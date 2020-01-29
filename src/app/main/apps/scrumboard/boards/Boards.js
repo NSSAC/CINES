@@ -52,13 +52,15 @@ function Boards(props)
     }, [dispatch]);
 
     return (
-        <div className={clsx(classes.root, "flex flex-grow flex-shrink-0 flex-col items-center")}>
+        <div className={clsx( "flex flex-grow flex-shrink-0 flex-col items-center")}>
 
             <div className="flex flex-grow flex-shrink-0 flex-col items-center container px-16 md:px-24">
+            Vision: CINES (pronounced “science") is a self-sustaining cyberinfrastructure that will be a community resource for network science. CINES is an extensible platform for producers and consumers of network science data, information, and software. Domain scientists can use CINES to obtain interesting insights to advance their fields. Major components of CINES include a messaging infrastructure to route job requests and other data/information; infrastructure services for system monitoring, security, continuous testing, and resource management (for submitting jobs), among others; common (app) services such as a digital library and visualization; various applications that will include web apps, individual codes, desktop apps, and software libraries; a workflow engine to compose common services and apps; a user interface (UI) for interactive use through a browser; and an API to service third party software requests.
 
-                <FuseAnimate>
+
+                {/* <FuseAnimate>
                     <Typography className="mt-44 sm:mt-88 sm:py-24 text-32 sm:text-40 font-300" color="inherit">Scrumboard App</Typography>
-                </FuseAnimate>
+                </FuseAnimate> */}
 
                 <div>
                     <FuseAnimateGroup
@@ -68,7 +70,7 @@ function Boards(props)
                             duration : 300
                         }}
                     >
-                        {boards.map(board => (
+                        {/* {boards.map(board => (
                             <div className="w-224 h-224 p-16" key={board.id}>
                                 <Link
                                     to={'/apps/scrumboard/boards/' + board.id + '/' + board.uri}
@@ -79,8 +81,9 @@ function Boards(props)
                                     <Typography className="text-16 font-300 text-center pt-16 px-32" color="inherit">{board.name}</Typography>
                                 </Link>
                             </div>
-                        ))}
-                        <div className="w-224 h-224 p-16">
+                        ))} */}
+
+                        {/* <div className="w-224 h-224 p-16">
                             <div
                                 className={clsx(classes.board, classes.newBoard, "flex flex-col items-center justify-center w-full h-full rounded py-24")}
                                 onClick={() => dispatch(Actions.newBoard())}
@@ -88,7 +91,7 @@ function Boards(props)
                                 <Icon className="text-56">add_circle</Icon>
                                 <Typography className="text-16 font-300 text-center pt-16 px-32" color="inherit">Add new board</Typography>
                             </div>
-                        </div>
+                        </div> */}
                     </FuseAnimateGroup>
                 </div>
             </div>

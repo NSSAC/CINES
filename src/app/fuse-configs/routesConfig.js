@@ -32,7 +32,7 @@ const routes = [
     {
         path     : '/',
         exact    : true,
-        component: () => <Redirect to="/apps/dashboards/analytics"/>
+        component: () => <Redirect to="/home"/>
     },
     {
         component: () => <Redirect to="/pages/errors/error-404"/>

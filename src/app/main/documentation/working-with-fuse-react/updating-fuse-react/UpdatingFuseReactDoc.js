@@ -12,25 +12,29 @@ function UpdatingFuseReactDoc()
                         <div className="flex items-center mb-16">
                             <Icon className="text-18" color="action">home</Icon>
                             <Icon className="text-16" color="action">chevron_right</Icon>
-                            <Typography color="textSecondary">Documentation</Typography>
-                            <Icon className="text-16" color="action">chevron_right</Icon>
-                            <Typography color="textSecondary">Working with Fuse React</Typography>
+                            <Typography color="textSecondary">About</Typography>
+                            {/* <Icon className="text-16" color="action">chevron_right</Icon>
+                            <Typography color="textSecondary">Working with Fuse React</Typography> */}
                         </div>
-                        <Typography variant="h6">Updating Fuse React</Typography>
+                        <Typography variant="h6">About</Typography>
                     </div>
                 </div>
             }
             content={
                 <div className="p-24 max-w-2xl">
+                    <Typography className="mb-8" variant="h5">Vision:</Typography>
+                    {/* <div style={{paddingBottom: "15px",fontWeight: '700'}}>
+                        <h3>Vision</h3>
+                    </div> */}
 
                     <Typography className="mb-16" component="p">
-                        Fuse React isn’t end product or an extension so there is no easy way to update the project.
-                        Due to the nature of apps, we cannot give any set instructions for updating Fuse React.
-                        It heavily depends on your project and it's up to you to update your code.
-                        However, there are couple points that we want to put forward which might help you to keep Fuse React updated:
+                    CINES (pronounced “science") is a self-sustaining cyberinfrastructure that will be a community resource for network science. CINES is an extensible platform for producers and consumers of network science data, information, and software. Domain scientists can use CINES to obtain interesting insights to advance their fields. 
+                    </Typography>
+                    <Typography className="mb-16" component="p">
+                    Major components of CINES include a messaging infrastructure to route job requests and other data/information; infrastructure services for system monitoring, security, continuous testing, and resource management (for submitting jobs), among others; common (app) services such as a digital library and visualization; various applications that will include web apps, individual codes, desktop apps, and software libraries; a workflow engine to compose common services and apps; a user interface (UI) for interactive use through a browser; and an API to service third party software requests.
                     </Typography>
 
-                    <Typography className="my-16" component="div">
+                    {/* <Typography className="my-16" component="div">
                         <ol>
                             <li className="mb-16">
                                 The most important one is not to touch the /@fuse directory but sometimes that is going to be inevitable and in those cases, try to keep the
@@ -50,7 +54,7 @@ function UpdatingFuseReactDoc()
                                 but it's the best way to keep the Fuse React updated.
                             </li>
                         </ol>
-                    </Typography>
+                    </Typography> */}
                 </div>
             }
         />

@@ -2,21 +2,21 @@ import React from 'react';
 
 export const WorkingWithFuseReactDocRoutes = [
     {
-        path     : '/documentation/working-with-fuse-react/development',
+        path     : '/home',
         component: React.lazy(() => import('./development/DevelopmentDoc'))
     },
     {
-        path     : '/documentation/working-with-fuse-react/production',
+        path     : '/collaborators',
         component: React.lazy(() => import('./production/ProductionDoc'))
     },
     {
-        path     : '/documentation/working-with-fuse-react/project-structure',
+        path     : '/publications',
         component: React.lazy(() => import('./project-structure/ProjectStructureDoc'))
     },
     {
-        path     : '/documentation/working-with-fuse-react/updating-fuse-react',
+        path     : '/about',
         component: React.lazy(() => import('./updating-fuse-react/UpdatingFuseReactDoc'))
-    },
+    },    
     {
         path     : '/documentation/working-with-fuse-react/theming',
         component: React.lazy(() => import('./theming/ThemingDoc'))

@@ -13,136 +13,138 @@ const navigationConfig = [
                 'title': 'Home',
                 'type' : 'item',
                 'icon' : 'home',
-                'url'  : '/apps/dashboards/analytics'
+                'url'  : '/home'
             },
             {
                 'id'   : 'scrumboard',
-                'title': 'News',
+                'title': 'About',
                 'type' : 'item',
-                'icon' : 'fiber_new',
-                'url'  : '/apps/scrumboard'
+                'icon' : 'font_download',
+                'url'  :'/about'
+                // 'url'  : '/apps/scrumboard'
             },
             {
                 'id'   : 'mail',
-                'title': 'Announcements',
+                'title': 'Collaborators',
                 'type' : 'item',
-                'icon' : 'email',
-                'url'  : '/apps/mail',
-                'badge': {
-                    'title': 25,
-                    'bg'   : '#F44336',
-                    'fg'   : '#FFFFFF'
-                }
+                'icon' : 'group',
+                'url'  : '/collaborators'
+                // 'badge': {
+                //     'title': 25,
+                //     'bg'   : '#F44336',
+                //     'fg'   : '#FFFFFF'
+                // }
              },
-            {
-                'id'      : 'todo',
-                'title'   : 'Project Materials',
-                'type'    : 'collapse',
-                'icon'    : 'dashboard',
-                'children': [
-                    {
-                        'id'   : 'analytics-dashboard',
-                        'title': 'About',
-                        'type' : 'item',
-                        'url'  : '/apps/notes'
-                    },
-                    {
-                        'id'   : 'project-dashboard',
-                        'title': 'Goals',
-                        'type' : 'item',
-                        'url'  : '/apps/dashboards/project'
-                    },
-                    {
-                        'id'   : 'modern',
-                        'title': 'Teams/collaborators',
-                        'type' : 'item',
-                        'url'  : '/pages/invoices/modern'
-                    },
-                    {
-                        'id'   : 'compact',
-                        'title': 'Contacts',
-                        'type' : 'item',
-                        'url'  : '/pages/invoices/compact'
-                    },
-                    {
-                        'id'   : 'maintenance',
-                        'title': 'Funding',
-                        'type' : 'item',
-                        'url'  : '/pages/maintenance'
-                    }
-                ]
-            },
-            {
+             {
                 'id'   : 'calendar',
-                'title': 'Papers',
+                'title': 'Publications',
                 'type' : 'item',
                 'icon' : 'library_books',
-                'url'  : '/apps/calendar'
+                'url'  : 'publications'
             },
-            {
-                'id'      : 'e-commerce',
-                'title'   : 'Learning Materials',
-                'type'    : 'collapse',
-                'icon'    : 'book',
-                'url'     : '/apps/e-commerce',
-                'children': [
-                    {
-                        'id'   : 'e-commerce-products',
-                        'title': 'Class Materials',
-                        'type' : 'item',
-                        'url'  : '/apps/e-commerce/products',
-                        'exact': true
-                    },
-                    {
-                        'id'   : 'e-commerce-product-detail',
-                        'title': 'Videos',
-                        'type' : 'item',
-                        'url'  : '/apps/e-commerce/products/1/a-walk-amongst-friends-canvas-print',
-                        'exact': true
-                    },
-                    {
-                        'id'   : 'e-commerce-new-product',
-                        'title': 'Documentation',
-                        'type' : 'item',
-                        'url'  : '/apps/e-commerce/products/new',
-                        'exact': true
-                    },
-                    {
-                        'id'   : 'e-commerce-orders',
-                        'title': 'Tutorials',
-                        'type' : 'item',
-                        'url'  : '/apps/e-commerce/orders',
-                        'exact': true
-                    },
-                    {
-                        'id'   : 'e-commerce-order-detail',
-                        'title': 'Order Detail',
-                        'type' : 'item',
-                        'url'  : '/apps/e-commerce/orders/1',
-                        'exact': true
-                    }
-                ]
-            },            
-            {
-                'id'      : 'academy',
-                'title'   : 'Events',
-                'type'    : 'collapse',
-                'icon'    : 'event_available',
-                'children': [
-                    {
-                        'id'   : 'style-1',
-                        'title': 'Courses',
-                        'type' : 'item',
-                        'url'  : '/pages/pricing/style-1'
-                    },
-                    {
-                        'id'   : 'style-2',
-                        'title': 'Talks',
-                        'type' : 'item',
-                        'url'  : '/pages/pricing/style-2'
-                    }
-                ]
-            }
+            // {
+            //     'id'      : 'todo',
+            //     'title'   : 'Project Materials',
+            //     'type'    : 'collapse',
+            //     'icon'    : 'dashboard',
+            //     'children': [
+            //         {
+            //             'id'   : 'analytics-dashboard',
+            //             'title': 'About',
+            //             'type' : 'item',
+            //             'url'  : '/apps/notes'
+            //         },
+            //         {
+            //             'id'   : 'project-dashboard',
+            //             'title': 'Goals',
+            //             'type' : 'item',
+            //             'url'  : '/apps/dashboards/project'
+            //         },
+            //         {
+            //             'id'   : 'modern',
+            //             'title': 'Teams/collaborators',
+            //             'type' : 'item',
+            //             'url'  : '/pages/invoices/modern'
+            //         },
+            //         {
+            //             'id'   : 'compact',
+            //             'title': 'Contacts',
+            //             'type' : 'item',
+            //             'url'  : '/pages/invoices/compact'
+            //         },
+            //         {
+            //             'id'   : 'maintenance',
+            //             'title': 'Funding',
+            //             'type' : 'item',
+            //             'url'  : '/pages/maintenance'
+            //         }
+            //     ]
+            // },
+           
+            // {
+            //     'id'      : 'e-commerce',
+            //     'title'   : 'Learning Materials',
+            //     'type'    : 'collapse',
+            //     'icon'    : 'book',
+            //     'url'     : '/apps/e-commerce',
+            //     'children': [
+            //         {
+            //             'id'   : 'e-commerce-products',
+            //             'title': 'Class Materials',
+            //             'type' : 'item',
+            //             'url'  : '/apps/e-commerce/products',
+            //             'exact': true
+            //         },
+            //         {
+            //             'id'   : 'e-commerce-product-detail',
+            //             'title': 'Videos',
+            //             'type' : 'item',
+            //             'url'  : '/apps/e-commerce/products/1/a-walk-amongst-friends-canvas-print',
+            //             'exact': true
+            //         },
+            //         {
+            //             'id'   : 'e-commerce-new-product',
+            //             'title': 'Documentation',
+            //             'type' : 'item',
+            //             'url'  : '/apps/e-commerce/products/new',
+            //             'exact': true
+            //         },
+            //         {
+            //             'id'   : 'e-commerce-orders',
+            //             'title': 'Tutorials',
+            //             'type' : 'item',
+            //             'url'  : '/apps/e-commerce/orders',
+            //             'exact': true
+            //         },
+            //         {
+            //             'id'   : 'e-commerce-order-detail',
+            //             'title': 'Order Detail',
+            //             'type' : 'item',
+            //             'url'  : '/apps/e-commerce/orders/1',
+            //             'exact': true
+            //         }
+            //     ]
+            // },            
+            // {
+            //     'id'      : 'academy',
+            //     'title'   : 'Events',
+            //     'type'    : 'collapse',
+            //     'icon'    : 'event_available',
+            //     'children': [
+            //         {
+            //             'id'   : 'style-1',
+            //             'title': 'Courses',
+            //             'type' : 'item',
+            //             'url'  : '/pages/pricing/style-1'
+            //         },
+            //         {
+            //             'id'   : 'style-2',
+            //             'title': 'Talks',
+            //             'type' : 'item',
+            //             'url'  : '/pages/pricing/style-2'
+            //         }
+            //     ]
+            // }
             
              //,
             // {
