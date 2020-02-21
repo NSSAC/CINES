@@ -26,7 +26,7 @@ function ToolbarLayout1(props)
     return (
         <ThemeProvider theme={toolbarTheme}>
             <AppBar id="fuse-toolbar" className="flex relative z-10" color="default" style={{backgroundColor: toolbarTheme.palette.background.default}}>
-                {/* <Toolbar className="p-0">
+                <Toolbar className="p-0">
 
                     {config.navbar.display && config.navbar.position === 'left' && (
                         <Hidden lgUp>
@@ -66,7 +66,7 @@ function ToolbarLayout1(props)
                             <NavbarMobileToggleButton/>
                         </Hidden>
                     )}
-                </Toolbar> */}
+                </Toolbar>
             </AppBar>
         </ThemeProvider>
     );

@@ -27,59 +27,64 @@ function ProductionDoc()
                     <Typography className="my-16" component="div">
                         <ol style={{listStyle: 'square'}} className="pl-12">
                             <li className="mb-12">
-                            Indiana University, Bloomington, IN
+                            Institution: Indiana University, Bloomington, IN
+Contacts: Geoffrey Fox, Gregor von Laszewski and Judy Qiu (School of Informatics, Computing and Engineering)
                             </li>
                             <li className="mb-12">
-                            Jackson State University, Jackson, MS
+                            Institution: Jackson State University, Jackson, MS
+Contact: Natarajan Meghanathan (Department of Electrical & Computer Engineering and
+Computer Science)
                             </li>
                             <li className="mb-12">
-                            North Carolina A&T State University, Greensboro, NC
+                            Institution: North Carolina A&T State University, Greensboro, NC
+Contact: Albert Esterline (Department of Computer Science)
                             </li>
                            
                             <li className="mb-12">
-                            Stanford University, Stanford, CA
+                            Institution: Stanford University, Stanford, CA
+Contacts: Jure Leskovec and Rok Sosic (Department of Computer Science)
                             </li>
                             <li className="mb-12">
-                            University of Virginia, Charlottesville, VA
+                            Institution: University of Virginia, Charlottesville, VA
+Contacts: Madhav V. Marathe (Biocomplexity Institute and Initiative and Department of
+Computer Science), Christopher J. Kuhlman, Dustin Machi and S. S. Ravi (all from Biocomplexity Institute and Initiative and Department of Computer Science)
                             </li>
                             <li className="mb-12">
-                            Virginia Tech, Blacksburg, VA
+                            Institution: Virginia Tech, Blacksburg, VA
+Contacts: Catherine Amelink (Learning Systems Innovation and Effectiveness and Department of Engineering Education), Kristy Collins (Fralin Life Sciences Institute), Edward Fox
+and Naren Ramakrishnan (both from the Department of Computer Science) and Yasuo
+Miyazaki (School of Education)
                             </li>
                             <li className="mb-12">
-                            Kitware, Inc., Clifton Park, NY
+                            Organization: Los Alamos National Laboratory, Los Alamos, NM
+Contact: Aric Hagberg (Computer, Computational and Statistical Sciences Division)
                             </li>
                             <li className="mb-12">
-                            Network Repository (networkrepository:org)
+                            Organization: Kitware, Inc., Clifton Park, NY
+Contact: Aashish Chaudhary
                             </li>
                             <li className="mb-12">
-                            NewCity, Blacksburg, VA
+                            Organization: Network Repository (networkrepository.org)
+Contacts: Ryan Rossi and Nesreen Ahmed
                             </li>
-                            <li className="mb-12">
-                            Persistent Systems Limited, Pune, India
-                            </li>
+                            
                         </ol>
-                    </Typography>
-                    
+                    </Typography>    
 
-                    {/* <FuseHighlight component="pre" className="language-bash my-16">
-                        {`
-                              yarn run build
-                        `}
-                    </FuseHighlight> */}
-
-                    {/* <Typography className="mb-16" component="p">
-                        compiles the application into <code>/build</code> directory
-                    </Typography>
-
-                    <Typography className="mt-32 mb-8" variant="h5">Deployment</Typography>
-
-                    <Typography className="mb-16" component="p">
-                        Checkout at Facebook's create-react-app documentation:
-                        <a href="https://facebook.github.io/create-react-app/docs/deployment" target="_blank" rel="noreferrer noopener" className="ml-4 font-bold">
-                            Deployment
-                        </a>
-                    </Typography> */}
-
+                    <Typography className="mb-8" variant="h5">Scientific Advisory Board:</Typography>               
+                    <Typography className="my-16" component="div">
+                        <ol style={{listStyle: 'square'}} className="pl-12">
+                            <li className="mb-12">Richard Alo (Florida Agricultural and Mechanical University, Tallahassee, FL)</li>
+                            <li className="mb-12">Noshir Contractor (Northwestern University, Evanston, IL)</li>
+                            <li className="mb-12">Matthew Jackson (Stanford University, Stanford, CA)</li>
+                            <li className="mb-12">Pamela Murray-Tuite (Clemson University, Clemson, SC)</li>
+                            <li className="mb-12">Y. Narahari (Indian Institute of Science, Bangalore, India)</li>
+                            <li className="mb-12">Arun Phadke (Virginia Tech, Blacksburg, VA)</li>
+                            <li className="mb-12">Cliff Shaffer (Virginia Tech, Blacksburg, VA)</li>
+                            <li className="mb-12">Zoltan Toroczkai (University of Notre Dame, Notre Dame, IN)</li>
+                            <li className="mb-12">Stanley Wasserman (Indiana University, Bloomington, IN)</li>
+                        </ol>
+                    </Typography> 
                 </div>
             }
         />

@@ -6,8 +6,8 @@ import {makeStyles} from '@material-ui/styles';
 const useStyles = makeStyles(theme => ({
     root      : {
         '& .logo-icon'                : {
-            width     : 24,
-            height    : 24,
+            width     : 32,
+            height    : 32,
             transition: theme.transitions.create(['width', 'height'], {
                 duration: theme.transitions.duration.shortest,
                 easing  : theme.transitions.easing.easeInOut
@@ -32,7 +32,7 @@ function Logo()
 
     return (
         <div className={clsx(classes.root, "flex items-center")}>
-            <img className="logo-icon" src="assets/images/logos/fuse.svg" alt="logo"/>
+            <img className="logo-icon" src="assets/images/logos/favicon-32x32.png" alt="logo"/>
             <Typography className="text-16 ml-12 font-light logo-text" color="inherit">CINES</Typography>
             {/* <div className={clsx(classes.reactBadge, "react-badge flex items-center ml-12 mr-8 py-4 px-8 rounded")}>
                 <img

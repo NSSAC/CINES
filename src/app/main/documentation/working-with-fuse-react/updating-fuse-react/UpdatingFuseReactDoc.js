@@ -27,12 +27,24 @@ function UpdatingFuseReactDoc()
                         <h3>Vision</h3>
                     </div> */}
 
-                    <Typography className="mb-16" component="p">
-                    CINES (pronounced “science") is a self-sustaining cyberinfrastructure that will be a community resource for network science. CINES is an extensible platform for producers and consumers of network science data, information, and software. Domain scientists can use CINES to obtain interesting insights to advance their fields. 
+<Typography className="mb-16" component="p">
+                    CINES (pronounced “science”) is a self-sustaining cyberinfrastructure that will be a community resource for network science. CINES is an extensible platform for producers and consumers
+of network science data, information, and software. Domain scientists can use CINES to obtain
+interesting insights to advance their fields
                     </Typography>
                     <Typography className="mb-16" component="p">
-                    Major components of CINES include a messaging infrastructure to route job requests and other data/information; infrastructure services for system monitoring, security, continuous testing, and resource management (for submitting jobs), among others; common (app) services such as a digital library and visualization; various applications that will include web apps, individual codes, desktop apps, and software libraries; a workflow engine to compose common services and apps; a user interface (UI) for interactive use through a browser; and an API to service third party software requests.
+                    Major components of CINES include a messaging infrastructure to route job requests and other data/information; infrastructure services for system
+monitoring, security, continuous testing, and resource management (for submitting jobs), among
+others; common (app) services such as a digital library and visualization; various applications that
+will include web apps, individual codes, desktop apps, and software libraries; a workflow engine to
+compose common services and apps; a user interface (UI) for interactive use through a browser;
+and an API to service third party software requests.
                     </Typography>
+                    <Typography className="mb-8" variant="h5">Sponsor: </Typography>
+                    <Typography className="mb-16" component="p">
+                    National Science Foundation (NSF) – Grant No.: OAC-1916805 (https://www.nsf.gov/
+awardsearch/showAward?AWD_ID=1916805&HistoricalAwards=false)
+</Typography>
 
                     {/* <Typography className="my-16" component="div">
                         <ol>
