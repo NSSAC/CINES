@@ -27,34 +27,44 @@ function ProjectStructureDoc()
                 <Typography className="my-16" component="div">
                         <ol style={{listStyle: 'square'}} className="pl-12">
                             <li className="mb-12">
-                            R´eka Albert, Elements of Network Science and Applications. Lecture Notes can be downloaded from <a target="_blank" href="https://www.ralbert.me/teaching.html">https://www.ralbert.me/teaching.html</a>.
+                            R´eka Albert, Pennsylvania State University, State College, PA. Lecture notes for the course
+Elements of Network Science and Applications can be downloaded from <a target="_blank" href="https://www.ralbert.me/teaching.html">https://www.ralbert.me/teaching.html</a>.
                             </li>
                             <li className="mb-12">
                             
-                            Albert-L´aszl´o Barab´asi, Network Science, online book available at  <a target="_blank" href="http://networksciencebook.com">http://networksciencebook.com</a>.
+                            Albert-L´aszl´o Barab´asi, Northeastern University, Boston, MA. Online book entitled Network
+Science is available at  <a target="_blank" href="http://networksciencebook.com">http://networksciencebook.com</a>.
                             </li>
                             <li className="mb-12">
-                            Aaron Clauset, Network Analysis and Modeling, Materials used for this course at the University of Colorado, Boulder, CO, can be accessed from: <a target="_blank" href="http://tuvalu.santafe.edu/~aaronc/courses/5352/#Schedule">http://tuvalu.santafe.edu/~aaronc/courses/5352/#Schedule</a>
+                            Aaron Clauset, University of Colorado, Boulder, CO. Materials used for the course Network Analysis and Modeling, can be accessed from <a target="_blank" href="http://tuvalu.santafe.edu/~aaronc/courses/5352/#Schedule">http://tuvalu.santafe.edu/~aaronc/courses/5352/#Schedule</a>
 
                             </li>
                             <li className="mb-12">
-                            David Easley and Jon Kleinberg, Networks, Crowds and Markets: Reasoning About a Connected World, Cambridge University Press, 2010. An online version of this book can be downloaded from <a target="_blank" href="https://www.cs.cornell.edu/home/kleinber/networks-book/networks-book.pdf">https://www.cs.cornell.edu/home/kleinber/networks-book/networks-book.pdf</a>.
+                            David Easley and Jon Kleinberg, Cornell University, Ithaca, NY. An online version of the
+book Networks, Crowds and Markets: Reasoning About a Connected World, Cambridge University Press, 2010, can be downloaded from <a target="_blank" href="https://www.cs.cornell.edu/home/kleinber/networks-book/networks-book.pdf">https://www.cs.cornell.edu/home/kleinber/networks-book/networks-book.pdf</a>.
                             </li>
                             <li className="mb-12">
-                            David Kempe, Structure and Dynamics of Information in Networks, lecture notes available at <a target="_blank" href="http://david-kempe.com/teaching/structure-dynamics.pdf">http://david-kempe.com/teaching/structure-dynamics.pdf.</a>
+                            David Kempe, University of Southern California, Los Angeles, CA. Lecture notes for the
+course Structure and Dynamics of Information in Networks are available from <a target="_blank" href="http://david-kempe.com/teaching/structure-dynamics.pdf">http://david-kempe.com/teaching/structure-dynamics.pdf.</a>
                              </li>
 
+                             <li className="mb-12">
+                             Natarajan Meghanathan, Jackson State University, Jackson, MS. Materials for the Fall 2019
+offering of the course Network Science can be accessed from <a target="_blank" href="http://www.jsums.edu/nmeghanathan/
+csc641-fall2019/">http://www.jsums.edu/nmeghanathan/
+csc641-fall2019/</a>
+                            </li> 
+
                             <li className="mb-12">
-                            S. S. Ravi, Course materials used to teach a class on Network Science at the University
-at Albany – State University of New York during Fall 2015 can be accessed from <a target="_blank" href="https://www.albany.edu/~ravi/csi660_index.html">https://www.albany.edu/~ravi/csi660_index.html</a>
+                            S. S. Ravi, University at Albany – State University of New York (UAlbany), Albany, NY.
+Course materials for the class Network Science taught during Fall 2015 can be accessed from <a target="_blank" href="https://www.albany.edu/~ravi/csi660_index.html">https://www.albany.edu/~ravi/csi660_index.html</a>
                             </li> 
                             <li className="mb-12">
-                          Stanford University, Materials for the course “Social and Information Network Analysis”
-                            taught during Autumn 2015 can be accessed from <a target="_blank" href="http://snap.stanford.edu/class/cs224w2015/handouts.html">http://snap.stanford.edu/class/cs224w2015/handouts.html.</a>
+                            Stanford University, Stanford, CA. Materials for the course Social and Information Network Analysis taught during Autumn 2015 can be accessed from <a target="_blank" href="http://snap.stanford.edu/class/cs224w2015/handouts.html">http://snap.stanford.edu/class/cs224w2015/handouts.html.</a>
                             </li> 
                             <li className="mb-12">
-Boleslaw Szymanski, Frontiers of Network Science. Materials for this course taught at the
-Rensselaer Polytechnic Institute (RPI), Troy, NY, during Fall 2018 can be accessed from
+                            Boleslaw Szymanski, Rensselaer Polytechnic Institute (RPI), Troy, NY. Materials for the
+Fall 2018 offering of the course Frontiers of Network Science can be accessed from
 <a target="_blank" href="http://cs.rpi.edu/~szymansk/fns.18/"> http://cs.rpi.edu/~szymansk/fns.18/.</a>
 </li>
 
