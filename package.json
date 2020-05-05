@@ -105,5 +105,6 @@
             "last 1 safari version",
             "ie 11"
         ]
-    }
+    },
+    "homepage": "."
 }
