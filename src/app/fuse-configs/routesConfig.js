@@ -10,6 +10,7 @@ import {LoginConfig} from 'app/main/login/LoginConfig';
 import {RegisterConfig} from 'app/main/register/RegisterConfig';
 import {LogoutConfig} from 'app/main/logout/LogoutConfig';
 import {CallbackConfig} from 'app/main/callback/CallbackConfig';
+import {CineStaticConfig} from 'app/main/cines-static/CineStaticConfig';
 
 const routeConfigs = [
     ...appsConfigs,
@@ -21,7 +22,8 @@ const routeConfigs = [
     LoginConfig,
     RegisterConfig,
     LogoutConfig,
-    CallbackConfig
+    CallbackConfig,
+    CineStaticConfig
 ];
 
 const routes = [

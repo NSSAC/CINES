@@ -2,19 +2,19 @@ import React from 'react';
 
 export const WorkingWithFuseReactDocRoutes = [
     {
-        path     : '/home',
+        path     : 'app/home',
         component: React.lazy(() => import('./development/DevelopmentDoc'))
     },
     {
-        path     : '/collaborators',
+        path     : 'app/collaborators',
         component: React.lazy(() => import('./production/ProductionDoc'))
     },
     {
-        path     : '/publications',
+        path     : 'app/publications',
         component: React.lazy(() => import('./project-structure/ProjectStructureDoc'))
     },
     {
-        path     : '/about',
+        path     : 'app/about',
         component: React.lazy(() => import('./updating-fuse-react/UpdatingFuseReactDoc'))
     },    
     {

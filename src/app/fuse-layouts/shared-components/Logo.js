@@ -30,10 +30,15 @@ function Logo()
 {
     const classes = useStyles();
 
+    const logsize = {
+    fontSize:'2rem',
+    fontWeight: '700'
+    }
+
     return (
         <div className={clsx(classes.root, "flex items-center")}>
             <img className="logo-icon" src="assets/images/logos/favicon-32x32.png" alt="logo"/>
-            <Typography className="text-16 ml-12 font-light logo-text" color="inherit">CINES</Typography>
+            <Typography className="text-16 ml-12 font-light logo-text" style={logsize}  color="inherit">Net.Science</Typography>
             {/* <div className={clsx(classes.reactBadge, "react-badge flex items-center ml-12 mr-8 py-4 px-8 rounded")}>
                 <img
                     className="react-logo"
