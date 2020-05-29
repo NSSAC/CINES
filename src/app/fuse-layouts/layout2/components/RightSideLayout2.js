@@ -6,10 +6,6 @@ function RightSideLayout2()
 {
     return (
         <React.Fragment>
-
-            <ChatPanel/>
-
-            <QuickPanel/>
         </React.Fragment>
     );
 }

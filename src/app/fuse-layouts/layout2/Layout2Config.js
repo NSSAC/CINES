@@ -7,12 +7,12 @@ const config = {
             display: true
         },
         toolbar       : {
-            display : true,
+            display : false,
             position: 'below'
         },
         footer        : {
             display: true,
-            style  : 'fixed'
+            style  : 'static'
         },
         leftSidePanel : {
             display: true

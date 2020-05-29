@@ -2,46 +2,40 @@ import {MaterialUIComponentsNavigation} from 'app/main/documentation/material-ui
 import {authRoles} from 'app/auth';
 
 const navigationConfig = [
-    {
-        'id'      : 'applications',
-        'title'   : 'Menu',
-        'type'    : 'group',
-        'icon'    : 'apps',
-        'children': [
-            {
-                'id'   : 'dashboards',
-                'title': 'Home',
-                'type' : 'item',
-                'icon' : 'home',
-                'url'  : '/home'
+        {
+            'id'   : 'dashboards',
+            'title': 'Home',
+            'type' : 'item',
+            'icon' : 'home',
+            'url'  : '/home'
+        },
+        {
+            'id'   : 'scrumboard',
+            'title': 'About',
+            'type' : 'item',
+            'icon' : 'font_download',
+            'url'  :'/about'
+            // 'url'  : '/apps/scrumboard'
+        },
+        {
+            'id'   : 'mail',
+            'title': 'Collaborators',
+            'type' : 'item',
+            'icon' : 'group',
+            'url'  : '/collaborators'
+            // 'badge': {
+            //     'title': 25,
+            //     'bg'   : '#F44336',
+            //     'fg'   : '#FFFFFF'
+            // }
             },
             {
-                'id'   : 'scrumboard',
-                'title': 'About',
-                'type' : 'item',
-                'icon' : 'font_download',
-                'url'  :'/about'
-                // 'url'  : '/apps/scrumboard'
-            },
-            {
-                'id'   : 'mail',
-                'title': 'Collaborators',
-                'type' : 'item',
-                'icon' : 'group',
-                'url'  : '/collaborators'
-                // 'badge': {
-                //     'title': 25,
-                //     'bg'   : '#F44336',
-                //     'fg'   : '#FFFFFF'
-                // }
-             },
-             {
-                'id'   : 'calendar',
-                'title': 'Publications',
-                'type' : 'item',
-                'icon' : 'library_books',
-                'url'  : 'publications'
-            },
+            'id'   : 'calendar',
+            'title': 'Publications',
+            'type' : 'item',
+            'icon' : 'library_books',
+            'url'  : 'publications'
+        },
             // {
             //     'id'      : 'todo',
             //     'title'   : 'Project Materials',
@@ -199,8 +193,6 @@ const navigationConfig = [
             //     'icon' : 'note',
             //     'url'  : '/apps/notes'
             // }
-        ]
-    },
     // {
     //     'id'      : 'pages',
     //     'title'   : 'Pages',

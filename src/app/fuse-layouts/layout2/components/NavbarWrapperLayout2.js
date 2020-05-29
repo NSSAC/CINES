@@ -47,37 +47,11 @@ function NavbarWrapperLayout2(props)
     return (
         <React.Fragment>
             <ThemeProvider theme={navbarTheme}>
+                <Paper className={classes.navbar} square={true}>
+                    <NavbarLayout2/>
+                </Paper>
 
-                <Hidden mdDown>
-                    <Paper className={classes.navbar} square={true}>
-                        <NavbarLayout2/>
-                    </Paper>
-                </Hidden>
-
-                <Hidden lgUp>
-                    <Drawer
-                        anchor="left"
-                        variant="temporary"
-                        open={navbar.mobileOpen}
-                        classes={{
-                            paper: classes.navbarMobile
-                        }}
-                        onClose={ev => dispatch(Actions.navbarCloseMobile())}
-                        ModalProps={{
-                            keepMounted: true // Better open performance on mobile.
-                        }}
-                    >
-                        <NavbarMobileLayout2/>
-                    </Drawer>
-                </Hidden>
             </ThemeProvider>
-
-            {config.navbar.display && !config.toolbar.display && (
-                <Hidden lgUp>
-                    <NavbarMobileToggleFab/>
-                </Hidden>
-            )}
-
         </React.Fragment>
     );
 }

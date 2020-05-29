@@ -28,12 +28,12 @@ function UpdatingFuseReactDoc()
                     </div> */}
 
 <Typography className="mb-16" component="p">
-                    CINES (pronounced “science”) is a self-sustaining cyberinfrastructure that will be a community resource for network science. CINES is an extensible platform for producers and consumers
-of network science data, information, and software. Domain scientists can use CINES to obtain
+                    Net.Science is a self-sustaining cyberinfrastructure that will be a community resource for network science. CINES is an extensible platform for producers and consumers
+of network science data, information, and software. Domain scientists can use Net.Science to obtain
 interesting insights to advance their fields
                     </Typography>
                     <Typography className="mb-16" component="p">
-                    Major components of CINES include a messaging infrastructure to route job requests and other data/information; infrastructure services for system
+                    Major components of Net.Science include a messaging infrastructure to route job requests and other data/information; infrastructure services for system
 monitoring, security, continuous testing, and resource management (for submitting jobs), among
 others; common (app) services such as a digital library and visualization; various applications that
 will include web apps, individual codes, desktop apps, and software libraries; a workflow engine to
