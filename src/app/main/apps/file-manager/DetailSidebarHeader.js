@@ -28,9 +28,7 @@ function DetailSidebarHeader(props)
                         <Icon>cloud_download</Icon>
                     </IconButton>
                 </FuseAnimate>
-                <IconButton>
-                    <Icon>more_vert</Icon>
-                </IconButton>
+               
             </div>
 
             <div className="p-12">
