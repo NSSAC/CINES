@@ -34,7 +34,7 @@ const navigationConfig = [
             'title': 'Publications',
             'type' : 'item',
             'icon' : 'library_books',
-            'url'  : 'publications'
+            'url'  : '/publications'
         },
             // {
             //     'id'      : 'todo',
@@ -153,13 +153,13 @@ const navigationConfig = [
             //         'fg'   : '#FFFFFF'
             //     }
             // },
-            // {
-            //     'id'   : 'file-manager',
-            //     'title': 'File Manager',
-            //     'type' : 'item',
-            //     'icon' : 'folder',
-            //     'url'  : '/apps/file-manager'
-            // },
+            {
+                'id'   : 'file-manager',
+                'title': 'File Manager',
+                'type' : 'item',
+                'icon' : 'folder',
+                'url'  : '/apps/files/'
+            },
             // {
             //     'id'   : 'contacts',
             //     'title': 'Contacts',

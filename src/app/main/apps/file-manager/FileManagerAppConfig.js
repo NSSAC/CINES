@@ -1,4 +1,5 @@
 import React from 'react';
+import { withRouter } from 'react-router-dom';
 
 export const FileManagerAppConfig = {
     settings: {
@@ -8,8 +9,8 @@ export const FileManagerAppConfig = {
     },
     routes  : [
         {
-            path     : '/apps/file-manager',
-            component: React.lazy(() => import('./FileManagerApp'))
+            path     : '/apps/files/*',
+            component: withRouter(React.lazy(() => import('./FileManagerApp')))
         }
     ]
 };

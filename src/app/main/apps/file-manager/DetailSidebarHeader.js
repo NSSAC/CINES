@@ -2,6 +2,7 @@ import React from 'react';
 import {Icon, IconButton, Typography} from '@material-ui/core';
 import {FuseAnimate} from '@fuse';
 import {useSelector} from 'react-redux';
+import moment from 'moment';
 
 function DetailSidebarHeader(props)
 {
@@ -38,8 +39,8 @@ function DetailSidebarHeader(props)
                 </FuseAnimate>
                 <FuseAnimate delay={300}>
                     <Typography variant="caption" className="">
-                        <span>Edited</span>
-                        <span>: {selectedItem.modified}</span>
+                        <span>Updated</span>
+                        <span>: {moment(selectedItem.update_date).fromNow()}</span>
                     </Typography>
                 </FuseAnimate>
             </div>
