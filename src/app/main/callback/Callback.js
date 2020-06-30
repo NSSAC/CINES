@@ -4,24 +4,24 @@ import auth0Service from 'app/services/auth0Service';
 import * as userActions from 'app/auth/store/actions';
 import * as Actions from 'app/store/actions';
 import {useDispatch} from 'react-redux';
+import sciductService from 'app/services/sciductService';
 
 function Callback(props)
 {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        auth0Service.onAuthenticated(() => {
-            dispatch(Actions.showMessage({message: 'Logging in with Auth0'}));
-
-            /**
-             * Retrieve user data from Auth0
-             */
-            auth0Service.getUserData().then(tokenData => {
-                dispatch(userActions.setUserDataAuth0(tokenData));
-                dispatch(Actions.showMessage({message: 'Logged in with Auth0'}));
-            });
+        let searchParam = window.location.search;
+        let params = new URLSearchParams(searchParam);
+        let tokenData = params.get('token');
+      sciductService.onAuthenticated(tokenData, () => {
+        sciductService.getUserData().then(tokenData => {
+            console.log("tokenData: ", tokenData)
+            dispatch(userActions.setUserDataSciDuct(tokenData));
         });
-    }, [dispatch]);
+    });
+}, [dispatch,props,props.location]);
+
 
     return (
         <FuseSplashScreen/>
