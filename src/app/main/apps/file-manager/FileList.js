@@ -30,14 +30,18 @@ function FileList(props)
     console.log("History", props.history)
     const classes = useStyles();
 
-    function onClickHandler(id,canLink){
+    function onClickHandler(n,canLink){
         return function(evt){
             if (evt.target && evt.target.getAttribute("to") ){
+                if(n.type == "folder")
                 var target = window.location.pathname + evt.target.getAttribute("to") + "/";
+                if(n.type !== "folder")
+                var target = window.location.pathname + evt.target.getAttribute("to");
                 console.log("Target URL: ", window.location.pathname)
                 props.history.push(target)
+                
             }
-            dispatch(Actions.setSelectedItem(id))
+            dispatch(Actions.setSelectedItem(n.id))
         }
     }
 /// tablerow click handler    {event => dispatch(Actions.setSelectedItem(n.id))}
@@ -62,14 +66,14 @@ function FileList(props)
                             <TableRow
                                 key={n.id}
                                 hover
-                                onClick={onClickHandler(n.id,n.isContainer)}
+                                onClick={onClickHandler(n,n.isContainer)}
                                 selected={n.id === selectedItemId}
                                 className="cursor-pointer"
                             >
                                 <TableCell className="max-w-64 w-64 p-0 text-center">
                                     <Icon className={clsx(classes.typeIcon, n.type)}/>
                                 </TableCell>
-                                <TableCell>{(n.type == "folder")?<Link to={n.name}>{n.name}</Link> : (n.name)}</TableCell>
+                                <TableCell>{<Link to={n.name}>{n.name}</Link>}</TableCell>
                                 <TableCell className="hidden sm:table-cell">{n.type}</TableCell>
                                 <TableCell className="hidden sm:table-cell">{n.owner_id}</TableCell>
                                 <TableCell className="text-center hidden sm:table-cell">{(!n.size && (n.size!==0))? '-' : filesize(n.size)}</TableCell>
