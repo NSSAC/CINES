@@ -30,8 +30,8 @@ function UserMenu(props)
                     :
                     (
                         <Avatar className="">
-                            User
-                            {/* {user.data.displayName[0]} */}
+                         
+                         {user.data.displayName[0]} {user.data.lastName[0]}
                         </Avatar>
                     )
                 }
@@ -72,12 +72,12 @@ function UserMenu(props)
                             </ListItemIcon>
                             <ListItemText className="pl-0" primary="Login"/>
                         </MenuItem>
-                        <MenuItem component={Link} to="/register">
+                        {/* <MenuItem component={Link} to="/register">
                             <ListItemIcon className="min-w-40">
                                 <Icon>person_add</Icon>
                             </ListItemIcon>
                             <ListItemText className="pl-0" primary="Register"/>
-                        </MenuItem>
+                        </MenuItem> */}
                     </React.Fragment>
                 ) : (
                     <React.Fragment>

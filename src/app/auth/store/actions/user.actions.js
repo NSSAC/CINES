@@ -46,6 +46,7 @@ export function setUserDataSciDuct(tokenData)
         from: 'sciduct',
         data: {
             displayName: `${tokenData.first_name} ${tokenData.last_name}`,
+            lastName:`${tokenData.last_name}`,
             photoURL   : tokenData.picture,
             email      : tokenData.email,
             roles      : roles,
