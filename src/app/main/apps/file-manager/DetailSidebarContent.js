@@ -1,12 +1,14 @@
 import React, {useState} from 'react';
 import { Typography,Tabs,Tab} from '@material-ui/core';
-import { InsertDriveFile as FileIcon, ListAlt as MetadataIcon, History as ProvenanceIcon, Share as ShareIcon, RemoveRedEye   } from "@material-ui/icons";
+import { InsertDriveFile as FileIcon,RemoveRedEye, ListAlt as MetadataIcon, History as ProvenanceIcon, Share as ShareIcon, Computer  } from "@material-ui/icons";
 import {makeStyles} from '@material-ui/styles';
 import {FuseAnimate} from '@fuse';
 import {useSelector} from 'react-redux';
 import clsx from 'clsx';
 import moment from 'moment';
 import filesize from 'filesize';
+import JSONTree from 'react-json-tree'
+
 
 const useStyles = makeStyles({
     table   : {
@@ -32,6 +34,7 @@ const useStyles = makeStyles({
 
 function DetailSidebarContent(props)
 {   
+ 
     const classes = useStyles();
     const [selectedTab, setSelectedTab] = useState(0);
     const files = useSelector(({fileManagerApp}) => fileManagerApp.files);
@@ -121,16 +124,43 @@ function DetailSidebarContent(props)
                 {selectedTab === 1 && (
                     <React.Fragment>
                         <div><Typography variant="h6">DISCOVERED META</Typography></div>
-                        <div><pre>{JSON.stringify(selectedItem.autometa,null,2)}</pre></div>
+                        <JSONTree data={selectedItem.autometa} theme={{
+                                                                        tree: {
+                                                                          backgroundColor: '#F7F7F7'
+                                                                         },
+                                                                        label : {
+                                                                            color: 'black',
+                                                                            fontSize:'14px',
+                                                                            fontWeight: 'bold'
+                                                                        },
+                                                                     }}/>
                         <div><Typography variant="h6">USER META</Typography></div>
-                        <div><pre>{JSON.stringify(selectedItem.usermeta,null,2)}</pre></div>
+                        <JSONTree data={selectedItem.usermeta} theme={{
+                                                                        tree: {
+                                                                          backgroundColor: '#F7F7F7'
+                                                                         },
+                                                                        label : {
+                                                                            color: 'black',
+                                                                            fontSize:'14px',
+                                                                            fontWeight: 'bold'
+                                                                        },
+                                                                     }}/>
                     </React.Fragment>
                 )}
 
                 {selectedTab === 2 && (
                     <React.Fragment>
                         <div><Typography variant="h6">PROVENANCE</Typography></div>
-                        <div><pre>{JSON.stringify(selectedItem.provenance,null,2)}</pre></div>
+                        <JSONTree data={selectedItem.provenance} theme={{
+                                                                        tree: {
+                                                                          backgroundColor: '#F7F7F7'
+                                                                         },
+                                                                        label : {
+                                                                            color: 'black',
+                                                                            fontSize:'14px',
+                                                                            fontWeight: 'bold'
+                                                                        },
+                                                                     }}/>
                     </React.Fragment>
                 )}
 

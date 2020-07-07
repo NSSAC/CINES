@@ -1,7 +1,5 @@
 export const GET_FILES = 'GET_FILES';
 var token=localStorage.getItem('id_token')
-console.log(typeof(token))
-console.log(token)
 export function getFiles(path)
 {
             

@@ -22,29 +22,27 @@ const useStyles = makeStyles({
     }
 });
 
+
+
 function FileList(props)
 {
     const dispatch = useDispatch();
     const files = useSelector(({fileManagerApp}) => fileManagerApp.files);
     const selectedItemId = useSelector(({fileManagerApp}) => fileManagerApp.selectedItemId);
-    console.log("History", props.history)
     const classes = useStyles();
 
-    function onClickHandler(n,canLink){
+    function onClickHandler(node,canLink){
         return function(evt){
             if (evt.target && evt.target.getAttribute("to") ){
-                if(n.type == "folder")
-                var target = window.location.pathname + evt.target.getAttribute("to") + "/";
-                if(n.type !== "folder")
-                var target = window.location.pathname + evt.target.getAttribute("to");
-                console.log("Target URL: ", window.location.pathname)
-                props.history.push(target)
-                
+                if(node.type == "folder")
+                  var target = window.location.pathname + evt.target.getAttribute("to") + "/";
+                else
+                  var target = window.location.pathname + evt.target.getAttribute("to");
+              props.history.push(target)
             }
-            dispatch(Actions.setSelectedItem(n.id))
+            dispatch(Actions.setSelectedItem(node.id))
         }
     }
-/// tablerow click handler    {event => dispatch(Actions.setSelectedItem(n.id))}
     return (
         <FuseAnimate animation="transition.slideUpIn" delay={300}>
             <Table>
@@ -61,23 +59,25 @@ function FileList(props)
                 </TableHead>
 
                 <TableBody>
-                    {Object.entries(files).map(([key, n]) => {
-                        return (
+                    {Object.values(files).filter((data)=>{
+                        if((props.search == "" || (data.name.toLowerCase().includes(props.search.toLowerCase()) || data.type.toLowerCase().includes(props.search.toLowerCase())  || data.owner_id.toLowerCase().includes(props.search.toLowerCase())))) return data }).map(node=>{
+                       return(
                             <TableRow
-                                key={n.id}
+                            key={node.id}
                                 hover
-                                onClick={onClickHandler(n,n.isContainer)}
-                                selected={n.id === selectedItemId}
+                                onClick={onClickHandler(node,node.isContainer)}
+                                selected={node.id === selectedItemId}
                                 className="cursor-pointer"
                             >
                                 <TableCell className="max-w-64 w-64 p-0 text-center">
-                                    <Icon className={clsx(classes.typeIcon, n.type)}/>
+                                    <Icon className={clsx(classes.typeIcon, node.type)}/>
                                 </TableCell>
-                                <TableCell>{<Link to={n.name}>{n.name}</Link>}</TableCell>
-                                <TableCell className="hidden sm:table-cell">{n.type}</TableCell>
-                                <TableCell className="hidden sm:table-cell">{n.owner_id}</TableCell>
-                                <TableCell className="text-center hidden sm:table-cell">{(!n.size && (n.size!==0))? '-' : filesize(n.size)}</TableCell>
-                                <TableCell className="hidden sm:table-cell">{moment(n.update_date).fromNow()}</TableCell>
+                                {/* <TableCell>{(n.type == "folder")?<Link to={n.name}>{n.name}</Link> : (n.name)}</TableCell> */}
+                                <TableCell>{<Link to={node.name}>{node.name}</Link>}</TableCell>
+                                <TableCell className="hidden sm:table-cell">{node.type}</TableCell>
+                                <TableCell className="hidden sm:table-cell">{node.owner_id}</TableCell>
+                                <TableCell className="text-center hidden sm:table-cell">{(!node.size && (node.size!==0))? '-' : filesize(node.size)}</TableCell>
+                                <TableCell className="hidden sm:table-cell">{moment(node.update_date).fromNow()}</TableCell>
                                 <Hidden lgUp>
                                     <TableCell>
                                         <IconButton
