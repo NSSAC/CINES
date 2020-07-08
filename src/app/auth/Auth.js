@@ -44,13 +44,13 @@ class Auth extends Component {
              */
             if ( sciductService.isAuthenticated() && localStorage.getItem('loggedIn'))
             {
-            sciductService.getUserData().then(tokenData => {
+            sciductService.onRefreshGetUserData().then(tokenData => {
 
                 this.props.setUserDataSciDuct(tokenData);
 
                resolve();
 
-               this.props.showMessage({message: 'Logging in with Sciducth'});
+               this.props.showMessage({message: 'Logging in with Sciduct'});
             })
         }
         else{

@@ -38,15 +38,10 @@ class SciDuctService {
 
     setSession = (token) => {
 
-            // Set the time that the access token will expire at
-           //let expiresAt = JSON.stringify((token.exp * 1000) + new Date().getTime());
-         
-            localStorage.setItem('id_token', token);
-         
-           // window.clearTimeout (timeOutHandle)
-              //this.setRefreshTime(token);
-
-            //localStorage.setItem('expires_at', expiresAt);
+        localStorage.setItem('id_token', token);
+        window.clearTimeout (timeOutHandle)
+      
+        this.setRefreshTime(token);
     };
     setRefreshTime(token){
        
@@ -55,60 +50,49 @@ class SciDuctService {
             
                 this.refreshAPI
              
-          ,8000);
+          ,`${AUTH_CONFIG.refresh_time}`);
     }
 
     refreshAPI = () => {
-    
-         const userToken = localStorage.getItem('id_token')
-          axios.get('https://sciduct.bii.virginia.edu/usersvc/refresh', {
-             headers: { 
-                'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin' : '* ',
-            'Authorization' : userToken,
-         } ,
-            
-        
-         }).then(res => {
-           
-             localStorage.clear();
-             this.setSession(res.data)
-         })
+        const userToken = localStorage.getItem('id_token')
+         axios.get(`${AUTH_CONFIG.refresh_token}`, {
+            headers: { 
+               'Content-Type': 'application/json',
+           'Access-Control-Allow-Origin' : '* ',
+           'Authorization' : userToken,
+        } ,
+        }).then(res => {
+          
+            localStorage.removeItem("id_token")
+            this.setSession(res.data)
+            alert("token refreshed")
 
-    }
+        })
+
+   }
+   onRefreshGetUserData =() =>{
+    this.refreshAPI();
+    return new Promise((resolve, reject) => {
+        return resolve(this.getTokenData());
+    });
+
+}
+
     
-    logout = () => {
-        // Clear access token and ID token from local storage
-        localStorage.removeItem('id_token');
-        localStorage.removeItem('expires_at');
-        localStorage.clear();
-        window.open(`${AUTH_CONFIG.userServiceURL}/logout?redirect=${encodeURIComponent('http://localhost:3000')}`,"_self")
-    };
+   logout = () => {
+    // Clear access token and ID token from local storage
+    localStorage.removeItem('id_token');
+    localStorage.clear();
+    window.clearTimeout (timeOutHandle)
+    window.open(`${AUTH_CONFIG.userServiceURL}/logout?redirect=${encodeURIComponent(`${AUTH_CONFIG.logout_local_dev}`)}`,"_self")
+};
 
     isAuthenticated = () => {
-        // if ( !this.lock )
-        // {
-        //     return false;
-        // }
-        // Check whether the current time is past the
-        // access token's expiry time
-        //console.log("isAuthenticated()?")
+       
         if (localStorage.getItem('id_token')){
             return true;
         }
         return false;
-        // console.log("not authed")
-        // let expiresAt = JSON.parse(localStorage.getItem('expires_at'));
-        // const isNotExpired = new Date().getTime() < expiresAt;
-        // if ( isNotExpired )
-        // {
-        //     return true;
-        // }
-        // else
-        // {
-        //     this.logout();
-        //     return false;
-        // }
     };
 
     getUserData = () => {

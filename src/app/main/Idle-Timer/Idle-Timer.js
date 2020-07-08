@@ -94,8 +94,4 @@ class IdleTimerComponent extends React.Component {
 
  }
 
-//  IdleTimerComponent.propTypes = {
-//      match: PropTypes.any.isRequired,
-//      history: PropTypes.func.isRequired
-//  }
  export default IdleTimerComponent

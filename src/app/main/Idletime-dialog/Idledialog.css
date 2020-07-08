@@ -33,7 +33,6 @@
       background-color: red;
   }
 
-
   .modal{
     position: fixed;
     top: 20px;
@@ -48,8 +47,6 @@
 .display{
     display: block;
 }
-
-
   .modal-content{
     position: relative;
     display: flex;
@@ -70,8 +67,6 @@
   .modal-open-noscroll .navbar-default, .modal-open .navbar-default 
   {
     margin-right: 0!important;
-  
-
   }
   .modal-header {
     display: flex;
@@ -128,10 +123,6 @@
     background-color: #007bff;
     border-color: #007bff;
 }
-/* .MuiTypography-body1 {
-    font-size: 1.5rem !important; 
-
-} */
 
 .MuiDialogContentText-root{
     font-size: 1.5rem !important; 
