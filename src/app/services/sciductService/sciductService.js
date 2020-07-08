@@ -65,7 +65,7 @@ class SciDuctService {
           
             localStorage.removeItem("id_token")
             this.setSession(res.data)
-            alert("token refreshed")
+         
 
         })
 
