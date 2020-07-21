@@ -1,5 +1,5 @@
 import React, {useEffect, useRef} from 'react';
-import {ClickAwayListener,Tooltip, Typography, Icon, IconButton,Input} from '@material-ui/core';
+import {ClickAwayListener,Tooltip, Typography, Icon, IconButton,Input, Fab} from '@material-ui/core';
 import {FuseAnimate, FusePageSimple} from '@fuse';
 import {useDispatch, useSelector} from 'react-redux';
 import withReducer from 'app/store/withReducer';
@@ -19,7 +19,9 @@ function FileManagerApp(props){
 
     const [searchbool, setSearchbool] = useState(false);
     const [search, setSearch] = useState("");
-    const wid = window.innerWidth >= 767
+    var path = window.location.pathname
+    var pathEnd=path.charAt(path.length-1)
+    const width = window.innerWidth >= 767
 
     function showSearch()
     {
@@ -56,7 +58,7 @@ function FileManagerApp(props){
         //FIXME: Figure out how to get the routes base path.
         dispatch(Actions.getFiles(targetPath));
         setSearch("")
-    }, [dispatch,props,props.location]);
+    }, [dispatch,props,props.location, props.history]);
 
     return (
         <FusePageSimple
@@ -113,14 +115,18 @@ function FileManagerApp(props){
                             </div>
                       </span>
                     </FuseAnimate>
-                       
-                    </div>
-                    <div className="flex flex-1 items-end">
+                </div>
+                <div className="flex flex-1 items-end">
+                    <FuseAnimate animation="transition.expandIn" delay={600}>
+                            <Fab color="secondary" aria-label="add" className="absolute bottom-0 left-0 ml-16 -mb-28 z-999">
+                                <Icon>add</Icon>
+                            </Fab>
+                        </FuseAnimate>
                         <FuseAnimate delay={200}>
                             <div>
                                 { 
 
-                                    <Breadcrumb width={wid} props={props} path={targetPath} className="flex flex-1 pl-2 text-16 sm:text-16"/>
+                                    <Breadcrumb width={width} props={props} path={targetPath} className="flex flex-1 pl-72 text-16 sm:text-16"/>
                                 }
                             </div>
                         </FuseAnimate>
@@ -135,12 +141,12 @@ function FileManagerApp(props){
                 <MainSidebarHeader/>
             }
             leftSidebarContent={
-                <MainSidebarContent/>
+               <MainSidebarContent/>
             }
-            rightSidebarHeader={
+            rightSidebarHeader={pathEnd=="/" &&
                 <DetailSidebarHeader/>
             }
-            rightSidebarContent={
+            rightSidebarContent={pathEnd=="/" &&
                 <DetailSidebarContent/>
             }
             ref={pageLayout}

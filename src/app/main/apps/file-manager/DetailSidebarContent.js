@@ -49,7 +49,7 @@ function DetailSidebarContent(props)
     {
         setSelectedTab(value);
     }
-
+    
     return (
         <FuseAnimate animation="transition.slideUpIn" delay={200}>
 
@@ -81,10 +81,6 @@ function DetailSidebarContent(props)
                     <Tab
                         className="min-w-0"
                         icon={<ShareIcon alt="Sharing Permissions"/>}
-                    />
-                    <Tab
-                        className="min-w-0"
-                        icon={<RemoveRedEye alt="Preview"/>}
                     />
                 </Tabs>
 
@@ -124,7 +120,7 @@ function DetailSidebarContent(props)
                 {selectedTab === 1 && (
                     <React.Fragment>
                         <div><Typography variant="h6">DISCOVERED META</Typography></div>
-                        <JSONTree data={selectedItem.autometa} theme={{
+                        <JSONTree data={selectedItem.autometa} hideRoot={true} theme={{
                                                                         tree: {
                                                                           backgroundColor: '#F7F7F7'
                                                                          },
@@ -135,7 +131,7 @@ function DetailSidebarContent(props)
                                                                         },
                                                                      }}/>
                         <div><Typography variant="h6">USER META</Typography></div>
-                        <JSONTree data={selectedItem.usermeta} theme={{
+                        <JSONTree data={selectedItem.usermeta} hideRoot={true} theme={{
                                                                         tree: {
                                                                           backgroundColor: '#F7F7F7'
                                                                          },
@@ -151,7 +147,7 @@ function DetailSidebarContent(props)
                 {selectedTab === 2 && (
                     <React.Fragment>
                         <div><Typography variant="h6">PROVENANCE</Typography></div>
-                        <JSONTree data={selectedItem.provenance} theme={{
+                        <JSONTree data={selectedItem.provenance} hideRoot={true} theme={{
                                                                         tree: {
                                                                           backgroundColor: '#F7F7F7'
                                                                          },
