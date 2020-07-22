@@ -96,13 +96,16 @@ function FileList(props)
             dispatch(Actions.setSelectedItem(node.id))
         }
     }
+
+   var searchResults = Object.values(files).filter((data)=>{
+        if(data.name !== "" && (props.search == ""  || (data.name.toLowerCase().includes(props.search.toLowerCase()) || data.type.toLowerCase().includes(props.search.toLowerCase())  || data.owner_id.toLowerCase().includes(props.search.toLowerCase())))) return data })
     
     if(pathEnd == "/"){
         localStorage.removeItem('nodeId', 'nodeSize','nodeType')
+  if(Object.values(files).length > 0 && searchResults.length > 0)
     return (
         <FuseAnimate animation="transition.slideUpIn" delay={300}>
             <Table>
-
                 <TableHead>
                     <TableRow>
                         <TableCell className="max-w-64 w-64 p-0 text-center"> </TableCell>
@@ -115,8 +118,7 @@ function FileList(props)
                 </TableHead>
 
                 <TableBody>
-                    {Object.values(files).filter((data)=>{
-                        if(data.name !== "" && (props.search == ""  || (data.name.toLowerCase().includes(props.search.toLowerCase()) || data.type.toLowerCase().includes(props.search.toLowerCase())  || data.owner_id.toLowerCase().includes(props.search.toLowerCase())))) return data }).map((node)=>{
+                    {searchResults.map((node)=>{
                             return(
                             <TableRow
                                 key={node.id}
@@ -146,11 +148,26 @@ function FileList(props)
                                 </Hidden>
                             </TableRow>
                         );
+
                     })}
                 </TableBody>
             </Table>
         </FuseAnimate>
     );
+    else if(Object.values(files).length == 0)
+        return (
+            <div className="flex flex-1 flex-col items-center justify-center mt-40">
+             <Typography className="text-18 mt-16" color="textSecondary">This folder is empty.</Typography>
+            </div>
+           )
+
+     else if(searchResults.length  == 0)
+        return (
+            <div className="flex flex-1 flex-col items-center justify-center mt-40">
+             <Typography className="text-18 mt-16" color="textSecondary">No match found for "{props.search}". Please try finding something else.</Typography>
+            </div>
+           )
+           
   
 }
     else{

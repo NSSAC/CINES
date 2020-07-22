@@ -105,9 +105,11 @@ function FileManagerApp(props){
                                                     onChange={(event)=>setSearch(event.target.value)}
                                                     autoFocus
                                                 />
-                                                <IconButton onClick={hideSearch} className="mx-8">
-                                                    <Icon>close</Icon>
-                                                </IconButton>
+                                                    <Tooltip title="Click to search" placement="bottom">
+                                                            <IconButton onClick={hideSearch} className="mx-8" label="Click here to hide the search box">
+                                                                <Icon>close</Icon>
+                                                            </IconButton>
+                                                    </Tooltip>
                                             </div>
                                         </div>
                                     </ClickAwayListener>
