@@ -6,7 +6,7 @@ import { Vega } from 'react-vega';
 // import { Document, Page } from 'react-pdf';
 
 var token=localStorage.getItem('id_token')
-
+// localStorage.setItem('showPreview', false)
  function Preview(props){
     const [data, setData] = useState("");
     const [load, setLoad] = useState(false);
@@ -64,7 +64,7 @@ var token=localStorage.getItem('id_token')
         if(props.size > 3200000)
      return( 
             <div className="flex flex-1 flex-col items-center justify-center">
-              <Typography className="text-20 mt-16" color="textSecondary">The file is not available for preview because it is very large in size</Typography>
+              <Typography className="text-20 mt-16" color="textSecondary">The file size is too large and is not available for preview.</Typography>
             </div>
            );
         else

@@ -19,9 +19,15 @@ function FileManagerApp(props){
 
     const [searchbool, setSearchbool] = useState(false);
     const [search, setSearch] = useState("");
+    const [preview, setPreview] = useState(true);
+
     var path = window.location.pathname
     var pathEnd=path.charAt(path.length-1)
-    const width = window.innerWidth >= 767
+
+    const style={
+        width : "100%",
+        flexWrap : "wrap"
+    }
 
     function showSearch()
     {
@@ -65,12 +71,12 @@ function FileManagerApp(props){
         
             classes={{
                 root         : "bg-red",
-                header       : "h-96 min-h-96 sm:h-160 sm:min-h-160",
+                header       : "h-auto min-h-auto sm:h-160 sm:min-h-160",
                 sidebarHeader: "h-96 min-h-96 sm:h-160 sm:min-h-160",
                 rightSidebar : "w-320"
             }}
             header={  
-                 <div className="flex flex-col flex-1 p-8 sm:p-12 relative">
+                 <div className="flex flex-col flex-1 p-8 sm:p-12 relative" style={{width: '100%'}} >
                     <div className="flex items-center justify-between">
                         <div style={{minWidth: '40%'}}>
                             <div className="flex flex-1 items-center justify-between ">
@@ -84,8 +90,9 @@ function FileManagerApp(props){
                               </div>
                             </div>
                         </div>
-                    <FuseAnimate animation="transition.expandIn" delay={200}>
-                      <span  >
+                     {preview && (
+                      <FuseAnimate animation="transition.expandIn" delay={200}>
+                         <span>
                             <div className={clsx( "flex", props.className)}>
                                 <Tooltip title="Click to search" placement="bottom">
                                     <div onClick={showSearch}>
@@ -105,8 +112,8 @@ function FileManagerApp(props){
                                                     onChange={(event)=>setSearch(event.target.value)}
                                                     autoFocus
                                                 />
-                                                    <Tooltip title="Click to search" placement="bottom">
-                                                            <IconButton onClick={hideSearch} className="mx-8" label="Click here to hide the search box">
+                                                    <Tooltip title="Click to hide the search box" placement="bottom">
+                                                            <IconButton onClick={hideSearch} className="mx-8" >
                                                                 <Icon>close</Icon>
                                                             </IconButton>
                                                     </Tooltip>
@@ -115,12 +122,13 @@ function FileManagerApp(props){
                                     </ClickAwayListener>
                                 )}
                             </div>
-                      </span>
+                      </span> 
                     </FuseAnimate>
+                    )}
                 </div>
                 <div className="flex flex-1 items-end">
                     <FuseAnimate animation="transition.expandIn" delay={600}>
-                            <Fab color="secondary" aria-label="add" className="absolute bottom-0 left-0 ml-16 -mb-28 z-999">
+                            <Fab color="secondary" aria-label="add" size="medium" className="absolute bottom-0 left-0 ml-16 -mb-12 z-999">
                                 <Icon>add</Icon>
                             </Fab>
                         </FuseAnimate>
@@ -128,7 +136,7 @@ function FileManagerApp(props){
                             <div>
                                 { 
 
-                                    <Breadcrumb width={width} props={props} path={targetPath} className="flex flex-1 pl-72 text-16 sm:text-16"/>
+                                    <Breadcrumb props={props} path={targetPath} className="flex pl-72 text-16 sm:text-16" styles={style} />
                                 }
                             </div>
                         </FuseAnimate>
@@ -136,7 +144,7 @@ function FileManagerApp(props){
                 </div>
             }
             content={
-                <FileList pageLayout={pageLayout} search={search}/>
+                <FileList pageLayout={pageLayout} search={search} setPreview={(p)=>setPreview(p)}/>
             }
             leftSidebarVariant="temporary"
             leftSidebarHeader={

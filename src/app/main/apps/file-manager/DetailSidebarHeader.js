@@ -1,5 +1,5 @@
 import React from 'react';
-import {Icon, IconButton, Typography} from '@material-ui/core';
+import {Icon, IconButton, Typography, Tooltip} from '@material-ui/core';
 import {FuseAnimate} from '@fuse';
 import {useSelector} from 'react-redux';
 import moment from 'moment';
@@ -8,25 +8,28 @@ function DetailSidebarHeader(props)
 {
     const files = useSelector(({fileManagerApp}) => fileManagerApp.files);
     const selectedItem = useSelector(({fileManagerApp}) => files[fileManagerApp.selectedItemId]);
-
     if ( !selectedItem )
     {
         return null;
     }
-
+      
     return (
         <div className="flex flex-col justify-between h-full p-4 sm:p-12">
 
             <div className="toolbar flex align-center justify-end">
                 <FuseAnimate animation="transition.expandIn" delay={200}>
+                  <Tooltip title="Click to Delete" placement="bottom">
                     <IconButton>
                         <Icon>delete</Icon>
                     </IconButton>
+                  </Tooltip>
                 </FuseAnimate>
                 <FuseAnimate animation="transition.expandIn" delay={200}>
+                  <Tooltip title="Click to Download" placement="bottom">
                     <IconButton>
-                        <Icon>cloud_download</Icon>
+                     <Icon>cloud_download</Icon>
                     </IconButton>
+                 </Tooltip>
                 </FuseAnimate>
                
             </div>
