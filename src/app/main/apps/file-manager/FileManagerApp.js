@@ -71,8 +71,8 @@ function FileManagerApp(props){
         
             classes={{
                 root         : "bg-red",
-                header       : "h-auto min-h-auto sm:h-160 sm:min-h-160",
-                sidebarHeader: "h-96 min-h-96 sm:h-160 sm:min-h-160",
+                header       : "h-auto min-h-120 sm:h-auto sm:min-h-160",
+                sidebarHeader: "h-auto min-h-120 sm:h-auto sm:min-h-160",
                 rightSidebar : "w-320"
             }}
             header={  
