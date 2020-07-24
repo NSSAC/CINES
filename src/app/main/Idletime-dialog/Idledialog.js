@@ -26,7 +26,8 @@ export const IdleTimeOutDialog = ({showModal, handleClose, handleLogout, remaini
         <DialogTitle id="alert-dialog-slide-title">{"You Have Been Idle!"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
-          You Will Get Timed Out. You want to stay?.
+          You Will Get Logged Out. Do you want to stay?
+
           </DialogContentText>
         </DialogContent>
         <DialogActions>

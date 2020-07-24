@@ -50,7 +50,7 @@ class Auth extends Component {
 
                resolve();
 
-               this.props.showMessage({message: 'Logging in with Sciduct'});
+               //this.props.showMessage({message: 'Logging in with Sciduct'});
             })
         }
         else{
