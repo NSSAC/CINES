@@ -69,13 +69,23 @@ function FileList(props)
     const dispatch = useDispatch();
     const files = useSelector(({fileManagerApp}) => fileManagerApp.files);
     const selectedItemId = useSelector(({fileManagerApp}) => fileManagerApp.selectedItemId);
+    const selectedItem = useSelector(({fileManagerApp}) => files[fileManagerApp.selectedItemId]);
     const classes = useStyles();
     var path = window.location.pathname
     var pathEnd=path.charAt(path.length-1)
     const [click, setClick] = useState(false);
 
-    // if(Object.values(files).length > 0)
-    //     dispatch(Actions.setSelectedItem(Object.values(files)[0].id))
+    var searchResults = Object.values(files).filter((data)=>{
+        if(data.name !== "" && (props.search == ""  || (data.name.toLowerCase().includes(props.search.toLowerCase()) || data.type.toLowerCase().includes(props.search.toLowerCase())  || data.owner_id.toLowerCase().includes(props.search.toLowerCase())))) return data })
+  
+        if(pathEnd == "/"){
+            if(!selectedItem){
+             if(Object.values(files).length > 0  && (searchResults[0].id !== undefined)) {
+                dispatch(Actions.setSelectedItem(searchResults[0].id))
+              }
+              else return(null)
+            }
+         }
 
     const tableStyle={
         overflow: 'hidden',
@@ -92,7 +102,7 @@ function FileList(props)
                 setClick(true)
                 setTimeout(() => {
                    setClick(false)
-                }, 1000);
+                }, 1500);
                 if(node.type == "folder" || node.type == "epihiperOutput" || node.type == "epihiper_multicell_analysis"){
                   var target = window.location.pathname + evt.target.getAttribute("to") + "/";
                 }
@@ -109,9 +119,6 @@ function FileList(props)
         }
     }
         
-
-   var searchResults = Object.values(files).filter((data)=>{
-        if(data.name !== "" && (props.search == ""  || (data.name.toLowerCase().includes(props.search.toLowerCase()) || data.type.toLowerCase().includes(props.search.toLowerCase())  || data.owner_id.toLowerCase().includes(props.search.toLowerCase())))) return data })
     
     if(pathEnd == "/"){
         props.setPreview(true)

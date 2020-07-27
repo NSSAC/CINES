@@ -8,6 +8,8 @@ var token=localStorage.getItem('id_token')
  function Preview(props){
     const [data, setData] = useState("");
     const [load, setLoad] = useState(false);
+    const [error, setError] = useState(false);
+    const [errormsg, setErrormsg] = useState("");
 
         var axios = require('axios');
 
@@ -44,16 +46,32 @@ var token=localStorage.getItem('id_token')
      };
   }
 
+
   useEffect(() => {
      setTimeout(() => {
       async function insertData() {
         var request = axios(config)
-            await request.then((response) => {
+         await request
+        .then((response) => {
             setData(response.data)
             setLoad(true)
-            })} 
-          insertData()
-        }, 3000);
+            })
+        .catch(err => {
+          setError(true)
+          setLoad(true)
+        if (err.response.status === 403) {
+          setErrormsg('403-Forbidden')
+        }
+        else if (err.response.status === 404) {
+          setErrormsg('404-Not Found')
+        }
+        else
+          setErrormsg('An error occurred while loading file preview. Please click on file again to reload.')
+        });
+    
+      } 
+    insertData()
+   }, 3000);
   }, []);
 
   var extentionType = props.type;
@@ -62,17 +80,26 @@ var token=localStorage.getItem('id_token')
         if(props.size > 3200000)
      return( 
             <div className="flex flex-1 flex-col items-center justify-center">
-              <Typography className="text-20 mt-16" color="textSecondary">The file size is too large and is not available for preview.</Typography>
+              <Typography className="text-20 mt-16" color="textPrimary">The file size is too large and is not available for preview.</Typography>
             </div>
            );
-        else
+        else if(error == false)
       return( 
           <div className="flex flex-1 flex-col items-center justify-center mt-40">
-          <Typography className="text-20 mt-16" color="textSecondary">Loading Preview</Typography>
+          <Typography className="text-20 mt-16" color="textPrimary">Loading Preview</Typography>
           <LinearProgress className="w-xs" color="secondary"/>
         </div>
       );
     }
+
+     if(error == true && props.size < 3200000){
+          return (
+            <div className="flex flex-1 flex-col items-center justify-center">
+              <Typography className="text-20 mt-16" color="textPrimary">{errormsg}</Typography>
+            </div>
+          )
+        }
+
 
     else if (( extentionType === 'txt' ) && props.size <3200000) {
             return (data);
@@ -210,11 +237,11 @@ var token=localStorage.getItem('id_token')
           margin : "auto",
           marginTop : "20px"
         }
-         var imgData =Buffer.from(data, 'binary').toString('base64')
+     var imgData =Buffer.from(data, 'binary').toString('base64')
         if(window.innerWidth<768)
               return( 
-                  <img src={`data:image/png;base64,${imgData}`} width="100%" style = {styles}/>
-              );
+                <img src={`data:image/png;base64,${imgData}`} width="100%" style = {styles}/>
+                );
          else
               return( 
                 <img src={`data:image/png;base64,${imgData}`} width="50%" display="block" style = {styles}/>
@@ -254,19 +281,17 @@ var token=localStorage.getItem('id_token')
         );
      }
 
-   
-
    else if(props.size > 3200000)
      return( 
             <div className="flex flex-1 flex-col items-center justify-center">
-              <Typography className="text-20 mt-16" color="textSecondary">The file is not available for preview because it is very large in size</Typography>
+              <Typography className="text-20 mt-16" color="textPrimary">The file size is too large and is not available for preview.</Typography>
             </div>
            );
 
     else
      return (
              <div className="flex flex-1 flex-col items-center justify-center">
-              <Typography className="text-20 mt-16" color="textSecondary">The file format is is unsupported and not available for preview</Typography>
+              <Typography className="text-20 mt-16" color="textPrimary">The file format is unsupported and not available for preview.</Typography>
              </div>
             ) ;
 }
