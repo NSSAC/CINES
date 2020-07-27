@@ -9,7 +9,7 @@ function Breadcrumb({props,className, styles, path})
         textOverflow:'ellipsis',
         whiteSpace: 'nowrap',
         overflow: 'hidden',
-        maxWidth: '150px'
+        maxWidth: '170px'
     }
     
    function onclickRoute(path) {

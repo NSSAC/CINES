@@ -41,6 +41,14 @@ function DetailSidebarContent(props)
     const [selectedTab, setSelectedTab] = useState(0);
     const files = useSelector(({fileManagerApp}) => fileManagerApp.files);
     const selectedItem = useSelector(({fileManagerApp}) => files[fileManagerApp.selectedItemId]);
+
+    const tableStyle={
+        overflow: 'hidden',
+        maxWidth: '220px',
+        textOverflow: 'ellipsis',
+        display:'block',
+        whiteSpace: 'nowrap'
+    }
     
     if ( !selectedItem )
     {
@@ -118,7 +126,7 @@ function DetailSidebarContent(props)
 
                                 <tr className="MD5">
                                     <th>MD5</th>
-                                    <td title={selectedItem.hash}>{selectedItem.hash}</td>
+                <td> {<div style={tableStyle} title={selectedItem.hash}>{selectedItem.hash}</div>}</td>
                                 </tr>
                             </tbody>
                         </table>

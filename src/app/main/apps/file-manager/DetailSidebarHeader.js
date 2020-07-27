@@ -8,6 +8,15 @@ function DetailSidebarHeader(props)
 {
     const files = useSelector(({fileManagerApp}) => fileManagerApp.files);
     const selectedItem = useSelector(({fileManagerApp}) => files[fileManagerApp.selectedItemId]);
+
+    const tableStyle={
+        overflow: 'hidden',
+        maxWidth: '280px',
+        textOverflow: 'ellipsis',
+        display:'block',
+        whiteSpace: 'nowrap'
+    }
+
     if ( !selectedItem )
     {
         return null;
@@ -25,7 +34,7 @@ function DetailSidebarHeader(props)
                   </Tooltip>
                 </FuseAnimate>
                 <FuseAnimate animation="transition.expandIn" delay={200}>
-                  <Tooltip title="Click to Download" placement="bottom">
+                <Tooltip title="Click to Download" placement="bottom">
                     <IconButton>
                      <Icon>cloud_download</Icon>
                     </IconButton>
@@ -36,7 +45,8 @@ function DetailSidebarHeader(props)
 
             <div className="p-12">
                 <FuseAnimate delay={200}>
-                    <Typography variant="subtitle1" className="mb-8">{selectedItem.name}</Typography>
+                    <Typography variant="subtitle1" className="mb-8">
+                        <span style={tableStyle}>{selectedItem.name}</span></Typography>
                 </FuseAnimate>
                 <FuseAnimate delay={300}>
                     <Typography variant="caption" className="">

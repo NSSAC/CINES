@@ -74,6 +74,17 @@ function FileList(props)
     var pathEnd=path.charAt(path.length-1)
     const [click, setClick] = useState(false);
 
+    // if(Object.values(files).length > 0)
+    //     dispatch(Actions.setSelectedItem(Object.values(files)[0].id))
+
+    const tableStyle={
+        overflow: 'hidden',
+        maxWidth: '200px',
+        textOverflow: 'ellipsis',
+        display:'inline-block',
+        whiteSpace: 'nowrap'
+    }
+
     function onClickHandler(node,canLink){
         return function(evt){
             if(click == false)
@@ -97,6 +108,7 @@ function FileList(props)
             dispatch(Actions.setSelectedItem(node.id))
         }
     }
+        
 
    var searchResults = Object.values(files).filter((data)=>{
         if(data.name !== "" && (props.search == ""  || (data.name.toLowerCase().includes(props.search.toLowerCase()) || data.type.toLowerCase().includes(props.search.toLowerCase())  || data.owner_id.toLowerCase().includes(props.search.toLowerCase())))) return data })
@@ -133,7 +145,8 @@ function FileList(props)
                                         <TableCell className="max-w-64 w-64 p-0 text-center">
                                             <Icon className={clsx(classes.typeIcon, node.type)}/>
                                         </TableCell>
-                                        <TableCell>{<Link to={node.name}>{node.name}</Link>}</TableCell>
+                                        <TableCell >{window.innerWidth<1224?<Link style={tableStyle} title={node.name} to={node.name}>{node.name}</Link>:
+                                                                            <Link title={node.name} to={node.name}>{node.name}</Link>}</TableCell>
                                         <TableCell className="hidden sm:table-cell">{node.type}</TableCell>
                                         <TableCell className="hidden sm:table-cell">{node.owner_id}</TableCell>
                                         <TableCell className="text-center hidden sm:table-cell">{(!node.size && (node.size!==0))? '-' : filesize(node.size)}</TableCell>

@@ -3,10 +3,8 @@ import {Typography, LinearProgress, TableRow, Table, TableCell, TableHead, Table
 import JSONTree from 'react-json-tree'
 import { FuseAnimate } from '@fuse';
 import { Vega } from 'react-vega';
-// import { Document, Page } from 'react-pdf';
 
 var token=localStorage.getItem('id_token')
-// localStorage.setItem('showPreview', false)
  function Preview(props){
     const [data, setData] = useState("");
     const [load, setLoad] = useState(false);
@@ -103,7 +101,7 @@ var token=localStorage.getItem('id_token')
         var outputData = lines;
       }
         return(
-       <div>
+       <div style={{overflow:'auto'}}>
         <JSONTree data={JSON.parse(allTextLines[0])} hideRoot={true} theme={{
           tree: {
             backgroundColor: '#F7F7F7'
@@ -152,7 +150,8 @@ var token=localStorage.getItem('id_token')
         }
         var outputData = lines;
       }
-           return(
+       return(
+        <div style={{overflow:'auto'}}>
           <FuseAnimate>
           <Table>
             <TableHead>
@@ -170,6 +169,7 @@ var token=localStorage.getItem('id_token')
             </TableBody>
         </Table>
      </FuseAnimate>
+   </div>
         );
     }
     
@@ -193,11 +193,14 @@ var token=localStorage.getItem('id_token')
         margin : "auto",
         marginTop:"20px",
         width:"max-content",
-        display:"block"
+        display:"block",
+        overflow:'auto'
      }
      return(
-       <div style={style}>
-            <Vega spec={data} data={data.datasets} />
+      <div style={{overflow:'auto'}}>
+          <div style={style}>
+                <Vega spec={data} data={data.datasets} />
+          </div>
        </div>
      );
     }
@@ -207,7 +210,7 @@ var token=localStorage.getItem('id_token')
           margin : "auto",
           marginTop : "20px"
         }
-        var imgData =Buffer.from(data, 'binary').toString('base64')
+         var imgData =Buffer.from(data, 'binary').toString('base64')
         if(window.innerWidth<768)
               return( 
                   <img src={`data:image/png;base64,${imgData}`} width="100%" style = {styles}/>
