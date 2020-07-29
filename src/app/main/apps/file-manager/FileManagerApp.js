@@ -38,6 +38,7 @@ function FileManagerApp(props){
     function hideSearch()
     {
         setSearchbool(false);
+        setSearch("");
         document.removeEventListener("keydown", escFunction, false);
     }
 
@@ -112,7 +113,7 @@ function FileManagerApp(props){
                                                     onChange={(event)=>setSearch(event.target.value)}
                                                     autoFocus
                                                 />
-                                                    <Tooltip title="Click to hide the search box" placement="bottom">
+                                                    <Tooltip title="Click to clear and hide the search box" placement="bottom">
                                                             <IconButton onClick={hideSearch} className="mx-8" >
                                                                 <Icon>close</Icon>
                                                             </IconButton>
