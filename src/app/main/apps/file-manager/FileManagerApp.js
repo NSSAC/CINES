@@ -38,7 +38,7 @@ function FileManagerApp(props){
     function hideSearch()
     {
         setSearchbool(false);
-        setSearch("");
+            setSearch(""); 
         document.removeEventListener("keydown", escFunction, false);
     }
 
@@ -52,7 +52,11 @@ function FileManagerApp(props){
 
     function handleClickAway()
     {
-        hideSearch();
+        setSearchbool(false);
+        // setTimeout(() => {
+        //     setSearch(""); 
+        // }, 6000);
+        document.removeEventListener("keydown", escFunction, false);
     }
     
     const dispatch = useDispatch();
@@ -60,10 +64,14 @@ function FileManagerApp(props){
     const selectedItem = useSelector(({fileManagerApp}) => files[fileManagerApp.selectedItemId]);
     const pageLayout = useRef(null);
     var targetPath = props.location.pathname.replace("/apps/files","")
+    var path = window.location.pathname
+    var pathEnd=path.charAt(path.length-1)
 
     useEffect(() => {
         //FIXME: Figure out how to get the routes base path.
+        if(pathEnd === "/"){
         dispatch(Actions.getFiles(targetPath));
+       }
         setSearch("")
     }, [dispatch,props,props.location, props.history]);
 
@@ -105,7 +113,7 @@ function FileManagerApp(props){
                                             <div className="flex items-end ">
                                                 <Input
                                                     placeholder="&nbsp;Search"
-                                                    className="flex flex-1"
+                                                    className="flex flex-1 mb-8"
                                                     value={search}
                                                     inputProps={{
                                                         'aria-label': 'Search'
@@ -114,7 +122,7 @@ function FileManagerApp(props){
                                                     autoFocus
                                                 />
                                                     <Tooltip title="Click to clear and hide the search box" placement="bottom">
-                                                            <IconButton onClick={hideSearch} className="mx-8" >
+                                                            <IconButton onClick={hideSearch} className="mx-8 mt-8" >
                                                                 <Icon>close</Icon>
                                                             </IconButton>
                                                     </Tooltip>

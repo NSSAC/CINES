@@ -83,7 +83,6 @@ function FileList(props)
              if(Object.values(files).length > 0  && (searchResults[0].id !== undefined)) {
                 dispatch(Actions.setSelectedItem(searchResults[0].id))
               }
-              else return(null)
             }
          }
 
@@ -178,16 +177,16 @@ function FileList(props)
             );
             else if(Object.values(files).length == 0){              
                         return (
-                            <div className="flex flex-1 flex-col items-center justify-center mt-40">
-                            <Typography className="text-18 mt-16" color="textSecondary">This folder is empty.</Typography>
+                            <div className="flex flex-1 flex-col items-center justify-center mt-20">
+                            <Typography className="text-18 mt-16" color="textPrimary">This folder is empty.</Typography>
                             </div>
                         )             
             }
                
             else if(searchResults.length  == 0)
                 return (
-                    <div className="flex flex-1 flex-col items-center justify-center mt-40">
-                    <Typography className="text-18 mt-16" color="textSecondary">No match found for "{props.search}". Please try finding something else.</Typography>
+                    <div className="flex flex-1 flex-col items-center justify-center mt-20">
+                    <Typography className="text-18 mt-16" color="textPrimary">No match found for "{props.search}". Please try finding something else.</Typography>
                     </div>
                 )
            
@@ -204,7 +203,7 @@ function FileList(props)
       )
      else  return (
         <div className="flex flex-1 flex-col items-center justify-center">
-         <Typography className="text-20 mt-16" color="textSecondary">No such file exists</Typography>
+         <Typography className="text-20 mt-16" color="textPrimary">No such file exists</Typography>
         </div>
        )
     }
