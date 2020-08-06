@@ -9,7 +9,8 @@ import { withRouter } from 'react-router-dom';
 import moment from 'moment';
 import filesize from 'filesize';
 import Preview from './Preview'
-
+import instance from 'app/services/sciductService/sciductService.js'
+import { FormatAlignLeftSharp } from '@material-ui/icons';
 
 const useStyles = makeStyles({
     typeIcon: {
@@ -73,8 +74,8 @@ function FileList(props)
     const classes = useStyles();
     var path = window.location.pathname
     var pathEnd=path.charAt(path.length-1)
-    const [click, setClick] = useState(false);
-
+    var token=localStorage.getItem('id_token')
+    const [click, setClick] = useState(false)
     var searchResults = Object.values(files).filter((data)=>{
         if(data.name !== "" && (props.search == ""  || (data.name.toLowerCase().includes(props.search.toLowerCase()) || data.type.toLowerCase().includes(props.search.toLowerCase())  || data.owner_id.toLowerCase().includes(props.search.toLowerCase())))) return data })
   
@@ -85,6 +86,7 @@ function FileList(props)
               }
             }
          }
+
 
     const tableStyle={
         overflow: 'hidden',
@@ -111,7 +113,38 @@ function FileList(props)
                   localStorage.setItem('nodeType',node.type)
                   localStorage.setItem('nodeId',node.id)
                   localStorage.setItem('nodeSize',node.size)
+          
+                   if(token !==null){
+                       var canRead = false;
+                     for(var team in instance.getTokenData().teams){
+                         for(var readRights in node.readACL){
+                             if(team === readRights){
+                                canRead = true;
+                                localStorage.setItem('readPermission',true)
+                                break;
+                             }  
+                         }
+                         for(var writeRights in node.writeACL){
+                            if(team === writeRights){
+                                canRead = true;
+                                localStorage.setItem('readPermission',true)
+                                   break;
+                            } 
+                         }
+                     }
+                   if(instance.getTokenData().sub === node.owner_id){
+                       canRead = true;
+                       localStorage.setItem('readPermission',true)
+                    }
+                   if(canRead === false){
+                        localStorage.setItem('readPermission',false)
+                    } 
+                  }
+                  else{
+                    localStorage.setItem('readPermission',false)
+                  }
                 }
+                 
                props.history.push(target)
             }
             dispatch(Actions.setSelectedItem(node.id))
@@ -196,10 +229,11 @@ function FileList(props)
     var type = localStorage.getItem('nodeType')
     var id = localStorage.getItem('nodeId')
     var size = localStorage.getItem('nodeSize')
+    var readPermission = localStorage.getItem('readPermission')
     props.setPreview(false)
     if(id !== null)
       return (
-          <Preview type={type} fileId={id} size={size} ></Preview>
+          <Preview type={type} fileId={id} size={size} perm={readPermission}  ></Preview>
       )
      else  return (
         <div className="flex flex-1 flex-col items-center justify-center">

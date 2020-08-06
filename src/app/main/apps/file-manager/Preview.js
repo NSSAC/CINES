@@ -4,16 +4,17 @@ import JSONTree from 'react-json-tree'
 import { FuseAnimate } from '@fuse';
 import { Vega } from 'react-vega';
 
-var token=localStorage.getItem('id_token')
  function Preview(props){
+    var extentionType = props.type;
     const [data, setData] = useState("");
     const [load, setLoad] = useState(false);
     const [error, setError] = useState(false);
     const [errormsg, setErrormsg] = useState("");
+    var token=localStorage.getItem('id_token')
 
         var axios = require('axios');
 
-        if(typeof(token) == "string" && (props.type == "png" || props.type == "jpeg" || props.type == "jpg" || props.type == "excel" || props.type == "mp3" || props.type == "mp4")) {
+        if(typeof(token) == "string" && (props.type == "pdf" || props.type == "png" || props.type == "jpeg" || props.type == "jpg" || props.type == "excel" || props.type == "mp3" || props.type == "mp4")) {
           var config = {
             method: 'get',
             url: `https://sciduct.bii.virginia.edu/filesvc/file/${props.fileId}`,
@@ -46,71 +47,73 @@ var token=localStorage.getItem('id_token')
      };
   }
 
-
   useEffect(() => {
      setTimeout(() => {
       async function insertData() {
         var request = axios(config)
-         await request
-        .then((response) => {
-            setData(response.data)
-            setLoad(true)
-            })
-        .catch(err => {
-          setError(true)
-          setLoad(true)
-        if (err.response.status === 403) {
-          setErrormsg('403-Forbidden')
-        }
-        else if (err.response.status === 404) {
-          setErrormsg('404-Not Found')
-        }
-        else
-          setErrormsg('An error occurred while loading file preview. Please click on file again to reload.')
-        });
-    
+         await request.then((response) => {
+              setData(response.data)
+              setLoad(true)
+         }).catch(err => {
+              setError(true)
+              setLoad(true)
+              if (err.response.status === 403) {
+                setErrormsg('You do not have permissions to preview this file.')
+              }
+              else if (err.response.status === 404) {
+                setErrormsg('File not found.')
+              }
+              else
+                setErrormsg('An error occurred while loading file preview. Please click on file again to reload.')
+          });
       } 
-    insertData()
-   }, 3000);
+      if(props.size <= 3200000 && props.perm === "true")
+        insertData()
+      else{
+        setLoad(true)
+       }
+    }, 2000);
   }, []);
 
-  var extentionType = props.type;
+  if(load == false)
+        return( 
+            <div className="flex flex-1 flex-col items-center justify-center mt-40">
+            <Typography className="text-20 mt-16" color="textPrimary">Loading Preview</Typography>
+            <LinearProgress className="w-xs" color="secondary"/>
+          </div>
+        );
 
-  if(load == false){
-        if(props.size > 3200000)
-     return( 
-            <div className="flex flex-1 flex-col items-center justify-center">
-              <Typography className="text-20 mt-16" color="textPrimary">The file size is too large and is not available for preview.</Typography>
-            </div>
-           );
-        else if(error == false)
+  if(props.perm === "false")
       return( 
-          <div className="flex flex-1 flex-col items-center justify-center mt-40">
-          <Typography className="text-20 mt-16" color="textPrimary">Loading Preview</Typography>
-          <LinearProgress className="w-xs" color="secondary"/>
+        <div className="flex flex-1 flex-col items-center justify-center">
+          <Typography className="text-20 mt-16" color="textPrimary">You do not have enough permissions to preview this file.</Typography>
         </div>
+       );
+      
+    else if(error == true)
+      return (
+             <div className="flex flex-1 flex-col items-center justify-center">
+               <Typography className="text-20 mt-16" color="textPrimary">{errormsg}</Typography>
+             </div>
       );
-    }
 
-     if(error == true && props.size < 3200000){
-          return (
-            <div className="flex flex-1 flex-col items-center justify-center">
-              <Typography className="text-20 mt-16" color="textPrimary">{errormsg}</Typography>
-            </div>
-          )
-        }
+    else if(props.size > 3200000)
+      return( 
+             <div className="flex flex-1 flex-col items-center justify-center">
+               <Typography className="text-20 mt-16" color="textPrimary">The file size is too large and is not available for preview.</Typography>
+             </div>
+      );
 
-
-    else if (( extentionType === 'txt' ) && props.size <3200000) {
-            return (data);
-    } 
-
-    else if (( extentionType === 'pdf') && props.size <3200000) {
-          return (<iframe width="100%" height="400" src={`data:application/pdf&embedded=true,${data}`}>  </iframe>
+    else if (( extentionType === 'txt' )) 
+      return (data);
+       
+    else if (( extentionType === 'pdf')) {
+      var pdfData =Buffer.from(data, 'binary').toString('base64')
+          return (<iframe width="100%" height="400" src={`data:application/pdf;base64,${pdfData}`}>  </iframe>
         );
     } 
 
-    else if ((extentionType === 'population+text' || extentionType === 'population_network+text') && props.size <3200000){
+    else if ((extentionType === 'population+text' || extentionType === 'population_network+text')){
       var allTextLines = data.split(/\r\n|\n/);
       var headers = allTextLines[1].split(',');
       var lines = [];
@@ -158,9 +161,9 @@ var token=localStorage.getItem('id_token')
       </FuseAnimate>
     </div>
     );
-}
+  }
 
-    else if((extentionType === 'csv' ) && props.size <3200000) {
+  else if((extentionType === 'csv' )) {
       var allTextLines = data.split(/\r\n|\n/);
       var headers = allTextLines[0].split(',');
       var lines = [];
@@ -194,14 +197,13 @@ var token=localStorage.getItem('id_token')
                        </TableRow> 
                      )})}   
             </TableBody>
-        </Table>
-     </FuseAnimate>
-   </div>
-        );
+          </Table>
+         </FuseAnimate>
+       </div>
+      );
     }
-    
-
-   else if ((extentionType === 'json'  || extentionType === 'geographical_region'  ||  extentionType === 'epihiperDiseaseModel' || extentionType === 'epihiperInitialization' || extentionType === 'epihiperIntervention'  || extentionType === 'epihiperTraits' ) && props.size <3200000){
+  
+    else if ((extentionType === 'json'  || extentionType === 'geographical_region'  ||  extentionType === 'epihiperDiseaseModel' || extentionType === 'epihiperInitialization' || extentionType === 'epihiperIntervention'  || extentionType === 'epihiperTraits' )){
       return (
       <JSONTree data={data} hideRoot={true} theme={{
         tree: {
@@ -232,7 +234,7 @@ var token=localStorage.getItem('id_token')
      );
     }
 
-   else if((extentionType === 'png'  ||  extentionType === 'jpg' || extentionType === 'jpeg') && props.size <3200000){
+   else if((extentionType === 'png'  ||  extentionType === 'jpg' || extentionType === 'jpeg')){
         const styles ={
           margin : "auto",
           marginTop : "20px"
@@ -248,7 +250,7 @@ var token=localStorage.getItem('id_token')
           );
     }
 
-   else if((extentionType === 'mp4') && props.size <3200000){
+   else if((extentionType === 'mp4')){
        const styles ={
         margin : "auto",
         marginTop : "20px"
@@ -268,7 +270,7 @@ var token=localStorage.getItem('id_token')
           );
       }
 
-     else if((extentionType === 'mp3') && props.size <3200000){
+     else if((extentionType === 'mp3')){
           const styles ={
             margin : "auto",
             marginTop : "70px"
@@ -281,19 +283,12 @@ var token=localStorage.getItem('id_token')
         );
      }
 
-   else if(props.size > 3200000)
-     return( 
-            <div className="flex flex-1 flex-col items-center justify-center">
-              <Typography className="text-20 mt-16" color="textPrimary">The file size is too large and is not available for preview.</Typography>
-            </div>
-           );
-
     else
      return (
-             <div className="flex flex-1 flex-col items-center justify-center">
-              <Typography className="text-20 mt-16" color="textPrimary">The file format is unsupported and not available for preview.</Typography>
-             </div>
-            ) ;
+        <div className="flex flex-1 flex-col items-center justify-center">
+          <Typography className="text-20 mt-16" color="textPrimary">The file format is unsupported and not available for preview.</Typography>
+        </div>
+     ) ;
 }
 
 export default Preview;
