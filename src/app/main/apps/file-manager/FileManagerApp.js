@@ -20,7 +20,6 @@ function FileManagerApp(props){
     const [searchbool, setSearchbool] = useState(false);
     const [search, setSearch] = useState("");
     const [preview, setPreview] = useState(true);
-
     var path = window.location.pathname
     var pathEnd=path.charAt(path.length-1)
 
@@ -38,7 +37,7 @@ function FileManagerApp(props){
     function hideSearch()
     {
         setSearchbool(false);
-            setSearch(""); 
+        setSearch(""); 
         document.removeEventListener("keydown", escFunction, false);
     }
 
@@ -53,9 +52,6 @@ function FileManagerApp(props){
     function handleClickAway()
     {
         setSearchbool(false);
-        // setTimeout(() => {
-        //     setSearch(""); 
-        // }, 6000);
         document.removeEventListener("keydown", escFunction, false);
     }
     
@@ -66,11 +62,13 @@ function FileManagerApp(props){
     var targetPath = props.location.pathname.replace("/apps/files","")
     var path = window.location.pathname
     var pathEnd=path.charAt(path.length-1)
+    var targetMeta = ""
+    if(pathEnd === '/')
+     targetMeta = targetPath.slice(0, -1)
 
     useEffect(() => {
-        //FIXME: Figure out how to get the routes base path.
         if(pathEnd === "/"){
-        dispatch(Actions.getFiles(targetPath));
+        dispatch(Actions.getFiles(targetPath, 'GET_FILES'));
        }
         setSearch("")
     }, [dispatch,props,props.location, props.history]);

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import {Typography, LinearProgress, TableRow, Table, TableCell, TableHead, TableBody} from '@material-ui/core';
 import JSONTree from 'react-json-tree'
 import { FuseAnimate } from '@fuse';
@@ -14,7 +14,7 @@ import { Vega } from 'react-vega';
 
         var axios = require('axios');
 
-        if(typeof(token) == "string" && (props.type == "pdf" || props.type == "png" || props.type == "jpeg" || props.type == "jpg" || props.type == "excel" || props.type == "mp3" || props.type == "mp4")) {
+        if(typeof(token) === "string" && (props.type === "pdf" || props.type === "png" || props.type === "jpeg" || props.type === "jpg" || props.type === "excel" || props.type === "mp3" || props.type === "mp4")) {
           var config = {
             method: 'get',
             url: `https://sciduct.bii.virginia.edu/filesvc/file/${props.fileId}`,
@@ -75,7 +75,7 @@ import { Vega } from 'react-vega';
     }, 2000);
   }, []);
 
-  if(load == false)
+  if(load === false)
         return( 
             <div className="flex flex-1 flex-col items-center justify-center mt-40">
             <Typography className="text-20 mt-16" color="textPrimary">Loading Preview</Typography>
@@ -90,7 +90,7 @@ import { Vega } from 'react-vega';
         </div>
        );
       
-    else if(error == true)
+    else if(error === true)
       return (
              <div className="flex flex-1 flex-col items-center justify-center">
                <Typography className="text-20 mt-16" color="textPrimary">{errormsg}</Typography>
@@ -120,7 +120,7 @@ import { Vega } from 'react-vega';
   
       for (var i = 2; i < allTextLines.length; i++) {
         var dataCsv = allTextLines[i].split(',');
-        if (dataCsv.length == headers.length) {
+        if (dataCsv.length === headers.length) {
   
           var tarr = [];
           for (var j = 0; j < headers.length; j++) {
@@ -170,7 +170,7 @@ import { Vega } from 'react-vega';
   
       for (var i = 1; i < allTextLines.length; i++) {
         var dataCsv = allTextLines[i].split(',');
-        if (dataCsv.length == headers.length) {
+        if (dataCsv.length === headers.length) {
   
           var tarr = [];
           for (var j = 0; j < headers.length; j++) {

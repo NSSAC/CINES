@@ -1,13 +1,26 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {Icon, IconButton, Typography, Tooltip} from '@material-ui/core';
 import {FuseAnimate} from '@fuse';
 import {useSelector} from 'react-redux';
 import moment from 'moment';
+import Download from './Download'
+import DeleteFile from './DeleteFile'
+import 'react-responsive-modal/styles.css';
+import instance from  'app/services/sciductService/sciductService.js'
+import { confirmAlert } from 'react-confirm-alert'; 
+import './DeleteFile.css' 
+
 
 function DetailSidebarHeader(props)
 {
     const files = useSelector(({fileManagerApp}) => fileManagerApp.files);
     const selectedItem = useSelector(({fileManagerApp}) => files[fileManagerApp.selectedItemId]);
+    var token=localStorage.getItem('id_token')
+    const [download, setDownload] = useState(false);
+    const [deleteFile, setDeleteFile] = useState(false);
+    var canRead = false;
+    var canDelete = false;
+    var isFile=true
 
     const tableStyle={
         overflow: 'hidden',
@@ -21,26 +34,69 @@ function DetailSidebarHeader(props)
     {
         return null;
     }
-      
+
+    if(selectedItem.type === "folder" || selectedItem.type === "epihiperOutput" || selectedItem.type === "epihiper_multicell_analysis"){ 
+          isFile = false;
+       } 
+
+    function OnDelete() {
+        confirmAlert({
+          title: 'Confirm',
+          message: 'Are you sure you want to delete ' + `'${selectedItem.name}'` + '?',
+          buttons: [
+            {
+              label: 'Yes',
+              onClick: ()=> setDeleteFile(true)
+            },
+            {
+              label: 'No',
+              onClick: (null)
+            }
+          ],
+          closeOnClickOutside: false
+        })
+      };
+
+     if(token !==null){
+        for(var team in instance.getTokenData().teams){
+            for(var readRights in selectedItem.readACL){
+                if(team === readRights){
+                   canRead = true
+                   break;
+                }
+            }
+            for(var readRights in selectedItem.writeACL){
+                if(team === readRights){
+                       canRead = true
+                       break;
+                }
+            }
+        }
+        if(instance.getTokenData().sub === selectedItem.owner_id){
+                canRead = true;
+                canDelete = true;
+         }      
+    }
+    
     return (
         <div className="flex flex-col justify-between h-full p-4 sm:p-12">
-
             <div className="toolbar flex align-center justify-end">
-                <FuseAnimate animation="transition.expandIn" delay={200}>
+               {canDelete && <FuseAnimate animation="transition.expandIn" delay={200}>
                   <Tooltip title="Click to Delete" placement="bottom">
-                    <IconButton>
-                        <Icon>delete</Icon>
+                    <IconButton onClick={()=>OnDelete()}>
+                        <Icon >delete</Icon>
+                        { deleteFile?<DeleteFile setDeleteFile={(p)=>setDeleteFile(p)} name={selectedItem.name} size={selectedItem.size} fileId={selectedItem.id} type={selectedItem.type}></DeleteFile>:null}
                     </IconButton>
                   </Tooltip>
-                </FuseAnimate>
-                <FuseAnimate animation="transition.expandIn" delay={200}>
-                <Tooltip title="Click to Download" placement="bottom">
-                    <IconButton>
+                </FuseAnimate>}
+                {isFile && canRead && <FuseAnimate animation="transition.expandIn" delay={200}>
+                  <Tooltip title="Click to Download" placement="bottom">
+                    <IconButton onClick={()=>setDownload(true)}>
                      <Icon>cloud_download</Icon>
+                     { download?<Download setDownload={(p)=>setDownload(p)} name={selectedItem.name} size={selectedItem.size} fileId={selectedItem.id} type={selectedItem.type}></Download>:null}
                     </IconButton>
                  </Tooltip>
-                </FuseAnimate>
-               
+                </FuseAnimate>}
             </div>
 
             <div className="p-12">

@@ -1,6 +1,8 @@
 export const GET_FILES = 'GET_FILES';
+export const DELETE_FILE = 'DELETE_FILE';
+
 var token=localStorage.getItem('id_token')
-export function getFiles(path)
+export function getFiles(path, type, id)
 {
             
         var axios = require('axios');
@@ -30,8 +32,9 @@ export function getFiles(path)
     return (dispatch) =>
         request.then((response) =>
             dispatch({
-                type   : GET_FILES,
-                payload: response.data
+                type   : type,
+                payload: response.data,
+                delete_id: id
             })
         );
 

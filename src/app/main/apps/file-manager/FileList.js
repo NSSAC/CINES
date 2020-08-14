@@ -10,7 +10,6 @@ import moment from 'moment';
 import filesize from 'filesize';
 import Preview from './Preview'
 import instance from 'app/services/sciductService/sciductService.js'
-import { FormatAlignLeftSharp } from '@material-ui/icons';
 
 const useStyles = makeStyles({
     typeIcon: {
@@ -76,10 +75,11 @@ function FileList(props)
     var pathEnd=path.charAt(path.length-1)
     var token=localStorage.getItem('id_token')
     const [click, setClick] = useState(false)
+    
     var searchResults = Object.values(files).filter((data)=>{
-        if(data.name !== "" && (props.search == ""  || (data.name.toLowerCase().includes(props.search.toLowerCase()) || data.type.toLowerCase().includes(props.search.toLowerCase())  || data.owner_id.toLowerCase().includes(props.search.toLowerCase())))) return data })
+        if(data.name !== "" && (props.search === ""  || (data.name.toLowerCase().includes(props.search.toLowerCase()) || data.type.toLowerCase().includes(props.search.toLowerCase())  || data.owner_id.toLowerCase().includes(props.search.toLowerCase())))) return data })
   
-        if(pathEnd == "/"){
+        if(pathEnd === "/"){
             if(!selectedItem){
              if(Object.values(files).length > 0  && (searchResults[0].id !== undefined)) {
                 dispatch(Actions.setSelectedItem(searchResults[0].id))
@@ -98,13 +98,13 @@ function FileList(props)
 
     function onClickHandler(node,canLink){
         return function(evt){
-            if(click == false)
+            if(click === false)
             if (evt.target && evt.target.getAttribute("to") ){
                 setClick(true)
                 setTimeout(() => {
                    setClick(false)
                 }, 1500);
-                if(node.type == "folder" || node.type == "epihiperOutput" || node.type == "epihiper_multicell_analysis"){
+                if(node.type === "folder" || node.type === "epihiperOutput" || node.type === "epihiper_multicell_analysis"){
                   var target = window.location.pathname + evt.target.getAttribute("to") + "/";
                 }
                 else{
@@ -152,7 +152,7 @@ function FileList(props)
     }
         
     
-    if(pathEnd == "/"){
+    if(pathEnd === "/"){
         props.setPreview(true)
         localStorage.removeItem('nodeId', 'nodeSize','nodeType')
         if(Object.values(files).length > 0 && searchResults.length > 0)
@@ -208,7 +208,7 @@ function FileList(props)
                     </Table>
                 </FuseAnimate>
             );
-            else if(Object.values(files).length == 0){              
+            else if(Object.values(files).length === 0){              
                         return (
                             <div className="flex flex-1 flex-col items-center justify-center mt-20">
                             <Typography className="text-18 mt-16" color="textPrimary">This folder is empty.</Typography>
@@ -216,7 +216,7 @@ function FileList(props)
                         )             
             }
                
-            else if(searchResults.length  == 0)
+            else if(searchResults.length  === 0)
                 return (
                     <div className="flex flex-1 flex-col items-center justify-center mt-20">
                     <Typography className="text-18 mt-16" color="textPrimary">No match found for "{props.search}". Please try finding something else.</Typography>
