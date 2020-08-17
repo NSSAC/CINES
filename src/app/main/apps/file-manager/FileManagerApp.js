@@ -13,6 +13,7 @@ import MainSidebarContent from './MainSidebarContent';
 import Breadcrumb from './Breadcrumb';
 import { useState } from 'react';
 import clsx from 'clsx';
+import {FileUpload} from 'app/main/apps/file-manager/FileUpload/FileUploadDialog';
 
 
 function FileManagerApp(props){
@@ -20,6 +21,7 @@ function FileManagerApp(props){
     const [searchbool, setSearchbool] = useState(false);
     const [search, setSearch] = useState("");
     const [preview, setPreview] = useState(true);
+    const [showDialog, setshowDialog] = useState(false);
     var path = window.location.pathname
     var pathEnd=path.charAt(path.length-1)
 
@@ -32,6 +34,15 @@ function FileManagerApp(props){
     {
         setSearchbool(true);
         document.addEventListener("keydown", escFunction, false);
+    }
+
+    function showFileUploadDialog () {
+        setshowDialog(true)
+    }
+
+    function handleClose()
+    {
+        setshowDialog(false)
     }
 
     function hideSearch()
@@ -97,6 +108,12 @@ function FileManagerApp(props){
                               </div>
                             </div>
                         </div>
+                        <div>
+                      <FileUpload 
+                showModal = {showDialog}
+                                props={props}
+                 handleClose ={handleClose} /> 
+                </div>
                      {preview && (
                       <FuseAnimate animation="transition.expandIn" delay={200}>
                          <span>
@@ -136,7 +153,7 @@ function FileManagerApp(props){
                 <div className="flex flex-1 items-end">
                     <FuseAnimate animation="transition.expandIn" delay={600}>
                             <Fab color="secondary" aria-label="add" size="medium" className="absolute bottom-0 left-0 ml-16 -mb-12 z-999">
-                                <Icon>add</Icon>
+                                <Icon  onClick ={showFileUploadDialog}>add</Icon>
                             </Fab>
                         </FuseAnimate>
                         <FuseAnimate delay={200}>
