@@ -14,6 +14,7 @@ import Breadcrumb from './Breadcrumb';
 import { useState } from 'react';
 import clsx from 'clsx';
 import {FileUpload} from 'app/main/apps/file-manager/FileUpload/FileUploadDialog';
+import sciductService from  'app/services/sciductService/sciductService.js'
 
 
 function FileManagerApp(props){
@@ -22,8 +23,11 @@ function FileManagerApp(props){
     const [search, setSearch] = useState("");
     const [preview, setPreview] = useState(true);
     const [showDialog, setshowDialog] = useState(false);
+    const [checkFlag ,setcheckFlag ] =useState(false);
+    const [meta, setMeta] = useState([]);
     var path = window.location.pathname
-    var pathEnd=path.charAt(path.length-1)
+    var pathEnd=path.charAt(path.length-1);
+    var token=localStorage.getItem('id_token')
 
     const style={
         width : "100%",
@@ -65,6 +69,71 @@ function FileManagerApp(props){
         setSearchbool(false);
         document.removeEventListener("keydown", escFunction, false);
     }
+    async function getMetadata(targetMeta){ 
+        setcheckFlag(false);
+ 
+            var axios = require('axios');
+            if(typeof(token) == "string") {
+            var config = {
+              method: 'get',
+              url: `https://sciduct.bii.virginia.edu/filesvc/file${targetMeta}`,
+              headers: { 
+                'Accept': 'application/vsmetadata+json',
+                'Authorization': token
+              }
+           };
+        }
+    
+        if(typeof(token) == "object") {
+          var config = {
+            method: 'get',
+            url: `https://sciduct.bii.virginia.edu/filesvc/file/${targetMeta}`,
+            headers: { 
+              'Accept': '*/*',
+            }
+         };
+      }
+        
+        addData();
+  
+        async function addData(){
+            const request = axios(config)
+           await request.then((response)=>{
+               //setMeta([response.data.writeAC])
+    let  metaData= response.data.writeACL
+               //console.log("responsemetaData" + response.data.writeACL)
+               checkPermission(metaData)
+                
+              
+             
+            })
+
+        }    
+    }
+    const checkPermission =(metaData) =>{
+        let tokenData = sciductService.getTokenData().teams;
+        let fileMetaDate =metaData;
+
+        tokenData.forEach(element => {
+            fileMetaDate.forEach(item => {
+
+                if(item.includes(element))
+                {
+                    setcheckFlag(true)
+                    console.log(checkFlag)
+                  
+                }
+            });
+     });
+
+        // if(tokenData.length != 0  && fileMetaDate.length !=0){ 
+
+        //  return tokenData.some(item =>  fileMetaDate.includes(item))
+    
+        // }
+
+     }
+
     
     const dispatch = useDispatch();
     const files = useSelector(({fileManagerApp}) => fileManagerApp.files);
@@ -79,7 +148,15 @@ function FileManagerApp(props){
 
     useEffect(() => {
         if(pathEnd === "/"){
+            targetMeta = targetPath.slice(0, -1).replace("/apps/files","")
         dispatch(Actions.getFiles(targetPath, 'GET_FILES'));
+        if(props.location.pathname === "/apps/files/"){
+        setcheckFlag(false)
+        }
+        else{
+            getMetadata(targetMeta)
+        }
+      
        }
         setSearch("")
     }, [dispatch,props,props.location, props.history]);
@@ -151,11 +228,14 @@ function FileManagerApp(props){
                     )}
                 </div>
                 <div className="flex flex-1 items-end">
-                    <FuseAnimate animation="transition.expandIn" delay={600}>
-                            <Fab color="secondary" aria-label="add" size="medium" className="absolute bottom-0 left-0 ml-16 -mb-12 z-999">
-                                <Icon  onClick ={showFileUploadDialog}>add</Icon>
-                            </Fab>
-                        </FuseAnimate>
+                {checkFlag && <FuseAnimate animation="transition.expandIn" delay={600}>
+                    
+                    <Fab color="secondary" aria-label="add" size="medium" className="absolute bottom-0 left-0 ml-16 -mb-12 z-999">
+                        <Icon  onClick ={showFileUploadDialog}>add</Icon>
+                    </Fab>
+                </FuseAnimate>
+
+                }    
                         <FuseAnimate delay={200}>
                             <div>
                                 { 

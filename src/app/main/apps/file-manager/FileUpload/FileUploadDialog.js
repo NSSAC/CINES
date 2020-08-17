@@ -75,12 +75,19 @@ export const FileUpload = ({ showModal, handleClose }) => {
 
   const progressStatus = (status, id) => {
     var fileList = []
-    initialUploadFile[id].status = status;
-    setUploadedfiles([...fileList])
+    // initialUploadFile[id].status = status;
+    // setUploadedfiles([...fileList])
     initialUploadFile.forEach(item => {
       if (item.id == id) {
-        item.status = status;
+       if(status !== 100){
+        item.status ="Uploading-"+status+"%";
         fileList.push(item)
+       }
+       else{
+         item.status ="Uploaded successfully"
+         fileList.push(item)
+       }
+       
       }
       else {
         fileList.push(item)
@@ -102,13 +109,20 @@ export const FileUpload = ({ showModal, handleClose }) => {
   }
 
   const deleteIndividual = (index => {
+
     initialUploadFile.splice(index, 1);
 
     setUploadedfiles([...initialUploadFile])
 
   })
   const CreateFolderFile = (initialUploadFile, targetPath) => {
+var vaildTypeFileArray =[];
+initialUploadFile.forEach(items =>{
+  if(  fileTypeArray.includes(items.type)){
+    vaildTypeFileArray.push(items)
+  }
 
+})
     const userToken = localStorage.getItem('id_token')
     initialUploadFile.forEach(element => {
 
@@ -132,17 +146,17 @@ export const FileUpload = ({ showModal, handleClose }) => {
           "type": type
         },
       }).then(res => {
-        writeContent(initialUploadFile);
-        progressStatus("Successfully uploaded ", id)
+        writeContent(vaildTypeFileArray);
+       // progressStatus("Successfully uploaded ", id)
        
       },
 
         (error) => {
            if(error.message === "Request failed with status code 409"){
-            progressStatus("Failed (file already exist)", id)
+            progressStatus("Failed (file already exist) 0", id)
           }
           else{
-            progressStatus("Failed (unsupported file type)", id)
+            progressStatus("Failed (unsupported file type) 0", id)
           }
         }
       )
@@ -169,6 +183,12 @@ export const FileUpload = ({ showModal, handleClose }) => {
 
         },
         data: content,
+             onUploadProgress: (progress) => {
+                   //const {loded ,total} = progress;
+                 const percentage = Math.floor(progress.loaded*100/progress.total)
+                  console.log(percentage)
+                 progressStatus(percentage, id )
+                 }
 
       })
 
@@ -257,7 +277,12 @@ export const FileUpload = ({ showModal, handleClose }) => {
                         }
                       </MenuTableCell>
                      
-                      <TableCell className=" hidden sm:table-cell">{node.status}</TableCell>
+                      <TableCell className=" hidden sm:table-cell">{node.status}
+                      
+                      
+                      
+                      
+                      </TableCell>
 
                       <TableCell className="text-center hidden sm:table-cell">
                         <Button
