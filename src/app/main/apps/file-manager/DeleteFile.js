@@ -2,9 +2,7 @@ import React, {useState, useEffect} from 'react';
 import 'react-responsive-modal/styles.css';
 import * as Actions from './store/actions';
 import { useDispatch } from 'react-redux';
-import 'react-responsive-modal/styles.css';
 import {ToastsContainer, ToastsStore} from 'react-toasts';
-import { Modal } from 'react-responsive-modal';
 
 
 function DeleteFile(props){
@@ -32,29 +30,28 @@ function DeleteFile(props){
       var request = axios(config)
        request.then(response=> {
         setSuccess(true)
-        dispatch(Actions.getFiles(currPath,'DELETE_FILE', props.fileId))
         setTimeout(() => {
+          dispatch(Actions.getFiles(currPath,'DELETE_FILE', props.fileId))
           props.setDeleteFile(false)
-        }, 1000);
+        }, 2000);
       })
       .catch(err => {
         setError(true)
         setTimeout(() => {
           props.setDeleteFile(false)
-        }, 3000);  });
+        }, 3000);
+      });
 }
  
 if(error === true)
 return (
-  <Modal center={true} open={true} showCloseIcon={false} classNames styles center>
-        <p>{'An error occurred while deleting the file. Please try again.'}</p>
-      </Modal>
+  <div> {ToastsStore.error("An error occurred. Please try again.")}
+  <ToastsContainer store={ToastsStore}/></div>
  )
-// else 
-// return (
-//      <div> {ToastsStore.success(`'${props.name}'` + "deleted successfully")}
-//      <ToastsContainer store={ToastsStore}/></div>
-//     )
-    else return (null)
+else 
+return (
+     <div> {ToastsStore.success(`'${props.name}'` + " deleted successfully")}
+     <ToastsContainer store={ToastsStore}/></div>
+ )
 }
 export default DeleteFile;

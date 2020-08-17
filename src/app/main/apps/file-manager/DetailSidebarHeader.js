@@ -16,11 +16,13 @@ function DetailSidebarHeader(props)
     const files = useSelector(({fileManagerApp}) => fileManagerApp.files);
     const selectedItem = useSelector(({fileManagerApp}) => files[fileManagerApp.selectedItemId]);
     var token=localStorage.getItem('id_token')
+    var delete_id=localStorage.getItem("delete_id")
     const [download, setDownload] = useState(false);
     const [deleteFile, setDeleteFile] = useState(false);
     var canRead = false;
     var canDelete = false;
-    var isFile=true
+    var isFile=true;
+
 
     const tableStyle={
         overflow: 'hidden',
@@ -39,10 +41,11 @@ function DetailSidebarHeader(props)
           isFile = false;
        } 
 
-    function OnDelete() {
+    function OnDelete(item) {
+        localStorage.setItem("delete_id",item.id)
         confirmAlert({
           title: 'Confirm',
-          message: 'Are you sure you want to delete ' + `'${selectedItem.name}'` + '?',
+          message: 'Are you sure you want to delete ' + `'${item.name}'` + '?',
           buttons: [
             {
               label: 'Yes',
@@ -83,9 +86,9 @@ function DetailSidebarHeader(props)
             <div className="toolbar flex align-center justify-end">
                {canDelete && <FuseAnimate animation="transition.expandIn" delay={200}>
                   <Tooltip title="Click to Delete" placement="bottom">
-                    <IconButton onClick={()=>OnDelete()}>
+                    <IconButton onClick={()=>OnDelete(selectedItem)}>
                         <Icon >delete</Icon>
-                        { deleteFile?<DeleteFile setDeleteFile={(p)=>setDeleteFile(p)} name={selectedItem.name} size={selectedItem.size} fileId={selectedItem.id} type={selectedItem.type}></DeleteFile>:null}
+                        {(delete_id === selectedItem.id ) && deleteFile?<DeleteFile setDeleteFile={(p)=>setDeleteFile(p)} name={selectedItem.name} size={selectedItem.size} fileId={selectedItem.id} type={selectedItem.type}></DeleteFile>:null}
                     </IconButton>
                   </Tooltip>
                 </FuseAnimate>}
