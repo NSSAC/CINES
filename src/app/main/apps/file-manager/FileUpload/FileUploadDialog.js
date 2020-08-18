@@ -52,10 +52,10 @@ export const FileUpload = ({ showModal, handleClose }) => {
   var fileData = [];
   const fileTypeArray = FILEUPLOAD_CONFIG.fileType
   const [initialUploadFile, setUploadedfiles] = useState([]);
-  const [spinner, setspinner] = useState(false);
+  const [disableButton, setDisableButton] = useState(true);
   const classes = useStyles();
   const onChangeHandler = (event) => {
-  
+    
     fileData = []
     setUploadedfiles([...fileData]);
     for (let i = 0; i <= event.target.files.length - 1; i++) {
@@ -71,6 +71,7 @@ export const FileUpload = ({ showModal, handleClose }) => {
 
     }
     setUploadedfiles([...fileData]);
+    setDisableButton(false)
   }
 
   const progressStatus = (status, id) => {
@@ -79,21 +80,22 @@ export const FileUpload = ({ showModal, handleClose }) => {
     // setUploadedfiles([...fileList])
     initialUploadFile.forEach(item => {
       if (item.id == id) {
-       if(status !== 100){
-        item.status ="Uploading-"+status+"%";
-        fileList.push(item)
-       }
-       else{
-         item.status ="Uploaded successfully"
-         fileList.push(item)
-       }
-       
+        if (status !== 100) {
+          item.status = "Uploading-" + status + "%";
+          fileList.push(item)
+        }
+        else {
+          item.status = "Uploaded successfully"
+          fileList.push(item)
+        }
+
       }
       else {
         fileList.push(item)
       }
     })
     setUploadedfiles([...fileList])
+    setDisableButton(true)
   }
 
   const onCancle = () => {
@@ -104,7 +106,7 @@ export const FileUpload = ({ showModal, handleClose }) => {
 
 
   const OnUpload = () => {
-  
+    setDisableButton(true)
     CreateFolderFile(initialUploadFile)
   }
 
@@ -116,19 +118,19 @@ export const FileUpload = ({ showModal, handleClose }) => {
 
   })
   const CreateFolderFile = (initialUploadFile, targetPath) => {
-var vaildTypeFileArray =[];
-initialUploadFile.forEach(items =>{
-  if(  fileTypeArray.includes(items.type)){
-    vaildTypeFileArray.push(items)
-  }
+    var vaildTypeFileArray = [];
+    initialUploadFile.forEach(items => {
+      if (fileTypeArray.includes(items.type)) {
+        vaildTypeFileArray.push(items)
+      }
 
-})
+    })
     const userToken = localStorage.getItem('id_token')
     initialUploadFile.forEach(element => {
 
       let fileName = element.fileName;
       let type = element.type;
-     
+
       let target = window.location.pathname;
       let id = element.id;
       let targetPath = target.replace("/apps/files", "")
@@ -147,15 +149,15 @@ initialUploadFile.forEach(items =>{
         },
       }).then(res => {
         writeContent(vaildTypeFileArray);
-       // progressStatus("Successfully uploaded ", id)
-       
+        // progressStatus("Successfully uploaded ", id)
+
       },
 
         (error) => {
-           if(error.message === "Request failed with status code 409"){
+          if (error.message === "Request failed with status code 409") {
             progressStatus("Failed (file already exist) 0", id)
           }
-          else{
+          else {
             progressStatus("Failed (unsupported file type) 0", id)
           }
         }
@@ -183,12 +185,12 @@ initialUploadFile.forEach(items =>{
 
         },
         data: content,
-             onUploadProgress: (progress) => {
-                   //const {loded ,total} = progress;
-                 const percentage = Math.floor(progress.loaded*100/progress.total)
-                  console.log(percentage)
-                 progressStatus(percentage, id )
-                 }
+        onUploadProgress: (progress) => {
+          //const {loded ,total} = progress;
+          const percentage = Math.floor(progress.loaded * 100 / progress.total)
+          console.log(percentage)
+          progressStatus(percentage, id)
+        }
 
       })
 
@@ -200,7 +202,7 @@ initialUploadFile.forEach(items =>{
     initialUploadFile[id].type = e.target.value
     //initialUploadFile[id].type = e.target.value
     setUploadedfiles([...initialUploadFile]);
-   
+
   }
 
   return (
@@ -219,7 +221,7 @@ initialUploadFile.forEach(items =>{
 
         </DialogContent>
         <input
-          accept="image/*"
+        
           className={classes.input}
           id="contained-button-file"
           multiple="multiple"
@@ -257,15 +259,13 @@ initialUploadFile.forEach(items =>{
                   return (
                     <TableRow
                       key={node.id}
-                      className="cursor-pointer"
-                    >
+                      className="cursor-pointer" >
 
                       <TableCell className="max-w-30 w-30 p-0 text-center"> </TableCell>
                       <TableCell className="hidden sm:table-cell">{node.fileName}</TableCell>
                       <MenuTableCell
                         value={node.type}
-                        onChange={handleStatus(node.id)}
-                      >
+                        onChange={handleStatus(node.id)} >
                         {
 
                           fileTypeArray.map((item) => {
@@ -276,20 +276,15 @@ initialUploadFile.forEach(items =>{
                           })
                         }
                       </MenuTableCell>
-                     
                       <TableCell className=" hidden sm:table-cell">{node.status}
-                      
-                      
-                      
-                      
                       </TableCell>
-
                       <TableCell className="text-center hidden sm:table-cell">
                         <Button
                           variant="contained"
                           size="small"
                           color="secondary"
                           className={classes.button}
+                          disabled= {disableButton}
                           startIcon={<DeleteIcon />}
                           onClick={() => deleteIndividual(index)}             >
                           Remove
@@ -307,7 +302,7 @@ initialUploadFile.forEach(items =>{
             color="default"
             className={classes.button}
             startIcon={<CloudUploadIcon />}
-            disabled={initialUploadFile.length == 0} >
+            disabled={initialUploadFile.length == 0 || disableButton} >
             Upload
           </Button>
 

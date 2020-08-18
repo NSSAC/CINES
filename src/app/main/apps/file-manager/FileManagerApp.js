@@ -15,6 +15,7 @@ import { useState } from 'react';
 import clsx from 'clsx';
 import {FileUpload} from 'app/main/apps/file-manager/FileUpload/FileUploadDialog';
 import sciductService from  'app/services/sciductService/sciductService.js'
+import { add } from 'vega-lite/build/src/compositemark';
 
 
 function FileManagerApp(props){
@@ -83,26 +84,13 @@ function FileManagerApp(props){
               }
            };
         }
-    
-        if(typeof(token) == "object") {
-          var config = {
-            method: 'get',
-            url: `https://sciduct.bii.virginia.edu/filesvc/file/${targetMeta}`,
-            headers: { 
-              'Accept': '*/*',
-            }
-         };
-      }
-        
-        addData();
-  
+        addData()
         async function addData(){
             const request = axios(config)
-           await request.then((response)=>{
-               //setMeta([response.data.writeAC])
+           await request.then((response)=>{    
     let  metaData= response.data.writeACL
-               //console.log("responsemetaData" + response.data.writeACL)
-               checkPermission(metaData)
+    let ownerId =response.data.owner_id;
+               checkPermission(metaData,ownerId)
                 
               
              
@@ -110,21 +98,26 @@ function FileManagerApp(props){
 
         }    
     }
-    const checkPermission =(metaData) =>{
+    const checkPermission =(metaData,ownerId) =>{
         let tokenData = sciductService.getTokenData().teams;
         let fileMetaDate =metaData;
+        if(sciductService.getTokenData().sub === ownerId){
 
-        tokenData.forEach(element => {
-            fileMetaDate.forEach(item => {
+            setcheckFlag(true);
+        }
+        else{
+            tokenData.forEach(element => {
+                fileMetaDate.forEach(item => {
+    
+                    if(item.includes(element))
+                    {
+                      
+                    }
+                });
+         });
+        }
 
-                if(item.includes(element))
-                {
-                    setcheckFlag(true)
-                    console.log(checkFlag)
-                  
-                }
-            });
-     });
+       
 
         // if(tokenData.length != 0  && fileMetaDate.length !=0){ 
 
@@ -150,7 +143,7 @@ function FileManagerApp(props){
         if(pathEnd === "/"){
             targetMeta = targetPath.slice(0, -1).replace("/apps/files","")
         dispatch(Actions.getFiles(targetPath, 'GET_FILES'));
-        if(props.location.pathname === "/apps/files/"){
+        if(props.location.pathname === "/apps/files/" || token === null){
         setcheckFlag(false)
         }
         else{
