@@ -17,9 +17,11 @@ import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import { FuseAnimate } from '@fuse';
 import { Icon, MenuItem } from '@material-ui/core';
 import axios from 'axios';
+import { useDispatch } from 'react-redux';
 import DeleteIcon from '@material-ui/icons/Delete';
 import MenuTableCell from "./MenuTableCell";
 import FILEUPLOAD_CONFIG from "./FileUploadconfig";
+import * as Actions from '../store/actions';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -54,6 +56,7 @@ export const FileUpload = ({ showModal, handleClose }) => {
   const [initialUploadFile, setUploadedfiles] = useState([]);
   const [disableButton, setDisableButton] = useState(true);
   const classes = useStyles();
+  const dispatch = useDispatch();
   const onChangeHandler = (event) => {
     
     fileData = []
@@ -148,8 +151,10 @@ export const FileUpload = ({ showModal, handleClose }) => {
           "type": type
         },
       }).then(res => {
+        dispatch(Actions.getFiles(targetPath ,'GET_FILES'))
         writeContent(vaildTypeFileArray);
         // progressStatus("Successfully uploaded ", id)
+
 
       },
 
@@ -192,9 +197,18 @@ export const FileUpload = ({ showModal, handleClose }) => {
           progressStatus(percentage, id)
         }
 
-      })
+      }).then(res => {
+        dispatch(Actions.getFiles(targetPath ,'GET_FILES'))
+      
+      },
 
+        (error) => {
+
+        }
+      )
     });
+
+
 
   }
 
