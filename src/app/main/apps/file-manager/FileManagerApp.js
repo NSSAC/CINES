@@ -15,7 +15,7 @@ import { useState } from 'react';
 import clsx from 'clsx';
 import {FileUpload} from 'app/main/apps/file-manager/FileUpload/FileUploadDialog';
 import sciductService from  'app/services/sciductService/sciductService.js'
-import { add } from 'vega-lite/build/src/compositemark';
+
 
 
 function FileManagerApp(props){
@@ -90,7 +90,8 @@ function FileManagerApp(props){
            await request.then((response)=>{    
     let  metaData= response.data.writeACL
     let ownerId =response.data.owner_id;
-               checkPermission(metaData,ownerId)
+    let type =response.data.type;
+               checkPermission(metaData,ownerId,type)
                 
               
              
@@ -98,7 +99,7 @@ function FileManagerApp(props){
 
         }    
     }
-    const checkPermission =(metaData,ownerId) =>{
+    const checkPermission =(metaData,ownerId,type) =>{
         let tokenData = sciductService.getTokenData().teams;
         let fileMetaDate =metaData;
         if(sciductService.getTokenData().sub === ownerId){
@@ -109,9 +110,9 @@ function FileManagerApp(props){
             tokenData.forEach(element => {
                 fileMetaDate.forEach(item => {
     
-                    if(item.includes(element))
+                    if(item.includes(element)  )
                     {
-                      
+                        setcheckFlag(true);
                     }
                 });
          });
@@ -136,14 +137,16 @@ function FileManagerApp(props){
     var path = window.location.pathname
     var pathEnd=path.charAt(path.length-1)
     var targetMeta = ""
-    if(pathEnd === '/')
+    if(pathEnd === '/'){
      targetMeta = targetPath.slice(0, -1)
+   
+    }
 
     useEffect(() => {
         if(pathEnd === "/"){
             targetMeta = targetPath.slice(0, -1).replace("/apps/files","")
         dispatch(Actions.getFiles(targetPath, 'GET_FILES'));
-        if(props.location.pathname === "/apps/files/" || token === null){
+        if(props.location.pathname === "/apps/files/" || token === null ||pathEnd != '/' ){
         setcheckFlag(false)
         }
         else{
@@ -222,10 +225,11 @@ function FileManagerApp(props){
                 </div>
                 <div className="flex flex-1 items-end">
                 {checkFlag && <FuseAnimate animation="transition.expandIn" delay={600}>
-                    
+                <Tooltip title="Click to Upload" aria-label="add">
                     <Fab color="secondary" aria-label="add" size="medium" className="absolute bottom-0 left-0 ml-16 -mb-12 z-999">
                         <Icon  onClick ={showFileUploadDialog}>add</Icon>
                     </Fab>
+                    </Tooltip>
                 </FuseAnimate>
 
                 }    

@@ -57,8 +57,9 @@ export const FileUpload = ({ showModal, handleClose }) => {
   const [disableButton, setDisableButton] = useState(true);
   const classes = useStyles();
   const dispatch = useDispatch();
+  var responseArry = []
   const onChangeHandler = (event) => {
-    
+
     fileData = []
     setUploadedfiles([...fileData]);
     for (let i = 0; i <= event.target.files.length - 1; i++) {
@@ -151,7 +152,7 @@ export const FileUpload = ({ showModal, handleClose }) => {
           "type": type
         },
       }).then(res => {
-        dispatch(Actions.getFiles(targetPath ,'GET_FILES'))
+        //dispatch(Actions.getFiles(targetPath ,'GET_FILES'))
         writeContent(vaildTypeFileArray);
         // progressStatus("Successfully uploaded ", id)
 
@@ -171,9 +172,11 @@ export const FileUpload = ({ showModal, handleClose }) => {
   }
 
   const writeContent = (initialUploadFile) => {
-
+   
     const userToken = localStorage.getItem('id_token')
+    
     initialUploadFile.forEach(element => {
+    
       let fileName = element.fileName;
       let content = element.contents;
       let target = window.location.pathname;
@@ -195,11 +198,15 @@ export const FileUpload = ({ showModal, handleClose }) => {
           const percentage = Math.floor(progress.loaded * 100 / progress.total)
           console.log(percentage)
           progressStatus(percentage, id)
+          
         }
 
       }).then(res => {
-        dispatch(Actions.getFiles(targetPath ,'GET_FILES'))
-      
+       
+        responseArry.push(res)
+        if (responseArry.length === initialUploadFile.length) {
+          dispatch(Actions.getFiles(targetPath, 'GET_FILES'))
+        }
       },
 
         (error) => {
@@ -230,12 +237,12 @@ export const FileUpload = ({ showModal, handleClose }) => {
         <DialogTitle id="alert-dialog-slide-title" divider="true">{"File Upload"}</DialogTitle>
         <DialogContent divider="true">
           <DialogContentText id="alert-dialog-slide-description">
-            Please Select the file to be uploaded &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            Please select the file to be uploaded" &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           </DialogContentText>
 
         </DialogContent>
         <input
-        
+
           className={classes.input}
           id="contained-button-file"
           multiple="multiple"
@@ -263,7 +270,7 @@ export const FileUpload = ({ showModal, handleClose }) => {
               {initialUploadFile.length == 0 ?
                 <TableRow className="cursor-pointer">
                   <TableCell className="max-w-30 w-30 p-0 text-center"> </TableCell>
-                  <TableCell className="hidden sm:table-cell">No files selected</TableCell>
+                  <TableCell className="hidden sm:table-cell">No file selected</TableCell>
                   <TableCell className="hidden sm:table-cell">--</TableCell>
                   <TableCell className="text-center hidden sm:table-cell">--</TableCell>
                   <TableCell className="max-w-64 w-64 p-0 text-center"> </TableCell>
@@ -298,7 +305,7 @@ export const FileUpload = ({ showModal, handleClose }) => {
                           size="small"
                           color="secondary"
                           className={classes.button}
-                          disabled= {disableButton}
+                          disabled={disableButton}
                           startIcon={<DeleteIcon />}
                           onClick={() => deleteIndividual(index)}             >
                           Remove
@@ -320,7 +327,9 @@ export const FileUpload = ({ showModal, handleClose }) => {
             Upload
           </Button>
 
-          <Button onClick={onCancle} >
+          <Button onClick={onCancle}
+           
+          >
             Cancel
           </Button>
 
