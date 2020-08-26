@@ -1,7 +1,7 @@
-import React, {useEffect, useRef} from 'react';
-import {ClickAwayListener,Tooltip, Typography, Icon, IconButton,Input, Fab} from '@material-ui/core';
-import {FuseAnimate, FusePageSimple} from '@fuse';
-import {useDispatch, useSelector} from 'react-redux';
+import React, { useEffect, useRef } from 'react';
+import { ClickAwayListener, Tooltip, Typography, Icon, IconButton, Input, Fab } from '@material-ui/core';
+import { FuseAnimate, FusePageSimple } from '@fuse';
+import { useDispatch, useSelector } from 'react-redux';
 import withReducer from 'app/store/withReducer';
 import * as Actions from './store/actions';
 import reducer from './store/reducers';
@@ -13,229 +13,213 @@ import MainSidebarContent from './MainSidebarContent';
 import Breadcrumb from './Breadcrumb';
 import { useState } from 'react';
 import clsx from 'clsx';
-import {FileUpload} from 'app/main/apps/file-manager/FileUpload/FileUploadDialog';
-import sciductService from  'app/services/sciductService/sciductService.js'
+import { FileUpload } from 'app/main/apps/file-manager/FileUpload/FileUploadDialog';
+import sciductService from 'app/services/sciductService/sciductService.js'
 
 
 
-function FileManagerApp(props){
+function FileManagerApp(props) {
 
     const [searchbool, setSearchbool] = useState(false);
     const [search, setSearch] = useState("");
     const [preview, setPreview] = useState(true);
     const [showDialog, setshowDialog] = useState(false);
-    const [checkFlag ,setcheckFlag ] =useState(false);
+    const [checkFlag, setcheckFlag] = useState(false);
     const [meta, setMeta] = useState([]);
     var path = window.location.pathname
-    var pathEnd=path.charAt(path.length-1);
-    var token=localStorage.getItem('id_token')
+    var pathEnd = path.charAt(path.length - 1);
+    var token = localStorage.getItem('id_token')
 
-    const style={
-        width : "100%",
-        flexWrap : "wrap"
+    const style = {
+        width: "100%",
+        flexWrap: "wrap"
     }
 
-    function showSearch()
-    {
+    function showSearch() {
         setSearchbool(true);
         document.addEventListener("keydown", escFunction, false);
     }
 
-    function showFileUploadDialog () {
+    function showFileUploadDialog() {
         setshowDialog(true)
     }
 
-    function handleClose()
-    {
+    function handleClose() {
         setshowDialog(false)
     }
 
-    function hideSearch()
-    {
+    function hideSearch() {
         setSearchbool(false);
-        setSearch(""); 
+        setSearch("");
         document.removeEventListener("keydown", escFunction, false);
     }
 
-    function escFunction(event)
-    {
-        if ( event.keyCode === 27 )
-        {
+    function escFunction(event) {
+        if (event.keyCode === 27) {
             hideSearch();
         }
     }
 
-    function handleClickAway()
-    {
+    function handleClickAway() {
         setSearchbool(false);
         document.removeEventListener("keydown", escFunction, false);
     }
-    async function getMetadata(targetMeta){ 
+    async function getMetadata(targetMeta) {
         setcheckFlag(false);
- 
-            var axios = require('axios');
-            if(typeof(token) == "string") {
+
+        var axios = require('axios');
+        if (typeof (token) == "string") {
             var config = {
-              method: 'get',
-              url: `https://sciduct.bii.virginia.edu/filesvc/file${targetMeta}`,
-              headers: { 
-                'Accept': 'application/vsmetadata+json',
-                'Authorization': token
-              }
-           };
+                method: 'get',
+                url: `https://sciduct.bii.virginia.edu/filesvc/file${targetMeta}`,
+                headers: {
+                    'Accept': 'application/vsmetadata+json',
+                    'Authorization': token
+                }
+            };
         }
         addData()
-        async function addData(){
+        async function addData() {
             const request = axios(config)
-           await request.then((response)=>{    
-    let  metaData= response.data.writeACL
-    let ownerId =response.data.owner_id;
-    let type =response.data.type;
-               checkPermission(metaData,ownerId,type)
-                
-              
-             
+            await request.then((response) => {
+                let metaData = response.data.writeACL
+                let ownerId = response.data.owner_id;
+                let type = response.data.type;
+                checkPermission(metaData, ownerId, type)
+
+
+
             })
 
-        }    
+        }
     }
-    const checkPermission =(metaData,ownerId,type) =>{
+    const checkPermission = (metaData, ownerId, type) => {
         let tokenData = sciductService.getTokenData().teams;
-        let fileMetaDate =metaData;
-        if(sciductService.getTokenData().sub === ownerId){
+        let fileMetaDate = metaData;
+        if (sciductService.getTokenData().sub === ownerId) {
 
             setcheckFlag(true);
         }
-        else{
+        else {
             tokenData.forEach(element => {
                 fileMetaDate.forEach(item => {
-    
-                    if(item.includes(element)  )
-                    {
+
+                    if (item.includes(element)) {
                         setcheckFlag(true);
                     }
                 });
-         });
+            });
         }
+    }
 
-       
 
-        // if(tokenData.length != 0  && fileMetaDate.length !=0){ 
-
-        //  return tokenData.some(item =>  fileMetaDate.includes(item))
-    
-        // }
-
-     }
-
-    
     const dispatch = useDispatch();
-    const files = useSelector(({fileManagerApp}) => fileManagerApp.files);
-    const selectedItem = useSelector(({fileManagerApp}) => files[fileManagerApp.selectedItemId]);
+    const files = useSelector(({ fileManagerApp }) => fileManagerApp.files);
+    const selectedItem = useSelector(({ fileManagerApp }) => files[fileManagerApp.selectedItemId]);
     const pageLayout = useRef(null);
-    var targetPath = props.location.pathname.replace("/apps/files","")
+    var targetPath = props.location.pathname.replace("/apps/files", "")
     var path = window.location.pathname
-    var pathEnd=path.charAt(path.length-1)
+    var pathEnd = path.charAt(path.length - 1)
     var targetMeta = ""
-    if(pathEnd === '/'){
-     targetMeta = targetPath.slice(0, -1)
-   
+    if (pathEnd === '/') {
+        targetMeta = targetPath.slice(0, -1)
+
     }
 
     useEffect(() => {
-        if(pathEnd === "/"){
-            targetMeta = targetPath.slice(0, -1).replace("/apps/files","")
-        dispatch(Actions.getFiles(targetPath, 'GET_FILES'));
-        if(props.location.pathname === "/apps/files/" || token === null ||pathEnd != '/' ){
-        setcheckFlag(false)
+        if (pathEnd === "/") {
+            dispatch(Actions.getFiles(targetPath, 'GET_FILES'))
         }
-        else{
+        if (props.location.pathname === "/apps/files/" || token === null || pathEnd !== '/') {
+            setcheckFlag(false)
+        }
+        else {
+            targetMeta = targetPath.slice(0, -1).replace("/apps/files", "")
             getMetadata(targetMeta)
         }
-      
-       }
+
         setSearch("")
-    }, [dispatch,props,props.location, props.history]);
+    }, [dispatch, props, props.location, props.history]);
 
     return (
         <FusePageSimple
-        
+
             classes={{
-                root         : "bg-red",
-                header       : "h-auto min-h-128 sm:h-auto sm:min-h-160",
+                root: "bg-red",
+                header: "h-auto min-h-128 sm:h-auto sm:min-h-160",
                 sidebarHeader: "h-auto min-h-128 sm:h-auto sm:min-h-160",
-                rightSidebar : "w-320"
+                rightSidebar: "w-320"
             }}
-            header={  
-                 <div className="flex flex-col flex-1 p-8 sm:p-12 relative" style={{width: '100%'}} >
+            header={
+                <div className="flex flex-col flex-1 p-8 sm:p-12 relative" style={{ width: '100%' }} >
                     <div className="flex items-center justify-between">
-                        <div style={{minWidth: '40%'}}>
+                        <div style={{ minWidth: '40%' }}>
                             <div className="flex flex-1 items-center justify-between ">
-                              <div className="flex flex-col">
-                                <div className="flex items-center mb-16">
-                                   <Icon className="text-18" color="action">home</Icon>
-                                   <Icon className="text-16" color="action">chevron_right</Icon>
-                                   <Typography color="textSecondary">File Manager</Typography>
+                                <div className="flex flex-col">
+                                    <div className="flex items-center mb-16">
+                                        <Icon className="text-18" color="action">home</Icon>
+                                        <Icon className="text-16" color="action">chevron_right</Icon>
+                                        <Typography color="textSecondary">File Manager</Typography>
+                                    </div>
+                                    <Typography variant="h6">File Manager</Typography>
                                 </div>
-                               <Typography variant="h6">File Manager</Typography>
-                              </div>
                             </div>
                         </div>
                         <div>
-                      <FileUpload 
-                showModal = {showDialog}
+                            <FileUpload
+                                showModal={showDialog}
                                 props={props}
-                 handleClose ={handleClose} /> 
-                </div>
-                     {preview && (
-                      <FuseAnimate animation="transition.expandIn" delay={200}>
-                         <span>
-                            <div className={clsx( "flex", props.className)}>
-                                <Tooltip title="Click to search" placement="bottom">
-                                    <div onClick={showSearch}>
-                                    <IconButton className="w-64 h-64"><Icon>search</Icon></IconButton>    </div>
-                                </Tooltip>
-                                 {searchbool && (
-                                    <ClickAwayListener onClickAway={handleClickAway}>
-                                        <div>
-                                            <div className="flex items-end ">
-                                                <Input
-                                                    placeholder="&nbsp;Search"
-                                                    className="flex flex-1 mb-8"
-                                                    value={search}
-                                                    inputProps={{
-                                                        'aria-label': 'Search'
-                                                    }}
-                                                    onChange={(event)=>setSearch(event.target.value)}
-                                                    autoFocus
-                                                />
-                                                    <Tooltip title="Click to clear and hide the search box" placement="bottom">
+                                handleClose={handleClose} />
+                        </div>
+                        {preview && (
+                            <FuseAnimate animation="transition.expandIn" delay={200}>
+                                <span>
+                                    <div className={clsx("flex", props.className)}>
+                                        <Tooltip title="Click to search" placement="bottom">
+                                            <div onClick={showSearch}>
+                                                <IconButton className="w-64 h-64"><Icon>search</Icon></IconButton>    </div>
+                                        </Tooltip>
+                                        {searchbool && (
+                                            <ClickAwayListener onClickAway={handleClickAway}>
+                                                <div>
+                                                    <div className="flex items-end ">
+                                                        <Input
+                                                            placeholder="&nbsp;Search"
+                                                            className="flex flex-1 mb-8"
+                                                            value={search}
+                                                            inputProps={{
+                                                                'aria-label': 'Search'
+                                                            }}
+                                                            onChange={(event) => setSearch(event.target.value)}
+                                                            autoFocus
+                                                        />
+                                                        <Tooltip title="Click to clear and hide the search box" placement="bottom">
                                                             <IconButton onClick={hideSearch} className="mx-8 mt-8" >
                                                                 <Icon>close</Icon>
                                                             </IconButton>
-                                                    </Tooltip>
-                                            </div>
-                                        </div>
-                                    </ClickAwayListener>
-                                )}
-                            </div>
-                      </span> 
-                    </FuseAnimate>
-                    )}
-                </div>
-                <div className="flex flex-1 items-end">
-                {checkFlag && <FuseAnimate animation="transition.expandIn" delay={600}>
-                <Tooltip title="Click to Upload" aria-label="add">
-                    <Fab color="secondary" aria-label="add" size="medium" className="absolute bottom-0 left-0 ml-16 -mb-12 z-999">
-                        <Icon  onClick ={showFileUploadDialog}>add</Icon>
-                    </Fab>
-                    </Tooltip>
-                </FuseAnimate>
+                                                        </Tooltip>
+                                                    </div>
+                                                </div>
+                                            </ClickAwayListener>
+                                        )}
+                                    </div>
+                                </span>
+                            </FuseAnimate>
+                        )}
+                    </div>
+                    <div className="flex flex-1 items-end">
+                        {checkFlag && <FuseAnimate animation="transition.expandIn" delay={600}>
+                            <Tooltip title="Click to Upload" aria-label="add">
+                                <Fab color="secondary" aria-label="add" size="medium" className="absolute bottom-0 left-0 ml-16 -mb-12 z-999">
+                                    <Icon onClick={showFileUploadDialog}>add</Icon>
+                                </Fab>
+                            </Tooltip>
+                        </FuseAnimate>
 
-                }    
+                        }
                         <FuseAnimate delay={200}>
                             <div>
-                                { 
+                                {
 
                                     <Breadcrumb props={props} path={targetPath} className="flex pl-72 text-16 sm:text-16" styles={style} />
                                 }
@@ -245,20 +229,20 @@ function FileManagerApp(props){
                 </div>
             }
             content={
-                <FileList pageLayout={pageLayout} search={search} setPreview={(p)=>setPreview(p)}/>
+                <FileList pageLayout={pageLayout} search={search} setPreview={(p) => setPreview(p)} />
             }
             leftSidebarVariant="temporary"
             leftSidebarHeader={
-                <MainSidebarHeader/>
+                <MainSidebarHeader />
             }
             leftSidebarContent={
-               <MainSidebarContent/>
+                <MainSidebarContent />
             }
-            rightSidebarHeader={pathEnd=="/" &&
-                <DetailSidebarHeader/>
+            rightSidebarHeader={pathEnd == "/" &&
+                <DetailSidebarHeader />
             }
-            rightSidebarContent={pathEnd=="/" &&
-                <DetailSidebarContent/>
+            rightSidebarContent={pathEnd == "/" &&
+                <DetailSidebarContent />
             }
             ref={pageLayout}
             innerScroll

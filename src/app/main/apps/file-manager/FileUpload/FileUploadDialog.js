@@ -58,6 +58,7 @@ export const FileUpload = ({ showModal, handleClose }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   var responseArry = []
+  var vaildTypeFileArray = [];
   const onChangeHandler = (event) => {
 
     fileData = []
@@ -80,19 +81,23 @@ export const FileUpload = ({ showModal, handleClose }) => {
 
   const progressStatus = (status, id) => {
     var fileList = []
-    // initialUploadFile[id].status = status;
-    // setUploadedfiles([...fileList])
     initialUploadFile.forEach(item => {
       if (item.id == id) {
         if (status !== 100) {
-          item.status = "Uploading-" + status + "%";
-          fileList.push(item)
+          if (initialUploadFile[id].status !== "Uploading-Failed (file already exist) 0%") {
+            item.status = "Uploading-" + status + "%";
+            fileList.push(item)
+          }
+          else {
+            item.status = initialUploadFile[id].status
+          }
         }
         else {
-          item.status = "Uploaded successfully"
-          fileList.push(item)
+          if (initialUploadFile[id].status !== "Uploading-Failed (file already exist) 0%") {
+            item.status = "Uploaded successfully"
+            fileList.push(item)
+          }
         }
-
       }
       else {
         fileList.push(item)
@@ -100,6 +105,19 @@ export const FileUpload = ({ showModal, handleClose }) => {
     })
     setUploadedfiles([...fileList])
     setDisableButton(true)
+
+    let count = 0;
+    let target = window.location.pathname;
+    let targetPath = target.replace("/apps/files", "")
+    initialUploadFile.forEach(item => {
+
+      if (item.status === "Uploaded successfully" || item.status === "Uploading-Failed (file already exist) 0%" || item.status === "Uploading-Failed (unsupported file type) 0%") {
+        count++
+        if (count === initialUploadFile.length) {
+          dispatch(Actions.getFiles(targetPath, 'GET_FILES'))
+        }
+      }
+    })
   }
 
   const onCancle = () => {
@@ -122,7 +140,7 @@ export const FileUpload = ({ showModal, handleClose }) => {
 
   })
   const CreateFolderFile = (initialUploadFile, targetPath) => {
-    var vaildTypeFileArray = [];
+
     initialUploadFile.forEach(items => {
       if (fileTypeArray.includes(items.type)) {
         vaildTypeFileArray.push(items)
@@ -152,14 +170,14 @@ export const FileUpload = ({ showModal, handleClose }) => {
           "type": type
         },
       }).then(res => {
-        //dispatch(Actions.getFiles(targetPath ,'GET_FILES'))
-        writeContent(vaildTypeFileArray);
-        // progressStatus("Successfully uploaded ", id)
+        writeContent();
+       
 
 
       },
 
         (error) => {
+          //vaildTypeFileArray.splice(id ,1)
           if (error.message === "Request failed with status code 409") {
             progressStatus("Failed (file already exist) 0", id)
           }
@@ -171,12 +189,12 @@ export const FileUpload = ({ showModal, handleClose }) => {
     });
   }
 
-  const writeContent = (initialUploadFile) => {
-   
+  const writeContent = () => {
+
     const userToken = localStorage.getItem('id_token')
-    
-    initialUploadFile.forEach(element => {
-    
+
+    vaildTypeFileArray.forEach(element => {
+
       let fileName = element.fileName;
       let content = element.contents;
       let target = window.location.pathname;
@@ -198,15 +216,12 @@ export const FileUpload = ({ showModal, handleClose }) => {
           const percentage = Math.floor(progress.loaded * 100 / progress.total)
           console.log(percentage)
           progressStatus(percentage, id)
-          
+
         }
 
       }).then(res => {
-       
-        responseArry.push(res)
-        if (responseArry.length === initialUploadFile.length) {
-          dispatch(Actions.getFiles(targetPath, 'GET_FILES'))
-        }
+
+
       },
 
         (error) => {
@@ -220,7 +235,10 @@ export const FileUpload = ({ showModal, handleClose }) => {
   }
 
   const handleStatus = (id) => (e) => {
+    let changeFileName;
     initialUploadFile[id].type = e.target.value
+    changeFileName = initialUploadFile[id].fileName.split('.').slice(0, -1).join('.');
+    initialUploadFile[id].fileName = changeFileName + "." + e.target.value
     //initialUploadFile[id].type = e.target.value
     setUploadedfiles([...initialUploadFile]);
 
@@ -234,10 +252,10 @@ export const FileUpload = ({ showModal, handleClose }) => {
         aria-labelledby="alert-dialog-slide-title"
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle id="alert-dialog-slide-title" divider="true">{"File Upload"}</DialogTitle>
+        <DialogTitle id="alert-dialog-slide-title" divider="true">{"File Upload "}</DialogTitle>
         <DialogContent divider="true">
           <DialogContentText id="alert-dialog-slide-description">
-            Please select the file to be uploaded" &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
           </DialogContentText>
 
         </DialogContent>
@@ -258,7 +276,7 @@ export const FileUpload = ({ showModal, handleClose }) => {
                 <TableCell className="hidden sm:table-cell">Type</TableCell>
                 <TableCell className="hidden sm:table-cell">Status</TableCell>
 
-                {initialUploadFile.length == 0 ? null : <TableCell className="max-w-64 w-64 p-0 text-center">
+                {initialUploadFile.length == 0 ? null : <TableCell className=" p-0 text-center">
                   Remove All
           </TableCell>}
                 <TableCell className="max-w-64 w-64 p-0 text-center"> </TableCell>
@@ -266,7 +284,7 @@ export const FileUpload = ({ showModal, handleClose }) => {
               </TableRow>
             </TableHead>
 
-            <TableBody>
+            <TableBody className="max-w-100 w-100 p-0 text-center">
               {initialUploadFile.length == 0 ?
                 <TableRow className="cursor-pointer">
                   <TableCell className="max-w-30 w-30 p-0 text-center"> </TableCell>
@@ -283,7 +301,7 @@ export const FileUpload = ({ showModal, handleClose }) => {
                       className="cursor-pointer" >
 
                       <TableCell className="max-w-30 w-30 p-0 text-center"> </TableCell>
-                      <TableCell className="hidden sm:table-cell">{node.fileName}</TableCell>
+                      <TableCell className="max-w-30 w-30 p-0 hidden sm:table-cell">{node.fileName}</TableCell>
                       <MenuTableCell
                         value={node.type}
                         onChange={handleStatus(node.id)} >
@@ -299,10 +317,10 @@ export const FileUpload = ({ showModal, handleClose }) => {
                       </MenuTableCell>
                       <TableCell className=" hidden sm:table-cell">{node.status}
                       </TableCell>
-                      <TableCell className="text-center hidden sm:table-cell">
+                      <TableCell className=" hidden sm:table-cell">
                         <Button
                           variant="contained"
-                          size="small"
+                          ////size="small"
                           color="secondary"
                           className={classes.button}
                           disabled={disableButton}
@@ -328,7 +346,7 @@ export const FileUpload = ({ showModal, handleClose }) => {
           </Button>
 
           <Button onClick={onCancle}
-           
+
           >
             Cancel
           </Button>
