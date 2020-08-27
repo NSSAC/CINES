@@ -6,7 +6,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -27,15 +27,23 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-
 export const FileUpload = ({ showModal, handleClose }) => {
   const useStyles = makeStyles({
     table: {
       minWidth: 450,
     },
+    customeButton: {
+      alignSelf: 'baseline',
+      border: '2px solid ',
+      color: 'black',
+      backgroundColor: 'white',
+      width: '100px',
+      height: '31px',
+
+    },
     input: {
       padding: 10,
-      // display:"none",
+      display: "none",
     },
     typeIcon: {
       '&.clear:before': {
@@ -57,7 +65,8 @@ export const FileUpload = ({ showModal, handleClose }) => {
   const [disableButton, setDisableButton] = useState(true);
   const classes = useStyles();
   const dispatch = useDispatch();
-  var responseArry = []
+  var responseArry = [];
+  const fileInput = useRef();
   var vaildTypeFileArray = [];
   const onChangeHandler = (event) => {
 
@@ -171,9 +180,6 @@ export const FileUpload = ({ showModal, handleClose }) => {
         },
       }).then(res => {
         writeContent();
-       
-
-
       },
 
         (error) => {
@@ -216,23 +222,11 @@ export const FileUpload = ({ showModal, handleClose }) => {
           const percentage = Math.floor(progress.loaded * 100 / progress.total)
           console.log(percentage)
           progressStatus(percentage, id)
-
         }
-
-      }).then(res => {
-
-
-      },
-
-        (error) => {
-
-        }
-      )
-    });
-
-
-
-  }
+      }).then(res => {  },
+        (error) => { }
+      ) });
+    }
 
   const handleStatus = (id) => (e) => {
     let changeFileName;
@@ -243,6 +237,9 @@ export const FileUpload = ({ showModal, handleClose }) => {
     setUploadedfiles([...initialUploadFile]);
 
   }
+  const openFileDialog = () => {
+    fileInput.current.click();
+  };
 
   return (
     <React.Fragment>
@@ -257,16 +254,10 @@ export const FileUpload = ({ showModal, handleClose }) => {
           <DialogContentText id="alert-dialog-slide-description">
 
           </DialogContentText>
-
+          <input className={classes.input} ref={fileInput} type="file" multiple onChange={onChangeHandler} />
+        <button className={classes.customeButton} onClick={openFileDialog} type="button" >Choose File</button>
         </DialogContent>
-        <input
 
-          className={classes.input}
-          id="contained-button-file"
-          multiple="multiple"
-          type="file"
-          onChange={(event) => onChangeHandler(event)}
-        />
         <FuseAnimate animation="transition.slideUpIn" delay={300}>
           <Table>
             <TableHead>
