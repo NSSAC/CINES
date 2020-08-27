@@ -23,7 +23,6 @@ function DetailSidebarHeader(props)
     var canDelete = false;
     var isFile=true;
 
-
     const tableStyle={
         overflow: 'hidden',
         maxWidth: '280px',
@@ -47,13 +46,13 @@ function DetailSidebarHeader(props)
           title: 'Confirm',
           message: 'Are you sure you want to delete ' + `'${item.name}'` + '?',
           buttons: [
+            { 
+              label: 'No',
+              onClick: (null)
+            },
             {
               label: 'Yes',
               onClick: ()=> setDeleteFile(true)
-            },
-            {
-              label: 'No',
-              onClick: (null)
             }
           ],
           closeOnClickOutside: false

@@ -2,8 +2,7 @@ import React, {useState, useEffect} from 'react';
 import 'react-responsive-modal/styles.css';
 import * as Actions from './store/actions';
 import { useDispatch } from 'react-redux';
-import {ToastsContainer, ToastsStore} from 'react-toasts';
-
+import {ToastsContainer, ToastsStore, ToastsContainerPosition} from 'react-toasts';
 
 function DeleteFile(props){
   const [error, setError] = useState(false);
@@ -31,9 +30,9 @@ function DeleteFile(props){
        request.then(response=> {
         setSuccess(true)
         setTimeout(() => {
-          dispatch(Actions.getFiles(currPath,'DELETE_FILE', props.fileId))
           props.setDeleteFile(false)
-        }, 2000);
+          dispatch(Actions.getFiles(currPath,'DELETE_FILE', props.fileId))
+        }, 3000);
       })
       .catch(err => {
         setError(true)
@@ -46,12 +45,12 @@ function DeleteFile(props){
 if(error === true)
 return (
   <div> {ToastsStore.error("An error occurred. Please try again.")}
-  <ToastsContainer store={ToastsStore}/></div>
+  <ToastsContainer store={ToastsStore} position={ToastsContainerPosition.TOP_RIGHT}/></div>
  )
 else 
 return (
      <div> {ToastsStore.success(`'${props.name}'` + " deleted successfully")}
-     <ToastsContainer store={ToastsStore}/></div>
+     <ToastsContainer store={ToastsStore} position={ToastsContainerPosition.TOP_RIGHT}/></div>
  )
 }
 export default DeleteFile;

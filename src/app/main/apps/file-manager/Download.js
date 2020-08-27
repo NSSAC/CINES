@@ -1,11 +1,12 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import 'react-responsive-modal/styles.css';
 import { Modal } from 'react-responsive-modal';
+import { ToastsStore, ToastsContainerPosition, ToastsContainer } from 'react-toasts';
 
 function Download(props){
   const [error, setError] = useState(false);
+  const [isLarge, setIsLarge] = useState(false);
   const [errormsg, setErrormsg] = useState("");
-  const [open, setOpen] = useState(false)
   var token=localStorage.getItem('id_token')
 
         var axios = require('axios')
@@ -35,21 +36,30 @@ function Download(props){
 
   }
 
-  InsertData() 
+  useEffect(() => {
+    InsertData() 
+    setTimeout(() => {
+      props.setDownload(false)
+    }, 5500);
+  },[]) 
 
  function InsertData() {
       var request = axios(config)
+     if (props.size > 5324860){
+       setTimeout(() => {
+          setIsLarge(true)
+       }, 1000);
+     }
        request.then((response) => {
-      var ResponseData = response.data    
+      var ResponseData = response.data 
       DownloadData(ResponseData);
    }).catch(err => {
       setError(true)
-      setOpen(true)
       if (err.response.status === 403) {
-        setErrormsg('You dont have permission to download this file.')
+        setErrormsg('403-You dont have permission to download this file.')
       }
       else if (err.response.status === 404) {
-        setErrormsg('File not found.')
+        setErrormsg('404-File not found.')
       }
       else
         setErrormsg('An error occurred while downloading the file. Please try again.')
@@ -63,7 +73,6 @@ function Download(props){
       document.body.appendChild(downloadLink);
       downloadLink.setAttribute('download', props.name);
       downloadLink.click();
-      props.setDownload(false)
    }
 
   function DownloadData(data) {
@@ -100,17 +109,25 @@ function Download(props){
   }
 
   if(error === true)
+  return(
+    <Modal center={true} open={true} showCloseIcon={false} closeOnOverlayClick={false} classNames styles center>
+      <p>{errormsg}</p>
+    </Modal>
+    )
+  //   return (
+  //     <div> {ToastsStore.error(errormsg)}
+  //     <ToastsContainer store={ToastsStore} position={ToastsContainerPosition.TOP_RIGHT}/></div>
+  // )
+  else if(isLarge)
     return(
-      <Modal center={true} open={open} showCloseIcon={false} classNames styles center>
-        <p>{errormsg}</p>
+      <Modal center={true} open={true} showCloseIcon={false} closeOnOverlayClick={false} classNames styles center>
+        <p>Please wait... Downloading will start in few minutes.</p>
       </Modal>
     )
-  else if(props.size > 5324860)
-    return(
-      <Modal center={true} open={true} showCloseIcon={false} classNames styles center>
-        <p>Please wait... The downloading will start in few minutes.</p>
-      </Modal>
-    )
+  //   return (
+  //     <div> {ToastsStore.success("Please wait... The downloading will start in few minutes.")}
+  //     <ToastsContainer store={ToastsStore} position={ToastsContainerPosition.TOP_RIGHT}/></div>
+  // )
   else 
     return (null)
 }

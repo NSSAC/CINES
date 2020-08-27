@@ -47,6 +47,11 @@ import { Vega } from 'react-vega';
      };
   }
 
+  function HandleError(){
+    setError(true)
+     setErrormsg("The file might be corrupted and can't be previewed.")
+  }
+
   useEffect(() => {
      setTimeout(() => {
       async function insertData() {
@@ -204,6 +209,7 @@ import { Vega } from 'react-vega';
     }
   
     else if ((extentionType === 'json'  || extentionType === 'geographical_region'  ||  extentionType === 'epihiperDiseaseModel' || extentionType === 'epihiperInitialization' || extentionType === 'epihiperIntervention'  || extentionType === 'epihiperTraits' )){
+     if(typeof(data) === "object")
       return (
       <JSONTree data={data} hideRoot={true} theme={{
         tree: {
@@ -215,7 +221,14 @@ import { Vega } from 'react-vega';
             fontWeight: 'bold'
         },
      }}/>
-   )}
+   )
+  else{
+    return( 
+      <div className="flex flex-1 flex-col items-center justify-center">
+        <Typography className="text-20 mt-16" color="textPrimary">The file might be corrupted and can't be previewed.</Typography>
+      </div>
+     )}
+  }
 
    else if (extentionType === 'vegalite+json'){
      const style ={
@@ -225,6 +238,7 @@ import { Vega } from 'react-vega';
         display:"block",
         overflow:'auto'
      }
+    if(typeof(data) === "object")
      return(
       <div style={{overflow:'auto'}}>
           <div style={style}>
@@ -232,6 +246,12 @@ import { Vega } from 'react-vega';
           </div>
        </div>
      );
+     else{
+      return( 
+        <div className="flex flex-1 flex-col items-center justify-center">
+          <Typography className="text-20 mt-16" color="textPrimary">The file might be corrupted and can't be previewed</Typography>
+        </div>
+       )}
     }
 
    else if((extentionType === 'png'  ||  extentionType === 'jpg' || extentionType === 'jpeg')){
@@ -242,11 +262,11 @@ import { Vega } from 'react-vega';
      var imgData =Buffer.from(data, 'binary').toString('base64')
         if(window.innerWidth<768)
               return( 
-                <img src={`data:image/png;base64,${imgData}`} width="100%" style = {styles}/>
+                <img onError={()=>HandleError()} src={`data:image/png;base64,${imgData}`} width="100%" style = {styles}/>
                 );
          else
               return( 
-                <img src={`data:image/png;base64,${imgData}`} width="50%" display="block" style = {styles}/>
+                <img onError={()=>HandleError()} src={`data:image/png;base64,${imgData}`} width="50%" display="block" style = {styles}/>
           );
     }
 
@@ -259,13 +279,13 @@ import { Vega } from 'react-vega';
         if(window.innerWidth<768)
         return(
             <video width="100%" style = {styles} controls>
-                    <source  src={`data:video/mp4;base64,${videoData}`}></source> 
+                    <source onError={()=>HandleError()} src={`data:video/mp4;base64,${videoData}`}></source> 
             </video>
         );
         else
           return(
              <video width="50%" style = {styles} controls>
-                    <source  src={`data:video/mp4;base64,${videoData}`}></source> 
+                    <source  onError={()=>HandleError()} src={`data:video/mp4;base64,${videoData}`}></source> 
              </video>
           );
       }
@@ -278,7 +298,7 @@ import { Vega } from 'react-vega';
         var audioData ="Buffer.from(data, 'binary').toString('base64')"
         return( 
            <audio width="50%" display="block" style = {styles} controls>
-              <source  src={`data:audio/mp3;base64,${audioData}`}></source> 
+              <source onError={()=>HandleError()}  src={`data:audio/mp3;base64,${audioData}`}></source> 
            </audio>
         );
      }
