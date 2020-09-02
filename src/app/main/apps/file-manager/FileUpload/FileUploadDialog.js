@@ -94,8 +94,10 @@ export const FileUpload = ({ showModal, handleClose }) => {
       if (item.id == id) {
         if (status !== 100) {
           if (initialUploadFile[id].status !== "Uploading-Failed (file already exist) 0%") {
-            item.status = "Uploading-" + status + "%";
-            fileList.push(item)
+            if (initialUploadFile[id].status != "Uploading-Failed (unsupported file name only '-_.'are allowed) 0%") {
+              item.status = "Uploading-" + status + "%";
+              fileList.push(item)
+            }
           }
           else {
             item.status = initialUploadFile[id].status
@@ -103,8 +105,10 @@ export const FileUpload = ({ showModal, handleClose }) => {
         }
         else {
           if (initialUploadFile[id].status !== "Uploading-Failed (file already exist) 0%") {
-            item.status = "Uploaded successfully"
-            fileList.push(item)
+            if (initialUploadFile[id].status != "Uploading-Failed (unsupported file name only '-_.'are allowed) 0%") {
+              item.status = "Uploaded successfully"
+              fileList.push(item)
+            }
           }
         }
       }
@@ -120,7 +124,7 @@ export const FileUpload = ({ showModal, handleClose }) => {
     let targetPath = target.replace("/apps/files", "")
     initialUploadFile.forEach(item => {
 
-      if (item.status === "Uploaded successfully" || item.status === "Uploading-Failed (file already exist) 0%" || item.status === "Uploading-Failed (unsupported file type) 0%") {
+      if (item.status === "Uploaded successfully" || item.status === "Uploading-Failed (file already exist) 0%" || item.status === "Uploading-Failed (unsupported file type) 0%" || item.status === "Uploading-Failed (unsupported file name only '-_.'are allowed) 0%") {
         count++
         if (count === initialUploadFile.length) {
           dispatch(Actions.getFiles(targetPath, 'GET_FILES'))
@@ -184,11 +188,15 @@ export const FileUpload = ({ showModal, handleClose }) => {
 
         (error) => {
           //vaildTypeFileArray.splice(id ,1)
-          if (error.message === "Request failed with status code 409") {
+          if (error.response.data.message === "File already exists") {
             progressStatus("Failed (file already exist) 0", id)
           }
-          else {
+
+          else if (error.response.data.message === "data.type should be equal to one of the allowed values") {
             progressStatus("Failed (unsupported file type) 0", id)
+          }
+          else {
+            progressStatus("Failed (unsupported file name only '-_.'are allowed) 0", id)
           }
         }
       )
@@ -223,10 +231,11 @@ export const FileUpload = ({ showModal, handleClose }) => {
           console.log(percentage)
           progressStatus(percentage, id)
         }
-      }).then(res => {  },
+      }).then(res => { },
         (error) => { }
-      ) });
-    }
+      )
+    });
+  }
 
   const handleStatus = (id) => (e) => {
     let changeFileName;
@@ -255,7 +264,7 @@ export const FileUpload = ({ showModal, handleClose }) => {
 
           </DialogContentText>
           <input className={classes.input} ref={fileInput} type="file" multiple onChange={onChangeHandler} />
-        <button className={classes.customeButton} onClick={openFileDialog} type="button" >Choose File</button>
+          <button className={classes.customeButton} onClick={openFileDialog} type="button" >Choose File</button>
         </DialogContent>
 
         <FuseAnimate animation="transition.slideUpIn" delay={300}>
