@@ -55,6 +55,7 @@ export const FileUpload = ({ showModal, handleClose }) => {
         color: '#1565C0'
       }
     }
+
   });
   var fileName = "";
   var contents;
@@ -301,7 +302,7 @@ export const FileUpload = ({ showModal, handleClose }) => {
                       className="cursor-pointer" >
 
                       <TableCell className="max-w-30 w-30 p-0 text-center"> </TableCell>
-                      <TableCell className="max-w-30 w-30 p-0 hidden sm:table-cell">{node.fileName}</TableCell>
+                      <TableCell style={{ wordBreak: 'break-all' }} className=" max-w-30 w-30 p-0 hidden sm:table-cell">{node.fileName}</TableCell>
                       <MenuTableCell
                         value={node.type}
                         onChange={handleStatus(node.id)} >
