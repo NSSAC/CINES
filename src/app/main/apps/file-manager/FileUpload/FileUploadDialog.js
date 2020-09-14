@@ -22,6 +22,8 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import MenuTableCell from "./MenuTableCell";
 import FILEUPLOAD_CONFIG from "./FileUploadconfig";
 import * as Actions from '../store/actions';
+import './FileUpload.css'
+
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -64,11 +66,16 @@ export const FileUpload = ({ showModal, handleClose }) => {
   const fileTypeArray = FILEUPLOAD_CONFIG.fileType
   const [initialUploadFile, setUploadedfiles] = useState([]);
   const [disableButton, setDisableButton] = useState(true);
+  const [files, setFiles] = useState([]);
   const classes = useStyles();
   const dispatch = useDispatch();
   var responseArry = [];
   const fileInput = useRef();
   var vaildTypeFileArray = [];
+  const [uploading, setUploading] = useState(false);
+  const [previews, setPreviews] = useState([]);
+
+  const [isDrag, setDrag] = useState(false);
   const onChangeHandler = (event) => {
 
     fileData = []
@@ -239,6 +246,7 @@ export const FileUpload = ({ showModal, handleClose }) => {
   }
 
   const handleStatus = (id) => (e) => {
+
     let changeFileName;
     initialUploadFile[id].type = e.target.value
     changeFileName = initialUploadFile[id].fileName.split('.').slice(0, -1).join('.');
@@ -250,6 +258,49 @@ export const FileUpload = ({ showModal, handleClose }) => {
   const openFileDialog = () => {
     fileInput.current.click();
   };
+  const handleDragOver = e => {
+    e.preventDefault();
+    setDrag(true);
+  };
+
+  const handleDragLeave = e => {
+    e.preventDefault();
+    setDrag(false);
+  };
+
+
+
+  const handleDrop = e => {
+    e.preventDefault();
+    console.log(e)
+    const draggedFiles = [];
+    let id = Number;
+    if (e.dataTransfer.items) {
+      Array.from(e.dataTransfer.items).forEach((item, i) => {
+
+        if (item.kind === "file") {
+
+          let file = item.getAsFile();
+          let tempObj = {};
+          tempObj.type = file.name.split('.').pop();
+          tempObj.fileName = file.name
+          tempObj.id = i
+          tempObj.status = "-";
+          tempObj['contents'] = file;
+          //fileData.push(tempObj);
+          console.log(file);
+          draggedFiles.push(tempObj);
+        }
+      });
+
+      setUploadedfiles([...draggedFiles])
+      setDisableButton(false)
+    }
+
+    setDrag(false);
+  };
+
+
 
   return (
     <React.Fragment>
@@ -259,7 +310,7 @@ export const FileUpload = ({ showModal, handleClose }) => {
         aria-labelledby="alert-dialog-slide-title"
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle id="alert-dialog-slide-title" divider="true">{"File Upload "}</DialogTitle>
+        <DialogTitle id="alert-dialog-slide-title" divider="true">{"File Upload (Click or Drag and Drop)"}</DialogTitle>
         <DialogContent divider="true">
           <DialogContentText id="alert-dialog-slide-description">
 
@@ -268,75 +319,90 @@ export const FileUpload = ({ showModal, handleClose }) => {
           <button className={classes.customeButton} onClick={openFileDialog} type="button" >Choose File</button>
         </DialogContent>
 
-        <FuseAnimate animation="transition.slideUpIn" delay={300}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell className="max-w-64 w-64 p-0 text-center"> </TableCell>
-                <TableCell>Name</TableCell>
-                <TableCell className="hidden sm:table-cell">Type</TableCell>
-                <TableCell className="hidden sm:table-cell">Status</TableCell>
 
-                {initialUploadFile.length == 0 ? null : <TableCell className=" p-0 text-center">
-                  Remove All
+        <div className={`file-upload-container ${isDrag ? "drag" : ""} ${
+          uploading ? "uploading" : ""
+          }`}
+          onDrop={handleDrop}
+          onDragOver={handleDragOver}
+          onDragLeave={handleDragLeave}
+        >
+
+
+          <FuseAnimate animation="transition.slideUpIn" delay={300}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell className="max-w-64 w-64 p-0 text-center"> </TableCell>
+                  <TableCell>Name</TableCell>
+                  <TableCell className="hidden sm:table-cell">Type</TableCell>
+                  <TableCell className="hidden sm:table-cell">Status</TableCell>
+
+                  {initialUploadFile.length == 0 ? null : <TableCell className=" p-0 text-center">
+                    Remove All
           </TableCell>}
-                <TableCell className="max-w-64 w-64 p-0 text-center"> </TableCell>
-
-              </TableRow>
-            </TableHead>
-
-            <TableBody className="max-w-100 w-100 p-0 text-center">
-              {initialUploadFile.length == 0 ?
-                <TableRow className="cursor-pointer">
-                  <TableCell className="max-w-30 w-30 p-0 text-center"> </TableCell>
-                  <TableCell className="hidden sm:table-cell">No file selected</TableCell>
-                  <TableCell className="hidden sm:table-cell">--</TableCell>
-                  <TableCell className="text-center hidden sm:table-cell">--</TableCell>
                   <TableCell className="max-w-64 w-64 p-0 text-center"> </TableCell>
 
-                </TableRow> :
-                initialUploadFile.map((node, index) => {
-                  return (
-                    <TableRow
-                      key={node.id}
-                      className="cursor-pointer" >
+                </TableRow>
+              </TableHead>
 
-                      <TableCell className="max-w-30 w-30 p-0 text-center"> </TableCell>
-                      <TableCell style={{ wordBreak: 'break-all' }} className=" max-w-30 w-30 p-0 hidden sm:table-cell">{node.fileName}</TableCell>
-                      <MenuTableCell
-                        value={node.type}
-                        onChange={handleStatus(node.id)} >
-                        {
+              <TableBody className="max-w-100 w-100 p-0 text-center">
+                {initialUploadFile.length == 0 ?
+                  <TableRow className="cursor-pointer">
+                    <TableCell className="max-w-30 w-30 p-0 text-center"> </TableCell>
+                    <TableCell className="hidden sm:table-cell">No file selected</TableCell>
+                    <TableCell className="hidden sm:table-cell">--</TableCell>
+                    <TableCell className="text-center hidden sm:table-cell">--</TableCell>
+                    <TableCell className="max-w-64 w-64 p-0 text-center"> </TableCell>
 
-                          fileTypeArray.map((item) => {
-                            return (
-                              <MenuItem value={item}>{item}</MenuItem>
-                            )
+                  </TableRow> :
+                  initialUploadFile.map((node, index) => {
+                    return (
+                      <TableRow
+                        key={node.id}
+                        className="cursor-pointer" >
 
-                          })
-                        }
-                      </MenuTableCell>
-                      <TableCell className=" hidden sm:table-cell">{node.status}
-                      </TableCell>
-                      <TableCell className=" hidden sm:table-cell">
-                        <Button
-                          variant="contained"
-                          ////size="small"
-                          color="secondary"
-                          className={classes.button}
-                          disabled={disableButton}
-                          startIcon={<DeleteIcon />}
-                          onClick={() => deleteIndividual(index)}             >
-                          Remove
+                        <TableCell className="max-w-30 w-30 p-0 text-center"> </TableCell>
+                        <TableCell style={{ wordBreak: 'break-all' }} className=" max-w-30 w-30 p-0 hidden sm:table-cell">{node.fileName}</TableCell>
+                        <MenuTableCell
+                          value={node.type}
+                          onChange={handleStatus(node.id)} >
+                          {
+
+                            fileTypeArray.map((item) => {
+                              return (
+                                <MenuItem value={item}>{item}</MenuItem>
+                              )
+
+                            })
+                          }
+                        </MenuTableCell>
+                        <TableCell className=" hidden sm:table-cell">{node.status}
+                        </TableCell>
+                        <TableCell className=" hidden sm:table-cell">
+                          <Button
+                            variant="contained"
+                            ////size="small"
+                            color="secondary"
+                            className={classes.button}
+                            disabled={disableButton}
+                            startIcon={<DeleteIcon />}
+                            onClick={() => deleteIndividual(index)}             >
+                            Remove
                                      </Button>
-                      </TableCell>
-                      <TableCell className="max-w-64 w-64 p-0 text-center"> </TableCell>
-                    </TableRow>
-                  );
-                })}
-            </TableBody>
-          </Table>
-        </FuseAnimate>
+                        </TableCell>
+                        <TableCell className="max-w-64 w-64 p-0 text-center"> </TableCell>
+                      </TableRow>
+                    );
+                  })}
+              </TableBody>
+            </Table>
+          </FuseAnimate>
+
+
+        </div>
+
+
         <DialogActions>
           <Button onClick={OnUpload} variant="contained"
             color="default"
