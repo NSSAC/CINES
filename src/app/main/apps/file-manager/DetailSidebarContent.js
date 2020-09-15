@@ -10,14 +10,11 @@ import filesize from 'filesize';
 import * as Actions from './store/actions';
 import JSONTree from 'react-json-tree'
 import Tooltip from "@material-ui/core/Tooltip";
-import EditUserMeta from './EditUserMeta'
 import instance from  'app/services/sciductService/sciductService.js'
 import { JsonEditor as Editor } from './jsoneditor-react';
 import 'jsoneditor-react/es/editor.min.css';
 import { isEqual } from 'lodash';
 import { ToastsStore, ToastsContainer, ToastsContainerPosition } from 'react-toasts';
-
-
 
 const useStyles = makeStyles({
     table   : {
@@ -311,7 +308,6 @@ function DetailSidebarContent(props)
                           {canWrite && <Tooltip title="Edit" placement="top">
                             <IconButton onClick={OnEditClick}>
                               <Icon>edit</Icon>   
-                                {<EditUserMeta meta={editUserMeta} targetPath={props.path}  id={selectedItem.id} name={selectedItem.name} setTab={(p)=>setSelectedTab(p)} setMeta={(p)=>setEditUserMeta(p)} ></EditUserMeta>}
                             </IconButton>
                           </Tooltip>}
                           {!props.editContent && <Tooltip title="Save changes" placement="top">
