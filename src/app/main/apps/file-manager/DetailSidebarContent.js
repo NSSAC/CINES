@@ -11,8 +11,8 @@ import * as Actions from './store/actions';
 import JSONTree from 'react-json-tree'
 import Tooltip from "@material-ui/core/Tooltip";
 import instance from  'app/services/sciductService/sciductService.js'
-import { JsonEditor as Editor } from './jsoneditor-react';
-import 'jsoneditor-react/es/editor.min.css';
+import { JsonEditor as Editor } from './jsoneditor-react/es';
+// import 'jsoneditor-react/es/editor.min.css';
 import { isEqual } from 'lodash';
 import { ToastsStore, ToastsContainer, ToastsContainerPosition } from 'react-toasts';
 
