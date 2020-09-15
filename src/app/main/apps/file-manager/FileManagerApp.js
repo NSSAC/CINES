@@ -16,12 +16,11 @@ import clsx from 'clsx';
 import { FileUpload } from 'app/main/apps/file-manager/FileUpload/FileUploadDialog';
 import sciductService from 'app/services/sciductService/sciductService.js'
 
-
-
 function FileManagerApp(props) {
 
     const [searchbool, setSearchbool] = useState(false);
     const [search, setSearch] = useState("");
+    const [editContent, setEditContent] = useState(true);
     const [preview, setPreview] = useState(true);
     const [showDialog, setshowDialog] = useState(false);
     const [checkFlag, setcheckFlag] = useState(false);
@@ -229,7 +228,7 @@ function FileManagerApp(props) {
                 </div>
             }
             content={
-                <FileList pageLayout={pageLayout} search={search} setPreview={(p) => setPreview(p)} />
+                <FileList pageLayout={pageLayout}  editContent={editContent} setEditContent={(p)=>setEditContent(p)}  search={search} setPreview={(p) => setPreview(p)} />
             }
             leftSidebarVariant="temporary"
             leftSidebarHeader={
@@ -242,7 +241,7 @@ function FileManagerApp(props) {
                 <DetailSidebarHeader />
             }
             rightSidebarContent={pathEnd == "/" &&
-                <DetailSidebarContent />
+                <DetailSidebarContent  editContent={editContent} setEditContent={(p)=>setEditContent(p)}  />
             }
             ref={pageLayout}
             innerScroll
