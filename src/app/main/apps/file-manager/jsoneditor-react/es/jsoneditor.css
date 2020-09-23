@@ -646,6 +646,14 @@ div.jsoneditor-readonly {
     color: #808080;
 }
 
+div.jsoneditor-readonly:first-child {
+    max-width: 220px;
+    color: #808080;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
 div.jsoneditor-empty {
     border-color: #d3d3d3;
     border-style: dashed;
@@ -705,7 +713,7 @@ div.jsoneditor-tree {
     position: relative;
     overflow: auto;
     width: max-content;
-    min-width: 290px;
+    min-width: 282px;
     max-width: 350px;
 }
 
@@ -1262,7 +1270,7 @@ pre.jsoneditor-preview,
 
 .jsoneditor-mode-form,
 .jsoneditor-mode-tree {
-    min-width: 287px;
+    min-width: 282px;
     width: fit-content;
 }
 
@@ -1363,18 +1371,17 @@ pre.jsoneditor-preview,
     border-collapse: collapse;
     border-spacing: 0;
     display: flex;
-    left: 175px;
+    /* left: 175px; */
 }
 
 .jsoneditor-search input {
     color: #1a1a1a;
-    width: 120px;
     border: none;
     outline: none;
     margin: 1px;
     line-height: 20px;
     font-family: arial, sans-serif;
-    width: 50px;
+    width: 40px;
 }
 
 .jsoneditor-search button {

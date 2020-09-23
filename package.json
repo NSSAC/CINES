@@ -57,6 +57,7 @@
         "react-responsive-modal": "^5.0.3",
         "react-router-config": "5.1.1",
         "react-router-dom": "5.1.2",
+        "react-router-navigation-prompt": "^1.8.13",
         "react-scripts": "3.4.0",
         "react-select": "3.0.8",
         "react-spring": "8.0.27",

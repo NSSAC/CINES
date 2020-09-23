@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {Hidden, Typography,Tabs,Tab, Icon, IconButton} from '@material-ui/core';
+import {Hidden, Typography,Tabs,Tab, Icon, IconButton, Modal} from '@material-ui/core';
 import { Edit, InsertDriveFile as FileIcon, ListAlt as MetadataIcon, History as ProvenanceIcon, Share as ShareIcon, Computer  } from "@material-ui/icons";
 import {makeStyles} from '@material-ui/styles';
 import {FuseAnimate} from '@fuse';
@@ -15,6 +15,8 @@ import { JsonEditor as Editor } from './jsoneditor-react/es';
 // import 'jsoneditor-react/es/editor.min.css';
 import { isEqual } from 'lodash';
 import { ToastsStore, ToastsContainer, ToastsContainerPosition } from 'react-toasts';
+import NavigationPrompt from 'react-router-navigation-prompt';
+import { confirmAlert } from 'react-confirm-alert';
 
 const useStyles = makeStyles({
     table   : {
@@ -42,7 +44,7 @@ function DetailSidebarContent(props)
     const dispatch = useDispatch()
     const classes = useStyles();
     const [selectedTab, setSelectedTab] = useState(0);
-    const [editUserMeta, setEditUserMeta] = useState(false);
+    const [metaBool, setMetaBool] = useState(false);
     const [UsermetaSuccess, setUsermetaSuccess] = useState(false);
     const [UsermetaError, setUsermetaError] = useState(false);
     const files = useSelector(({fileManagerApp}) => fileManagerApp.files);
@@ -50,6 +52,7 @@ function DetailSidebarContent(props)
     var token=localStorage.getItem('id_token')
     var path = window.location.pathname.replace("/apps/files", "")
     var editItem=localStorage.getItem('editItem')
+    var currName = localStorage.getItem("tempName")
     var canWrite = false;
     var modifiedUsermeta = "";
 
@@ -66,11 +69,32 @@ function DetailSidebarContent(props)
         display:'block',
         whiteSpace: 'nowrap'
     }
-
-    if(editItem && selectedItem){
-        if(editItem !== selectedItem.id)
-           props.setEditContent(true)
+    
+    if(editItem && selectedItem && !props.editContent){
+         if(editItem !== selectedItem.id){
+            (confirmAlert({
+                title: 'Confirm',
+                message: 'Are you sure you want to leave without saving the changes?',
+                buttons: [
+                    { 
+                    label: 'No',
+                    onClick: ()=>OnConfirm()
+                    },
+                    {
+                    label: 'Yes',
+                    onClick: ()=>OnCancelClick()
+                    }
+                ],
+                closeOnClickOutside: false
+            }))     
+        } 
     }
+
+    // if(!props.editContent){
+    // window.onbeforeunload = function(event) {
+    //     event.returnValue = "Write something clever here..";
+    //   }
+    // }
       
     if ( selectedItem )
     {
@@ -81,7 +105,7 @@ function DetailSidebarContent(props)
     {
         return null;
     }
-        
+  
     function OnModeChange() {
         if(document.getElementsByClassName("jsoneditor-mode-tree").length >0){
             document.getElementsByClassName("jsoneditor")[0].scrollIntoView()}
@@ -98,6 +122,8 @@ function DetailSidebarContent(props)
 
     function handleUsermetaChange(value){
         modifiedUsermeta = value
+        localStorage.setItem("tempMeta",JSON.stringify(modifiedUsermeta))
+        localStorage.setItem("tempName",selectedItem.name)
         console.log(modifiedUsermeta)
       }
 
@@ -115,12 +141,21 @@ function DetailSidebarContent(props)
         props.setEditContent(true)
     }
 
+    function OnConfirm(){
+        setMetaBool(true)
+        dispatch(Actions.setSelectedItem(editItem))
+    }
+
     const diffInMeta =(obj1, obj2) => {
+        if(metaBool && currName == selectedItem.name){
+            var updatedMeta = JSON.parse(localStorage.getItem("tempMeta"))
+            obj2 = updatedMeta
+        }
         var changedObj = {};
         var newObj = {};
         var removedKeys = [];
         
-        if (Object.is(obj1, obj2)) {
+        if (Object.is(obj1, obj2) || obj1 === {}) {
             changedObj = undefined;
             newObj = undefined;
             removedKeys = []
@@ -140,10 +175,13 @@ function DetailSidebarContent(props)
         console.log(changedObj)
             console.log(newObj)
             console.log(removedKeys)
+
+            // Object.keys(changedObj).forEach(x=>{if(typeof(JSON.parse(changedObj[x])) == "object")(
+            //     changedObj[x] = JSON.parse(changedObj[x]))})
+
     
         StoreData(changedObj, newObj, removedKeys)
     }
-
     const StoreData = (changedObj, newObj, removedKeys) =>{
         var data = []
     
@@ -225,7 +263,6 @@ function DetailSidebarContent(props)
 
     return (
         <FuseAnimate animation="transition.slideUpIn" delay={200}>
-
             <div className="file-details p-16 sm:p-24">
 
                 <Tabs
@@ -305,7 +342,7 @@ function DetailSidebarContent(props)
                                                                         },
                                                                      }}/>
                         <div><Typography variant="h6" style={{display:"inline-flex"}}>USER META</Typography> 
-                          {canWrite && <Tooltip title="Edit" placement="top">
+                          {canWrite && props.editContent && <Tooltip title="Edit" placement="top">
                             <IconButton onClick={OnEditClick}>
                               <Icon>edit</Icon>   
                             </IconButton>
@@ -331,12 +368,29 @@ function DetailSidebarContent(props)
                                                                             fontWeight: 'bold'
                                                                         }
                           }}/>}
-                          {!props.editContent && <Editor mode={Editor.modes.form} value={selectedItem.usermeta} name={"root"} search={true} allowedModes={[Editor.modes.form, Editor.modes.tree]} history={true} limitDragging={true} enableSort={false} enableTransform={false} onModeChange={OnModeChange} onChange={handleUsermetaChange}/>}
+                        {!props.editContent && <Editor mode={Editor.modes.form} value={selectedItem.usermeta} name={selectedItem.name} search={true} allowedModes={[Editor.modes.form, Editor.modes.tree]} history={true} limitDragging={true} enableSort={false} enableTransform={false} onModeChange={OnModeChange} onChange={handleUsermetaChange}/>}  
                         </div>
                     </React.Fragment>
                 )}
 
-                {UsermetaSuccess && 
+          <NavigationPrompt when={(crntLocation, nextLocation) =>!props.editContent} afterCancel={OnConfirm} afterConfirm={OnCancelClick}>{({ onConfirm, onCancel }) => (confirmAlert({
+                title: 'Confirm',
+                message: 'Are you sure you want to leave without saving the changes1',
+                buttons: [
+                    { 
+                    label: 'No',
+                    onClick: (onCancel)
+                    },
+                    {
+                    label: 'Yes',
+                    onClick: (onConfirm)
+                    }
+                ],
+                closeOnClickOutside: false
+                }))}
+          </NavigationPrompt> 
+
+                {UsermetaSuccess && currName == selectedItem.name && 
                    <div> {ToastsStore.success(`'${selectedItem.name}'` + " Usermeta modified successfully")}
                         <ToastsContainer store={ToastsStore} position={ToastsContainerPosition.TOP_RIGHT}/></div>
                 }
