@@ -124,7 +124,6 @@ function DetailSidebarContent(props)
         modifiedUsermeta = value
         localStorage.setItem("tempMeta",JSON.stringify(modifiedUsermeta))
         localStorage.setItem("tempName",selectedItem.name)
-        console.log(modifiedUsermeta)
       }
 
     function OnEditClick(){
@@ -172,9 +171,6 @@ function DetailSidebarContent(props)
         
             removedKeys = (Object.keys(obj1).filter(x => !(Object.keys(obj2).includes(x))))
         }
-        console.log(changedObj)
-            console.log(newObj)
-            console.log(removedKeys)
 
             // Object.keys(changedObj).forEach(x=>{if(typeof(JSON.parse(changedObj[x])) == "object")(
             //     changedObj[x] = JSON.parse(changedObj[x]))})
@@ -212,7 +208,6 @@ function DetailSidebarContent(props)
             obj['path']= `/usermeta/${key}`
             data.push(obj)
         })}
-        console.log(data)
         usermetaApi(data)
      }
     
