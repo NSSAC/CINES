@@ -370,7 +370,7 @@ function DetailSidebarContent(props)
 
           <NavigationPrompt when={(crntLocation, nextLocation) =>!props.editContent} afterCancel={OnConfirm} afterConfirm={OnCancelClick}>{({ onConfirm, onCancel }) => (confirmAlert({
                 title: 'Confirm',
-                message: 'Are you sure you want to leave without saving the changes1',
+                message: 'Are you sure you want to leave without saving the changes?',
                 buttons: [
                     { 
                     label: 'No',
