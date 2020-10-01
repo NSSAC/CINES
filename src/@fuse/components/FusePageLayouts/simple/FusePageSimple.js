@@ -154,6 +154,7 @@ const FusePageSimple = React.forwardRef(function (props, ref) {
                 leftSidebarRef.current.toggleSidebar()
             },
             toggleRightSidebar: () => {
+             if(rightSidebarRef.current)
                 rightSidebarRef.current.toggleSidebar()
             }
         }

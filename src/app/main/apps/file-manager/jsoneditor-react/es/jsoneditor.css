@@ -914,6 +914,11 @@ tr.jsoneditor-selected.jsoneditor-first button.jsoneditor-contextmenu-button {
     background-position: -48px -48px;
 }
 
+
+/* .jsoneditor-button.jsoneditor-contextmenu-button{
+    display: none
+} */
+
 div.jsoneditor-tree div.jsoneditor-show-more a:hover,
 div.jsoneditor-tree div.jsoneditor-show-more a:focus {
     color: #ee422e;
@@ -1026,7 +1031,7 @@ pre.jsoneditor-preview,
 
 .jsoneditor-popover.jsoneditor-left {
     top: -7px;
-    right: 32px;
+    right: -3px;
 }
 
 .jsoneditor-popover.jsoneditor-left:before {
@@ -1247,7 +1252,7 @@ pre.jsoneditor-preview,
 
 .jsoneditor-menu>button:disabled,
 .jsoneditor-menu>.jsoneditor-modes>button:disabled {
-    opacity: 0.5;
+    opacity: 1;
     background-color: transparent;
     border: none;
 }
@@ -1272,6 +1277,7 @@ pre.jsoneditor-preview,
 .jsoneditor-mode-tree {
     min-width: 282px;
     width: fit-content;
+    margin-right: 15px;
 }
 
 .jsoneditor.jsoneditor-mode-view>.jsoneditor-menu>button.jsoneditor-sort,

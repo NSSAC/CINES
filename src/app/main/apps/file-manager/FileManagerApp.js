@@ -24,7 +24,7 @@ function FileManagerApp(props) {
     const [preview, setPreview] = useState(true);
     const [showDialog, setshowDialog] = useState(false);
     const [checkFlag, setcheckFlag] = useState(false);
-    const [meta, setMeta] = useState([]);
+    const [prompt, setPrompt] = useState(true);
     var path = window.location.pathname
     var pathEnd = path.charAt(path.length - 1);
     var token = localStorage.getItem('id_token')
@@ -63,6 +63,7 @@ function FileManagerApp(props) {
         setSearchbool(false);
         document.removeEventListener("keydown", escFunction, false);
     }
+
     async function getMetadata(targetMeta) {
         setcheckFlag(false);
 
@@ -228,7 +229,7 @@ function FileManagerApp(props) {
                 </div>
             }
             content={
-                <FileList pageLayout={pageLayout}  editContent={editContent} setEditContent={(p)=>setEditContent(p)}  search={search} setPreview={(p) => setPreview(p)} />
+                <FileList pageLayout={pageLayout} prompt={prompt} setPrompt={(p)=>setPrompt(p)}  editContent={editContent} setEditContent={(p)=>setEditContent(p)}  search={search} setPreview={(p) => setPreview(p)} />
             }
             leftSidebarVariant="temporary"
             leftSidebarHeader={
@@ -241,7 +242,7 @@ function FileManagerApp(props) {
                 <DetailSidebarHeader />
             }
             rightSidebarContent={pathEnd == "/" &&
-                <DetailSidebarContent  editContent={editContent} setEditContent={(p)=>setEditContent(p)}  />
+                <DetailSidebarContent  setPrompt={(p)=>setPrompt(p)} editContent={editContent} setEditContent={(p)=>setEditContent(p)}  />
             }
             ref={pageLayout}
             innerScroll

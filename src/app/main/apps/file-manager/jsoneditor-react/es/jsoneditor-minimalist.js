@@ -2641,7 +2641,7 @@ var ContextMenu = /*#__PURE__*/function () {
     value: function show(anchor, frame, ignoreParent) {
       this.hide(); // determine whether to display the menu below or above the anchor
 
-      var showBelow = true;
+      var showBelow = false;
       var parent = anchor.parentNode;
       var anchorRect = anchor.getBoundingClientRect();
       var parentRect = parent.getBoundingClientRect();
@@ -12764,7 +12764,7 @@ function appendNodeFactory(Node) {
 
     if (this.editor.options.mode === 'tree') {
       // a cell for the dragarea column
-      // dom.tdDrag = document.createElement('td'); // create context menu
+      dom.tdDrag = document.createElement('td'); // create context menu
 
       var tdMenu = document.createElement('td');
       dom.tdMenu = tdMenu;
@@ -15357,7 +15357,6 @@ var Node_Node = /*#__PURE__*/function () {
         }
 
         dom.tr.appendChild(tdDrag); // create context menu
-
         var tdMenu = document.createElement('td');
         var menu = document.createElement('button');
         menu.type = 'button';

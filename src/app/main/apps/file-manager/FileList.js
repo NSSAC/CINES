@@ -151,10 +151,14 @@ function FileList(props)
         }
     }
         
+    if(!props.prompt && props.pageLayout.current){
+      props.pageLayout.current.toggleRightSidebar() 
+      props.setPrompt(true)
+    }
     
     if(pathEnd === "/"){
         props.setPreview(true)
-        localStorage.removeItem('nodeId', 'nodeSize','nodeType')
+        // localStorage.removeItem('nodeId', 'nodeSize','nodeType')
         if(Object.values(files).length > 0 && searchResults.length > 0)
             return (
                 <FuseAnimate animation="transition.slideUpIn" delay={300}>

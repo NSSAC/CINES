@@ -17,6 +17,7 @@ import { isEqual } from 'lodash';
 import { ToastsStore, ToastsContainer, ToastsContainerPosition } from 'react-toasts';
 import NavigationPrompt from 'react-router-navigation-prompt';
 import { confirmAlert } from 'react-confirm-alert';
+import './Confirm-alert.css' 
 
 const useStyles = makeStyles({
     table   : {
@@ -51,6 +52,7 @@ function DetailSidebarContent(props)
     const selectedItem = useSelector(({fileManagerApp}) => files[fileManagerApp.selectedItemId]);
     var token=localStorage.getItem('id_token')
     var path = window.location.pathname.replace("/apps/files", "")
+    var lastPath = localStorage.getItem("editMetaPath")
     var editItem=localStorage.getItem('editItem')
     var currName = localStorage.getItem("tempName")
     var canWrite = false;
@@ -69,8 +71,13 @@ function DetailSidebarContent(props)
         display:'block',
         whiteSpace: 'nowrap'
     }
+    var styleEditor={
+       style:{
+           width:"fit-content"
+        }
+    }
     
-    if(editItem && selectedItem && !props.editContent){
+    if(editItem && selectedItem && !props.editContent && path == lastPath ){
          if(editItem !== selectedItem.id){
             (confirmAlert({
                 title: 'Confirm',
@@ -108,8 +115,9 @@ function DetailSidebarContent(props)
   
     function OnModeChange() {
         if(document.getElementsByClassName("jsoneditor-mode-tree").length >0){
-            document.getElementsByClassName("jsoneditor")[0].scrollIntoView()}
-
+            document.getElementsByClassName("jsoneditor")[0].scrollIntoView()
+            document.getElementsByClassName("jsoneditor-button jsoneditor-contextmenu-button")[0].hidden=true
+        }
         if(document.getElementsByClassName("jsoneditor-mode-form").length >0){
             document.getElementsByClassName("jsoneditor")[0].scrollIntoView()
         }
@@ -128,6 +136,8 @@ function DetailSidebarContent(props)
 
     function OnEditClick(){
         localStorage.setItem("editItem", selectedItem.id)
+        var path = window.location.pathname.replace("/apps/files", "")
+        localStorage.setItem("editMetaPath", path)
         props.setEditContent(false)
     }
 
@@ -137,10 +147,12 @@ function DetailSidebarContent(props)
     }
 
     function OnCancelClick(){
+        props.setPrompt(false)
         props.setEditContent(true)
     }
 
     function OnConfirm(){
+        props.setPrompt(false)
         setMetaBool(true)
         dispatch(Actions.setSelectedItem(editItem))
     }
@@ -353,7 +365,8 @@ function DetailSidebarContent(props)
                             </IconButton>
                           </Tooltip>}
                         </div>
-                        <div>{props.editContent && <JSONTree data={selectedItem.usermeta} hideRoot={true} theme={{
+                        {/* <div> */}
+                            {props.editContent && <JSONTree data={selectedItem.usermeta} hideRoot={true} theme={{
                                                                         tree: {
                                                                           backgroundColor: '#F7F7F7'
                                                                          },
@@ -363,8 +376,8 @@ function DetailSidebarContent(props)
                                                                             fontWeight: 'bold'
                                                                         }
                           }}/>}
-                        {!props.editContent && <Editor mode={Editor.modes.form} value={selectedItem.usermeta} name={selectedItem.name} search={true} allowedModes={[Editor.modes.form, Editor.modes.tree]} history={true} limitDragging={true} enableSort={false} enableTransform={false} onModeChange={OnModeChange} onChange={handleUsermetaChange}/>}  
-                        </div>
+                        {!props.editContent && <Editor htmlElementProps={styleEditor} mode={Editor.modes.form} value={selectedItem.usermeta} name={selectedItem.name} search={true} allowedModes={[Editor.modes.form, Editor.modes.tree]} history={true} limitDragging={true} enableSort={false} enableTransform={false} onModeChange={OnModeChange} onChange={handleUsermetaChange}/>}  
+                        {/* </div> */}
                     </React.Fragment>
                 )}
 
@@ -385,7 +398,7 @@ function DetailSidebarContent(props)
                 }))}
           </NavigationPrompt> 
 
-                {UsermetaSuccess && currName == selectedItem.name && 
+                {UsermetaSuccess && currName == selectedItem.name && props.editContent && 
                    <div> {ToastsStore.success(`'${selectedItem.name}'` + " Usermeta modified successfully")}
                         <ToastsContainer store={ToastsStore} position={ToastsContainerPosition.TOP_RIGHT}/></div>
                 }

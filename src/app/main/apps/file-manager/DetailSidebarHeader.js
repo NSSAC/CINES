@@ -8,7 +8,7 @@ import DeleteFile from './DeleteFile'
 import 'react-responsive-modal/styles.css';
 import instance from  'app/services/sciductService/sciductService.js'
 import { confirmAlert } from 'react-confirm-alert'; 
-import './DeleteFile.css' 
+import './Confirm-alert.css' 
 
 
 function DetailSidebarHeader(props)
