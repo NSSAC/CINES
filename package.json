@@ -21,7 +21,7 @@
         "firebase": "7.6.0",
         "formsy-react": "1.1.5",
         "google-map-react": "1.1.5",
-        "jsoneditor": "^9.0.4",
+        "jsoneditor": "^9.1.1",
         "jsoneditor-react": "^3.0.1",
         "jsonwebtoken": "8.5.1",
         "jss": "10.0.0",
@@ -103,6 +103,7 @@
         "bundle-report": "yarn run build-stats && webpack-bundle-analyzer build/bundle-stats.json -m static -r build/bundle-stats.html -O",
         "tarball": "npm run build && tar -cvf cines-build.tar build/"
     },
+    "proxy": "https://sciduct.bii.virginia.edu",
     "eslintConfig": {
         "extends": "react-app"
     },

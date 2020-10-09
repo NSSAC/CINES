@@ -14,7 +14,7 @@ function Download(props){
         if(typeof(token) === "string") {
         var config = {
           method: 'get',
-          url: `https://sciduct.bii.virginia.edu/filesvc/file/${props.fileId}`,
+          url: `/filesvc/file/${props.fileId}`,
           headers: { 
             'Accept': '*/*',
             'Authorization': token
@@ -27,7 +27,7 @@ function Download(props){
     else if(typeof(token) === "object") {
       var config = {
         method: 'get',
-        url: `https://sciduct.bii.virginia.edu/filesvc/file/${props.fileId}`,
+        url: `/filesvc/file/${props.fileId}`,
         headers: { 
           'Accept': '*/*'
         },

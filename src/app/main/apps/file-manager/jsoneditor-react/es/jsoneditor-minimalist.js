@@ -12204,7 +12204,7 @@ var SearchBox_SearchBox = /*#__PURE__*/function () {
     var results = document.createElement('div');
     this.dom.results = results;
     results.className = 'jsoneditor-results';
-    wrapper.appendChild(results);
+    container.appendChild(results);
     var divInput = document.createElement('div');
     this.dom.input = divInput;
     divInput.className = 'jsoneditor-frame';
@@ -12426,7 +12426,7 @@ var SearchBox_SearchBox = /*#__PURE__*/function () {
           var resultCount = this.results.length;
 
           if (resultCount === 0) {
-            this.dom.results.textContent = "no\xA0results";
+            this.dom.results.textContent = "No\xA0matches";
           } else if (resultCount === 1) {
             this.dom.results.textContent = "1\xA0result";
           } else if (resultCount > MAX_SEARCH_RESULTS) {
@@ -15357,6 +15357,7 @@ var Node_Node = /*#__PURE__*/function () {
         }
 
         dom.tr.appendChild(tdDrag); // create context menu
+
         var tdMenu = document.createElement('td');
         var menu = document.createElement('button');
         menu.type = 'button';

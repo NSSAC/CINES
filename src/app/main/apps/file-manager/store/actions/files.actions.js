@@ -9,7 +9,7 @@ export function getFiles(path, type, id)
         if(typeof(token) == "string") {
         var config = {
           method: 'get',
-          url: `https://sciduct.bii.virginia.edu/filesvc/file/${path}`,
+          url: `/filesvc/file/${path}`,
           headers: { 
             'Accept': '*/*',
             'Authorization': token
@@ -20,7 +20,7 @@ export function getFiles(path, type, id)
     if(typeof(token) == "object") {
       var config = {
         method: 'get',
-        url: `https://sciduct.bii.virginia.edu/filesvc/file/${path}`,
+        url: `/filesvc/file/${path}`,
         headers: { 
           'Accept': '*/*',
         }
