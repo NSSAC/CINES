@@ -71,7 +71,7 @@ function FileManagerApp(props) {
         if (typeof (token) == "string") {
             var config = {
                 method: 'get',
-                url: `/filesvc/file${targetMeta}`,
+                url: `https://sciduct.bii.virginia.edu/filesvc/file${targetMeta}`,
                 headers: {
                     'Accept': 'application/vsmetadata+json',
                     'Authorization': token

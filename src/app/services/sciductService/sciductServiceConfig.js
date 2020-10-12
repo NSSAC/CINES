@@ -6,7 +6,7 @@ const AUTH_CONFIG = {
     // domain     : "YOUR_DOMAIN",
     // clientId   : "YOUR_CLIENT_ID",
      callbackUrl: "YOUR_DOMAIN/callback",
-     refresh_token :"/usersvc/refresh",
+     refresh_token :"https://sciduct.bii.virginia.edu/usersvc/refresh",
      logout_local_dev : "http://localhost:3000",
      logout_production :""
 };

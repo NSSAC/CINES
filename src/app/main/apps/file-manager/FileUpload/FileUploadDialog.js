@@ -180,7 +180,7 @@ export const FileUpload = ({ showModal, handleClose }) => {
 
       return axios({
         method: 'post',
-        url: "/filesvc/file/" + targetPath,
+        url: "https://sciduct.bii.virginia.edu/filesvc/file/" + targetPath,
         headers: {
           'Content-Type': 'application/json',
           'Authorization': userToken,
@@ -225,7 +225,7 @@ export const FileUpload = ({ showModal, handleClose }) => {
 
       axios({
         method: 'put',
-        url: "/filesvc/file/" + targetPath + fileName,
+        url: "https://sciduct.bii.virginia.edu/filesvc/file/" + targetPath + fileName,
         headers: {
           'Content-Type': 'application/json',
           'Access-Control-Allow-Origin': '* ',

@@ -15,7 +15,7 @@ function DeleteFile(props){
 
         var config = {
           method: 'delete',
-          url: `/filesvc/file/${props.fileId}?recursive=true`,
+          url: `https://sciduct.bii.virginia.edu/filesvc/file/${props.fileId}?recursive=true`,
           headers: { 
             'Accept': 'application/vsmetadata+json',
             'Authorization': token

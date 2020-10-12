@@ -103,7 +103,6 @@
         "bundle-report": "yarn run build-stats && webpack-bundle-analyzer build/bundle-stats.json -m static -r build/bundle-stats.html -O",
         "tarball": "npm run build && tar -cvf cines-build.tar build/"
     },
-    "proxy": "https://sciduct.bii.virginia.edu",
     "eslintConfig": {
         "extends": "react-app"
     },

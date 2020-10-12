@@ -17,7 +17,7 @@ import { Vega } from 'react-vega';
         if(typeof(token) === "string" && (props.type === "pdf" || props.type === "png" || props.type === "jpeg" || props.type === "jpg" || props.type === "excel" || props.type === "mp3" || props.type === "mp4")) {
           var config = {
             method: 'get',
-            url: `/filesvc/file/${props.fileId}`,
+            url: `https://sciduct.bii.virginia.edu/filesvc/file/${props.fileId}`,
             headers: { 
               'Accept': '*/*',
               'Authorization': token
@@ -29,7 +29,7 @@ import { Vega } from 'react-vega';
        else if(typeof(token) == "string") {
         var config = {
           method: 'get',
-          url: `/filesvc/file/${props.fileId}`,
+          url: `https://sciduct.bii.virginia.edu/filesvc/file/${props.fileId}`,
           headers: { 
             'Accept': '*/*',
             'Authorization': token
@@ -40,7 +40,7 @@ import { Vega } from 'react-vega';
     else if(typeof(token) == "object") {
       var config = {
         method: 'get',
-        url: `/filesvc/file/${props.fileId}`,
+        url: `https://sciduct.bii.virginia.edu/filesvc/file/${props.fileId}`,
         headers: { 
           'Accept': '*/*'
         }
