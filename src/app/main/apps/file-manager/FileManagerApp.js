@@ -208,10 +208,10 @@ function FileManagerApp(props) {
                         )}
                     </div>
                     <div className="flex flex-1 items-end">
-                        {checkFlag && <FuseAnimate animation="transition.expandIn" delay={600}>
+                    {checkFlag && <FuseAnimate className="hidden md:flex flex-col" animation="transition.expandIn" delay={600}>
                             <Tooltip title="Click to Upload" aria-label="add">
-                                <Fab color="secondary" aria-label="add" size="medium" className="absolute bottom-0 left-0 ml-16 -mb-12 z-999">
-                                    <Icon onClick={showFileUploadDialog}>add</Icon>
+                                <Fab color="secondary" aria-label="add" size="medium" className=" hidden sm:flex flex-col absolute bottom-0 d-none d-sm-block  left-0 ml-16 -mb-12 z-999">
+                                    <Icon className="hidden sm:flex flex-col" onClick={showFileUploadDialog}>add</Icon>
                                 </Fab>
                             </Tooltip>
                         </FuseAnimate>

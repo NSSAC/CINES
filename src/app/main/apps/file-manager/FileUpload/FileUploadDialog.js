@@ -315,8 +315,8 @@ export const FileUpload = ({ showModal, handleClose }) => {
           <DialogContentText id="alert-dialog-slide-description">
 
           </DialogContentText>
-          <input className={classes.input} ref={fileInput} type="file" multiple onChange={onChangeHandler} />
-          <button className={classes.customeButton} onClick={openFileDialog} type="button" >Choose File</button>
+          {/* <input className={classes.input} ref={fileInput} type="file" multiple onChange={onChangeHandler} />
+          <button className={classes.customeButton} onClick={openFileDialog} type="button" >Choose File</button> */}
         </DialogContent>
 
 
@@ -327,7 +327,8 @@ export const FileUpload = ({ showModal, handleClose }) => {
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
         >
-
+<input className={classes.input} ref={fileInput} type="file" multiple onChange={onChangeHandler} />
+          <button className={classes.customeButton} onClick={openFileDialog} type="button" >Choose File</button>
 
           <FuseAnimate animation="transition.slideUpIn" delay={300}>
             <Table>
