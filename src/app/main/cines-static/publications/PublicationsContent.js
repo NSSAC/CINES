@@ -23,7 +23,7 @@ function ProjectStructureDoc()
             content={
                 <div className="p-24 max-w-2xl">
 
-                <Typography className="mb-8" variant="h5">Links to Educational Materials on Network Science:</Typography>
+                <Typography className="mb-8" variant="h5"><b>Links to Educational Materials on Network Science</b></Typography>
                 <Typography className="mb-8" variant="h6">I. Lecture Notes and Other Material Based on Courses:</Typography>
                 <Typography className="my-16" component="div">
                         <ol style={{listStyle: 'square'}} className="pl-12">
@@ -113,7 +113,7 @@ at: <a target="_blank" href="https://kateto.net/tutorials/">https://kateto.net/t
 </ol>
 
 <Typography className="mb-8" variant="h6">IV. Links to Online Courses on Network Science and Related Topics:</Typography>
-<ol style={{listStyle: 'square'}} className="pl-12">
+<ol style={{listStyle: 'square'}} className="pl-12 mb-40">
 <li className="mb-12">A list of courses on Network Science and related topics offered by Coursera is available at: 
 <a target="_blank" href="https://www.coursera.org/courses?query=network%20analysis"> https://www.coursera.org/courses?query=network%20analysis.</a></li>
 <li className="mb-12">Information regarding a course on Introduction to Network Analysis in Python offered by
@@ -122,33 +122,33 @@ DataCamp is available at:  <a target="_blank" href="https://www.datacamp.com/cou
 <a target="_blank" href="https://www.edx.org/course/social-network-analysis-sna"> https://www.edx.org/course/social-network-analysis-sna.</a></li>
 </ol>
 
-
-                <Typography className="mb-8" variant="h5">Publications Acknowledging Support from CINES NSF Grant OAC-1916805:</Typography>
+                 
+                <Typography className="mb-8 mt-4" variant="h5"><b>Publications Acknowledging Support from CINES NSF Grant OAC-1916805</b></Typography>
                 <Typography className="my-16" component="div">
-                        <ol style={{listStyle: 'square'}} className="pl-12">
+                        <ol style={{listStyle: 'square'}} className="pl-12 mb-40">
                             <li className="mb-12">
-                            G. Korkmaz,  C. J. Kuhlman,  S. S. Ravi and F. Vega-Redondo, “An Agent-Based Model of Common Knowledge and Collective Action Dynamics on Social Networks,” submitted for publication.
+                            C. J. Kuhlman, G. Korkmaz, S. S. Ravi and F. Vega-Redondo, “An Agent-Based Model of Common Knowledge and Collective Action Dynamics on Social Networks,” Winter Simulation Conference (WSC), 2020.
                             </li>
                             <li className="mb-12">
                             R. Kim, J. Gangolly, S. S. Ravi and D. J. Rosenkrantz, “Formal Analysis of Segregation of
-Duties (SoD) in Accounting: A Computational Approach,”  to appear in Abacus (A Wiley
+Duties (SoD) in Accounting: A Computational Approach,”  Abacus (A Wiley
 Journal of Accounting, Finance and Business Studies).
                             </li>
                             <li className="mb-12">
                             A. Adiga, S. Krauss, O. Maksimov and S. S. Ravi, “Boolean Games: Inferring Agents Goals
-Using Taxation Queries,”  to appear in Proc. 2020 International Joint Conference on Artificial
+Using Taxation Queries,”   Proc. 2020 International Joint Conference on Artificial
 Intelligence (IJCAI-2020).
                             </li>
                             <li className="mb-12">
                             A. Adiga, C. J. Kuhlman, M. V. Marathe, S. S. Ravi, D. J. Rosenkrantz, R. E. Stearns and
 A. Vullikanti1, “Bounds and Complexity Results for Learning Coalition-Based Interaction
-Functions in Networked Social Systems,”  to appear in Proc. 34th AAAI Conference on
+Functions in Networked Social Systems,”   Proc. 34th AAAI Conference on
 Artificial Intelligence (AAAI-2020).
                             </li>
                             <li className="mb-12">
                              P. Sambaturu,  A. Gupta,  I. Davidson, S. S. Ravi, A. Vullikanti and A. Warren, “Efficient
 Algorithms for Generating Provably Near-Optimal Cluster Descriptors for Explainability,”
-to appear in Proc. 34th AAAI Conference on Artificial Intelligence (AAAI-2020).
+ Proc. 34th AAAI Conference on Artificial Intelligence (AAAI-2020).
                             </li>
                             <li className="mb-12">
                             D. J. Rosenkrantz,  M. V. Marathe,  S. S. Ravi and R. E. Stearns, “Symmetry Properties of
@@ -169,16 +169,17 @@ Nested Canalyzing Functions,”  Discrete Mathematics and Theoretical Computer S
                 
                
                
-                <Typography className="mb-8" variant="h5">Publications Related to CINES:</Typography>
+                <Typography className="mb-8" variant="h5"><b>Publications Related to CINES</b></Typography>
+                <Typography className="mb-8" variant="h6">I. Works on cyberinfrastructure :</Typography>
                 <Typography className="my-16" component="div">
                         <ol style={{listStyle: 'square'}} className="pl-12">
-                            <li className="mb-12">
-                            S. E. Abdelhamid, R. Alo, S. M. Arifuzzaman, P. Beckman, M. H. Bhuiyan, K. Bisset, E.
-A. Fox, G. C. Fox, K. Hall, S. M. S. Hasan, A. Joshi, M. Khan, C. J. Kuhlman, S. Lee,
-J. P. Leidig, H. Makkapati, M. V. Marathe, H. S. Mortveit, J. Qiu, S. S. Ravi, Z. Shams,
+                            <li className="mb-12">tveit, J. Qiu, S. S. Ravi, Z. Shams,
 O. Sirisaengtaksin, R. Subbiah, S. Swarup, N. Trebon, A. Vullikanti and Z. Zhao, “CINET:
 A CyberInfrastructure for Network Science”, Proc. 8th IEEE International Conference on
 eScience (eScience 2012), Chicago, IL. Oct. 2012, pp. 1–8.
+                            S. E. Abdelhamid, R. Alo, S. M. Arifuzzaman, P. Beckman, M. H. Bhuiyan, K. Bisset, E.
+A. Fox, G. C. Fox, K. Hall, S. M. S. Hasan, A. Joshi, M. Khan, C. J. Kuhlman, S. Lee,
+J. P. Leidig, H. Makkapati, M. V. Marathe, H. S. Mor
 
                             </li>
                             <li className="mb-12">
@@ -190,6 +191,18 @@ A CyberInfrastructure for Network Science, Proc. 10th IEEE Intl. Conference on e
 (eScience 2014), Sao Paulo, Brazil, Oct. 2014, pp. 324–331.
 
                             </li>
+                            <li>
+
+                            Nesreen K. Ahmed, Richard A. Alo, Catherine T. Amelink, Young Yun Baek,
+                             Aashish Chaudhary, Kristy Collins, Albert C. Esterline, Edward A. Fox,
+                              Geoffrey C. Fox, Aric Hagberg, Ron Kenyon, Chris J. Kuhlman, Jure Leskovec, Dustin Machi, Madhav V. Marathe, Natarajan Meghanathan, Yasuo Miyazaki, Judy Qiu, Naren Ramakrishnan, S. S. Ravi, Ryan A. Rossi, Rok Sosic, Gregor von Laszewski, “net.science: A Cyberinfrastructure for Sustained Innovation in Network Science and Engineering,” Gateways Conference, 2020.
+                            </li>
+                            </ol>
+                            </Typography>
+
+                            <Typography className="mb-8" variant="h6">II. Works on applications:</Typography>
+                            <Typography className="my-16" component="div">
+                        <ol style={{listStyle: 'square'}} className="pl-12">
                             <li className="mb-12">
                             C. Dumas, D. LaManna, T. M. Harrison, S. S. Ravi, L. Hagen, C. Kotfila and F. Chen,
 “E-petitioning as Collective Political Action in We the People”, Proc. iConference 2015,
@@ -204,10 +217,32 @@ We the People”, Big Data and Society (an online journal), Vol. 2, No. 2, July�
 2015, pp. 1–20.
 
 
+                            </li>     
 
-                            </li>                            
+                            <li className="mb-12">Joshua D. Priest, Madhav V. Marathe, S. S. Ravi,
+                                 Daniel J. Rosenkrantz and Richard E.
+                                  Stearns, “Evolution of Similar Configurations in Graph Dynamical Systems”, The 9th International Conference on Complex Networks and their Applications (ComplexNetworks), 2020.</li>                       
+                      <li className="mb-12">
+                      Rosemary Kim, Jagdish Gangolly, 
+                      S. S. Ravi and Daniel J. Rosenkrantz,
+                       “Formal Analysis of Segregation of Duties (SoD) in Accounting:
+                        A Computational Approach”, 
+                        Abacus (A WileyJournal of Accounting, Finance and Business Studies),
+                         Vol. 56, No. 2, June 2020, pp. 165–212.
+                      </li>
+
+                      <li className="mb-12">
+                      Abhijin Adiga, Chris J. Kuhlman, Madhav V. Marathe, S. S. Ravi, Daniel J. Rosenkrantz, Richard E. Stearns and Anil K. Vullikanti, “Bounds and Complexity Results for Learning Coalition-Based Interaction Functions in Networked Social Systems,” Proc. 32nd AAAI Conference on Artificial Intelligence (AAAI-2020), New York, NY, Feb. 2020, pp. 3138–3145.
+                      </li>
+                      <li className="mb-12">
+                      Henry L. Carscadden, Chris J. Kuhlman, Madhav V. Marathe, S. S. Ravi, and Daniel J. Rosenkrantz, “Blocking the Propagation of Two Simultaneous Contagions over Networks,” The 9th International Conference on Complex Networks and their Applications (Complex Networks), 2020.
+                      </li>
+                      <li className="mb-12">
+                      Chris J. Kuhlman, Gizem Korkmaz, S. S. Ravi, and Fernando Vega-Redondo, “Effect of Interaction Mechanisms on Facebook Dynamics Using a Common Knowledge Model,” The 9th International Conference on Complex Networks and their Applications (ComplexNetworks), 2020.
+                      </li>
                         </ol>
                     </Typography>
+                    
                    
                 </div>
             }
