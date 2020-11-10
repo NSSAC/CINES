@@ -28,7 +28,7 @@ function UpdatingFuseReactDoc()
                     </div> */}
 
 <Typography className="mb-16" component="p">
-                    Net.Science is a self-sustaining cyberinfrastructure that will be a community resource for network science. CINES is an extensible platform for producers and consumers
+                    Net.Science is a self-sustaining cyberinfrastructure that will be a community resource for network science. Net.Science is an extensible platform for producers and consumers
 of network science data, information, and software. Domain scientists can use Net.Science to obtain
 interesting insights to advance their fields
                     </Typography>
