@@ -1,5 +1,6 @@
-import React from 'react';
 import { Icon, Typography } from '@material-ui/core';
+import React from 'react';
+
 import { FusePageSimple } from '@fuse';
 
 function ProjectStructureDoc() {
@@ -33,8 +34,8 @@ Elements of Network Science and Applications can be downloaded from <a target="_
                             <li className="mb-12">
                                 Amir Arjolu, Massachusetts Institute of Technology, Cambridge, MA. Lecture notes and
 other materials for the course Introduction to Network Models are available at: <a target="_blank" href="https://
-ocw.mit.edu/courses/civil-and-environmental-engineering/1-022-introduction-tonetwork-models-fall-2018/">https://
-ocw.mit.edu/courses/civil-and-environmental-engineering/1-022-introduction-tonetwork-models-fall-2018/</a>.
+ocw.mit.edu/courses/civil-and-environmental-engineering/1-022-introduction-to-network-models-fall-2018/">https://
+ocw.mit.edu/courses/civil-and-environmental-engineering/1-022-introduction-to-network-models-fall-2018/</a>.
                             </li>
 
                             <li className="mb-12">
@@ -74,7 +75,7 @@ csc641-fall2019/</a>
 Course materials for the class Network Science taught during Fall 2015 can be accessed from <a target="_blank" href="https://www.albany.edu/~ravi/csi660_index.html">https://www.albany.edu/~ravi/csi660_index.html</a>
                             </li>
                             <li className="mb-12">
-                                Stanford University, Stanford, CA. Materials for the course Social and Information Network Analysis taught during Autumn 2015 can be accessed from <a target="_blank" href="http://snap.stanford.edu/class/cs224w2015/handouts.html">http://snap.stanford.edu/class/cs224w2015/handouts.html.</a>
+                                Stanford University, Stanford, CA. Materials for the course Social and Information Network Analysis taught during Autumn 2015 can be accessed from <a target="_blank" href="http://snap.stanford.edu/class/cs224w-2015/handouts.html">http://snap.stanford.edu/class/cs224w-2015/handouts.html.</a>
                             </li>
                             <li className="mb-12">
                                 Boleslaw Szymanski, Rensselaer Polytechnic Institute (RPI), Troy, NY. Materials for the
@@ -84,7 +85,7 @@ Course materials for the class Network Science taught during Fall 2015 can be ac
                             <li className="mb-12">
                                 Leonid Zhukov and Ilya Makarov, National Research University, Higher School of Economics,
                                 Moscow, Russia. Materials for the Winter-Spring 2017 offering of the course Network Science
-can be accessed from <a target="_blank" href="http://cs.rpi.edu/~szymansk/fns.18/">http://www.leonidzhukov.net/hse/2017/networkscience/#textbooks.</a>
+can be accessed from <a target="_blank" href="http://www.leonidzhukov.net/hse/2017/networkscience/#textbooks">http://www.leonidzhukov.net/hse/2017/networkscience/#textbooks.</a>
                             </li>
 
                         </ol>
