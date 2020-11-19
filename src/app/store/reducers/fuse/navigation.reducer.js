@@ -26,6 +26,27 @@ const navigation = function (state = initialState, action) {
         }
         default:
         {
+            if(localStorage.getItem("loggedIn")){
+
+                for (var i = 0; i < state.length; i++) {
+                    if (state[i].id === 'my-jobs') {
+                        
+                             return state;                   // exit loop and function
+                    }
+                }
+             
+
+                    state.push({
+                        
+                        'id'   : 'my-jobs',
+                     'title': 'My Jobs',
+                         'type' : 'item',
+                         'icon' : 'folder',
+                         'url'  : '/apps/my-jobs/'
+                      })
+                  
+             
+            }
             return state;
         }
     }
