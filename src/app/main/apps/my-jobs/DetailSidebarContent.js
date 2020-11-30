@@ -56,14 +56,12 @@ function DetailSidebarContent(props) {
 
     const openoutputDialog = () => {
         setshowDialog(true)
-        console.log("open")
         setStandardOut(selectedItem.standard_out)
         setHeaderTitle("Output")
 
     }
     const openErrorDialog = () => {
         setshowDialog(true)
-        console.log("open")
         setStandardOut(selectedItem.standard_err)
         setHeaderTitle("Error")
 
@@ -88,7 +86,7 @@ function DetailSidebarContent(props) {
                             openDialog={showDialog}
                             closeDialog={handleClose}
                             standardOut={standardOut}
-                            title={headerTitle}
+                            headerTitle={headerTitle}
                         ></MetadataInfoDialog>
                     </div>
                 }

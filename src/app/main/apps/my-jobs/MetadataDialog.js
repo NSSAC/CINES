@@ -34,30 +34,9 @@ const options = [
 function MetadataInfoDialog(props) {
   const { onClose, value: valueProp, open, ...other } = props;
   const [value, setValue] = React.useState(valueProp);
-  const radioGroupRef = React.useRef(null);
-
-  React.useEffect(() => {
-    if (!open) {
-      setValue(valueProp);
-    }
-  }, [valueProp, open]);
-
-  const handleEntering = () => {
-    if (radioGroupRef.current != null) {
-      radioGroupRef.current.focus();
-    }
-  };
 
   const handleCancel = () => {
     props.closeDialog()
-  };
-
-  const handleOk = () => {
-    onClose(value);
-  };
-
-  const handleChange = (event) => {
-    setValue(event.target.value);
   };
 
   return (
@@ -69,14 +48,16 @@ function MetadataInfoDialog(props) {
       open={props.openDialog}
       {...other}
     >
-      <DialogTitle id="confirmation-dialog-title"> {props.title}</DialogTitle>
+      <DialogTitle > {props.headerTitle}</DialogTitle>
       <DialogContent dividers>
-      <pre>{props.standardOut}</pre> 
+        <pre>{props.standardOut}</pre>
       </DialogContent>
+
       <DialogActions>
-        <Button  onClick={handleCancel} color="primary">
+        <Button onClick={handleCancel} color="primary">
           Close
         </Button>
+
       </DialogActions>
     </Dialog>
   );

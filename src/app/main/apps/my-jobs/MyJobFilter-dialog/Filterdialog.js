@@ -61,6 +61,7 @@ export const MyJobFilter = ({ showModal, handleClose, handleLogout, remainingTim
     /* Flag to enable value dropdown */
     setStateFlag(true)
     setState1(e.target.value)
+    setselectedValue("")
 
     if (e.target.value === 'State') {
       setjobTypeArray(JOBTYPEVALUE.statusType)
@@ -77,7 +78,7 @@ export const MyJobFilter = ({ showModal, handleClose, handleLogout, remainingTim
   }
 
   function addData() {
-    
+
 
     if (!selectedTypeArray.includes(state)) {
       setSelectedTypeArray(selectedTypeArray => [...selectedTypeArray, state]);
@@ -99,7 +100,7 @@ export const MyJobFilter = ({ showModal, handleClose, handleLogout, remainingTim
   }
 
   const applyFilter = () => {
-    sessionStorage.setItem("resetPage" , JSON.stringify(true))
+    sessionStorage.setItem("resetPage", JSON.stringify(true))
     sessionStorage.setItem("selectedTypeArray", JSON.stringify(selectedTypeArray));
     sessionStorage.setItem("preStateValue", JSON.stringify(preStateValue));
     sessionStorage.setItem("preJobTypeValue", JSON.stringify(preJobTypeValue));
@@ -109,7 +110,7 @@ export const MyJobFilter = ({ showModal, handleClose, handleLogout, remainingTim
 
   }
   const reset = () => {
-    sessionStorage.setItem("resetPage" ,JSON.stringify(true))
+    sessionStorage.setItem("resetPage", JSON.stringify(true))
     setPreStateValue([]);
     setSelectedTypeArray([]);
     setPreJobTypeValue([]);
@@ -123,6 +124,8 @@ export const MyJobFilter = ({ showModal, handleClose, handleLogout, remainingTim
   }
 
   const onCancle = () => {
+    setState1("");
+    setselectedValue("")
     // setPreStateValue([]);
     // setSelectedTypeArray([]);
     // setPreJobTypeValue([]);
@@ -135,17 +138,17 @@ export const MyJobFilter = ({ showModal, handleClose, handleLogout, remainingTim
     preStateValue.splice(index, 1);
     setPreStateValue([...preStateValue])
 
-    if(preStateValue.length == 0 ){
+    if (preStateValue.length == 0) {
       var index = selectedTypeArray.indexOf('State');
       selectedTypeArray.splice(index, 1);
       setSelectedTypeArray([...selectedTypeArray])
-      if(selectedTypeArray.length === 0){
+      if (selectedTypeArray.length === 0) {
         reset()
       }
 
     }
 
-   // setPreStateValue(preStateValue => [...preStateValue, preStateValue.splice( index, 1 )])
+    // setPreStateValue(preStateValue => [...preStateValue, preStateValue.splice( index, 1 )])
     //setPreStateValue((preStateValue) => preStateValue.filter((preStateValue) => preStateValue !== chipToDelete));
     //let status = preStateValue
   };
@@ -157,18 +160,18 @@ export const MyJobFilter = ({ showModal, handleClose, handleLogout, remainingTim
     preJobTypeValue.splice(index, 1);
     setPreJobTypeValue([...preJobTypeValue])
 
-    if(preJobTypeValue.length == 0 ){
+    if (preJobTypeValue.length == 0) {
       var index = selectedTypeArray.indexOf('Job Type');
       selectedTypeArray.splice(index, 1);
       setSelectedTypeArray([...selectedTypeArray])
-      if(selectedTypeArray.length === 0){
+      if (selectedTypeArray.length === 0) {
         reset()
       }
 
     }
 
 
-   //setPreJobTypeValue((preJobTypeValue) => preJobTypeValue.filter((preJobTypeValue) => preJobTypeValue !== chipToDelete));
+    //setPreJobTypeValue((preJobTypeValue) => preJobTypeValue.filter((preJobTypeValue) => preJobTypeValue !== chipToDelete));
   };
   const classes = useStyles();
 
@@ -218,7 +221,7 @@ export const MyJobFilter = ({ showModal, handleClose, handleLogout, remainingTim
 
           <DialogActions>
             <Button onClick={addData} variant="contained"
-            disabled = {selectedValue == ""}
+              disabled={selectedValue == ""}
 
             >
               Add
@@ -228,7 +231,7 @@ export const MyJobFilter = ({ showModal, handleClose, handleLogout, remainingTim
 
           <div className="absolut mt-5" >
             {
-              preStateValue.length != 0 ? <spa> Status: </spa> : null
+              preStateValue.length != 0 ? <spa> Status : </spa> : null
             }
             {preStateValue.map((data) => {
               let icon;
@@ -259,7 +262,7 @@ export const MyJobFilter = ({ showModal, handleClose, handleLogout, remainingTim
             {preJobTypeValue.map((data) => {
               let icon;
 
-           
+
               return (
                 <Paper component="ul" className={classes.root}>
                   <li key={data.key}>
@@ -280,17 +283,17 @@ export const MyJobFilter = ({ showModal, handleClose, handleLogout, remainingTim
             variant="contained"
             color="default"
           >
-            
+
             Apply
           </Button>
           <Button onClick={reset}
-            disabled={selectedTypeArray.length === 0 && (preStateValue.length ===0 && preJobTypeValue.length ===0)}
+            disabled={selectedTypeArray.length === 0 && (preStateValue.length === 0 && preJobTypeValue.length === 0)}
             variant="contained"
             color="default"  >
             Reset
           </Button>
           <Button onClick={onCancle}    >
-            Cancel
+            Close
           </Button>
         </DialogActions>
       </Dialog>

@@ -27,4 +27,12 @@ display: none;
     margin-top: 0px;
      margin-bottom: 5px;
   }
-  
+  .sort-arrow{
+    opacity: 0;
+  }
+  .sort-arrow:hover{
+    opacity: .5;
+  }
+  /* .sort-arrow1:hover{
+    opacity: 1;
+  } */
