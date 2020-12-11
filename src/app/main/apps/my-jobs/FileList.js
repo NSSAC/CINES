@@ -174,14 +174,6 @@ function FileList(props) {
         setShowRange(true)
         let currentPage = page - 1
         setPage(currentPage)
-        let clearAarry = false;
-        let sortType = JSON.parse(sessionStorage.getItem("type"));
-        let sortOrder = JSON.parse(sessionStorage.getItem("sortOrder"));
-        let start = parseInt(sessionStorage.getItem("count")) - 10;
-
-        dispatch(Actions.getFiles(10, start, sortOrder, sortType, clearAarry));
-        // Store
-        sessionStorage.setItem("count", start);
     }
     function onRowClick(selectedId) {
         setSelectedFlag(false)

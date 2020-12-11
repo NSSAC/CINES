@@ -106,7 +106,7 @@ export const MyJobFilter = ({ showModal, handleClose, handleLogout, remainingTim
     sessionStorage.setItem("preJobTypeValue", JSON.stringify(preJobTypeValue));
     sessionStorage.setItem("isFilterApplied", JSON.stringify(true));
     handleClose()
-    dispatch(Actions.getFiles(10, 1, true, 'creation_date', true, true));
+    dispatch(Actions.getFiles(10, 0, true, 'creation_date', true, true));
 
   }
   const reset = () => {
