@@ -104,7 +104,7 @@ function MyJobsApp(props) {
                         <div >
 
                             {
-                                sessionStorage.getItem("preJobTypeValue") && JSON.parse(sessionStorage.getItem("preJobTypeValue")).length != 0 ? <span> Job Type :</span> : null
+                                sessionStorage.getItem("preJobTypeValue") && JSON.parse(sessionStorage.getItem("preJobTypeValue")).length != 0 ? <span> Job Type:</span> : null
                             }
                             {sessionStorage.getItem("preJobTypeValue") && JSON.parse(sessionStorage.getItem("preJobTypeValue")).length != 0 ? JSON.parse(sessionStorage.getItem("preJobTypeValue")).map((data) => {
                                 let icon;
@@ -116,7 +116,7 @@ function MyJobsApp(props) {
 
 
                             {
-                                sessionStorage.getItem("preStateValue") && JSON.parse(sessionStorage.getItem("preStateValue")).length != 0 ? <span style={{ marginLeft: "4px" }}> Status :</span> : null
+                                sessionStorage.getItem("preStateValue") && JSON.parse(sessionStorage.getItem("preStateValue")).length != 0 ? <span style={{ marginLeft: "4px" }}> Status:</span> : null
                             }
                             {sessionStorage.getItem("preStateValue") && JSON.parse(sessionStorage.getItem("preStateValue")).length != 0 ? JSON.parse(sessionStorage.getItem("preStateValue")).map((data) => {
                                 let icon;
