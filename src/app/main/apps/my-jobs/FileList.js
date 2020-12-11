@@ -29,8 +29,6 @@ const useStyles2 = makeStyles({
 });
 
 function FileList(props) {
-
-
     const dispatch = useDispatch();
     const files1 = useSelector(({ myJobsApp }) => myJobsApp.myjobs);
     const selectedItem = useSelector(({ myJobsApp }) => myJobsApp.selectedjobid);
@@ -53,32 +51,29 @@ function FileList(props) {
     const classes = useStyles();
 
     const tableClasses = useStyles2();
-
     const [page, setPage] = React.useState(0);
     const [filterFlag, setFilterFlag] = useState(true);
-    const [shortById, setshortById] = useState(false);
-    const [shortByjobdef, setshortByjobdef] = useState(false);
-
-
-    const [shortIdFlag, setShortIdFlag] = useState(false);
-    const [shortByjobdefFlag, setShortByjobdefFlag] = useState(false);
-    const [shortBystateFlag, setShortBystateFlag] = useState(false);
-    const [shortByCreationDdateFlag, setShortByCreationDdateFlag] = useState(true);
-    const [shortByCreationDdate, setshortByCreationDdate] = useState(false)
-    const [shortBystate, setshortBystate] = useState(false);
-    const [shortByCompletedDdate, setshortByCompletedDdate] = useState(false);
+    const [sortById, setsortById] = useState(false);
+    const [sortByjobdef, setsortByjobdef] = useState(false);
+    const [sortIdFlag, setSortIdFlag] = useState(false);
+    const [sortByjobdefFlag, setSortByjobdefFlag] = useState(false);
+    const [sortBystateFlag, setSortBystateFlag] = useState(false);
+    const [sortByCreationDdateFlag, setSortByCreationDdateFlag] = useState(true);
+    const [sortByCreationDdate, setsortByCreationDdate] = useState(false)
+    const [sortBystate, setsortBystate] = useState(false);
+    const [sortByCompletedDdate, setsortByCompletedDdate] = useState(false);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
     const [spinnerFlag, setSpinnerFlag] = useState(true);
     const [selectedFlag, setSelectedFlag] = useState(true)
+    const [showRange, setShowRange] = useState(false)
     var type;
+    var rowLength;
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, files.length - page * rowsPerPage);
     useEffect(() => {
         setSpinnerFlag(false)
         if (files.length !== 0) {
 
-
         }
-
 
         if (JSON.parse(sessionStorage.getItem("resetPage"))) {
             let currentPage = 0
@@ -88,8 +83,6 @@ function FileList(props) {
             var selectedId = files[0].id
             setSelectedId(selectedId)
         }
-
-
     })
 
     const handleChangePage = (event, newPage) => {
@@ -106,91 +99,95 @@ function FileList(props) {
         setRowsPerPage(parseInt(event.target.value, 10));
         setPage(0);
     };
+    const toggleSorting = (sortType, toggleArrow) => {
+        let sortOrder = ""
+        if (toggleArrow === 'sortByjobdef') {
+            setSortIdFlag(false)
+            setSortByjobdefFlag(true)
+            setSortBystateFlag(false)
+            setSortByCreationDdateFlag(false)
 
-    const toggleShorting = (shortType, toggleArrow) => {
-        let shortOrder = ""
-        if (toggleArrow === 'shortByjobdef') {
-            setShortIdFlag(false)
-            setShortByjobdefFlag(true)
-            setShortBystateFlag(false)
-            setShortByCreationDdateFlag(false)
-
-            setshortByCreationDdate(false)
-            setshortById(false)
-            setshortBystate(false)
-            setshortByjobdef(!shortByjobdef)
-            shortOrder = shortByjobdef
-
+            setsortByCreationDdate(false)
+            setsortById(false)
+            setsortBystate(false)
+            setsortByjobdef(!sortByjobdef)
+            sortOrder = sortByjobdef
         }
-        else if (toggleArrow === 'shortBystate') {
-            setShortIdFlag(false)
-            setShortByjobdefFlag(false)
-            setShortBystateFlag(true)
-            setShortByCreationDdateFlag(false)
+        else if (toggleArrow === 'sortBystate') {
+            setSortIdFlag(false)
+            setSortByjobdefFlag(false)
+            setSortBystateFlag(true)
+            setSortByCreationDdateFlag(false)
 
-            setshortByjobdef(false)
-            setshortByCreationDdate(false)
-            setshortById(false)
-            setshortBystate(!shortBystate)
-            shortOrder = shortBystate
+            setsortByjobdef(false)
+            setsortByCreationDdate(false)
+            setsortById(false)
+            setsortBystate(!sortBystate)
+            sortOrder = sortBystate
         }
-        else if (toggleArrow === 'shortByCreationDdate') {
-            setShortIdFlag(false)
-            setShortByjobdefFlag(false)
-            setShortBystateFlag(false)
-            setShortByCreationDdateFlag(true)
+        else if (toggleArrow === 'sortByCreationDdate') {
+            setSortIdFlag(false)
+            setSortByjobdefFlag(false)
+            setSortBystateFlag(false)
+            setSortByCreationDdateFlag(true)
 
-            setshortByjobdef(false)
-            setshortById(false)
-            setshortBystate(false)
-            setshortByCreationDdate(!shortByCreationDdate)
-            shortOrder = shortByCreationDdate
+            setsortByjobdef(false)
+            setsortById(false)
+            setsortBystate(false)
+            setsortByCreationDdate(!sortByCreationDdate)
+            sortOrder = sortByCreationDdate
         }
 
-        else if (toggleArrow === 'shortById') {
-            setShortByjobdefFlag(false)
-            setShortBystateFlag(false)
-            setShortByCreationDdateFlag(false)
-            setShortIdFlag(true)
-            setshortByjobdef(false)
-            setshortByCreationDdate(false)
-            setshortBystate(false)
-            setshortById(!shortById)
-            shortOrder = shortById
+        else if (toggleArrow === 'sortById') {
+            setSortByjobdefFlag(false)
+            setSortBystateFlag(false)
+            setSortByCreationDdateFlag(false)
+            setSortIdFlag(true)
+            setsortByjobdef(false)
+            setsortByCreationDdate(false)
+            setsortBystate(false)
+            setsortById(!sortById)
+            sortOrder = sortById
         }
-        let start = 1
+        let start = 0
         setPage(0)
-        type = shortType;
+        type = sortType;
         let clearAarry = true;
-        dispatch(Actions.getFiles(10, 1, shortOrder, type, clearAarry));
-        sessionStorage.setItem("shortOrder", JSON.stringify(shortOrder));
+        dispatch(Actions.getFiles(10, 0, sortOrder, type, clearAarry));
+        sessionStorage.setItem("sortOrder", JSON.stringify(sortOrder));
         sessionStorage.setItem("type", JSON.stringify(type));
         sessionStorage.setItem("count", start);
-
     }
-
     const fetchNextSetData = () => {
+        setShowRange(false)
         let clearAarry = false;
-        let shortType = JSON.parse(sessionStorage.getItem("type"));
-        let shortOrder = JSON.parse(sessionStorage.getItem("shortOrder"));
+        let sortType = JSON.parse(sessionStorage.getItem("type"));
+        let sortOrder = JSON.parse(sessionStorage.getItem("sortOrder"));
         let start = parseInt(sessionStorage.getItem("count")) + 10;
 
-        dispatch(Actions.getFiles(10, start, shortOrder, shortType, clearAarry));
+        dispatch(Actions.getFiles(10, start, sortOrder, sortType, clearAarry));
         // Store
         sessionStorage.setItem("count", start);
     }
 
     const fetchPreviousSetData = () => {
+        setShowRange(true)
         let currentPage = page - 1
         setPage(currentPage)
-    }
+        let clearAarry = false;
+        let sortType = JSON.parse(sessionStorage.getItem("type"));
+        let sortOrder = JSON.parse(sessionStorage.getItem("sortOrder"));
+        let start = parseInt(sessionStorage.getItem("count")) - 10;
 
+        dispatch(Actions.getFiles(10, start, sortOrder, sortType, clearAarry));
+        // Store
+        sessionStorage.setItem("count", start);
+    }
     function onRowClick(selectedId) {
         setSelectedFlag(false)
         setSelectedId(selectedId)
         selectedId = selectedId;
         dispatch(Actions.setSelectedItem(selectedId));
-
     }
 
     if (spinnerFlag === true)
@@ -205,55 +202,64 @@ function FileList(props) {
         return (
             <div>
 
-                <FuseAnimate animation="transition.slideUpIn" delay={300}>
+                <FuseAnimate animation="transition.slideUpIn" delay={100}>
                     <TableContainer component={Paper}>
-                        <Table className={tableClasses.table} aria-label="custom pagination table">
+                        <Table aria-label="a dense table">
 
                             <TableHead>
                                 <TableRow>
 
-                                    <TableCell> {(shortById) ?
+                                    <TableCell> {(sortById) ?
 
-                                        <Tooltip title="Short by id" placement="bottom">
-                                            <IconButton aria-label="arrow_upward" onClick={() => toggleShorting('id', 'shortById')}>
+                                        <Tooltip title="Sort by job id" placement="bottom">
+                                            <IconButton aria-label="arrow_upward" onClick={() => toggleSorting('id', 'sortById')}>
                                                 <Icon >arrow_upward</Icon>
                                             </IconButton>
                                         </Tooltip>
 
                                         :
-                                        <Tooltip title="Short by id" placement="bottom">
-                                            <IconButton aria-label="arrow_downward" onClick={() => toggleShorting('id', 'shortById')}>
-                                                <Icon className={shortIdFlag ? "" : "sort-arrow"}>arrow_downward</Icon></IconButton>
+                                        <Tooltip title="Sort by job id" placement="bottom">
+                                            <IconButton aria-label="arrow_downward" onClick={() => toggleSorting('id', 'sortById')}>
+                                                <Icon className={sortIdFlag ? "" : "sort-arrow"}>arrow_downward</Icon></IconButton>
                                         </Tooltip>
                                     }Job Id</TableCell>
-                                    <TableCell >{(shortByjobdef) ?
-                                        <Tooltip title="Short by job type" placement="bottom">
-                                            <IconButton aria-label="arrow_upward" onClick={() => toggleShorting('job_definition', 'shortByjobdef')}> <Icon>arrow_upward</Icon></IconButton>
+                                    <TableCell >{(sortByjobdef) ?
+                                        <Tooltip title="Sort by job type" placement="bottom">
+                                            <IconButton aria-label="arrow_upward" onClick={() => toggleSorting('job_definition', 'sortByjobdef')}> <Icon>arrow_upward</Icon></IconButton>
                                         </Tooltip>
                                         :
-                                        <Tooltip title="Short by job type" placement="bottom">
-                                            <IconButton aria-label="arrow_downward" onClick={() => toggleShorting('job_definition', 'shortByjobdef')}> <Icon className={shortByjobdefFlag ? "" : "sort-arrow"}>arrow_downward</Icon></IconButton>
+                                        <Tooltip title="Sort by job type" placement="bottom">
+                                            <IconButton aria-label="arrow_downward" onClick={() => toggleSorting('job_definition', 'sortByjobdef')}> <Icon className={sortByjobdefFlag ? "" : "sort-arrow"}>arrow_downward</Icon></IconButton>
                                         </Tooltip>
                                     }Job Type</TableCell>
-                                    <TableCell className="hidden md:table-cell" >{(shortBystate) ?
-                                        <Tooltip title="Short by status" placement="bottom">
-                                            <IconButton aria-label="arrow_upward" onClick={() => toggleShorting('state', 'shortBystate')}> <Icon>arrow_upward</Icon></IconButton>
+                                    <TableCell  >{(sortBystate) ?
+                                        <Tooltip title="Sort by status" placement="bottom">
+                                            <IconButton aria-label="arrow_upward" onClick={() => toggleSorting('state', 'sortBystate')}> <Icon>arrow_upward</Icon></IconButton>
                                         </Tooltip>
                                         :
-                                        <Tooltip title="Short by status" placement="bottom">
-                                            <IconButton aria-label="arrow_downward" onClick={() => toggleShorting('state', 'shortBystate')}> <Icon className={shortBystateFlag ? "" : "sort-arrow"}>arrow_downward</Icon></IconButton>
+                                        <Tooltip title="Sort by status" placement="bottom">
+                                            <IconButton aria-label="arrow_downward" onClick={() => toggleSorting('state', 'sortBystate')}> <Icon className={sortBystateFlag ? "" : "sort-arrow"}>arrow_downward</Icon></IconButton>
                                         </Tooltip>
                                     } Status</TableCell>
-                                    <TableCell className=" hidden md:table-cell"> {(shortByCreationDdate) ?
-                                        <Tooltip title="Short by creation date" placement="bottom">
-                                            <IconButton aria-label="arrow_upward" onClick={() => toggleShorting('creation_date', 'shortByCreationDdate')}> <Icon>arrow_upward</Icon></IconButton>
+                                    <TableCell > {(sortByCreationDdate) ?
+                                        <Tooltip title="Sort by creation date" placement="bottom">
+                                            <IconButton aria-label="arrow_upward" onClick={() => toggleSorting('creation_date', 'sortByCreationDdate')}> <Icon>arrow_upward</Icon></IconButton>
                                         </Tooltip>
                                         :
-                                        <Tooltip title="Short by creation date" placement="bottom">
-                                            <IconButton aria-label="arrow_downward" onClick={() => toggleShorting('creation_date', 'shortByCreationDdate')}> <Icon className={shortByCreationDdateFlag ? "" : "sort-arrow"}>arrow_downward</Icon></IconButton>
+                                        <Tooltip title="Sort by creation date" placement="bottom">
+                                            <IconButton aria-label="arrow_downward" onClick={() => toggleSorting('creation_date', 'sortByCreationDdate')}> <Icon className={sortByCreationDdateFlag ? "" : "sort-arrow"}>arrow_downward</Icon></IconButton>
                                         </Tooltip>
                                     }Creation Date</TableCell>
-                                    {/* <TableCell className="hidden sm:table-cell">{(shortByCompletedDdate) ? <IconButton aria-label="arrow_upward" onClick={() => toggleShorting('creation_date', 'shortByCreationDdate')}> <Icon>arrow_upward</Icon></IconButton> : <IconButton aria-label="arrow_downward" onClick={() => toggleShorting('creation_date', 'shortByCreationDdate')}> <Icon>arrow_downward</Icon></IconButton>} Completed Date</TableCell> */}
+                                    {/* <TableCell > {(sortByCreationDdate) ?
+                                        <Tooltip title="Sort by creation date" placement="bottom">
+                                            <IconButton aria-label="arrow_upward" onClick={() => toggleSorting('creation_date', 'sortByCreationDdate')}> <Icon>arrow_upward</Icon></IconButton>
+                                        </Tooltip>
+                                        :
+                                        <Tooltip title="Sort by creation date" placement="bottom">
+                                            <IconButton aria-label="arrow_downward" onClick={() => toggleSorting('creation_date', 'sortByCreationDdate')}></IconButton>
+                                        </Tooltip>
+                                    }Updated date</TableCell> */}
+                                    {/* <TableCell className="hidden sm:table-cell">{(sortByCompletedDdate) ? <IconButton aria-label="arrow_upward" onClick={() => toggleSorting('creation_date', 'sortByCreationDdate')}> <Icon>arrow_upward</Icon></IconButton> : <IconButton aria-label="arrow_downward" onClick={() => toggleSorting('creation_date', 'sortByCreationDdate')}> <Icon>arrow_downward</Icon></IconButton>} Completed Date</TableCell> */}
                                 </TableRow>
                             </TableHead>
                             {files.length > 0 ?
@@ -261,8 +267,8 @@ function FileList(props) {
                                     {(rowsPerPage > 0
                                         ? files.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                         : files
-                                    ).map((row) => {
-
+                                    ).map((row, ind, arr) => {
+                                        rowLength = arr.length;
                                         return ((
                                             <TableRow key={row.id}
                                                 className="cursor-pointer"
@@ -275,13 +281,16 @@ function FileList(props) {
                                                 <TableCell >
                                                     {row.job_definition}
                                                 </TableCell>
-                                                <TableCell className="hidden md:table-cell" >
+                                                <TableCell  >
                                                     {row.state}
                                                 </TableCell>
 
-                                                <TableCell className="hidden md:table-cell" >
-                                                    {row.creation_date}
+                                                <TableCell  >
+                                                    {row.creation_date.replace(/T|Z/g, '  ').split(".")[0]}
                                                 </TableCell>
+                                                {/* <TableCell  >
+                                                    {row.update_date}
+                                                </TableCell> */}
                                                 <Hidden lgUp>
                                                     <TableCell>
                                                         <IconButton
@@ -308,17 +317,35 @@ function FileList(props) {
                         </Table>
                     </TableContainer>
                 </FuseAnimate>
+                {files.length > 0 ?
+                    <div >
+                        <Button disabled={page * rowsPerPage + 1 === 1}
+                            className={'next-button'} color="primary"
+                            variant="contained" onClick={fetchPreviousSetData}>Previous</Button>
+                        <span className={'count-info'}>Items  {page * rowsPerPage + 1}-{page * rowsPerPage + rowLength} /{totalRecords}</span>
+                        <Button
+                            disabled={page * rowsPerPage + rowLength == totalRecords}
+                            color="primary" className={'next-button'} variant="contained"
+                            onClick={handleChangePage}>Next</Button>
+                        <span className={'count-info'}>Page - {page + 1}</span>
+                    </div> : null
+                }
 
-                <div >
-                    <Button disabled={page * rowsPerPage + 1 === 1} className={'next-button'} color="primary" variant="contained" onClick={fetchPreviousSetData}>Previous</Button><span className={'count-info'}>Items {page * rowsPerPage + 1}-{page * rowsPerPage + rowsPerPage} /{totalRecords}</span> <Button disabled={page * rowsPerPage + rowsPerPage === totalRecords} color="primary" className={'next-button'} variant="contained" onClick={handleChangePage}>Next</Button>
-                    <span className={'count-info'}>Page - {page + 1}</span>
-                </div>
-                {/* <div className="">
-                    <IconButton disabled={page * rowsPerPage + 1 === 1} className={'next-button'} color="primary" variant="contained" onClick={fetchPreviousSetData}> <Icon >chevron_left</Icon></IconButton><span className={'count-info'}>Total records  {page * rowsPerPage + 1}-{page * rowsPerPage + rowsPerPage} of {totalRecords}</span>  <IconButton disabled={page * rowsPerPage + rowsPerPage === totalRecords} color="primary" className={'next-button'} variant="contained" onClick={handleChangePage}> <Icon >chevron_right</Icon></IconButton> 
+                {/* { <div className="">
+            <IconButton disabled={page * rowsPerPage + 1 === 1} className={'next-button'} color="primary" variant="contained" onClick={fetchPreviousSetData}> <Icon >chevron_left</Icon></IconButton><span className={'count-info'}>{contentRange}</span>  <IconButton disabled={page * rowsPerPage + rowsPerPage === totalRecords} color="primary" className={'next-button'} variant="contained" onClick={handleChangePage}> <Icon >chevron_right</Icon></IconButton> 
                 <span className={'count-info'}>Page - {page + 1}</span>
-                    </div> */}
+                    </div>} */}
 
-                {/* <Button disabled={page * rowsPerPage + 1 === 1} className={'next-button'} color="primary" variant="contained" onClick={fetchPreviousSetData}>Previous</Button><span className={'count-info'}>{contentRange} </span> <Button disabled={lastResult === totalRecords} color="primary" className={'next-button'} variant="contained" onClick={handleChangePage}>Next</Button>
+                {/* <Button disabled={page * rowsPerPage + 1 === 1} className={'next-button'} 
+                color="primary" variant="contained"
+                 onClick={fetchPreviousSetData}>Previous</Button>
+                <span className={'count-info'}> 
+
+              {contentRange}
+                
+              
+                 </span>
+                  <Button disabled={lastResult === totalRecords} color="primary" className={'next-button'} variant="contained" onClick={handleChangePage}>Next</Button>
                 <span className={'count-info'}>Page - {page + 1}</span> */}
             </div>
         );

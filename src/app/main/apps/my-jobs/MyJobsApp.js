@@ -15,6 +15,7 @@ import Breadcrumb from './Breadcrumb';
 import { MyJobFilter } from 'app/main/apps/my-jobs/MyJobFilter-dialog/Filterdialog';
 import { makeStyles } from '@material-ui/core/styles';
 import Chip from '@material-ui/core/Chip';
+import { useHistory, Link } from "react-router-dom";
 import "./MyJobsApp.css"
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -37,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function MyJobsApp(props) {
-
+    const history = useHistory();
     const dispatch = useDispatch();
     const files = useSelector(({ myJobsApp }) => myJobsApp.myjobs);
     const [showDialog, setshowDialog] = useState(false);
@@ -45,11 +46,11 @@ function MyJobsApp(props) {
     const [flag, setFilterFlag] = useState(false);
 
     useEffect(() => {
-        let start = 1
+        let start = 0
         let type = 'creation_date';
         let descShort = true;
         sessionStorage.setItem("isFilterApplied", JSON.stringify(false));
-        dispatch(Actions.getFiles(10, 1, descShort, type, false, false));
+        dispatch(Actions.getFiles(10, 0, descShort, type, false, false));
         sessionStorage.setItem("count", start);
         sessionStorage.setItem("shortOrder", JSON.stringify(descShort));
 
@@ -61,6 +62,8 @@ function MyJobsApp(props) {
     function showFileUploadDialog() {
         setshowDialog(true)
     }
+
+
     const childRef = useRef();
     function handleClose() {
         setshowDialog(false)
@@ -126,10 +129,10 @@ function MyJobsApp(props) {
                         </div>
 
                         <FuseAnimate animation="transition.expandIn" delay={200}>
-                        <Tooltip title="Filter" placement="bottom">
-                            <IconButton aria-label="search">
-                                <Icon onClick={showFileUploadDialog}>filter_list</Icon>
-                            </IconButton>
+                            <Tooltip title="Filter" placement="bottom">
+                                <IconButton aria-label="search">
+                                    <Icon onClick={showFileUploadDialog}>filter_list</Icon>
+                                </IconButton>
                             </Tooltip>
                         </FuseAnimate>
 
@@ -138,11 +141,14 @@ function MyJobsApp(props) {
 
 
                     <div className="flex flex-1 items-end">
-                        {/* <FuseAnimate animation="transition.expandIn" delay={600}>
-                            <Fab color="secondary" aria-label="add" className="absolute bottom-0 left-0 ml-16 -mb-28 z-999">
-                                <Icon>add</Icon>
+
+                        {/* <Link to="/apps/job-definition/">
+                        <FuseAnimate animation="transition.expandIn" delay={600}>
+                            <Fab color="secondary"  aria-label="add" className="absolute bottom-0 left-0 ml-16 -mb-28 z-999">
+                            <Icon>add</Icon>
                             </Fab>
-                        </FuseAnimate> */}
+                        </FuseAnimate>
+                            </Link>  */}
                         {/* <FuseAnimate delay={200}>
                             <div>
                                 {selectedItem && (

@@ -231,7 +231,7 @@ export const MyJobFilter = ({ showModal, handleClose, handleLogout, remainingTim
 
           <div className="absolut mt-5" >
             {
-              preStateValue.length != 0 ? <spa> Status : </spa> : null
+              preStateValue.length != 0 ? <spa> Status: </spa> : null
             }
             {preStateValue.map((data) => {
               let icon;
@@ -257,7 +257,7 @@ export const MyJobFilter = ({ showModal, handleClose, handleLogout, remainingTim
           <div>
 
             {
-              preJobTypeValue.length != 0 ? <spa> Job Type :</spa> : null
+              preJobTypeValue.length != 0 ? <spa> Job Type:</spa> : null
             }
             {preJobTypeValue.map((data) => {
               let icon;

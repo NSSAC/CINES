@@ -340,7 +340,7 @@ export const FileUpload = ({ showModal, handleClose }) => {
                   <TableCell className="hidden sm:table-cell">Status</TableCell>
 
                   {initialUploadFile.length == 0 ? null : <TableCell className=" p-0 text-center">
-                    Remove All
+                    Remove 
           </TableCell>}
                   <TableCell className="max-w-64 w-64 p-0 text-center"> </TableCell>
 
