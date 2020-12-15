@@ -1,0 +1,8 @@
+.buttonDisabled {
+    pointer-events: none;
+    opacity: 0.2;
+}
+
+.dialogButton {
+    background-color: lightgray !important;
+}

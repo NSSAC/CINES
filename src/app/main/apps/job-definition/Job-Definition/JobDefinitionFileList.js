@@ -7,6 +7,8 @@ import clsx from 'clsx';
 import Grid from '@material-ui/core/Grid';
 import * as Actions from './store/actions';
 import './JobDefinitionFileList.css'
+import { Link, withRouter } from 'react-router-dom';
+import JobDefinitionForm from './JobDefinitionForm';
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
@@ -48,6 +50,8 @@ function JobDefinitionFileList(props) {
     const dispatch = useDispatch();
     const jobDefinitionData = useSelector(({ JobDefinitionApp }) => JobDefinitionApp.jobdefinition);
     const selectedItem = useSelector(({ JobDefinitionApp }) => JobDefinitionApp.selectedjobid);
+    var path = window.location.pathname
+    var pathEnd=path.charAt(path.length-1)
 
     var jobDefinitionList = Object.values(jobDefinitionData);
     var totalRecords = "";
@@ -115,6 +119,12 @@ function JobDefinitionFileList(props) {
         setrowLength(rowLength)
     };
 
+    const onSelectClick = (row) => {
+        localStorage.setItem('selectedJobDefinition',JSON.stringify(row))
+        console.log(row)
+        var target = window.location.pathname + row.id;
+        props.history.push(target)
+    }
 
     const searchFetchPreviousSetData = () => {
         let currentPage = searchPage - 1
@@ -200,6 +210,12 @@ function JobDefinitionFileList(props) {
 
     }
 
+    if(pathEnd !== "/"){
+        var selectedJobDefinition=JSON.parse(localStorage.getItem('selectedJobDefinition'))
+        return (
+            <JobDefinitionForm selectedJob={selectedJobDefinition}></JobDefinitionForm>
+        )
+    }
 
     if (spinnerFlag === true)
         return (
@@ -269,6 +285,7 @@ function JobDefinitionFileList(props) {
                                                             ////size="small"
                                                             //color="primary"
                                                             className={classes.button}
+                                                            onClick={()=>onSelectClick(row)}
                                                         >
                                                             Select
                                      </Button>
@@ -317,4 +334,4 @@ function JobDefinitionFileList(props) {
     }
 }
 
-export default JobDefinitionFileList;
+export default withRouter(JobDefinitionFileList);

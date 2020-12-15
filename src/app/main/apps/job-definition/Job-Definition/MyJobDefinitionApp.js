@@ -49,6 +49,9 @@ function JobDefinitionApp(props) {
     const [editContent, setEditContent] = useState(true);
     const [preview, setPreview] = useState(true);
 
+    var path = window.location.pathname
+    var pathEnd = path.charAt(path.length - 1);
+
     useEffect(() => {
         let start = 0
         let type = 'creation_date';
@@ -167,7 +170,7 @@ function JobDefinitionApp(props) {
 {preview && (
                             <FuseAnimate animation="transition.expandIn" delay={200}>
                                 <span>
-                                    <div className={clsx("flex", props.className)}>
+                                {pathEnd == "/" && <div className={clsx("flex", props.className)}>
                                         <Tooltip title="Click to search" placement="bottom">
                                             <div onClick={showSearch}>
                                                 <IconButton className="w-64 h-64"><Icon>search</Icon></IconButton>    </div>
@@ -195,7 +198,7 @@ function JobDefinitionApp(props) {
                                                 </div>
                                             </ClickAwayListener>
                                         )}
-                                    </div>
+                                    </div>}
                                 </span>
                             </FuseAnimate>
                         )}
@@ -230,10 +233,10 @@ function JobDefinitionApp(props) {
             leftSidebarContent={
                 <MainSidebarContent />
             }
-            rightSidebarHeader={
+            rightSidebarHeader={pathEnd == "/" &&
                 <DetailSidebarHeader />
             }
-            rightSidebarContent={
+            rightSidebarContent={pathEnd == "/" &&
                 <DetailSidebarContent />
             }
             ref={pageLayout}
