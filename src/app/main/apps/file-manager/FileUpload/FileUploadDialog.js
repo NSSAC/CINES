@@ -29,7 +29,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export const FileUpload = ({ showModal, handleClose }) => {
+export const FileUpload = ({setUploadFile, dialogTargetPath, setShowModal, showModal, handleClose }) => {
   const useStyles = makeStyles({
     table: {
       minWidth: 450,
@@ -130,6 +130,8 @@ export const FileUpload = ({ showModal, handleClose }) => {
     let count = 0;
     let target = window.location.pathname;
     let targetPath = target.replace("/apps/files", "")
+    if(dialogTargetPath)
+    targetPath = dialogTargetPath
     initialUploadFile.forEach(item => {
 
       if (item.status === "Uploaded successfully" || item.status === "Uploading-Failed (file already exist) 0%" || item.status === "Uploading-Failed (unsupported file type) 0%" || item.status === "Uploading-Failed (unsupported file name only '-_.'are allowed) 0%") {
@@ -145,8 +147,13 @@ export const FileUpload = ({ showModal, handleClose }) => {
     let fileData1 = []
     setUploadedfiles([...fileData1])
     handleClose()
+    if(dialogTargetPath)
+     setShowModal(true)
   }
 
+  const OnUploadAndSubmit = () => {
+    OnUpload()
+  }
 
   const OnUpload = () => {
     setDisableButton(true)
@@ -177,6 +184,8 @@ export const FileUpload = ({ showModal, handleClose }) => {
       let target = window.location.pathname;
       let id = element.id;
       let targetPath = target.replace("/apps/files", "")
+      if(dialogTargetPath)
+        targetPath = dialogTargetPath
 
       return axios({
         method: 'post',
@@ -222,6 +231,8 @@ export const FileUpload = ({ showModal, handleClose }) => {
       let target = window.location.pathname;
       let id = element.id;
       let targetPath = target.replace("/apps/files", "")
+      if(dialogTargetPath)
+        targetPath = dialogTargetPath
 
       axios({
         method: 'put',
@@ -239,7 +250,12 @@ export const FileUpload = ({ showModal, handleClose }) => {
           console.log(percentage)
           progressStatus(percentage, id)
         }
-      }).then(res => { },
+      }).then(res => {
+        if(dialogTargetPath){
+              setUploadFile(element.fileName)
+              setUploadedfiles([])
+              handleClose() }
+      },
         (error) => { }
       )
     });
@@ -327,7 +343,8 @@ export const FileUpload = ({ showModal, handleClose }) => {
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
         >
-<input className={classes.input} ref={fileInput} type="file" multiple onChange={onChangeHandler} />
+{dialogTargetPath?<input className={classes.input} ref={fileInput} type="file" onChange={onChangeHandler} />:
+                  <input className={classes.input} ref={fileInput} type="file" multiple onChange={onChangeHandler} />}
           <button className={classes.customeButton} onClick={openFileDialog} type="button" >Choose File</button>
 
           <FuseAnimate animation="transition.slideUpIn" delay={300}>
@@ -405,17 +422,24 @@ export const FileUpload = ({ showModal, handleClose }) => {
 
 
         <DialogActions>
-          <Button onClick={OnUpload} variant="contained"
+          {dialogTargetPath?
+          <Button onClick={OnUploadAndSubmit} variant="contained"
             color="default"
             className={classes.button}
             startIcon={<CloudUploadIcon />}
             disabled={initialUploadFile.length == 0 || disableButton} >
-            Upload
+            Upload and Submit
+          </Button>:
+          <Button onClick={OnUpload} variant="contained"
+           color="default"
+           className={classes.button}
+           startIcon={<CloudUploadIcon />}
+           disabled={initialUploadFile.length == 0 || disableButton} >
+           Upload
           </Button>
+}
 
-          <Button onClick={onCancle}
-
-          >
+          <Button onClick={onCancle}>
             Cancel
           </Button>
 

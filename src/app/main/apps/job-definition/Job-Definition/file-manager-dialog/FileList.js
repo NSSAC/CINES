@@ -75,7 +75,7 @@ function Filelist(props) {
     const tableStyle={
         overflow:'auto',
         maxHeight:'400px',
-        backgroundColor:'lightgray',
+        backgroundColor:'black',
         borderRadius:'10px'
         // marginTop:'15px',
 
@@ -148,7 +148,7 @@ function Filelist(props) {
                                         <TableCell className="max-w-64 w-64 p-0 text-center">
                                             <Icon className={clsx(classes.typeIcon, node.type)}/>
                                         </TableCell>
-                                        <TableCell title={node.name} style={nameStyle} >{node.type === "folder" || node.type === "epihiperOutput" || node.type === "epihiper_multicell_analysis"?<Link style={{color:'darkblue'}} title={node.name} to={node.name}>{node.name}</Link>:
+                                        <TableCell title={node.name} style={nameStyle} >{node.type === "folder" || node.type === "epihiperOutput" || node.type === "epihiper_multicell_analysis"?<Link style={{color:'#61dafb'}} title={node.name} to={node.name}>{node.name}</Link>:
                                                                             node.name}</TableCell>
                                         <TableCell>{node.type}</TableCell>
                                         <TableCell>{node.owner_id}</TableCell>

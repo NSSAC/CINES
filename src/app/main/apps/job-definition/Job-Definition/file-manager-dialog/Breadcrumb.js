@@ -13,7 +13,7 @@ function Breadcrumb(props)
         whiteSpace: 'nowrap',
         overflow: 'hidden',
         maxWidth: '170px',
-        color:'darkblue'
+        color:'#61dafb'
     }
 
     const breadcrumb_wrap={
