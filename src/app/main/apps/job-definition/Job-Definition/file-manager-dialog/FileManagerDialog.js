@@ -13,7 +13,7 @@ import { FileUpload } from "app/main/apps/file-manager/FileUpload/FileUploadDial
 import sciductService from "app/services/sciductService";
 import { makeStyles } from "@material-ui/styles";
 
-function FMPopup({ showModal, setShowModal, handleFMClose, setFileChosen })  {
+function FMPopup({ showModal, setShowModal, handleFMClose, setFileChosen, setFileChosenPath,fileTypes })  {
 
     const useStyles = makeStyles({
         table: {
@@ -62,9 +62,11 @@ function FMPopup({ showModal, setShowModal, handleFMClose, setFileChosen })  {
             if(node.name == uploadFile){
                 dispatch(Actions.setSelectedItem(node.id))
                 setFileChosen("")
+                setFileChosenPath("")
                 if(selectedItem){
                     localStorage.setItem('selectedSnapFile',JSON.stringify(selectedItem))
                 setFileChosen(selectedItem.name)
+                setFileChosenPath(targetPath + selectedItem.name)
                 setUploadFile("")
                 setTargetPath("/")
                 setSearch("")
@@ -86,6 +88,7 @@ function FMPopup({ showModal, setShowModal, handleFMClose, setFileChosen })  {
         setTargetPath("/")
         localStorage.setItem('selectedSnapFile',JSON.stringify(selectedItem))
         setFileChosen(selectedItem.name)
+        setFileChosenPath(targetPath + selectedItem.name)
         handleFMClose()
     }
 
@@ -188,7 +191,6 @@ function FMPopup({ showModal, setShowModal, handleFMClose, setFileChosen })  {
         }
     },[targetPath]);
 
-    console.log(uploadFile)
 
 return (
     <div >
@@ -197,6 +199,7 @@ return (
         onClose={handleFMClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
+        onBackdropClick="false"
       >
         <DialogTitle id="alert-dialog-title">
             <div class="flex items-center justify-between">
@@ -252,7 +255,7 @@ return (
         </DialogTitle>
         <DialogContent style={dialogcontentStyle} >
           <Breadcrumb  setSearch={(p)=>setSearch(p)} targetPath={targetPath} setTargetPath={(p)=>setTargetPath(p)}></Breadcrumb>
-         <Filelist search={search}  setSearch={(p)=>setSearch(p)} targetPath={targetPath} setTargetPath={(p)=>setTargetPath(p)}></Filelist>
+         <Filelist search={search}  setSearch={(p)=>setSearch(p)} targetPath={targetPath} setTargetPath={(p)=>setTargetPath(p)} fileTypes={fileTypes}></Filelist>
         </DialogContent>
         <DialogActions>
           <Button variant="contained" id='selectFile' className="buttonDisabled " size='small' onClick={onSelect}>
@@ -263,7 +266,7 @@ return (
           </Button>
         </DialogActions>
       </Dialog>
-      <FileUpload setUploadFile={(p)=>setUploadFile(p)} dialogTargetPath={targetPath} showModal={showDialog} setShowModal={(p)=>setShowModal(p)} handleClose={handleClose} />
+      <FileUpload  fileTypes={fileTypes} setUploadFile={(p)=>setUploadFile(p)} dialogTargetPath={targetPath} showModal={showDialog} setShowModal={(p)=>setShowModal(p)} handleClose={handleClose} />
     </div>
   )
 

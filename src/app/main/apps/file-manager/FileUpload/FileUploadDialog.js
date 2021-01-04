@@ -29,7 +29,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export const FileUpload = ({setUploadFile, dialogTargetPath, setShowModal, showModal, handleClose }) => {
+export const FileUpload = ({fileTypes, setUploadFile, dialogTargetPath, setShowModal, showModal, handleClose }) => {
   const useStyles = makeStyles({
     table: {
       minWidth: 450,
@@ -63,7 +63,10 @@ export const FileUpload = ({setUploadFile, dialogTargetPath, setShowModal, showM
   var contents;
   var type = "";
   var fileData = [];
-  const fileTypeArray = FILEUPLOAD_CONFIG.fileType
+  var fileTypeArray = FILEUPLOAD_CONFIG.fileType
+  if(dialogTargetPath){
+    fileTypeArray = fileTypes
+  }
   const [initialUploadFile, setUploadedfiles] = useState([]);
   const [disableButton, setDisableButton] = useState(true);
   const [files, setFiles] = useState([]);

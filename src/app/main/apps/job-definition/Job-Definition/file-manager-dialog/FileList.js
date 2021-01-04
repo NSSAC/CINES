@@ -71,6 +71,7 @@ function Filelist(props) {
     const selectedItem = useSelector(({fMApp}) => files[fMApp.selectedItemId]);
     const classes = useStyles();
     const dispatch = useDispatch()
+    const [click, setClick] = useState(false);
 
     const tableStyle={
         overflow:'auto',
@@ -93,10 +94,14 @@ function Filelist(props) {
   
 
     useEffect(() => {
-        if(document.getElementById('selectFile') && selectedItem && (selectedItem.type !== 'folder' && selectedItem.type !== 'epihiperOutput' && selectedItem.type !== 'epihiper_multicell_analysis'))  {
+        var flag=0;
+        var i=0;
+        for (i=0;i<props.fileTypes.length;i++){
+        if(document.getElementById('selectFile') && selectedItem && (selectedItem.type == props.fileTypes[i]))  {
           document.getElementById('selectFile').classList.remove('buttonDisabled');
-        }
-        else
+          flag=1;
+        }}
+        if(flag == 0)
           document.getElementById('selectFile').classList.add('buttonDisabled');
 
     
@@ -105,8 +110,12 @@ function Filelist(props) {
     function onClickHandler(node,canLink){
         // props.setSearch("")
         return function(evt){
+            if(click === false)
             if (evt.target && evt.target.getAttribute("to") ){
-            
+                setClick(true)
+                setTimeout(() => {
+                   setClick(false)
+                }, 1500);
                 if(node.type === "folder" || node.type === "epihiperOutput" || node.type === "epihiper_multicell_analysis"){
                     props.setTargetPath(props.targetPath  + evt.target.getAttribute("to") + "/") 
                     setTimeout(() => {

@@ -33,3 +33,7 @@ input[type=submit]:hover {
 .headerDisplay {
     display: none;
 }
+
+.inputStyle {
+    width:80%;
+}
