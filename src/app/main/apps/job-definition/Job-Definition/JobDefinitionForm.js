@@ -142,7 +142,7 @@ function JobDefinitionForm(props) {
 					<Formsy className="flex flex-col justify-center">
 						<Grid style={parentGrid} container spacing={3}>
 							{Object.entries(formElementsArray).map((formElement) => (
-								<Grid style={childGrid} container xs={12} sm={6}>
+								<Grid style={childGrid} item container xs={12} sm={6}>
 									<Input
 										key={formElement.id}
 										formData={formElement}

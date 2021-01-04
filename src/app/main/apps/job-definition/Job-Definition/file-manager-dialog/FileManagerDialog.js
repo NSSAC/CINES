@@ -1,5 +1,5 @@
 import { FuseAnimate } from "@fuse";
-import { Button, ClickAwayListener, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Fab, Icon, IconButton, Input, Tooltip } from "@material-ui/core"
+import { Button, ClickAwayListener, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Fab, Icon, IconButton, Input, Tooltip, Typography } from "@material-ui/core"
 import withReducer from "app/store/withReducer";
 import React, { useState, useRef, useEffect } from 'react';
 import { useDispatch, useSelector } from "react-redux";
@@ -199,15 +199,15 @@ return (
         onClose={handleFMClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
-        onBackdropClick="false"
+        disableBackdropClick
       >
         <DialogTitle id="alert-dialog-title">
-            <div class="flex items-center justify-between">
+            <div className="flex items-center justify-between">
                 <h2>File Manager</h2>
                 {/* <div id="fileUpload"> */}
                 {/* <FileUpload setUploadFile={(p)=>setUploadFile(p)} dialogTargetPath={targetPath} showModal={showDialog} handleClose={handleClose} /> */}
                 {/* </div> */}
-                         <div class="flex items-end items-center">
+                         <div className="flex items-end items-center">
                             <FuseAnimate animation="transition.expandIn" delay={200}>
                                 <span>
                                     <div className={clsx("flex")}>
@@ -250,7 +250,7 @@ return (
                             </FuseAnimate>}
                 </div>
             </div>
-            <h5>Please select a file</h5>
+            <div><h5>Please select a file</h5></div>
 
         </DialogTitle>
         <DialogContent style={dialogcontentStyle} >
