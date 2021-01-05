@@ -26,16 +26,16 @@ export const Input = (props) => {
 		color: 'black'
 	};
 
-	const [ showFMDialog, setShowFMDialog ] = useState(false);
-	const [ fileChosen, setFileChosen ] = useState('');
-	const [ fileChosenPath, setFileChosenPath ] = useState('');
-	if(props.formData[1].value!== undefined && fileChosenPath !== '') {
-	  props.formData[1].value = fileChosenPath
-	// if(fileChosenPath !== '')
-	// console.log(props.formData)
+	const [showFMDialog, setShowFMDialog] = useState(false);
+	const [fileChosen, setFileChosen] = useState('');
+	const [fileChosenPath, setFileChosenPath] = useState('');
+	if (props.formData[1].value !== undefined && fileChosenPath !== '') {
+		props.formData[1].value = fileChosenPath
+		// if(fileChosenPath !== '')
+		// console.log(props.formData)
 	}
 
-  	// if (props.invalid && props.shouldValidate && props.touched) {
+	// if (props.invalid && props.shouldValidate && props.touched) {
 	//     inputClasses.push(classes.Invalid);
 	// }
 	function showFileManagerDialog() {
@@ -57,77 +57,76 @@ export const Input = (props) => {
 					style={{ width: '18px' }}
 					value={props.formData[1].value}
 					label={props.formData[0]}
-					onChange={props.changed} 
-				
+					onChange={props.changed}
+
 					required
-					
+
 				/>
 			);
 			break;
-			case 'string':
-				inputElement =  (
-					 <SelectFormsy
-					 className="my-16 inputStyle"
-					 name="related"
-					 label={props.formData[0]}
-					 value={props.formData[1].value}	
+		case 'string':
+			inputElement = (
+				<SelectFormsy
+					className="my-16 inputStyle"
+					name="related"
+					label={props.formData[0]}
+					value={props.formData[1].value}
 					required
-				  >
-					  {
+				>
+					{
 						props.formData[1].enum.map((item) => {
-						  return (
-							<MenuItem key={item} value={item}>{item}</MenuItem>
-						  )
+							return (
+								<MenuItem key={item} value={item}>{item}</MenuItem>
+							)
 						})
 					}
-					</SelectFormsy> 
-				);
-				break;
-				
-				case 'boolean':
-					inputElement =  (
-						<RadioGroupFormsy
-						className="my-16 inputStyle"
-						name="gender"
-						label={props.formData[0]}
-						required
-					>
-						<FormControlLabel value="true" control={<Radio color="primary"/>} label="True"/>
-						<FormControlLabel value="false" control={<Radio color="primary"/>} label="False"/>
-						
-					</RadioGroupFormsy>
-					);
-					break;
+				</SelectFormsy>
+			);
+			break;
 
-					default:
-						inputElement = (
-							<div className="my-32" >
-								<label className="my-32 ">
-									{props.formData[1].formLabel}-
+		case 'boolean':
+			inputElement = (
+				<RadioGroupFormsy
+					className="my-16 inputStyle"
+					name="gender"
+					label={props.formData[0]}
+					required
+				>
+					<FormControlLabel value="true" control={<Radio color="primary" />} label="True" />
+					<FormControlLabel value="false" control={<Radio color="primary" />} label="False" />
+
+				</RadioGroupFormsy>
+			);
+			break;
+
+		default:
+			inputElement = (
+				<div className="my-32" >
+					<label className="my-32 ">
+						{props.formData[1].formLabel}*-
 									<Button onClick={showFileManagerDialog} style={selectButtonStyle}>
-										&nbsp;Select file
+							&nbsp;Select file
 									</Button>
-									<CheckboxFormsy
-										id={props.formData[1].formLabel}
-										className="my-16 "
-										name="accept"
-										required
-										value={false}
-										validations={{
-											equals: true,
-										}}
-										validationErrors={{
-											equals: "You need to accept"
-										}}
-									/> 
-								</label>
-								<span className="my-32 ">{fileChosen == '' ? 'No file chosen' : <b>{fileChosen}</b>}</span>
-							</div>
-						);
+									<TextFieldFormsy
+                                        id={props.formData[1].formLabel}
+                                        className="my-16 hidden"
+                                        type="number"
+                                        name="SrcColId"
+                                        style={{ width: '18px' }}
+                                        value={props.formData[1].value}
+                                        label={props.formData[0]}
+                                        onChange={props.changed} 
+                                        required
+                                    />
+					</label>
+					<span className="my-32 ">{fileChosen == '' ? 'No file chosen' : <b onChange={props.changed} >{fileChosen}</b>}</span>
+				</div>
+			);
 	}
 	useEffect(()=>{
-        if(fileChosen)
-         document.getElementById(props.formData[1].formLabel).checked= true;
+        if(fileChosen){
+         document.getElementById(props.formData[1].formLabel).value= 1;
+        }
     })
 
 	return (
@@ -142,7 +141,7 @@ export const Input = (props) => {
 					handleFMClose={handleFMClose}
 					setFileChosen={(p) => setFileChosen(p)}
 					setFileChosenPath={(p) => setFileChosenPath(p)}
-					fileTypes={props.formData[1].types} 
+					fileTypes={props.formData[1].types}
 					props={props}
 				/>
 			}

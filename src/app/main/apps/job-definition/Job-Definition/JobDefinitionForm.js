@@ -56,14 +56,17 @@ function JobDefinitionForm(props) {
 	}, []);
 
 	const creatForm = (createFromData, inputFileData) => {
-		var count = 0;
-		for (let [ index, obj ] of inputFileData.entries()) {
-			obj['id'] = index;
-			obj['formLabel'] = obj.name;
-			obj['value'] = '';
-			//  let keyName = obj.name
-			// createFromData[keyName] = obj
-		}
+        var count = 0;
+        if(inputFileData !== undefined){
+            for (let [ index, obj ] of inputFileData.entries()) {
+                obj['id'] = index;
+                obj['formLabel'] = obj.name;
+                obj['value'] = '';
+                //  let keyName = obj.name
+                // createFromData[keyName] = obj
+            }
+        }
+	
 
 		for (let key in createFromData) {
 			count++;
@@ -72,11 +75,13 @@ function JobDefinitionForm(props) {
 			createFromData[key]['id'] = count + 100;
 			createFromData[key]['formLabel'] = key;
 		}
-
-		for (let obj of inputFileData) {
-			let keyName = obj.name;
-			createFromData[keyName] = obj;
-		}
+if(inputFileData !== undefined){
+	for (let obj of inputFileData) {
+        let keyName = obj.name;
+        createFromData[keyName] = obj;
+    }
+}
+	
 
 		const sortable = Object.entries(createFromData)
 			.sort(([ , a ], [ , b ]) => a - b)
@@ -137,14 +142,8 @@ function JobDefinitionForm(props) {
 
 	return (
 		<div style={{ paddingLeft: '10px' }}>
-			<div className="flex" style={{ paddingBottom: '10px' }}>
-				<Typography className="h2 mb-1">{props.selectedJob.id}</Typography>
-				<Tooltip className="h4 mb-12" title={<h4>{props.selectedJob.description}</h4>} placement="right">
-					<div style={{ marginLeft: '3px' }}>
-						<Icon fontSize="small">info</Icon>
-					</div>
-				</Tooltip>
-			</div>
+            <Typography className="h2">&nbsp;{props.selectedJob.id}</Typography>
+					<Typography className="h4 mb-12">&nbsp;{props.selectedJob.description}</Typography>
 			<div>
 				{Object.entries(formElementsArray).length !== 0 ? (
                     <Formsy 

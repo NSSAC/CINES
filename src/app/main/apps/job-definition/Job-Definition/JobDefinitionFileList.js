@@ -51,7 +51,7 @@ function JobDefinitionFileList(props) {
     const jobDefinitionData = useSelector(({ JobDefinitionApp }) => JobDefinitionApp.jobdefinition);
     const selectedItem = useSelector(({ JobDefinitionApp }) => JobDefinitionApp.selectedjobid);
     var path = window.location.pathname
-    var pathEnd=path.charAt(path.length-1)
+    var pathEnd = path.charAt(path.length - 1)
 
     var jobDefinitionList = Object.values(jobDefinitionData);
     var totalRecords = "";
@@ -96,7 +96,7 @@ function JobDefinitionFileList(props) {
         }
         if (jobDefinitionList.length > 0 && selectedFlag) {
             var selectedId = jobDefinitionList[0].id
-           //console.log("form data "+JSON.parse(jobDefinitionList[0].input_schema))
+            //console.log("form data "+JSON.parse(jobDefinitionList[0].input_schema))
             setSelectedId(selectedId)
         }
     })
@@ -120,7 +120,7 @@ function JobDefinitionFileList(props) {
     };
 
     const onSelectClick = (row) => {
-        localStorage.setItem('selectedJobDefinition',JSON.stringify(row))
+        localStorage.setItem('selectedJobDefinition', JSON.stringify(row))
         console.log(row)
         var target = window.location.pathname + row.id;
         props.history.push(target)
@@ -210,22 +210,15 @@ function JobDefinitionFileList(props) {
 
     }
 
-    if(pathEnd !== "/"){
-        var selectedJobDefinition=JSON.parse(localStorage.getItem('selectedJobDefinition'))
+    if (pathEnd !== "/") {
+        var selectedJobDefinition = JSON.parse(localStorage.getItem('selectedJobDefinition'))
         return (
             <JobDefinitionForm selectedJob={selectedJobDefinition}></JobDefinitionForm>
         )
     }
 
-    if (spinnerFlag === true)
-        return (
-            <div className="flex flex-1 flex-col items-center justify-center mt-40">
-                <Typography className="text-20 mt-16" color="textPrimary">Loading</Typography>
-                <LinearProgress className="w-xs" color="secondary" />
-            </div>
-        );
 
-    if (spinnerFlag === false) {
+    if (Object.values(jobDefinitionData).length > 0 && Object.values(jobDefinitionData) !== undefined && searchResult.length >0) 
         return (
             <div>
 
@@ -239,58 +232,58 @@ function JobDefinitionFileList(props) {
                             ).map((row, ind, arr) => {
                                 lengthOfRow = arr.length
                                 {
-                                    if(true){
+                                    if (true) {
 
                                     }
                                 }
                                 return ((
                                     <React.Fragment>
                                         <div className={classes.root}>
-                                            <Grid className= {row.id === selectedId ? "selceted-row" : ""}  onClick={() => onRowClick(row.id)} style={{ borderBottom: "1px solid lightgrey" }} container spacing={1}>
-                                                <Grid item xs={3} style={{paddingLeft :"15px"}}>
+                                            <Grid className={row.id === selectedId ? "selceted-row" : ""} onClick={() => onRowClick(row.id)} style={{ borderBottom: "1px solid lightgrey" }} container spacing={1}>
+                                                <Grid item xs={3} style={{ paddingLeft: "15px" }}>
                                                     <Typography  >
                                                         Name
          </Typography >
-                                                    <Typography variant="h7" style={{fontWeight:"700"}} >
+                                                    <Typography variant="h7" style={{ fontWeight: "700" }} >
                                                         {row.id}
                                                     </Typography >
                                                 </Grid>
-                                                <Grid item xs={4} style={{paddingLeft :"15px"}}>
+                                                <Grid item xs={4} style={{ paddingLeft: "15px" }}>
                                                     <Typography >
                                                         Created By
          </Typography >
-                                                    <Typography style={{fontWeight:"700"}}>
+                                                    <Typography style={{ fontWeight: "700" }}>
                                                         {row.created_by}
                                                     </Typography >
                                                 </Grid>
-                                                <Grid item xs={4} style={{paddingLeft :"15px"}}>
+                                                <Grid item xs={4} style={{ paddingLeft: "15px" }}>
                                                     <Typography >
                                                         Last Updated
          </Typography >
-                                                    <Typography style={{fontWeight:"700"}}>
-                                                        {row.update_date.replace(/T|Z/g,'  ').split(".")[0]}
+                                                    <Typography style={{ fontWeight: "700" }}>
+                                                        {row.update_date.replace(/T|Z/g, '  ').split(".")[0]}
                                                     </Typography >
                                                 </Grid>
-                                                <Grid item xs={10} style={{paddingLeft :"15px"}}>
+                                                <Grid item xs={10} style={{ paddingLeft: "15px" }}>
                                                     <Typography >
                                                         Description
          </Typography >
-                                                    <Typography style={{fontWeight:"700"}}>
+                                                    <Typography style={{ fontWeight: "700" }}>
                                                         {row.description}
                                                     </Typography >
                                                 </Grid>
                                                 <Grid item xs={2} >
-                                                <Button
-                                                            variant="contained"
-                                                            ////size="small"
-                                                            //color="primary"
-                                                            className={classes.button}
-                                                            onClick={()=>onSelectClick(row)}
-                                                        >
-                                                            Select
+                                                    <Button
+                                                        variant="contained"
+                                                        ////size="small"
+                                                        //color="primary"
+                                                        className={classes.button}
+                                                        onClick={() => onSelectClick(row)}
+                                                    >
+                                                        Select
                                      </Button>
                                                 </Grid>
-                                               
+
 
 
                                             </Grid>
@@ -310,11 +303,25 @@ function JobDefinitionFileList(props) {
 
                     props.search == "" ?
                         <div >
-                            <Button disabled={page * rowsPerPage + 1 === 1} className={'next-button'} color="primary" variant="contained" onClick={fetchPreviousSetData}>Previous</Button><span className={'count-info'}>Items {page * rowsPerPage + 1}-{page * rowsPerPage + lengthOfRow} /{totalRecords}</span> <Button disabled={page * rowsPerPage + lengthOfRow === totalRecords} color="primary" className={'next-button'} variant="contained" onClick={handleChangePage}>Next</Button>
+                            <Button disabled={page * rowsPerPage + 1 === 1} className={'next-button'}
+                             color="primary" variant="contained" onClick={fetchPreviousSetData}>Previous
+                             </Button>
+                             <span className={'count-info'}>Items {page * rowsPerPage + 1}-{page * rowsPerPage + lengthOfRow} /{totalRecords}
+                             </span> 
+                            <Button disabled={page * rowsPerPage + lengthOfRow === totalRecords}
+                             color="primary" className={'next-button'}
+                             variant="contained" onClick={handleChangePage}>Next</Button>
                             <span className={'count-info'}>Page - {page + 1}</span>
                         </div> :
                         <div >
-                            <Button disabled={searchPage * searchRowperPage + 1 === 1} className={'next-button'} color="primary" variant="contained" onClick={searchFetchPreviousSetData}>Previous</Button><span className={'count-info'}>Items {searchPage * searchRowperPage + 1}-{searchPage * searchRowperPage + lengthOfRow} /{jobDefinitionList.length}</span> <Button disabled={searchPage * searchRowperPage + lengthOfRow === jobDefinitionList.length} color="primary" className={'next-button'} variant="contained" onClick={searchHandleChangePage}>Next</Button>
+                            <Button disabled={searchPage * searchRowperPage + 1 === 1}
+                             className={'next-button'} color="primary" variant="contained" 
+                             onClick={searchFetchPreviousSetData}>Previous</Button>
+                             <span className={'count-info'}>
+                                 Items {searchPage * searchRowperPage + 1}-{searchPage * searchRowperPage + lengthOfRow} /{searchResult.length}
+                                 </span> 
+                                 <Button disabled={searchPage * searchRowperPage + lengthOfRow === searchResult.length} 
+                                 color="primary" className={'next-button'} variant="contained" onClick={searchHandleChangePage}>Next</Button>
                             <span className={'count-info'}>Page - {searchPage + 1}</span>
                         </div>
                 }
@@ -331,7 +338,22 @@ function JobDefinitionFileList(props) {
                 <span className={'count-info'}>Page - {page + 1}</span> */}
             </div>
         );
-    }
+        else if(Object.values(jobDefinitionData).length  === 0){              
+            return (
+                <div className="flex flex-1 flex-col items-center justify-center mt-20">
+                <Typography className="text-18 mt-16" color="textPrimary">This folder is empty.</Typography>
+                </div>
+            )             
+}
+
+
+else if(searchResult.length  === 0)
+return (
+    <div className="flex flex-1 flex-col items-center justify-center mt-20">
+    <Typography className="text-18 mt-16" color="textPrimary">No match found for "{props.search}". Please try finding something else.</Typography>
+    </div>
+)
+
 }
 
 export default withRouter(JobDefinitionFileList);

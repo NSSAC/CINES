@@ -37,3 +37,8 @@ input[type=submit]:hover {
 .inputStyle {
     width:80%;
 }
+.MuiFormGroup-root {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+}
