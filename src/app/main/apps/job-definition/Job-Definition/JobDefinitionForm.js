@@ -14,7 +14,8 @@ function JobDefinitionForm(props) {
 	const [ showFMDialog, setShowFMDialog ] = useState(false);
 	const [ showDialog, setshowDialog ] = useState(false);
 	const [ fileChosen, setFileChosen ] = useState('');
-	const [ formElementsArray, setFormElementsArray ] = useState({});
+    const [ formElementsArray, setFormElementsArray ] = useState({});
+    const [isFormValid, setIsFormValid] = useState(false);
 
 	const parentGrid = {
 		borderTop: '2px solid black',
@@ -67,7 +68,7 @@ function JobDefinitionForm(props) {
 		for (let key in createFromData) {
 			count++;
 			//console.log(`obj.${key} = ${createFromData[prop]}`);
-			createFromData[key]['value'] = 'Abhishek';
+			createFromData[key]['value'] = '';
 			createFromData[key]['id'] = count + 100;
 			createFromData[key]['formLabel'] = key;
 		}
@@ -85,13 +86,15 @@ function JobDefinitionForm(props) {
 		console.log(formElementsArray);
 	};
 
-	// function creatForm(fromData) {
-	//     for (const prop in fromData) {
-	//         console.log(`obj.${prop} = ${fromData[prop]}`);
-	//       }
+    function disableButton()
+    {
+        setIsFormValid(false);
+    }
 
-	//   }
-
+    function enableButton()
+    {
+        setIsFormValid(true);
+    }
 	function onFormSubmit() {
 		console.log(formElementsArray)
 	}
@@ -125,7 +128,12 @@ function JobDefinitionForm(props) {
 		// localStorage.removeItem('selectedJobDefinition')
 	};
 
-	console.log(formElementsArray)
+    
+  const  inputChangedHandler = (event, inputIdentifier) => {
+     
+        var value = event.target.value;
+      
+    }
 
 	return (
 		<div style={{ paddingLeft: '10px' }}>
@@ -139,7 +147,10 @@ function JobDefinitionForm(props) {
 			</div>
 			<div>
 				{Object.entries(formElementsArray).length !== 0 ? (
-					<Formsy className="flex flex-col justify-center">
+                    <Formsy 
+                    onValid={enableButton}
+                    onInvalid={disableButton}
+                    className="flex flex-col justify-center">
 						<Grid style={parentGrid} container spacing={3}>
 							{Object.entries(formElementsArray).map((formElement) => (
 								<Grid style={childGrid} item container xs={12} sm={6}>
@@ -150,7 +161,7 @@ function JobDefinitionForm(props) {
 										elementType={formElement.type}
 										value={formElement.value}
 										buttonClicked={showDialog}
-										changed={(event) => this.inputChangedHandler(event, formElement.id)}
+										changed={(event) => inputChangedHandler(event, formElement.id)}
 									/>
 								</Grid>
 							))}
@@ -162,7 +173,8 @@ function JobDefinitionForm(props) {
 								color="primary"
 								className="w-30  mt-32 mb-80"
 								aria-label="LOG IN"
-								onClick={onFormSubmit}
+                                onClick={onFormSubmit}
+                                disabled={!isFormValid}
 							>
 								Submit
 							</Button>
