@@ -47,7 +47,7 @@ export const Input = (props) => {
 		//  childRef.current.getAlert()
 	}
 
-	switch (props.formData[1].type) {
+	switch (props.formData[1].type  ) {
 		case 'integer':
 			inputElement = (
 				<TextFieldFormsy
@@ -64,24 +64,43 @@ export const Input = (props) => {
 				/>
 			);
 			break;
-		case 'string':
-			inputElement = (
-				<SelectFormsy
-					className="my-16 inputStyle"
-					name="related"
-					label={props.formData[0]}
-					value={props.formData[1].value}
-					required
-				>
-					{
-						props.formData[1].enum.map((item) => {
-							return (
-								<MenuItem key={item} value={item}>{item}</MenuItem>
-							)
-						})
-					}
-				</SelectFormsy>
-			);
+		case ('string'):
+			if(props.formData[1].enum){
+				inputElement = (
+					<SelectFormsy
+						className="my-16 inputStyle"
+						name="related"
+						label={props.formData[0]}
+						value={props.formData[1].value}
+						required
+					>
+						{
+							props.formData[1].enum.map((item) => {
+								return (
+									<MenuItem key={item} value={item}>{item}</MenuItem>
+								)
+							})
+						}
+					</SelectFormsy>
+				);
+			}
+			else{
+				inputElement = (
+					<TextFieldFormsy
+						className="my-16 inputStyle"
+						type="text"
+						name="SrcColId"
+						style={{ width: '18px' }}
+						value={props.formData[1].value}
+						label={props.formData[0]}
+						onChange={props.changed}
+	
+						required
+	
+					/>
+				);
+			}
+		
 			break;
 
 		case 'boolean':
