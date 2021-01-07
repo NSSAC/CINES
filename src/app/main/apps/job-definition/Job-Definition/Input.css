@@ -37,3 +37,14 @@ input[type=submit]:hover {
 .inputStyle {
     width: 80%;
 }
+
+.mui-focused{
+    font-weight: 300;
+    font-size: large;
+}
+.MuiInputLabel-shrink {
+    transform: translate(0, 1.5px) scale(0.75);
+    transform-origin: top left;
+    font-size: x-large;
+    font-weight: 500;
+}

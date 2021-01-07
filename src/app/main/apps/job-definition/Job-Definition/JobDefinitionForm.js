@@ -47,20 +47,21 @@ function JobDefinitionForm(props) {
                     console.log(res.data);
                     var createFromData = JSON.parse(res.data.input_schema).properties;
                     var inputFileData = res.data.input_files;
+                    var outputFiles= res.data.output_files;
                     var x = JSON.parse(res.data.input_schema).required;
                     var responseData = res.data
                     console.log(response)
                     console.log(JSON.parse(res.data.input_schema).properties)
 
 
-                    creatForm(createFromData, inputFileData, responseData);
+                    creatForm(createFromData, inputFileData,outputFiles, responseData);
                 }
             },
             (error) => { }
         );
     }, []);
 
-    const creatForm = (createFromData, inputFileData, responseData) => {
+    const creatForm = (createFromData, inputFileData,outputFiles, responseData) => {
         setResponse(responseData)
         var count = 0;
         if (createFromData !== undefined) {
@@ -73,6 +74,24 @@ function JobDefinitionForm(props) {
                     //  let keyName = obj.name
                     // createFromData[keyName] = obj
                 }
+            }
+            if(outputFiles!=undefined){
+
+                let outputContainer={
+                    "id":200,
+                    "formLable":"output_container",
+                    "value" : "",
+                     "type": outputFiles.type
+                }
+                let outputName={
+                    "id":200,
+                    "formLable":"output_name",
+                    "value" : "",
+                     "type" :"string"
+                }
+                createFromData['output_container'] = outputContainer
+                createFromData['output_name'] = outputName
+
             }
 
 
