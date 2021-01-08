@@ -9,7 +9,7 @@ import MetadataInfoDialog from 'app/main/apps/my-jobs/MetadataDialog'
 import { Edit, InsertDriveFile as FileIcon, ListAlt as MetadataIcon, History as ProvenanceIcon, Share as ShareIcon, Computer } from "@material-ui/icons";
 import { read } from 'vega';
 import Tooltip from '@material-ui/core/Tooltip';
-
+import { useHistory, Link } from "react-router-dom";
 const useStyles = makeStyles({
     table: {
         '& th': {
@@ -139,7 +139,9 @@ function DetailSidebarContent(props) {
                                 {selectedItem.output_name ?
                                     <tr>
                                         <th> Output name</th>{selectedItem.output_name ?
-                                            <td> {selectedItem.output_name} </td> : "-"}
+                                       
+                                           <td> {selectedItem.output_name} </td>
+                                          : "-"}
 
                                     </tr> : null
                                 }
@@ -147,7 +149,11 @@ function DetailSidebarContent(props) {
                                 {selectedItem.output_container ?
                                     <tr>
                                         <th> Output Container</th>{selectedItem.output_container ?
-                                            <td style={{ overflowWrap: "anywhere" }}> {selectedItem.output_container} </td> : "-"}
+                                             <Link to={"/apps/files"+ selectedItem.output_container}>
+                                                     <td style={{ overflowWrap: "anywhere" }}>
+                                                 {selectedItem.output_container} </td>
+                                             </Link>
+                                      : "-"}
 
                                     </tr> : null
                                 }
