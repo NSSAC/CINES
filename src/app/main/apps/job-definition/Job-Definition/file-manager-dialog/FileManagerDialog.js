@@ -13,7 +13,7 @@ import { FileUpload } from "app/main/apps/file-manager/FileUpload/FileUploadDial
 import sciductService from "app/services/sciductService";
 import { makeStyles } from "@material-ui/styles";
 
-function FMPopup({ showModal, setShowModal, handleFMClose, setFileChosen, setFileChosenPath,fileTypes })  {
+function FMPopup({ showModal, setShowModal, handleFMClose, setFileChosen, setFileChosenPath, fileTypes })  {
 
     const useStyles = makeStyles({
         table: {
@@ -56,6 +56,8 @@ function FMPopup({ showModal, setShowModal, handleFMClose, setFileChosen, setFil
     const [uploadFile, setUploadFile] = useState("");
     const classes = useStyles();
     var token = localStorage.getItem('id_token')
+    const breadcrumbArr = targetPath.split('/');
+    breadcrumbArr[0]="files"
 
     if(uploadFile !== ""){
         files !== {} && Object.values(files).map(node => {
@@ -199,6 +201,7 @@ return (
         onClose={handleFMClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
+        maxWidth='lg'
         disableBackdropClick
       >
         <DialogTitle id="alert-dialog-title">
@@ -266,7 +269,7 @@ return (
           </Button>
         </DialogActions>
       </Dialog>
-      <FileUpload  fileTypes={fileTypes} setUploadFile={(p)=>setUploadFile(p)} dialogTargetPath={targetPath} showModal={showDialog} setShowModal={(p)=>setShowModal(p)} handleClose={handleClose} />
+      <FileUpload  fileTypes={fileTypes} setUploadFile={(p)=>setUploadFile(p)} dialogTargetPath={targetPath} showModal={showDialog} setShowModal={(p)=>setShowModal(p)} handleClose={handleClose} breadcrumbArr={breadcrumbArr} />
     </div>
   )
 

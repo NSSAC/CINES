@@ -29,7 +29,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export const FileUpload = ({fileTypes, setUploadFile, dialogTargetPath, setShowModal, showModal, handleClose }) => {
+export const FileUpload = ({ fileTypes, setUploadFile, dialogTargetPath, setShowModal, showModal, handleClose, breadcrumbArr }) => {
   const useStyles = makeStyles({
     table: {
       minWidth: 450,
@@ -59,12 +59,13 @@ export const FileUpload = ({fileTypes, setUploadFile, dialogTargetPath, setShowM
     }
 
   });
+
   var fileName = "";
   var contents;
   var type = "";
   var fileData = [];
   var fileTypeArray = FILEUPLOAD_CONFIG.fileType
-  if(dialogTargetPath){
+  if (dialogTargetPath) {
     fileTypeArray = fileTypes
   }
   const [initialUploadFile, setUploadedfiles] = useState([]);
@@ -78,6 +79,19 @@ export const FileUpload = ({fileTypes, setUploadFile, dialogTargetPath, setShowM
   const [uploading, setUploading] = useState(false);
   const [previews, setPreviews] = useState([]);
 
+  const ellipsis = {
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    maxWidth: '170px',
+    // color:'#61dafb'
+  }
+
+  const breadcrumb_wrap = {
+    width: '100%',
+    flexWrap: 'wrap'
+  }
+
   const [isDrag, setDrag] = useState(false);
   const onChangeHandler = (event) => {
 
@@ -86,6 +100,8 @@ export const FileUpload = ({fileTypes, setUploadFile, dialogTargetPath, setShowM
     for (let i = 0; i <= event.target.files.length - 1; i++) {
       let fileDataObject = {};
       fileDataObject.type = event.target.files[i].name.split('.').pop();
+      if(fileTypeArray.length == 1)
+         fileDataObject.type = fileTypeArray[0]
       // fileDataObject.fileName = event.target.files[i].name.split('.').slice(0, -1).join('.');
       fileDataObject.fileName = event.target.files[i].name
       fileDataObject.size = event.target.files[i].size;
@@ -133,8 +149,11 @@ export const FileUpload = ({fileTypes, setUploadFile, dialogTargetPath, setShowM
     let count = 0;
     let target = window.location.pathname;
     let targetPath = target.replace("/apps/files", "")
-    if(dialogTargetPath)
-    targetPath = dialogTargetPath
+
+    if (dialogTargetPath) {
+      targetPath = dialogTargetPath
+    }
+
     initialUploadFile.forEach(item => {
 
       if (item.status === "Uploaded successfully" || item.status === "Uploading-Failed (file already exist) 0%" || item.status === "Uploading-Failed (unsupported file type) 0%" || item.status === "Uploading-Failed (unsupported file name only '-_.'are allowed) 0%") {
@@ -150,8 +169,8 @@ export const FileUpload = ({fileTypes, setUploadFile, dialogTargetPath, setShowM
     let fileData1 = []
     setUploadedfiles([...fileData1])
     handleClose()
-    if(dialogTargetPath)
-     setShowModal(true)
+    if (dialogTargetPath)
+      setShowModal(true)
   }
 
   const OnUploadAndSubmit = () => {
@@ -187,7 +206,7 @@ export const FileUpload = ({fileTypes, setUploadFile, dialogTargetPath, setShowM
       let target = window.location.pathname;
       let id = element.id;
       let targetPath = target.replace("/apps/files", "")
-      if(dialogTargetPath)
+      if (dialogTargetPath)
         targetPath = dialogTargetPath
 
       return axios({
@@ -234,7 +253,7 @@ export const FileUpload = ({fileTypes, setUploadFile, dialogTargetPath, setShowM
       let target = window.location.pathname;
       let id = element.id;
       let targetPath = target.replace("/apps/files", "")
-      if(dialogTargetPath)
+      if (dialogTargetPath)
         targetPath = dialogTargetPath
 
       axios({
@@ -254,10 +273,11 @@ export const FileUpload = ({fileTypes, setUploadFile, dialogTargetPath, setShowM
           progressStatus(percentage, id)
         }
       }).then(res => {
-        if(dialogTargetPath){
-              setUploadFile(element.fileName)
-              setUploadedfiles([])
-              handleClose() }
+        if (dialogTargetPath) {
+          setUploadFile(element.fileName)
+          setUploadedfiles([])
+          handleClose()
+        }
       },
         (error) => { }
       )
@@ -268,8 +288,8 @@ export const FileUpload = ({fileTypes, setUploadFile, dialogTargetPath, setShowM
 
     let changeFileName;
     initialUploadFile[id].type = e.target.value
-    changeFileName = initialUploadFile[id].fileName.split('.').slice(0, -1).join('.');
-    initialUploadFile[id].fileName = changeFileName + "." + e.target.value
+    // changeFileName = initialUploadFile[id].fileName.split('.').slice(0, -1).join('.');
+    // initialUploadFile[id].fileName = changeFileName + "." + e.target.value
     //initialUploadFile[id].type = e.target.value
     setUploadedfiles([...initialUploadFile]);
 
@@ -331,23 +351,30 @@ export const FileUpload = ({fileTypes, setUploadFile, dialogTargetPath, setShowM
       >
         <DialogTitle id="alert-dialog-slide-title" divider="true">{"File Upload (Click or Drag and Drop)"}</DialogTitle>
         <DialogContent divider="true">
-          <DialogContentText id="alert-dialog-slide-description">
-
+          <DialogContentText className='mb-0' id="alert-dialog-slide-description">
+            {breadcrumbArr?<div className="flex text-16 sm:text-16" style={breadcrumb_wrap}>
+              {breadcrumbArr.map((path, i) => (
+                <div key={i} className="flex items-center" >
+                  <div className="cursor-pointer" title={path} style={ellipsis} >{path} </div>
+                  {breadcrumbArr.length - 1 !== i && (
+                    <Icon>chevron_right</Icon>
+                  )}
+                </div>))}
+            </div>:null}
           </DialogContentText>
           {/* <input className={classes.input} ref={fileInput} type="file" multiple onChange={onChangeHandler} />
           <button className={classes.customeButton} onClick={openFileDialog} type="button" >Choose File</button> */}
         </DialogContent>
 
 
-        <div className={`file-upload-container ${isDrag ? "drag" : ""} ${
-          uploading ? "uploading" : ""
+        <div className={`file-upload-container ${isDrag ? "drag" : ""} ${uploading ? "uploading" : ""
           }`}
           onDrop={handleDrop}
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
         >
-{dialogTargetPath?<input className={classes.input} ref={fileInput} type="file" onChange={onChangeHandler} />:
-                  <input className={classes.input} ref={fileInput} type="file" multiple onChange={onChangeHandler} />}
+          {dialogTargetPath ? <input className={classes.input} ref={fileInput} type="file" onChange={onChangeHandler} /> :
+            <input className={classes.input} ref={fileInput} type="file" multiple onChange={onChangeHandler} />}
           <button className={classes.customeButton} onClick={openFileDialog} type="button" >Choose File</button>
 
           <FuseAnimate animation="transition.slideUpIn" delay={300}>
@@ -360,7 +387,7 @@ export const FileUpload = ({fileTypes, setUploadFile, dialogTargetPath, setShowM
                   <TableCell className="hidden sm:table-cell">Status</TableCell>
 
                   {initialUploadFile.length == 0 ? null : <TableCell className=" p-0 text-center">
-                    Remove 
+                    Remove
           </TableCell>}
                   <TableCell className="max-w-64 w-64 p-0 text-center"> </TableCell>
 
@@ -385,19 +412,22 @@ export const FileUpload = ({fileTypes, setUploadFile, dialogTargetPath, setShowM
 
                         <TableCell className="max-w-30 w-30 p-0 text-center"> </TableCell>
                         <TableCell style={{ wordBreak: 'break-all' }} className=" max-w-30 w-30 p-0 hidden sm:table-cell">{node.fileName}</TableCell>
-                        <MenuTableCell
-                          value={node.type}
-                          onChange={handleStatus(node.id)} >
-                          {
+                        {fileTypeArray.length > 1 ?
+                          <MenuTableCell
+                            value={node.type}
+                            onChange={handleStatus(node.id)}
+                          >
+                            {
 
-                            fileTypeArray.map((item) => {
-                              return (
-                                <MenuItem value={item}>{item}</MenuItem>
-                              )
+                              fileTypeArray.map((item) => {
+                                return (
+                                  <MenuItem value={item}>{item}</MenuItem>
+                                )
 
-                            })
-                          }
-                        </MenuTableCell>
+                              })
+                            }
+                          </MenuTableCell> :
+                          <TableCell className=" hidden sm:table-cell">{fileTypeArray[0]}</TableCell>}
                         <TableCell className=" hidden sm:table-cell">{node.status}
                         </TableCell>
                         <TableCell className=" hidden sm:table-cell">
@@ -425,22 +455,22 @@ export const FileUpload = ({fileTypes, setUploadFile, dialogTargetPath, setShowM
 
 
         <DialogActions>
-          {dialogTargetPath?
-          <Button onClick={OnUploadAndSubmit} variant="contained"
-            color="default"
-            className={classes.button}
-            startIcon={<CloudUploadIcon />}
-            disabled={initialUploadFile.length == 0 || disableButton} >
-            Upload and Submit
-          </Button>:
-          <Button onClick={OnUpload} variant="contained"
-           color="default"
-           className={classes.button}
-           startIcon={<CloudUploadIcon />}
-           disabled={initialUploadFile.length == 0 || disableButton} >
-           Upload
+          {dialogTargetPath ?
+            <Button onClick={OnUploadAndSubmit} variant="contained"
+              color="default"
+              className={classes.button}
+              startIcon={<CloudUploadIcon />}
+              disabled={initialUploadFile.length == 0 || disableButton} >
+              Upload and Submit
+          </Button> :
+            <Button onClick={OnUpload} variant="contained"
+              color="default"
+              className={classes.button}
+              startIcon={<CloudUploadIcon />}
+              disabled={initialUploadFile.length == 0 || disableButton} >
+              Upload
           </Button>
-}
+          }
 
           <Button onClick={onCancle}>
             Cancel
