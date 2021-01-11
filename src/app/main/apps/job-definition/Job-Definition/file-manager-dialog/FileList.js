@@ -66,7 +66,9 @@ const useStyles = makeStyles({
 
 function Filelist(props) {
 
-    const files = useSelector(({ fMApp }) => fMApp.files);
+    const files = useSelector(({ fMApp }) => { if (!props.fileManager) 
+                                                 { return fMApp.home } 
+                                               return fMApp.files });
     const selectedItemId = useSelector(({ fMApp }) => fMApp.selectedItemId);
     const selectedItem = useSelector(({ fMApp }) => files[fMApp.selectedItemId]);
     const classes = useStyles();
@@ -104,7 +106,7 @@ function Filelist(props) {
     useEffect(() => {
         var flag = 0;
         var i = 0;
-        // if (!props.outputPath) {
+        if (props.fileManager) {
             for (i = 0; i < props.fileTypes.length; i++) {
                 if (document.getElementById('selectFile') && selectedItem && (selectedItem.type == props.fileTypes[i])) {
                     document.getElementById('selectFile').classList.remove('buttonDisabled');
@@ -113,12 +115,8 @@ function Filelist(props) {
             }
             if (flag == 0)
                 document.getElementById('selectFile').classList.add('buttonDisabled');
-        // }
-        // else
-        //     document.getElementById('selectFile').classList.remove('buttonDisabled');
-
-
-
+        }
+      
     });
 
     function onClickHandler(node, canLink) {

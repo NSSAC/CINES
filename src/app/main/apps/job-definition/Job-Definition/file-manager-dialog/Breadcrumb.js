@@ -32,7 +32,11 @@ function Breadcrumb(props)
     }
 
     const arr = props.targetPath.split('/');
-    arr[0]="files"
+    if(props.fileManager)
+      arr[0]="files"
+    else
+      arr[0]="home"
+
 
     return  (
         <div className="flex text-16 pb-8 sm:text-16" style={breadcrumb_wrap} >

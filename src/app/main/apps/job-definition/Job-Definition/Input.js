@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Button, Fab, Icon, Tooltip, Typography, Grid } from '@material-ui/core';
 import './Input.css';
 import FMPopup from './file-manager-dialog/FileManagerDialog.js';
+import * as Actions from './file-manager-dialog/store/actions';
+import FolderPopup from './file-manager-dialog/FolderManagerDialog.js';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Radio from '@material-ui/core/Radio';
@@ -14,6 +16,8 @@ import {
 	TextFieldFormsy
 } from '@fuse/components/formsy';
 import { FusePageSimple } from '@fuse';
+import { useDispatch } from 'react-redux';
+import FolderManagerDialog from './file-manager-dialog/FolderManagerDialog.js';
 
 export const Input = (props) => {
 	let inputElement = null;
@@ -26,13 +30,18 @@ export const Input = (props) => {
 		color: 'black'
 	};
 
+	const dispatch = useDispatch()
 	const [showFMDialog, setShowFMDialog] = useState(false);
+	const [showFolderDialog, setShowFolderDialog] = useState(false);
 	const [fileChosen, setFileChosen] = useState('');
+	const [folderChosenPath, setFolderChosenPath] = useState('');
 	const [fileChosenPath, setFileChosenPath] = useState('');
 	if (props.formData[1].value !== undefined && fileChosenPath !== '') {
 		props.formData[1].value = fileChosenPath
-		// if(fileChosenPath !== '')
-		// console.log(props.formData)
+	}
+
+	if (props.formData[1].value !== undefined && folderChosenPath !== '') {
+		props.formData[1].value = folderChosenPath
 	}
 
 	// if (props.invalid && props.shouldValidate && props.touched) {
@@ -42,12 +51,22 @@ export const Input = (props) => {
 		setShowFMDialog(true);
 	}
 
+	function showFolderManagerDialog() {
+		// dispatch(Actions.getFiles('/home/', 'GET_FILES'))
+		setShowFolderDialog(true);
+	}
+
 	function handleFMClose() {
 		setShowFMDialog(false);
 		//  childRef.current.getAlert()
 	}
 
-	switch (props.formData[1].type  ) {
+	function handleFolderClose() {
+		setShowFolderDialog(false);
+		//  childRef.current.getAlert()
+	}
+
+	switch (props.formData[1].type) {
 		case 'integer':
 			inputElement = (
 				<TextFieldFormsy
@@ -65,7 +84,7 @@ export const Input = (props) => {
 			);
 			break;
 		case ('string'):
-			if(props.formData[1].enum){
+			if (props.formData[1].enum) {
 				inputElement = (
 					<SelectFormsy
 						className="my-16 inputStyle"
@@ -84,7 +103,7 @@ export const Input = (props) => {
 					</SelectFormsy>
 				);
 			}
-			else{
+			else {
 				inputElement = (
 					<TextFieldFormsy
 						className="my-16 inputStyle"
@@ -94,13 +113,13 @@ export const Input = (props) => {
 						value={props.formData[1].value}
 						label={props.formData[0]}
 						onChange={props.changed}
-	
+
 						required
-	
+
 					/>
 				);
 			}
-		
+
 			break;
 
 		case 'boolean':
@@ -123,49 +142,69 @@ export const Input = (props) => {
 				<div className="my-32" >
 					<label className="my-32 ">
 						{props.formData[1].formLabel}*-
-									<Button onClick={showFileManagerDialog} style={selectButtonStyle}>
-							&nbsp;Select file
-									</Button>
-									<TextFieldFormsy
-                                        id={props.formData[1].formLabel}
-                                        className="my-16 hidden"
-                                        type="number"
-                                        name="SrcColId"
-                                        style={{ width: '18px' }}
-                                        value={props.formData[1].value}
-                                        label={props.formData[0]}
-                                        onChange={props.changed} 
-                                        required
-                                    />
+						   {props.formData[1].outputFlag ?
+							<Button onClick={showFolderManagerDialog} style={selectButtonStyle}>
+								&nbsp;Select path
+									</Button> :
+							<Button onClick={showFileManagerDialog} style={selectButtonStyle}>
+								&nbsp;Select file
+									</Button>}
+						<TextFieldFormsy
+							id={props.formData[1].formLabel}
+							className="my-16 hidden"
+							type="number"
+							name="SrcColId"
+							style={{ width: '18px' }}
+							value={props.formData[1].value}
+							label={props.formData[0]}
+							onChange={props.changed}
+							required
+						/>
 					</label>
-					<span className="my-32 ">{fileChosen == '' ? 'No file chosen' : <b onChange={props.changed} >{fileChosen}</b>}</span>
+					{props.formData[1].outputFlag ? <span className="my-32 ">{folderChosenPath == '' ? 'No folder specified' : <b className="folderPath" onChange={props.changed} >{folderChosenPath}</b>}</span>
+						: <span className="my-32 ">{fileChosen == '' ? 'No file chosen' : <b onChange={props.changed} >{fileChosen}</b>}</span>}
 				</div>
 			);
 	}
-	useEffect(()=>{
-        if(fileChosen){
-         document.getElementById(props.formData[1].formLabel).value= 1;
-        }
-    })
+	useEffect(() => {
+		if (fileChosen || folderChosenPath) {
+			document.getElementById(props.formData[1].formLabel).value = 1;
+		}
+	})
+
+	//   useEffect(() => {
+    //     dispatch(Actions.getFiles('/home/', 'GET_FILES'))
+    // },[showFolderDialog])
 
 	return (
 		<FusePageSimple
 			classes={{
+				root: 'root',
 				header: 'headerDisplay'
 			}}
 			header={
-				<FMPopup
-					showModal={showFMDialog}
-					setShowModal={(p) => setShowFMDialog(p)}
-					handleFMClose={handleFMClose}
-					setFileChosen={(p) => setFileChosen(p)}
-					setFileChosenPath={(p) => setFileChosenPath(p)}
-					fileTypes={props.formData[1].types}
-					props={props}
-				/>
+				<div>
+					<FMPopup
+						showModal={showFMDialog}
+						setShowModal={(p) => setShowFMDialog(p)}
+						handleFMClose={handleFMClose}
+						setFileChosen={(p) => setFileChosen(p)}
+						setFileChosenPath={(p) => setFileChosenPath(p)}
+						fileTypes={props.formData[1].types}
+						props={props}
+					/>
+
+					<FolderPopup
+						showModal={showFolderDialog}
+						handleFMClose={handleFolderClose}
+						setFolderPath={(p) => setFolderChosenPath(p)}
+						fileTypes={props.formData[1].types}
+						props={props}
+					/>
+				</div>
 			}
 			content={
-				<div className="flex">
+				<div className="flex content">
 					{inputElement}
 					{props.formData[1].description && (
 						<Tooltip title={<h4>{props.formData[1].description}</h4>} placement="right">

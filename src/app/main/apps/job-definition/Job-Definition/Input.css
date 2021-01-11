@@ -38,6 +38,16 @@ input[type=submit]:hover {
     width: 80%;
 }
 
+.folderPath {
+    word-break: break-word;
+    white-space: pre-wrap;
+}
+
+.root {
+    white-space: nowrap;
+    width:100%;
+}
+
 .mui-focused{
     font-weight: 300;
     font-size: large;
@@ -45,6 +55,6 @@ input[type=submit]:hover {
 .MuiInputLabel-shrink {
     transform: translate(0, 1.5px) scale(0.75);
     transform-origin: top left;
-    font-size: x-large;
+    font-size: large;
     font-weight: 500;
 }

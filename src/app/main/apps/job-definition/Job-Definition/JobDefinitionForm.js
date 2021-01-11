@@ -50,8 +50,8 @@ function JobDefinitionForm(props) {
                     var outputFiles= res.data.output_files;
                     var x = JSON.parse(res.data.input_schema).required;
                     var responseData = res.data
-                    console.log(response)
-                    console.log(JSON.parse(res.data.input_schema).properties)
+                    // console.log(response)
+                    // console.log(JSON.parse(res.data.input_schema).properties)
 
 
                     creatForm(createFromData, inputFileData,outputFiles, responseData);
@@ -71,6 +71,8 @@ function JobDefinitionForm(props) {
                     obj['id'] = index;
                     obj['formLabel'] = obj.name;
                     obj['value'] = '';
+                    obj["outputFlag"]= false;
+
                     //  let keyName = obj.name
                     // createFromData[keyName] = obj
                 }
@@ -81,13 +83,16 @@ function JobDefinitionForm(props) {
                     "id":200,
                     "formLable":"output_container",
                     "value" : "",
-                     "type": outputFiles.type
+                    "description":"Select the path from File manager where the output file is to be stored.",
+                    "types": ['folder','epihiper_multicell_analysis','epihiperOutput'],
+                    "outputFlag": true
                 }
                 let outputName={
-                    "id":200,
+                    "id":201,
                     "formLable":"output_name",
                     "value" : "",
-                     "type" :"string"
+                    "type" : 'string',
+                    "fileType" : outputFiles.type
                 }
                 createFromData['output_container'] = outputContainer
                 createFromData['output_name'] = outputName
@@ -128,8 +133,7 @@ function JobDefinitionForm(props) {
         setIsFormValid(true);
     }
     function onFormSubmit() {
-
-
+        // console.log(formElementsArray)
     }
 
     const selectButtonStyle = {

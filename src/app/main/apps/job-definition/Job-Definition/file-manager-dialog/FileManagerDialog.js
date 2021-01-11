@@ -257,8 +257,8 @@ return (
 
         </DialogTitle>
         <DialogContent style={dialogcontentStyle} >
-          <Breadcrumb  setSearch={(p)=>setSearch(p)} targetPath={targetPath} setTargetPath={(p)=>setTargetPath(p)}></Breadcrumb>
-         <Filelist search={search}  setSearch={(p)=>setSearch(p)} targetPath={targetPath} setTargetPath={(p)=>setTargetPath(p)} fileTypes={fileTypes}></Filelist>
+          <Breadcrumb  setSearch={(p)=>setSearch(p)} targetPath={targetPath} setTargetPath={(p)=>setTargetPath(p)} fileManager={true}></Breadcrumb>
+         <Filelist search={search}  setSearch={(p)=>setSearch(p)} targetPath={targetPath} setTargetPath={(p)=>setTargetPath(p)} fileTypes={fileTypes} fileManager={true}></Filelist>
         </DialogContent>
         <DialogActions>
           <Button variant="contained" id='selectFile' className="buttonDisabled " size='small' onClick={onSelect}>
