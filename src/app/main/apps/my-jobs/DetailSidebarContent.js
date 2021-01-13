@@ -149,7 +149,7 @@ function DetailSidebarContent(props) {
                                 {selectedItem.output_container ?
                                     <tr>
                                         <th> Output Container</th>{selectedItem.output_container ?
-                                             <Link to={"/apps/files"+ selectedItem.output_container}>
+                                             <Link to={"/apps/files"+ selectedItem.output_container+"/"}>
                                                      <td style={{ overflowWrap: "anywhere" }}>
                                                  {selectedItem.output_container} </td>
                                              </Link>
@@ -159,7 +159,7 @@ function DetailSidebarContent(props) {
                                 }
 
                                 <tr className="state">
-                                    <th>  Output</th>
+                                    <th>  Std out</th>
                                     {
                                         selectedItem.standard_out ? <td onClick={openoutputDialog}><a className="cursor-pointer">Click here</a></td> :
                                             <td >-</td>
@@ -167,7 +167,7 @@ function DetailSidebarContent(props) {
 
                                 </tr>
                                 <tr className="state">
-                                    <th>  Error</th>{selectedItem.standard_err ? <td onClick={openErrorDialog}><a className="cursor-pointer">Click here</a></td> :
+                                    <th>  Std error</th>{selectedItem.standard_err ? <td onClick={openErrorDialog}><a className="cursor-pointer">Click here</a></td> :
                                         <td >-</td>
 
                                     }

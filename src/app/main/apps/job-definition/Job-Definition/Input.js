@@ -30,6 +30,8 @@ export const Input = (props) => {
 		color: 'black'
 	};
 
+	
+
 	const dispatch = useDispatch()
 	const [showFMDialog, setShowFMDialog] = useState(false);
 	const [showFolderDialog, setShowFolderDialog] = useState(false);
@@ -91,6 +93,7 @@ export const Input = (props) => {
 						name="related"
 						label={props.formData[0]}
 						value={props.formData[1].value}
+						onChange={props.changed}
 						required
 					>
 						{
@@ -128,6 +131,8 @@ export const Input = (props) => {
 					className="my-16 inputStyle"
 					name="gender"
 					label={props.formData[0]}
+					value={props.formData[1].value}
+					onChange={props.changed}
 					required
 				>
 					<FormControlLabel value="true" control={<Radio color="primary" />} label="True" />
