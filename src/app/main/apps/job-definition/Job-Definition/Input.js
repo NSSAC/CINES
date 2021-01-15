@@ -79,7 +79,11 @@ export const Input = (props) => {
 					value={props.formData[1].value}
 					label={props.formData[0]}
 					onChange={props.changed}
-
+                    validations={{ isPositiveInt: function (values, value) {
+						return RegExp(/^(?:[+]?(?:0|[1-9]\d*))$/).test(value)
+					  }}}
+		            validationError="This is not a valid value"
+		  
 					required
 
 				/>
@@ -116,7 +120,7 @@ export const Input = (props) => {
 						value={props.formData[1].value}
 						label={props.formData[0]}
 						onChange={props.changed}
-
+                        autoComplete="off"
 						required
 
 					/>
@@ -202,6 +206,7 @@ export const Input = (props) => {
 					<FolderPopup
 						showModal={showFolderDialog}
 						handleFMClose={handleFolderClose}
+						folderPath={folderChosenPath}
 						setFolderPath={(p) => setFolderChosenPath(p)}
 						fileTypes={props.formData[1].types}
 						props={props}

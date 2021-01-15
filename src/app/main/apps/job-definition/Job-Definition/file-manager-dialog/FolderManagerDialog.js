@@ -12,7 +12,7 @@ import './FileManagerDialog.css'
 import sciductService from "app/services/sciductService";
 import { makeStyles } from "@material-ui/styles";
 
-function FolderPopup({ showModal, handleFMClose, setFolderPath, fileTypes })  {
+function FolderPopup({ showModal, handleFMClose, folderPath, setFolderPath, fileTypes })  {
 
     const useStyles = makeStyles({
         table: {
@@ -44,7 +44,7 @@ function FolderPopup({ showModal, handleFMClose, setFolderPath, fileTypes })  {
     })
 
     const dispatch = useDispatch()
-    const files = useSelector(({fMApp}) => fMApp.files);
+    const files = useSelector(({fMApp}) => fMApp.home);
     const selectedItemId = useSelector(({fMApp}) => fMApp.selectedItemId);
     const selectedItem = useSelector(({fMApp}) => files[fMApp.selectedItemId]);
     const [targetPath, setTargetPath] = useState('/')
@@ -58,14 +58,18 @@ function FolderPopup({ showModal, handleFMClose, setFolderPath, fileTypes })  {
 
     const onCancel = () => {
         setSearch("")
-        setTargetPath("/")
+        if(folderPath == '')
+          setTargetPath("/")
+        else 
+          setTargetPath(localStorage.getItem('selectedFolder'))
         handleFMClose()
     }
 
     const onSelect = () => {
         setSearch("")
-        setTargetPath("/")
-        setFolderPath("/home" + targetPath)
+        setTargetPath(targetPath)
+        localStorage.setItem("selectedFolder",targetPath)
+        setFolderPath("/home" + targetPath + selectedItem.name + '/')
         handleFMClose()
     }
 
@@ -116,16 +120,16 @@ function FolderPopup({ showModal, handleFMClose, setFolderPath, fileTypes })  {
         }
         addData()
         async function addData() {
-            const request = axios(config)
-            await request.then((response) => {
-                let metaData = response.data.writeACL
-                let ownerId = response.data.owner_id;
-                let type = response.data.type;        
-                checkPermission(metaData, ownerId, type)
+            // const request = axios(config)
+            // await request.then((response) => {
+            //     let metaData = response.data.writeACL
+            //     let ownerId = response.data.owner_id;
+            //     let type = response.data.type;        
+            //     checkPermission(metaData, ownerId, type)
 
 
 
-            })
+            // })
 
         }
     }
@@ -221,7 +225,7 @@ return (
          <Filelist search={search}  setSearch={(p)=>setSearch(p)} targetPath={targetPath} setTargetPath={(p)=>setTargetPath(p)} fileTypes={fileTypes}></Filelist>
         </DialogContent>
         <DialogActions>
-          <Button variant="contained" id='selectFile' size='small' onClick={onSelect}>
+          <Button variant="contained" id='selectFile'  className="buttonDisabled"  size='small' onClick={onSelect}>
             SELECT
           </Button>
           <Button size='small' onClick={onCancel}>

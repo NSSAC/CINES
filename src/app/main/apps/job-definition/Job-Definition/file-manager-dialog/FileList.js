@@ -106,16 +106,16 @@ function Filelist(props) {
     useEffect(() => {
         var flag = 0;
         var i = 0;
-        if (props.fileManager) {
+        // if (props.fileManager) {
             for (i = 0; i < props.fileTypes.length; i++) {
-                if (document.getElementById('selectFile') && selectedItem && (selectedItem.type == props.fileTypes[i])) {
+                if (document.getElementById('selectFile') && selectedItem && (selectedItem.type == props.fileTypes[i]) && selectedItem.name !== selectedItem.owner_id) {
                     document.getElementById('selectFile').classList.remove('buttonDisabled');
                     flag = 1;
                 }
             }
             if (flag == 0)
                 document.getElementById('selectFile').classList.add('buttonDisabled');
-        }
+        // }
       
     });
 
