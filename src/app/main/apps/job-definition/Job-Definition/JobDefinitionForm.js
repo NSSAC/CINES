@@ -10,6 +10,7 @@ import { Input } from 'app/main/apps/job-definition/Job-Definition/Input';
 import Toaster from './Toaster';
 import Formsy from 'formsy-react';
 import { fromPairs } from 'lodash';
+import { useHistory } from "react-router-dom";
 import {ToastsContainer, ToastsStore, ToastsContainerPosition} from 'react-toasts';
 
 function JobDefinitionForm(props) {
@@ -21,7 +22,9 @@ function JobDefinitionForm(props) {
     const [isFormValid, setIsFormValid] = useState(false);
     const [flag, setFlag] = useState(false)
     const [response, setResponse] = useState('')
-    const [success, setSuccess]= useState(false);
+    const [success, setSuccess]= useState();
+    const [isToasterFlag, setIsToasterFlag]= useState(false);
+
     const parentGrid = {
         borderTop: '2px solid black',
         borderBottom: '2px solid black'
@@ -45,8 +48,10 @@ function JobDefinitionForm(props) {
         padding: '6px',
         color: 'black'
     };
+    const history = useHistory();
 
     useEffect(() => {
+        setIsToasterFlag(false)
         var userToken = localStorage.getItem('id_token');
         var path = window.location.pathname;
         var pathEnd = path.replace('/apps/job-definition/', '');
@@ -73,9 +78,9 @@ function JobDefinitionForm(props) {
 
 
                     creatForm(createFromData, inputFileData,outputFiles, responseData);
-                    return(
-                        setSuccess(true)
-   )
+                
+                      
+   
                 }
             },
             (error) => {
@@ -101,27 +106,7 @@ function JobDefinitionForm(props) {
                     // createFromData[keyName] = obj
                 }
             }
-            if(outputFiles!=undefined){
-
-                let outputContainer={
-                    "id":200,
-                    "formLable":"output_container",
-                    "value" : "",
-                    "description":"Select the path from File manager where the output file is to be stored.",
-                    "types": ['folder','epihiper_multicell_analysis','epihiperOutput'],
-                    "outputFlag": true
-                }
-                let outputName={
-                    "id":201,
-                    "formLable":"output_name",
-                    "value" : "",
-                    "type" : 'string',
-                    "fileType" : outputFiles.type
-                }
-                createFromData['output_container'] = outputContainer
-                createFromData['output_name'] = outputName
-
-            }
+      
 
 
             for (let key in createFromData) {
@@ -137,7 +122,27 @@ function JobDefinitionForm(props) {
                     createFromData[keyName] = obj;
                 }
             }
+            if(outputFiles!=undefined){
 
+                let outputContainer={
+                    "id":200,
+                    "formLabel":"output_container",
+                    "value" : "",
+                    "description":"Select the path from File manager where the output file is to be stored.",
+                    "types": ['folder','epihiper_multicell_analysis','epihiperOutput'],
+                    "outputFlag": true
+                }
+                let outputName={
+                    "id":201,
+                    "formLabel":"output_name",
+                    "value" : "",
+                    "type" : 'string',
+                    "fileType" : outputFiles.type
+                }
+                createFromData['output_container'] = outputContainer
+                createFromData['output_name'] = outputName
+
+            }
 
             setFormElementsArray({ ...createFromData });
 
@@ -156,35 +161,60 @@ function JobDefinitionForm(props) {
         const updatedFormElement = { 
             ...updatedJobSubmissionForm[inputIdentifier]
         };
-        // if( updatedFormElement.type === 'integer'){
-        //     updatedFormElement.value = parseInt(event.target.value);
-        // }
-        // else{
-        //     updatedFormElement.value = event.target.value;
-        // }
-         updatedFormElement.value = event.target.value;
+        if( updatedFormElement.type === 'integer'){
+            updatedFormElement.value = parseInt(event.target.value);
+        }
+        else if( updatedFormElement.type === 'boolean'){
+            updatedFormElement.value = Boolean(event.target.value);
+        }
+        else{
+            updatedFormElement.value = event.target.value;
+        }
+         //updatedFormElement.value = event.target.value;
         updatedJobSubmissionForm[inputIdentifier] = updatedFormElement;
         setFormElementsArray({...updatedJobSubmissionForm});    
 
     }
 
     const createSubmissionData =() =>{
+        setIsToasterFlag(true)
         var path = window.location.pathname.replace("/apps/job-definition/" ,"")
          var jobDefinition =path
         var input ={}
-     
+       var requestJson ={
+           input:{},
+
+           job_definition: jobDefinition,
+           "pragmas": {
+            "account": "ARCS:bii_nssac"
+            }
+       }
         for(let key in formElementsArray){
 
-        input[key] = formElementsArray[key].value
+            if(formElementsArray[key].id >=200 && formElementsArray[key].formLabel == "output_container"  ){
+             requestJson['output_container'] =formElementsArray[key].value
+            }
+            else if(formElementsArray[key].id >=200 && formElementsArray[key].formLabel == "output_name"  ){
+                requestJson['output_name'] =formElementsArray[key].value
+               }
+            else{
+                input[key] = formElementsArray[key].value
+            }
+
+       
 
         }
-        setJobSubmissionArray({input:input ,job_definition: jobDefinition,"pragmas": {
-            "account": "ARCS:bii_nssac"
-            }})
-
+     
+        requestJson.input=input
+       setJobSubmissionArray({...requestJson})
+       onFormSubmit(requestJson)
+        // setJobSubmissionArray(input => ({input:input ,job_definition: jobDefinition,"pragmas": {
+        //     "account": "ARCS:bii_nssac"
+        //     }}))
+            //setTags(prevTags => ({...prevTags, available}));
     }
-    function onFormSubmit() {
-        createSubmissionData() 
+    function onFormSubmit(requestJson) {
+        //createSubmissionData() 
         var path = window.location.pathname.replace("/apps/job-definition/" ,"")
          var jobDefinition =path
          const userToken = localStorage.getItem('id_token')
@@ -197,20 +227,30 @@ function JobDefinitionForm(props) {
               'Authorization': userToken,
     
             },
-            data: jobSubmissionArray,
+            data: requestJson,
           }).then(res => {
-           
+            setIsToasterFlag(true)
+            //setIsToasterFlag(prevMovies => (true));
+            setSuccess(true)
+            var timeOutHandle = window.setTimeout( 
+                delayNavigation  
+          ,1000);
+            
           },
             (error) => { 
-                return (
-    <div> {ToastsStore.error("An error occurred. Please try again.")}
-    <ToastsContainer store={ToastsStore} position={ToastsContainerPosition.TOP_RIGHT}/></div>
-   )
-            }
+                setSuccess(false)
+                setIsToasterFlag(true)
+              
+          }
+               
+                   
           )
        
     }
     
+    function delayNavigation (){
+        history.push('/apps/my-jobs/');
+    }
     function disableButton() {
         setIsFormValid(false);
     }
@@ -235,12 +275,13 @@ function JobDefinitionForm(props) {
     };
 
 if(success){
- 
+ console.log("inside if block")
 
 }
 
     return (
         <div style={{ paddingLeft: '10px' }}>
+               {isToasterFlag? <Toaster success={success } id={ response.id}></Toaster>:null} 
             <Typography className="h2">&nbsp;{response != '' ?
                 response.id : null}</Typography>
             <Typography className="h4 mb-12">&nbsp;{response != '' ? response.description : null}</Typography>
@@ -272,7 +313,7 @@ if(success){
                                 color="primary"
                                 className="w-30  mt-32 mb-80"
                                 aria-label="LOG IN"
-                                onClick={onFormSubmit}
+                                onClick={createSubmissionData}
                                 disabled={!isFormValid}
                             >
                                 Submit
@@ -291,7 +332,7 @@ if(success){
                     </Formsy>
                 ) : null}
             </div>
-            {/* <Toaster></Toaster> */}
+          
         </div>
     );
 }
