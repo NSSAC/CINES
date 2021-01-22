@@ -108,7 +108,7 @@ function Filelist(props) {
         var i = 0;
         // if (props.fileManager) {
             for (i = 0; i < props.fileTypes.length; i++) {
-                if (document.getElementById('selectFile') && selectedItem && (selectedItem.type == props.fileTypes[i]) && selectedItem.name !== selectedItem.owner_id) {
+                if (document.getElementById('selectFile') && selectedItem && (selectedItem.type == props.fileTypes[i])) {
                     document.getElementById('selectFile').classList.remove('buttonDisabled');
                     flag = 1;
                 }

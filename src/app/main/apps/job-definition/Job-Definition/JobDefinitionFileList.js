@@ -9,6 +9,7 @@ import * as Actions from './store/actions';
 import './JobDefinitionFileList.css'
 import { Link, withRouter } from 'react-router-dom';
 import JobDefinitionForm from './JobDefinitionForm';
+
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
@@ -52,6 +53,8 @@ function JobDefinitionFileList(props) {
     const selectedItem = useSelector(({ JobDefinitionApp }) => JobDefinitionApp.selectedjobid);
     var path = window.location.pathname
     var pathEnd = path.charAt(path.length - 1)
+    var pathArray = window.location.pathname.split('/')
+    var pathArrayEnd=pathArray.slice(-1)[0]
 
     var jobDefinitionList = Object.values(jobDefinitionData);
     var totalRecords = "";
@@ -210,15 +213,29 @@ function JobDefinitionFileList(props) {
 
     }
 
+    function moduleIsAvailable () {
+        try {
+            require.resolve(`./static-forms/${pathArrayEnd}`)
+              return true;
+        } catch (e) {
+            return false;
+        }
+    }
+
     if (pathEnd !== "/") {
         var selectedJobDefinition = JSON.parse(localStorage.getItem('selectedJobDefinition'))
+        var StaticJobDefinitionForm = null
+        var formExists = moduleIsAvailable()
+        if(formExists){
+            StaticJobDefinitionForm = React.lazy(() =>
+              import(`./static-forms/${pathArrayEnd}`))
+        }
         return (
-            <JobDefinitionForm selectedJob={selectedJobDefinition}></JobDefinitionForm>
+            formExists?<StaticJobDefinitionForm></StaticJobDefinitionForm> : <JobDefinitionForm selectedJob={selectedJobDefinition}></JobDefinitionForm>
         )
     }
 
-
-    if (Object.values(jobDefinitionData).length > 0 && Object.values(jobDefinitionData) !== undefined && searchResult.length >0) 
+    if (Object.values(jobDefinitionData).length > 0 && Object.values(jobDefinitionData) !== undefined && searchResult.length > 0)
         return (
             <div>
 
@@ -304,24 +321,24 @@ function JobDefinitionFileList(props) {
                     props.search == "" ?
                         <div >
                             <Button disabled={page * rowsPerPage + 1 === 1} className={'next-button'}
-                             color="primary" variant="contained" onClick={fetchPreviousSetData}>Previous
+                                color="primary" variant="contained" onClick={fetchPreviousSetData}>Previous
                              </Button>
-                             <span className={'count-info'}>Items {page * rowsPerPage + 1}-{page * rowsPerPage + lengthOfRow} /{totalRecords}
-                             </span> 
+                            <span className={'count-info'}>Items {page * rowsPerPage + 1}-{page * rowsPerPage + lengthOfRow} /{totalRecords}
+                            </span>
                             <Button disabled={page * rowsPerPage + lengthOfRow === totalRecords}
-                             color="primary" className={'next-button'}
-                             variant="contained" onClick={handleChangePage}>Next</Button>
+                                color="primary" className={'next-button'}
+                                variant="contained" onClick={handleChangePage}>Next</Button>
                             <span className={'count-info'}>Page - {page + 1}</span>
                         </div> :
                         <div >
                             <Button disabled={searchPage * searchRowperPage + 1 === 1}
-                             className={'next-button'} color="primary" variant="contained" 
-                             onClick={searchFetchPreviousSetData}>Previous</Button>
-                             <span className={'count-info'}>
-                                 Items {searchPage * searchRowperPage + 1}-{searchPage * searchRowperPage + lengthOfRow} /{searchResult.length}
-                                 </span> 
-                                 <Button disabled={searchPage * searchRowperPage + lengthOfRow === searchResult.length} 
-                                 color="primary" className={'next-button'} variant="contained" onClick={searchHandleChangePage}>Next</Button>
+                                className={'next-button'} color="primary" variant="contained"
+                                onClick={searchFetchPreviousSetData}>Previous</Button>
+                            <span className={'count-info'}>
+                                Items {searchPage * searchRowperPage + 1}-{searchPage * searchRowperPage + lengthOfRow} /{searchResult.length}
+                            </span>
+                            <Button disabled={searchPage * searchRowperPage + lengthOfRow === searchResult.length}
+                                color="primary" className={'next-button'} variant="contained" onClick={searchHandleChangePage}>Next</Button>
                             <span className={'count-info'}>Page - {searchPage + 1}</span>
                         </div>
                 }
@@ -338,21 +355,21 @@ function JobDefinitionFileList(props) {
                 <span className={'count-info'}>Page - {page + 1}</span> */}
             </div>
         );
-        else if(Object.values(jobDefinitionData).length  === 0){              
-            return (
-                <div className="flex flex-1 flex-col items-center justify-center mt-20">
+    else if (Object.values(jobDefinitionData).length === 0) {
+        return (
+            <div className="flex flex-1 flex-col items-center justify-center mt-20">
                 <Typography className="text-18 mt-16" color="textPrimary">This folder is empty.</Typography>
-                </div>
-            )             
-}
+            </div>
+        )
+    }
 
 
-else if(searchResult.length  === 0)
-return (
-    <div className="flex flex-1 flex-col items-center justify-center mt-20">
-    <Typography className="text-18 mt-16" color="textPrimary">No match found for "{props.search}". Please try finding something else.</Typography>
-    </div>
-)
+    else if (searchResult.length === 0)
+        return (
+            <div className="flex flex-1 flex-col items-center justify-center mt-20">
+                <Typography className="text-18 mt-16" color="textPrimary">No match found for "{props.search}". Please try finding something else.</Typography>
+            </div>
+        )
 
 }
 

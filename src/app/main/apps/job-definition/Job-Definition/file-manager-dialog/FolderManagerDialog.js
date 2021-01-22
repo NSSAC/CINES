@@ -69,7 +69,7 @@ function FolderPopup({ showModal, handleFMClose, folderPath, setFolderPath, file
         setSearch("")
         setTargetPath(targetPath)
         localStorage.setItem("selectedFolder",targetPath)
-        setFolderPath("/home" + targetPath + selectedItem.name + '/')
+        setFolderPath("/home" + targetPath + selectedItem.name)
         handleFMClose()
     }
 
@@ -104,64 +104,9 @@ function FolderPopup({ showModal, handleFMClose, folderPath, setFolderPath, file
         document.removeEventListener("keydown", escFunction, false);
     }
 
-    async function getMetadata(targetMeta) {
-        setcheckFlag(false);
-
-        var axios = require('axios');
-        if (typeof (token) == "string") {
-            var config = {
-                method: 'get',
-                url: `https://sciduct.bii.virginia.edu/filesvc/file${targetMeta}`,
-                headers: {
-                    'Accept': 'application/vsmetadata+json',
-                    'Authorization': token
-                }
-            };
-        }
-        addData()
-        async function addData() {
-            // const request = axios(config)
-            // await request.then((response) => {
-            //     let metaData = response.data.writeACL
-            //     let ownerId = response.data.owner_id;
-            //     let type = response.data.type;        
-            //     checkPermission(metaData, ownerId, type)
-
-
-
-            // })
-
-        }
-    }
-    const checkPermission = (metaData, ownerId, type) => {
-        let tokenData = sciductService.getTokenData().teams;
-        let fileMetaDate = metaData;
-        if (sciductService.getTokenData().sub === ownerId) {
-
-            setcheckFlag(true);
-        }
-        else {
-            tokenData.forEach(element => {
-                fileMetaDate.forEach(item => {
-
-                    if (item.includes(element)) {
-                        setcheckFlag(true);
-                    }
-                });
-            });
-        }
-    }
-
+   
     useEffect(() => {
         dispatch(Actions.getHome(targetPath))
-        var targetMeta = ""
-        if (token === null || !showModal || targetPath == "/") {
-            setcheckFlag(false)
-        }
-        else {
-            targetMeta = targetPath.slice(0, -1)
-            getMetadata(targetMeta)
-        }
     },[targetPath]);
 
 
@@ -178,9 +123,6 @@ return (
         <DialogTitle id="alert-dialog-title">
             <div className="flex items-center justify-between">
                 <h2>File Manager</h2>
-                {/* <div id="fileUpload"> */}
-                {/* <FileUpload setUploadFile={(p)=>setUploadFile(p)} dialogTargetPath={targetPath} showModal={showDialog} handleClose={handleClose} /> */}
-                {/* </div> */}
                          <div className="flex items-end items-center">
                             <FuseAnimate animation="transition.expandIn" delay={200}>
                                 <span>
@@ -217,7 +159,7 @@ return (
                             </FuseAnimate>
                 </div>
             </div>
-            <div><h5>Please select a path for output file</h5></div>
+            <div><h5>Please click on a row to select a folder path. Or else, click on folder name to navigate to the folder contents.</h5></div>
 
         </DialogTitle>
         <DialogContent style={dialogcontentStyle} >

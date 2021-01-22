@@ -5,20 +5,9 @@
     background-color: rgba(255, 255, 255, 0.12);
 }
 
-
-/* .dialogButton {
-    font-size: 1.4rem;
-    color: white;
-}
-
-.dialogButton:hover {
-    text-decoration: none;
-    background-color: rgba(255, 255, 255, 0.1);
-} */
-
 ::-webkit-scrollbar {
-    width: 12px;
-    height: 12px;
+    width: 10px;
+    height: 10px;
     background-color: lightgray;
 }
 
@@ -27,7 +16,25 @@
 }
 
 ::-webkit-scrollbar:hover {
-    width: 12px;
-    height: 12px;
+    width: 10px;
+    height: 10px;
     background-color: lightgray;
 }
+
+@media only screen and (max-width: 600px) {
+    ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+        background-color: lightgray;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+        background-color: darkgray;
+    }
+    
+    ::-webkit-scrollbar:hover {
+        width: 6px;
+        height: 6px;
+        background-color: lightgray;
+    }
+  }

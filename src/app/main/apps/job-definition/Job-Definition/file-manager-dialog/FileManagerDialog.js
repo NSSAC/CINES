@@ -13,7 +13,7 @@ import { FileUpload } from "app/main/apps/file-manager/FileUpload/FileUploadDial
 import sciductService from "app/services/sciductService";
 import { makeStyles } from "@material-ui/styles";
 
-function FMPopup({ showModal, setShowModal, handleFMClose, setFileChosen, setFileChosenPath, fileTypes })  {
+function FMPopup({ showModal, setShowModal, handleFMClose, setFileChosen, setFileChosenPath, fileTypes})  {
 
     const useStyles = makeStyles({
         table: {
@@ -89,7 +89,7 @@ function FMPopup({ showModal, setShowModal, handleFMClose, setFileChosen, setFil
         setSearch("")
         setTargetPath("/")
         localStorage.setItem('selectedSnapFile',JSON.stringify(selectedItem))
-        setFileChosen(selectedItem.name)
+        setFileChosen(targetPath + selectedItem.name)
         setFileChosenPath(targetPath + selectedItem.name)
         handleFMClose()
     }

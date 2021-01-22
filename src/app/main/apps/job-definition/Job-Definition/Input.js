@@ -50,7 +50,7 @@ export const Input = (props) => {
 	//     inputClasses.push(classes.Invalid);
 	// }
 	function showFileManagerDialog() {
-		setShowFMDialog(true);
+			setShowFMDialog(true);
 	}
 
 	function showFolderManagerDialog() {
@@ -171,7 +171,7 @@ export const Input = (props) => {
 						/>
 					</label>
 					{props.formData[1].outputFlag ? <span className="my-32 ">{folderChosenPath == '' ? 'No folder specified' : <b className="folderPath" onChange={props.changed} >{folderChosenPath}</b>}</span>
-						: <span className="my-32 ">{fileChosen == '' ? 'No file chosen' : <b onChange={props.changed} >{fileChosen}</b>}</span>}
+						: <span className="my-32 folderPath">{fileChosen == '' ? 'No file chosen' : <b onChange={props.changed} >{fileChosen}</b>}</span>}
 				</div>
 			);
 	}
@@ -180,10 +180,6 @@ export const Input = (props) => {
 			document.getElementById(props.formData[1].formLabel).value = 1;
 		}
 	})
-
-	//   useEffect(() => {
-    //     dispatch(Actions.getFiles('/home/', 'GET_FILES'))
-    // },[showFolderDialog])
 
 	return (
 		<FusePageSimple
