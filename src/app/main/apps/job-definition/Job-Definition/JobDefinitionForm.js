@@ -27,7 +27,8 @@ function JobDefinitionForm(props) {
   const [success, setSuccess] = useState();
   const [isToasterFlag, setIsToasterFlag] = useState(false);
   const [spinnerFlag, setSpinnerFlag] = useState(true);
-
+  var path = window.location.pathname;
+  var pathEnd = path.replace("/apps/job-definition/", "");
   const parentGrid = {
     borderTop: "2px solid black",
     borderBottom: "2px solid black",
@@ -56,8 +57,7 @@ function JobDefinitionForm(props) {
   useEffect(() => {
     setIsToasterFlag(false);
     var userToken = localStorage.getItem("id_token");
-    var path = window.location.pathname;
-    var pathEnd = path.replace("/apps/job-definition/", "");
+   
 
     axios({
       method: "get",
@@ -99,7 +99,7 @@ function JobDefinitionForm(props) {
   ) => {
     setResponse(responseData);
     var count = 0;
-    if (createFromData !== undefined) {
+    if (createFromData !== undefined && pathEnd.split("_")[0] === "snap") {
       setFlag(true);
       if (inputFileData !== undefined) {
         for (let [index, obj] of inputFileData.entries()) {
