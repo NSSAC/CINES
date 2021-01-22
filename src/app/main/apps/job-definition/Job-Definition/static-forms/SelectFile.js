@@ -61,7 +61,7 @@ export const Input = (props) => {
 					required
 				/>
 			</label>
-			{props.formData[1].outputFlag ? <span className="my-32 ">{folderChosenPath == '' ? 'No folder specified' : <b className="folderPath" onChange={props.changed} >{folderChosenPath}</b>}</span>
+			{props.formData[1].outputFlag ? <span className="my-32 folderPath">{folderChosenPath == '' ? 'No folder specified' : <b  onChange={props.changed} >{folderChosenPath}</b>}</span>
 				: <span className="my-32 folderPath">{fileChosen == '' ? 'No file chosen' : <b onChange={props.changed} >{fileChosen}</b>}</span>}
 		</div>
 	);

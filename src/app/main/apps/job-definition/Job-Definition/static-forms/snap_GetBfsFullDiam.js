@@ -291,6 +291,7 @@ const Snap_GetBfsFullDiam = () => {
                                                 label={formElementsArray['IsDir'].formLabel}
                                                 value={formElementsArray['IsDir'].value}
                                                 onChange={(event) => inputChangedHandler(event, formElementsArray['IsDir'].formLabel)}
+                                                required
                                             >
                                                 <FormControlLabel value="true" control={<Radio color="primary" />} label="True" />
                                                 <FormControlLabel value="false" control={<Radio color="primary" />} label="False" />
