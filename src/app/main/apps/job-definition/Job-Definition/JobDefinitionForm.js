@@ -146,7 +146,8 @@ function JobDefinitionForm(props) {
         createFromData["output_container"] = outputContainer;
         createFromData["output_name"] = outputName;
       }
-
+       
+      
       setFormElementsArray({ ...createFromData });
     } else {
       setFlag(false);
@@ -223,7 +224,7 @@ function JobDefinitionForm(props) {
         setIsToasterFlag(true);
         //setIsToasterFlag(prevMovies => (true));
         setSuccess(true);
-        var timeOutHandle = window.setTimeout(delayNavigation, 1000);
+        var timeOutHandle = window.setTimeout(delayNavigation, 3000);
       },
       (error) => {
         setSuccess(false);

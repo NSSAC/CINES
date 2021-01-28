@@ -239,7 +239,7 @@ function JobDefinitionFileList(props) {
                           <Typography>Name</Typography>
                           <Typography
                             variant="h7"
-                            style={{ fontWeight: "700" }}
+                            style={{ fontWeight: "700" , wordBreak:"break-word"}}
                           >
                             {row.id}
                           </Typography>
