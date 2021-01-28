@@ -57,11 +57,10 @@ export const Input = (props) => {
 					value={props.formData[1].value}
 					label={props.formData[0]}
 					onChange={props.changed}
-					// inputRef={temp}
 					required
 				/>
 			</label>
-			{props.formData[1].outputFlag ? <span className="my-32 folderPath">{folderChosenPath == '' ? 'No folder specified' : <b  onChange={props.changed} >{folderChosenPath}</b>}</span>
+			{props.formData[1].outputFlag ? <span className="my-32 folderPath">{folderChosenPath == '' ? 'No folder specified' : <b onChange={props.changed} >{folderChosenPath}</b>}</span>
 				: <span className="my-32 folderPath">{fileChosen == '' ? 'No file chosen' : <b onChange={props.changed} >{fileChosen}</b>}</span>}
 		</div>
 	);
@@ -71,25 +70,21 @@ export const Input = (props) => {
 	}
 
 	function showFolderManagerDialog() {
-		// dispatch(Actions.getFiles('/home/', 'GET_FILES'))
 		setShowFolderDialog(true);
 	}
 
 	function handleFMClose() {
 		setShowFMDialog(false);
-		//  childRef.current.getAlert()
 	}
 
 	function handleFolderClose() {
 		setShowFolderDialog(false);
-		//  childRef.current.getAlert()
 	}
 
 
 	useEffect(() => {
 		if (fileChosen || folderChosenPath) {
 			document.getElementById(props.formData[1].formLabel).value = 1;
-			// temp.current.value = temp.current.value+2
 		}
 	})
 
@@ -101,7 +96,7 @@ export const Input = (props) => {
 			}}
 			header={
 				<div>
-					<FMPopup
+					{props.formData[1].type==undefined && <FMPopup
 						showModal={showFMDialog}
 						setShowModal={(p) => setShowFMDialog(p)}
 						handleFMClose={handleFMClose}
@@ -110,16 +105,16 @@ export const Input = (props) => {
 						setFileChosenPath={(p) => setFileChosenPath(p)}
 						fileTypes={props.formData[1].types}
 						props={props}
-					/>
+					/>}
 
-					<FolderPopup
+					{showFolderDialog && <FolderPopup
 						showModal={showFolderDialog}
 						handleFMClose={handleFolderClose}
 						folderPath={folderChosenPath}
 						setFolderPath={(p) => setFolderChosenPath(p)}
 						fileTypes={props.formData[1].types}
 						props={props}
-					/>
+					/>}
 				</div>
 			}
 			content={

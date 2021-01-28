@@ -66,9 +66,10 @@ const useStyles = makeStyles({
 
 function Filelist(props) {
 
-    const files = useSelector(({ fMApp }) => { if (!props.fileManager) 
-                                                 { return fMApp.home } 
-                                               return fMApp.files });
+    const files = useSelector(({ fMApp }) => {
+        if (!props.fileManager) { return fMApp.home }
+        return fMApp.files
+    });
     const selectedItemId = useSelector(({ fMApp }) => fMApp.selectedItemId);
     const selectedItem = useSelector(({ fMApp }) => files[fMApp.selectedItemId]);
     const classes = useStyles();
@@ -107,16 +108,16 @@ function Filelist(props) {
         var flag = 0;
         var i = 0;
         // if (props.fileManager) {
-            for (i = 0; i < props.fileTypes.length; i++) {
-                if (document.getElementById('selectFile') && selectedItem && (selectedItem.type == props.fileTypes[i])) {
-                    document.getElementById('selectFile').classList.remove('buttonDisabled');
-                    flag = 1;
-                }
+        for (i = 0; i < props.fileTypes.length; i++) {
+            if (document.getElementById('selectFile') && selectedItem && (selectedItem.type == props.fileTypes[i])) {
+                document.getElementById('selectFile').classList.remove('buttonDisabled');
+                flag = 1;
             }
-            if (flag == 0)
-                document.getElementById('selectFile').classList.add('buttonDisabled');
+        }
+        if (flag == 0)
+            document.getElementById('selectFile').classList.add('buttonDisabled');
         // }
-      
+
     });
 
     function onClickHandler(node, canLink) {
@@ -198,6 +199,14 @@ function Filelist(props) {
         return (
             <div className="flex flex-1 flex-col items-center justify-center mt-20">
                 <Typography className="text-13 mt-16" color="textPrimary">No match found for "{props.search}". Please try finding something else.</Typography>
+            </div>
+        )
+    }
+
+    else if (props.fileTypes[0]=="folder") {
+        return (
+            <div className="flex flex-1 flex-col items-center justify-center mt-20">
+                <Typography className="text-13 mt-16" color="textPrimary">This folder does not contain any folders.</Typography>
             </div>
         )
     }

@@ -347,16 +347,6 @@ function JobDefinitionFileList(props) {
             <span className={"count-info"}>Page - {searchPage + 1}</span>
           </div>
         )}
-
-        {/*
-         */}
-        {/* <div className="">
-                    <IconButton disabled={page * rowsPerPage + 1 === 1} className={'next-button'} color="primary" variant="contained" onClick={fetchPreviousSetData}> <Icon >chevron_left</Icon></IconButton><span className={'count-info'}>Total records  {page * rowsPerPage + 1}-{page * rowsPerPage + rowsPerPage} of {totalRecords}</span>  <IconButton disabled={page * rowsPerPage + rowsPerPage === totalRecords} color="primary" className={'next-button'} variant="contained" onClick={handleChangePage}> <Icon >chevron_right</Icon></IconButton> 
-                <span className={'count-info'}>Page - {page + 1}</span>
-                    </div> */}
-
-        {/* <Button disabled={page * rowsPerPage + 1 === 1} className={'next-button'} color="primary" variant="contained" onClick={fetchPreviousSetData}>Previous</Button><span className={'count-info'}>{contentRange} </span> <Button disabled={lastResult === totalRecords} color="primary" className={'next-button'} variant="contained" onClick={handleChangePage}>Next</Button>
-                <span className={'count-info'}>Page - {page + 1}</span> */}
       </div>
     );
   else if (Object.values(jobDefinitionData).length === 0 && spinnerFlag === false) {

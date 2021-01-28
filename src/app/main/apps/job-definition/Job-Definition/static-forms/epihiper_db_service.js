@@ -8,6 +8,7 @@ import { FusePageSimple } from '@fuse';
 import axios from 'axios';
 import { Input } from './SelectFile.js'
 import { Icon, LinearProgress, Tooltip } from '@material-ui/core';
+import Toaster from "../Toaster";
 
 const Snap_GetBfsFullDiam = () => {
     const [isFormValid, setIsFormValid] = useState(false);
@@ -20,7 +21,8 @@ const Snap_GetBfsFullDiam = () => {
     const [showDialog, setshowDialog] = useState(false);
     const [spinnerFlag, setSpinnerFlag] = useState(true);
     const history = useHistory();
-
+    var path = window.location.pathname;
+    var pathEnd = path.replace("/apps/job-definition/", "");
 
     const selectButtonStyle = {
         backgroundColor: '#61dafb',
@@ -46,9 +48,6 @@ const Snap_GetBfsFullDiam = () => {
 
 
     const onFormCancel = () => {
-        // console.log(formElementsArray);
-        // console.log(jobSubmissionArray)
-        // localStorage.removeItem('selectedJobDefinition')
     };
 
     function enableButton() {
@@ -57,10 +56,9 @@ const Snap_GetBfsFullDiam = () => {
 
 
     useEffect(() => {
+        setIsToasterFlag(false);
         var userToken = localStorage.getItem('id_token');
-        var path = window.location.pathname;
-        var pathEnd = path.replace('/apps/job-definition/', '');
-
+       
         axios({
             method: 'get',
             url: 'https://sciduct.bii.virginia.edu/jobsvc/job_definition/epihiper_db_service',
@@ -77,10 +75,10 @@ const Snap_GetBfsFullDiam = () => {
                     var createFromData = {};
                     var inputFileData = res.data.input_files;
                     var outputFiles = res.data.output_files;
-                    var x = JSON.parse(res.data.input_schema).required;
-                    var responseData = res.data
+                    var requiredFeildArray = JSON.parse(res.data.input_schema).required;
+                    var responseData = res.data;
 
-                    creatForm(createFromData, inputFileData, outputFiles, responseData);
+                    creatForm(createFromData, inputFileData, outputFiles, requiredFeildArray, responseData);
                     return (
                         setSuccess(true)
                     )
@@ -93,7 +91,7 @@ const Snap_GetBfsFullDiam = () => {
         );
     }, [axios]);
 
-    const creatForm = (createFromData, inputFileData, outputFiles, responseData) => {
+    const creatForm = (createFromData, inputFileData, outputFiles, requiredFeildArray, responseData) => {
         setResponse(responseData)
         var count = 0;
         if (1) {
@@ -105,17 +103,18 @@ const Snap_GetBfsFullDiam = () => {
                     obj['value'] = '';
                     obj["outputFlag"] = false;
 
-                    //  let keyName = obj.name
-                    // createFromData[keyName] = obj
                 }
             }
 
             for (let key in createFromData) {
                 count++;
-                //console.log(`obj.${key} = ${createFromData[prop]}`);
-                // createFromData[key]['value'] = '';
                 createFromData[key]['id'] = count + 100;
                 createFromData[key]['formLabel'] = key;
+                if (requiredFeildArray.includes(key)) {
+                    createFromData[key]["required"] = true;
+                } else {
+                    createFromData[key]["required"] = false;
+                }
             }
             if (inputFileData !== undefined) {
                 for (let obj of inputFileData) {
@@ -141,25 +140,25 @@ const Snap_GetBfsFullDiam = () => {
     </Tooltip>
 
     const inputChangedHandler = (event, inputIdentifier) => {
-
-        const updatedJobSubmissionForm = {
-            ...formElementsArray
-        };
-        const updatedFormElement = {
-            ...updatedJobSubmissionForm[inputIdentifier]
-        };
-        if (updatedFormElement.type === 'integer') {
-            updatedFormElement.value = parseInt(event.target.value);
+        if (event.target.value !== "") {
+            const updatedJobSubmissionForm = {
+                ...formElementsArray
+            };
+            const updatedFormElement = {
+                ...updatedJobSubmissionForm[inputIdentifier]
+            };
+            if (updatedFormElement.type === 'integer') {
+                updatedFormElement.value = parseInt(event.target.value);
+            }
+            else if (updatedFormElement.type === 'boolean') {
+                updatedFormElement.value = Boolean(event.target.value);
+            }
+            else {
+                updatedFormElement.value = event.target.value;
+            }
+            updatedJobSubmissionForm[inputIdentifier] = updatedFormElement;
+            setFormElementsArray({ ...updatedJobSubmissionForm });
         }
-        else if (updatedFormElement.type === 'boolean') {
-            updatedFormElement.value = Boolean(event.target.value);
-        }
-        else {
-            updatedFormElement.value = event.target.value;
-        }
-        //updatedFormElement.value = event.target.value;
-        updatedJobSubmissionForm[inputIdentifier] = updatedFormElement;
-        setFormElementsArray({ ...updatedJobSubmissionForm });
     }
 
     const createSubmissionData = () => {
@@ -194,11 +193,7 @@ const Snap_GetBfsFullDiam = () => {
         requestJson.input = input
         setJobSubmissionArray({ ...requestJson })
         onFormSubmit(requestJson)
-        // setJobSubmissionArray(input => ({input:input ,job_definition: jobDefinition,"pragmas": {
-        //     "account": "ARCS:bii_nssac"
-        //     }}))
-        //setTags(prevTags => ({...prevTags, available}));
-    }
+       }
     function onFormSubmit(requestJson) {
         //createSubmissionData() 
         var path = window.location.pathname.replace("/apps/job-definition/", "")
@@ -216,11 +211,10 @@ const Snap_GetBfsFullDiam = () => {
             data: requestJson,
         }).then(res => {
             setIsToasterFlag(true)
-            //setIsToasterFlag(prevMovies => (true));
             setSuccess(true)
             var timeOutHandle = window.setTimeout(
                 delayNavigation
-                , 1000);
+                , 3000);
 
         },
             (error) => {
@@ -239,82 +233,84 @@ const Snap_GetBfsFullDiam = () => {
     }
 
     if (spinnerFlag === true)
-    return (
-        <div className="flex flex-1 flex-col items-center justify-center mt-40">
-            <Typography className="text-20 mt-16" color="textPrimary">Loading Form</Typography>
-            <LinearProgress className="w-xs" color="secondary" />
-        </div>
-    );
+        return (
+            <div className="flex flex-1 flex-col items-center justify-center mt-40">
+                <Typography className="text-20 mt-16" color="textPrimary">Loading Form</Typography>
+                <LinearProgress className="w-xs" color="secondary" />
+            </div>
+        );
 
     if (spinnerFlag === false)
-    return (
-        <FusePageSimple
-            classes={{
-                root: 'root',
-                header: 'headerDisplay'
-            }}
-            header={
-                <div></div>
-            }
-            content={
-                <div className="flex content">
-                    <div className="content">
-                        <Typography className="h2">{response.id}</Typography>
-                        <Typography className="h4 mb-12" style={{ whiteSpace: "break-spaces" }}>&nbsp;{response.description}</Typography>
-                        <div>
-                            {Object.entries(formElementsArray).length !== 0 ? (
-                                <Formsy
-                                    onValid={enableButton}
-                                    onInvalid={disableButton}
-                                    className="flex flex-col justify-center"
-                                >
-                                    {console.log(formElementsArray)}
-                                    <Grid style={parentGrid} container spacing={3}>
-                                        {Object.entries(formElementsArray).filter(data => { if (data[1].type == undefined) return data }).map((formElement) => (
-                                            <Grid style={childGrid} item container xs={12} sm={6}>
-                                                <Input
-                                                    key={formElement.id}
-                                                    formData={formElement}
-                                                    key={formElement.id}
-                                                    elementType={formElement.type}
-                                                    value={formElement.value}
-                                                    buttonClicked={showDialog}
-                                                    changed={(event) => inputChangedHandler(event, formElement[0])}
-                                                />
-                                            </Grid>))}
-                                    </Grid>
-                                    <div style={{ alignSelf: 'flex-end' }}>
-                                        <Button
-                                            // type="submit"
-                                            variant="contained"
-                                            color="primary"
-                                            className="w-30  mt-32 mb-80"
-                                            aria-label="LOG IN"
-                                            onClick={createSubmissionData}
-                                            disabled={!isFormValid}
-                                        >
-                                            Submit
-							</Button>
-                                        <Link to="/apps/job-definition/" style={{ color: 'transparent' }}>
+        return (
+            <FusePageSimple
+                classes={{
+                    root: 'root',
+                    header: 'headerDisplay'
+                }}
+                header={
+                    <div></div>
+                }
+                content={
+                    <div className="flex content">
+                        <div className="content">
+                            {isToasterFlag ? (
+                                <Toaster success={success} id={response.id}></Toaster>
+                            ) : null} <Typography className="h2">{response.id}</Typography>
+                            <Typography className="h4 mb-12" style={{ whiteSpace: "break-spaces" }}>&nbsp;{response.description}</Typography>
+                            <div>
+                                {Object.entries(formElementsArray).length !== 0 ? (
+                                    <Formsy
+                                        onValid={enableButton}
+                                        onInvalid={disableButton}
+                                        className="flex flex-col justify-center"
+                                    >
+                                        {console.log(formElementsArray)}
+                                        <Grid style={parentGrid} container spacing={3}>
+                                            {Object.entries(formElementsArray).filter(data => { if (data[1].type == undefined) return data }).map((formElement) => (
+                                                <Grid style={childGrid} item container xs={12} sm={6}>
+                                                    <Input
+                                                        key={formElement.id}
+                                                        formData={formElement}
+                                                        key={formElement.id}
+                                                        elementType={formElement.type}
+                                                        value={formElement.value}
+                                                        buttonClicked={showDialog}
+                                                        changed={(event) => inputChangedHandler(event, formElement[0])}
+                                                    />
+                                                </Grid>))}
+                                        </Grid>
+                                        <div style={{ alignSelf: 'flex-end' }}>
                                             <Button
+                                                // type="submit"
                                                 variant="contained"
-                                                onClick={onFormCancel}
                                                 color="primary"
-                                                className="w-30 mx-8 mt-32 mb-80"
+                                                className="w-30  mt-32 mb-80"
+                                                aria-label="LOG IN"
+                                                onClick={createSubmissionData}
+                                                disabled={!isFormValid}
                                             >
-                                                Cancel
+                                                Submit
+							</Button>
+                                            <Link to="/apps/job-definition/" style={{ color: 'transparent' }}>
+                                                <Button
+                                                    variant="contained"
+                                                    onClick={onFormCancel}
+                                                    color="primary"
+                                                    className="w-30 mx-8 mt-32 mb-80"
+                                                >
+                                                    Cancel
 								</Button>
-                                        </Link>
-                                    </div>
-                                </Formsy>
-                            ) : null}
+                                            </Link>
+                                        </div>
+                                    </Formsy>
+                                ) : null}
+                            </div>
                         </div>
                     </div>
-                </div>
-            }
-        />
+                }
+            />
 
-    );
+        );
 }
 
 export default Snap_GetBfsFullDiam;

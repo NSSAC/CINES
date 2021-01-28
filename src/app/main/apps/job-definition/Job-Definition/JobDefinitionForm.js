@@ -71,7 +71,6 @@ function JobDefinitionForm(props) {
       (res) => {
         setSpinnerFlag(false);
         if (res.data) {
-          console.log(res.data);
           var createFromData = JSON.parse(res.data.input_schema).properties;
           var inputFileData = res.data.input_files;
           var outputFiles = res.data.output_files;
@@ -250,7 +249,6 @@ function JobDefinitionForm(props) {
 
   function handleFMClose() {
     setShowFMDialog(false);
-    //  childRef.current.getAlert()
   }
 
   const onFormCancel = () => {
@@ -258,7 +256,6 @@ function JobDefinitionForm(props) {
   };
 
   if (success) {
-    console.log("inside if block");
   }
 
   if (spinnerFlag === true)
@@ -357,7 +354,6 @@ function JobDefinitionForm(props) {
           className="flex flex-1 flex-col items-center justify-center"
         >
           <Typography className="text-20 mt-16" color="textPrimary">
-            {/* <Icon className="text-18" color="action">sentiment_dissatisfied</Icon> */}
             OOPS!!!
           </Typography>
 

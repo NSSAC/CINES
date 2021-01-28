@@ -21,7 +21,6 @@ import FolderManagerDialog from './file-manager-dialog/FolderManagerDialog.js';
 
 export const Input = (props) => {
 	let inputElement = null;
-	//  const inputClasses = [classes.InputElement];
 	const selectButtonStyle = {
 		backgroundColor: '#61dafb',
 		fontSize: 'inherit',
@@ -46,26 +45,20 @@ export const Input = (props) => {
 		props.formData[1].value = folderChosenPath
 	}
 
-	// if (props.invalid && props.shouldValidate && props.touched) {
-	//     inputClasses.push(classes.Invalid);
-	// }
 	function showFileManagerDialog() {
 			setShowFMDialog(true);
 	}
 
 	function showFolderManagerDialog() {
-		// dispatch(Actions.getFiles('/home/', 'GET_FILES'))
 		setShowFolderDialog(true);
 	}
 
 	function handleFMClose() {
 		setShowFMDialog(false);
-		//  childRef.current.getAlert()
 	}
 
 	function handleFolderClose() {
 		setShowFolderDialog(false);
-		//  childRef.current.getAlert()
 	}
 
 	switch (props.formData[1].type) {
@@ -189,7 +182,7 @@ export const Input = (props) => {
 			}}
 			header={
 				<div>
-					<FMPopup
+					{props.formData[1].type==undefined && <FMPopup
 						showModal={showFMDialog}
 						setShowModal={(p) => setShowFMDialog(p)}
 						handleFMClose={handleFMClose}
@@ -197,16 +190,16 @@ export const Input = (props) => {
 						setFileChosenPath={(p) => setFileChosenPath(p)}
 						fileTypes={props.formData[1].types}
 						props={props}
-					/>
+					/>}
 
-					<FolderPopup
+					{showFolderDialog &&<FolderPopup
 						showModal={showFolderDialog}
 						handleFMClose={handleFolderClose}
 						folderPath={folderChosenPath}
 						setFolderPath={(p) => setFolderChosenPath(p)}
 						fileTypes={props.formData[1].types}
 						props={props}
-					/>
+					/>}
 				</div>
 			}
 			content={
@@ -225,4 +218,3 @@ export const Input = (props) => {
 	);
 };
 
-// export default input;

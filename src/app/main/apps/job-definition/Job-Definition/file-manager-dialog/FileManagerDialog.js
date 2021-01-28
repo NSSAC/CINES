@@ -67,8 +67,8 @@ function FMPopup({ showModal, setShowModal, handleFMClose, setFileChosen, setFil
                 setFileChosenPath("")
                 if(selectedItem){
                     localStorage.setItem('selectedSnapFile',JSON.stringify(selectedItem))
-                setFileChosen(selectedItem.name)
-                setFileChosenPath(targetPath + selectedItem.name)
+                    setFileChosen(targetPath + selectedItem.name)
+                    setFileChosenPath(targetPath + selectedItem.name)
                 setUploadFile("")
                 setTargetPath("/")
                 setSearch("")
