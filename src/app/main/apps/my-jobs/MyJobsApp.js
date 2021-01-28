@@ -52,8 +52,8 @@ function MyJobsApp(props) {
         sessionStorage.setItem("isFilterApplied", JSON.stringify(false));
         dispatch(Actions.getFiles(10, 0, descShort, type, false, false));
         sessionStorage.setItem("count", start);
-        sessionStorage.setItem("shortOrder", JSON.stringify(descShort));
-
+        sessionStorage.setItem("sortOrder", JSON.stringify(descShort));
+        sessionStorage.setItem("type", JSON.stringify(type));
         sessionStorage.removeItem("selectedTypeArray")
         sessionStorage.removeItem("preStateValue")
         sessionStorage.removeItem("preJobTypeValue")
