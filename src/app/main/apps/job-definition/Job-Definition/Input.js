@@ -29,7 +29,7 @@ export const Input = (props) => {
 		color: 'black'
 	};
 
-	
+
 
 	const dispatch = useDispatch()
 	const [showFMDialog, setShowFMDialog] = useState(false);
@@ -46,7 +46,7 @@ export const Input = (props) => {
 	}
 
 	function showFileManagerDialog() {
-			setShowFMDialog(true);
+		setShowFMDialog(true);
 	}
 
 	function showFolderManagerDialog() {
@@ -62,81 +62,209 @@ export const Input = (props) => {
 	}
 
 	switch (props.formData[1].type) {
-		case 'integer':
-			inputElement = (
-				<TextFieldFormsy
-					className="my-16 inputStyle"
-					type="number"
-					name="SrcColId"
-					style={{ width: '18px' }}
-					value={props.formData[1].value}
-					label={props.formData[0]}
-					onChange={props.changed}
-                    validations={{ isPositiveInt: function (values, value) {
-						return RegExp(/^(?:[+]?(?:0|[1-9]\d*))$/).test(value)
-					  }}}
-		            validationError="This is not a valid value"
-					autoComplete="off"
-					required
-
-				/>
-			);
-			break;
-		case ('string'):
-			if (props.formData[1].enum) {
+		case "integer":
+			if (props.formData[1].required) {
 				inputElement = (
-					<SelectFormsy
+					<TextFieldFormsy
 						className="my-16 inputStyle"
-						name="related"
+						type="number"
+						name="SrcColId"
+						style={{ width: "18px" }}
+						value={props.formData[1].value}
+						label={props.formData[0]}
+						onChange={props.changed}
+						validations={{
+							isPositiveInt: function (values, value) {
+								return RegExp(/^(?:[+]?(?:0|[1-9]\d*))$/).test(value);
+							},
+						}}
+						validationError="This is not a valid value"
+						autoComplete="off"
+						required
+					/>
+				);
+			} else {
+				inputElement = (
+					<TextFieldFormsy
+						className="my-16 inputStyle"
+						type="number"
+						name="SrcColId"
+						style={{ width: "18px" }}
+						value={props.formData[1].value}
+						label={props.formData[0]}
+						onChange={props.changed}
+						validations={{
+							isPositiveInt: function (values, value) {
+								return RegExp(/^(?:[+]?(?:0|[1-9]\d*))$/).test(value);
+							},
+						}}
+						validationError="This is not a valid value"
+						autoComplete="off"
+					/>
+				);
+			}
+			break;
+
+        	case "float":
+			if (props.formData[1].required) {
+				inputElement = (
+					<TextFieldFormsy
+						className="my-16 inputStyle"
+						type="number"
+						name="SrcColId"
+						style={{ width: "18px" }}
+						value={props.formData[1].value}
+						label={props.formData[0]}
+						onChange={props.changed}
+						validations={{
+							isPositiveInt: function (values, value) {
+								return RegExp(/^(?:[1-9]\d*|0)?(?:\.\d+)?$/).test(value);
+							},
+						}}
+						validationError="This is not a valid value"
+						autoComplete="off"
+						required
+					/>
+				);
+			} else {
+				inputElement = (
+					<TextFieldFormsy
+						className="my-16 inputStyle"
+						type="number"
+						name="SrcColId"
+						style={{ width: "18px" }}
+						value={props.formData[1].value}
+						label={props.formData[0]}
+						onChange={props.changed}
+						validations={{
+							isPositiveInt: function (values, value) {
+								return RegExp(/^(?:[1-9]\d*|0)?(?:\.\d+)?$/).test(value);
+							},
+						}}
+						validationError="This is not a valid value"
+						autoComplete="off"
+					/>
+				);
+			}
+			break;
+			
+		case "string":
+			if (props.formData[1].required) {
+				if (props.formData[1].enum) {
+					inputElement = (
+						<SelectFormsy
+							className="my-16 inputStyle"
+							name="related"
+							label={props.formData[0]}
+							value={props.formData[1].value}
+							onChange={props.changed}
+							required
+						>
+							{props.formData[1].enum.map((item) => {
+								return (
+									<MenuItem key={item} value={item}>
+										{item}
+									</MenuItem>
+								);
+							})}
+						</SelectFormsy>
+					);
+				} else {
+					inputElement = (
+						<TextFieldFormsy
+							className="my-16 inputStyle"
+							type="text"
+							name="SrcColId"
+							style={{ width: "18px" }}
+							value={props.formData[1].value}
+							label={props.formData[0]}
+							onChange={props.changed}
+							autoComplete="off"
+							required
+						/>
+					);
+				}
+			} else {
+				if (props.formData[1].enum) {
+					inputElement = (
+						<SelectFormsy
+							className="my-16 inputStyle"
+							name="related"
+							label={props.formData[0]}
+							value={props.formData[1].value}
+							onChange={props.changed}
+						>
+							{props.formData[1].enum.map((item) => {
+								return (
+									<MenuItem key={item} value={item}>
+										{item}
+									</MenuItem>
+								);
+							})}
+						</SelectFormsy>
+					);
+				} else {
+					inputElement = (
+						<TextFieldFormsy
+							className="my-16 inputStyle"
+							type="text"
+							name="SrcColId"
+							style={{ width: "18px" }}
+							value={props.formData[1].value}
+							label={props.formData[0]}
+							onChange={props.changed}
+							autoComplete="off"
+						/>
+					);
+				}
+			}
+			break;
+
+		case "boolean":
+			if (props.formData[1].required) {
+				inputElement = (
+					<RadioGroupFormsy
+						className="my-16 inputStyle"
+						name="gender"
 						label={props.formData[0]}
 						value={props.formData[1].value}
 						onChange={props.changed}
 						required
 					>
-						{
-							props.formData[1].enum.map((item) => {
-								return (
-									<MenuItem key={item} value={item}>{item}</MenuItem>
-								)
-							})
-						}
-					</SelectFormsy>
+						<FormControlLabel
+							value="true"
+							control={<Radio color="primary" />}
+							label="True"
+						/>
+						<FormControlLabel
+							value="false"
+							control={<Radio color="primary" />}
+							label="False"
+						/>
+					</RadioGroupFormsy>
 				);
-			}
-			else {
+			} else {
 				inputElement = (
-					<TextFieldFormsy
+					<RadioGroupFormsy
 						className="my-16 inputStyle"
-						type="text"
-						name="SrcColId"
-						style={{ width: '18px' }}
-						value={props.formData[1].value}
+						name="gender"
 						label={props.formData[0]}
+						value={props.formData[1].value}
 						onChange={props.changed}
-                        autoComplete="off"
-						required
-
-					/>
+					>
+						<FormControlLabel
+							value="true"
+							control={<Radio color="primary" />}
+							label="True"
+						/>
+						<FormControlLabel
+							value="false"
+							control={<Radio color="primary" />}
+							label="False"
+						/>
+					</RadioGroupFormsy>
 				);
 			}
-
-			break;
-
-		case 'boolean':
-			inputElement = (
-				<RadioGroupFormsy
-					className="my-16 inputStyle"
-					name="gender"
-					label={props.formData[0]}
-					value={props.formData[1].value}
-					onChange={props.changed}
-					required
-				>
-					<FormControlLabel value="true" control={<Radio color="primary" />} label="True" />
-					<FormControlLabel value="false" control={<Radio color="primary" />} label="False" />
-
-				</RadioGroupFormsy>
-			);
 			break;
 
 		default:
@@ -182,7 +310,7 @@ export const Input = (props) => {
 			}}
 			header={
 				<div>
-					{props.formData[1].type==undefined && <FMPopup
+					{props.formData[1].type == undefined && <FMPopup
 						showModal={showFMDialog}
 						setShowModal={(p) => setShowFMDialog(p)}
 						handleFMClose={handleFMClose}
@@ -192,7 +320,7 @@ export const Input = (props) => {
 						props={props}
 					/>}
 
-					{showFolderDialog &&<FolderPopup
+					{showFolderDialog && <FolderPopup
 						showModal={showFolderDialog}
 						handleFMClose={handleFolderClose}
 						folderPath={folderChosenPath}
