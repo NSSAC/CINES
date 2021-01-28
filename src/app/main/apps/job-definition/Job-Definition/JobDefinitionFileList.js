@@ -244,13 +244,13 @@ function JobDefinitionFileList(props) {
                             {row.id}
                           </Typography>
                         </Grid>
-                        <Grid item xs={4} style={{ paddingLeft: "15px" }}>
+                        <Grid item xs={3} style={{ paddingLeft: "15px" }}>
                           <Typography>Created By</Typography>
                           <Typography style={{ fontWeight: "700" }}>
                             {row.created_by}
                           </Typography>
                         </Grid>
-                        <Grid item xs={4} style={{ paddingLeft: "15px" }}>
+                        <Grid item xs={3} style={{ paddingLeft: "15px" }}>
                           <Typography>Last Updated</Typography>
                           <Typography style={{ fontWeight: "700" }}>
                             {
@@ -260,13 +260,7 @@ function JobDefinitionFileList(props) {
                             }
                           </Typography>
                         </Grid>
-                        <Grid item xs={10} style={{ paddingLeft: "15px" }}>
-                          <Typography>Description</Typography>
-                          <Typography style={{ fontWeight: "700" }}>
-                            {row.description}
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={2}>
+                        <Grid item xs={3} style={{ paddingTop: "15px" }}>
                           <Button
                             variant="contained"
                             ////size="small"
@@ -277,6 +271,13 @@ function JobDefinitionFileList(props) {
                             Select
                           </Button>
                         </Grid>
+                        <Grid item xs={10} style={{ paddingLeft: "15px" }}>
+                          <Typography>Description</Typography>
+                          <Typography style={{ fontWeight: "700" }}>
+                            {row.description}
+                          </Typography>
+                        </Grid>
+                      
                       </Grid>
                     </div>
                   </React.Fragment>
