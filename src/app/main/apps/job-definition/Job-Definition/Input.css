@@ -58,3 +58,26 @@ input[type=submit]:hover {
     font-size: large;
     font-weight: 500;
 }
+
+.MuiInputLabel-asterisk {
+    color: red
+  }
+
+  .MuiFormLabel-asterisk {
+    color: red
+  }
+
+  .selectedFile {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  @media only screen and (max-width: 600px) {
+    .selectedFile {
+        justify-content: space-between;
+        align-items: center;
+        display: block
+      }
+    
+  }

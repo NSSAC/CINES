@@ -59,7 +59,21 @@ input[type=submit]:hover {
     font-weight: 500;
 }
 
+.selectedFile {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
 
+  @media only screen and (max-width: 600px) {
+    .selectedFile {
+        justify-content: space-between;
+        align-items: center;
+        display: block
+      }
+    
+  }
+  
 .content {
     padding-left: 8px;
     width: 100%

@@ -299,7 +299,7 @@ const Snap_GetBfsFullDiam = () => {
                                                     type="number"
                                                     name={formElementsArray['NTestNodes'].formLabel}
                                                     style={{ width: '18px' }}
-                                                    value={formElementsArray['NTestNodes'].value}
+                                                    value=""
                                                     label={formElementsArray['NTestNodes'].formLabel}
                                                     onChange={(event) => inputChangedHandler(event, formElementsArray['NTestNodes'].formLabel)}
                                                     validations={{
@@ -319,7 +319,7 @@ const Snap_GetBfsFullDiam = () => {
                                                     type="number"
                                                     name={formElementsArray['desCol'].formLabel}
                                                     style={{ width: '18px' }}
-                                                    value={formElementsArray['desCol'].value}
+                                                    value=""
                                                     label={formElementsArray['desCol'].formLabel}
                                                     onChange={(event) => inputChangedHandler(event, formElementsArray['desCol'].formLabel)}
                                                     validations={{
@@ -339,7 +339,7 @@ const Snap_GetBfsFullDiam = () => {
                                                     type="number"
                                                     name={formElementsArray['srcCol'].formLabel}
                                                     style={{ width: '18px' }}
-                                                    value={formElementsArray['srcCol'].value}
+                                                    value=""
                                                     label={formElementsArray['srcCol'].formLabel}
                                                     onChange={(event) => inputChangedHandler(event, formElementsArray['srcCol'].formLabel)}
                                                     validations={{

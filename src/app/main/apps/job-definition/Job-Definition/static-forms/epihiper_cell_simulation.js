@@ -284,7 +284,7 @@ const Epihiper_cell_simulation = () => {
                                                     type="number"
                                                     name={formElementsArray['startTick'].formLabel}
                                                     style={{ width: '18px' }}
-                                                    value={formElementsArray['startTick'].value}
+                                                    value=""
                                                     label={formElementsArray['startTick'].formLabel}
                                                     onChange={(event) => inputChangedHandler(event, formElementsArray['startTick'].formLabel)}
                                                     validations={{
@@ -304,7 +304,7 @@ const Epihiper_cell_simulation = () => {
                                                     type="number"
                                                     name={formElementsArray['endTick'].formLabel}
                                                     style={{ width: '18px' }}
-                                                    value={formElementsArray['endTick'].value}
+                                                    value=""
                                                     label={formElementsArray['endTick'].formLabel}
                                                     onChange={(event) => inputChangedHandler(event, formElementsArray['endTick'].formLabel)}
                                                     validations={{

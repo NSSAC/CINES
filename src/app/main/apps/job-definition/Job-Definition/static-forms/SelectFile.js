@@ -38,9 +38,9 @@ export const Input = (props) => {
 	}
 
 	let inputElement = (
-		<div className="my-32" >
-			<label className="my-32">
-				{props.formData[1].formLabel}*-
+		<div className="selectedFile">
+		<label className="my-32">
+				{props.formData[1].formLabel}<span style={{color:'red'}}>&nbsp;*</span>-
                    {props.formData[1].outputFlag ?
 					<Button onClick={showFolderManagerDialog} style={selectButtonStyle}>
 						&nbsp;Select path
@@ -60,8 +60,8 @@ export const Input = (props) => {
 					required
 				/>
 			</label>
-			{props.formData[1].outputFlag ? <span className="my-32 folderPath">{folderChosenPath == '' ? 'No folder specified' : <b onChange={props.changed} >{folderChosenPath}</b>}</span>
-				: <span className="my-32 folderPath">{fileChosen == '' ? 'No file chosen' : <b onChange={props.changed} >{fileChosen}</b>}</span>}
+			{props.formData[1].outputFlag ? <div className="folderPath">{folderChosenPath == '' ? 'No folder specified' : <b onChange={props.changed} >{folderChosenPath}</b>}</div>
+				: <div className="folderPath">{fileChosen == '' ? 'No file chosen' : <b onChange={props.changed} >{fileChosen}</b>}</div>}
 		</div>
 	);
 

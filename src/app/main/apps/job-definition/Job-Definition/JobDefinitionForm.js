@@ -113,6 +113,8 @@ function JobDefinitionForm(props) {
         count++;
         createFromData[key]["id"] = count + 100;
         createFromData[key]["formLabel"] = key;
+        // createFromData[key]["value"] = "";
+
         if (requiredFeildArray.includes(key)) {
           createFromData[key]["required"] = true;
         } else {
