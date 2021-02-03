@@ -75,7 +75,10 @@ export const Input = (props) => {
 						onChange={props.changed}
 						validations={{
 							isPositiveInt: function (values, value) {
-								return RegExp(/^(?:[+]?(?:0|[1-9]\d*))$/).test(value);
+								if(props.formData[0]=="SampleNodes")
+								 return (RegExp(/^(?:[+]?(?:0|[1-9]\d*))$/).test(value) || RegExp(/^(?:[-]?(?:1))$/).test(value));
+								else
+								 return RegExp(/^(?:[+]?(?:0|[1-9]\d*))$/).test(value);	 
 							},
 						}}
 						validationError="This is not a valid value"
