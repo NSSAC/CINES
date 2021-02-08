@@ -41,7 +41,7 @@ const navigation = function (state = initialState, action) {
                         'id'   : 'my-jobs',
                      'title': 'My Jobs',
                          'type' : 'item',
-                         'icon' : 'folder',
+                         'icon' : 'chrome_reader_mode',
                          'url'  : '/apps/my-jobs/'
                       })
                   
