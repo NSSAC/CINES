@@ -71,7 +71,9 @@ function JobDefinitionForm(props) {
       (res) => {
         setSpinnerFlag(false);
         if (res.data) {
+          console.log(res.data)
           var createFromData = JSON.parse(res.data.input_schema).properties;
+          console.log(createFromData)
           var inputFileData = res.data.input_files;
           var outputFiles = res.data.output_files;
           var requiredFeildArray = JSON.parse(res.data.input_schema).required;

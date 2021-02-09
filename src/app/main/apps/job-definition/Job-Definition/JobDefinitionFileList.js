@@ -56,7 +56,6 @@ function JobDefinitionFileList(props) {
   
   var type;
   var lengthOfRow;
-  // var jobDefinitionList;
   const dispatch = useDispatch();
   const jobDefinitionData = useSelector(
     ({ JobDefinitionApp }) => JobDefinitionApp.jobdefinition
@@ -118,7 +117,6 @@ function JobDefinitionFileList(props) {
     }
     if (jobDefinitionList.length > 0 && selectedFlag) {
       var selectedId = jobDefinitionList[0].id;
-      //console.log("form data "+JSON.parse(jobDefinitionList[0].input_schema))
       setSelectedId(selectedId);
     }
   });
@@ -128,12 +126,10 @@ function JobDefinitionFileList(props) {
 
     let currentPage = page + 1;
     setPage(currentPage);
-    // fetchNextSetData()
   };
   const searchHandleChangePage = (event, newPage) => {
     let currentPage = searchPage + 1;
     setSearchPage(currentPage);
-    // fetchNextSetData()
   };
 
   const arrLength = (rowLength) => {

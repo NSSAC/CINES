@@ -84,7 +84,7 @@ export const FileUpload = ({ fileTypes, setUploadFile, dialogTargetPath, setShow
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     maxWidth: '170px',
-    // color:'#61dafb'
+    cursor: 'default'
   }
 
   const breadcrumb_wrap = {
@@ -101,9 +101,9 @@ export const FileUpload = ({ fileTypes, setUploadFile, dialogTargetPath, setShow
       let fileDataObject = {};
       fileDataObject.type = event.target.files[i].name.split('.').pop();
       if(fileTypeArray.length == 1)
-         fileDataObject.type = fileTypeArray[0]
+         fileDataObject.type = fileTypeArray[0];
       // fileDataObject.fileName = event.target.files[i].name.split('.').slice(0, -1).join('.');
-      fileDataObject.fileName = event.target.files[i].name
+      fileDataObject.fileName = event.target.files[i].name;
       fileDataObject.size = event.target.files[i].size;
       fileDataObject.id = i;
       fileDataObject.status = "-";
@@ -112,7 +112,7 @@ export const FileUpload = ({ fileTypes, setUploadFile, dialogTargetPath, setShow
 
     }
     setUploadedfiles([...fileData]);
-    setDisableButton(false)
+    setDisableButton(false);
   }
 
   const progressStatus = (status, id) => {
@@ -123,35 +123,35 @@ export const FileUpload = ({ fileTypes, setUploadFile, dialogTargetPath, setShow
           if (initialUploadFile[id].status !== "Uploading-Failed (file already exist) 0%") {
             if (initialUploadFile[id].status != "Uploading-Failed (unsupported file name only '-_.'are allowed) 0%") {
               item.status = "Uploading-" + status + "%";
-              fileList.push(item)
+              fileList.push(item);
             }
           }
           else {
-            item.status = initialUploadFile[id].status
+            item.status = initialUploadFile[id].status;
           }
         }
         else {
           if (initialUploadFile[id].status !== "Uploading-Failed (file already exist) 0%") {
             if (initialUploadFile[id].status != "Uploading-Failed (unsupported file name only '-_.'are allowed) 0%") {
-              item.status = "Uploaded successfully"
-              fileList.push(item)
+              item.status = "Uploaded successfully";
+              fileList.push(item);
             }
           }
         }
       }
       else {
-        fileList.push(item)
+        fileList.push(item);
       }
     })
-    setUploadedfiles([...fileList])
-    setDisableButton(true)
+    setUploadedfiles([...fileList]);
+    setDisableButton(true);
 
     let count = 0;
     let target = window.location.pathname;
-    let targetPath = target.replace("/apps/files", "")
+    let targetPath = target.replace("/apps/files", "");
 
     if (dialogTargetPath) {
-      targetPath = dialogTargetPath
+      targetPath = dialogTargetPath;
     }
 
     initialUploadFile.forEach(item => {
@@ -159,18 +159,18 @@ export const FileUpload = ({ fileTypes, setUploadFile, dialogTargetPath, setShow
       if (item.status === "Uploaded successfully" || item.status === "Uploading-Failed (file already exist) 0%" || item.status === "Uploading-Failed (unsupported file type) 0%" || item.status === "Uploading-Failed (unsupported file name only '-_.'are allowed) 0%") {
         count++
         if (count === initialUploadFile.length) {
-          dispatch(Actions.getFiles(targetPath, 'GET_FILES'))
+          dispatch(Actions.getFiles(targetPath, 'GET_FILES'));
         }
       }
     })
   }
 
   const onCancle = () => {
-    let fileData1 = []
-    setUploadedfiles([...fileData1])
+    let fileData1 = [];
+    setUploadedfiles([...fileData1]);
     handleClose()
     if (dialogTargetPath)
-      setShowModal(true)
+      setShowModal(true);
   }
 
   const OnUploadAndSubmit = () => {
@@ -178,22 +178,22 @@ export const FileUpload = ({ fileTypes, setUploadFile, dialogTargetPath, setShow
   }
 
   const OnUpload = () => {
-    setDisableButton(true)
-    CreateFolderFile(initialUploadFile)
+    setDisableButton(true);
+    CreateFolderFile(initialUploadFile);
   }
 
   const deleteIndividual = (index => {
 
     initialUploadFile.splice(index, 1);
 
-    setUploadedfiles([...initialUploadFile])
+    setUploadedfiles([...initialUploadFile]);
 
   })
   const CreateFolderFile = (initialUploadFile, targetPath) => {
 
     initialUploadFile.forEach(items => {
       if (fileTypeArray.includes(items.type)) {
-        vaildTypeFileArray.push(items)
+        vaildTypeFileArray.push(items);
       }
 
     })
@@ -207,7 +207,7 @@ export const FileUpload = ({ fileTypes, setUploadFile, dialogTargetPath, setShow
       let id = element.id;
       let targetPath = target.replace("/apps/files", "")
       if (dialogTargetPath)
-        targetPath = dialogTargetPath
+        targetPath = dialogTargetPath;
 
       return axios({
         method: 'post',
@@ -228,14 +228,14 @@ export const FileUpload = ({ fileTypes, setUploadFile, dialogTargetPath, setShow
         (error) => {
           //vaildTypeFileArray.splice(id ,1)
           if (error.response.data.message === "File already exists") {
-            progressStatus("Failed (file already exist) 0", id)
+            progressStatus("Failed (file already exist) 0", id);
           }
 
           else if (error.response.data.message === "data.type should be equal to one of the allowed values") {
-            progressStatus("Failed (unsupported file type) 0", id)
+            progressStatus("Failed (unsupported file type) 0", id);
           }
           else {
-            progressStatus("Failed (unsupported file name only '-_.'are allowed) 0", id)
+            progressStatus("Failed (unsupported file name only '-_.'are allowed) 0", id);
           }
         }
       )
@@ -254,7 +254,7 @@ export const FileUpload = ({ fileTypes, setUploadFile, dialogTargetPath, setShow
       let id = element.id;
       let targetPath = target.replace("/apps/files", "")
       if (dialogTargetPath)
-        targetPath = dialogTargetPath
+        targetPath = dialogTargetPath;
 
       axios({
         method: 'put',
@@ -267,16 +267,14 @@ export const FileUpload = ({ fileTypes, setUploadFile, dialogTargetPath, setShow
         },
         data: content,
         onUploadProgress: (progress) => {
-          //const {loded ,total} = progress;
           const percentage = Math.floor(progress.loaded * 100 / progress.total)
-          console.log(percentage)
-          progressStatus(percentage, id)
+          progressStatus(percentage, id);
         }
       }).then(res => {
         if (dialogTargetPath) {
-          setUploadFile(element.fileName)
-          setUploadedfiles([])
-          handleClose()
+          setUploadFile(element.fileName);
+          setUploadedfiles([]);
+          handleClose();
         }
       },
         (error) => { }
@@ -285,12 +283,7 @@ export const FileUpload = ({ fileTypes, setUploadFile, dialogTargetPath, setShow
   }
 
   const handleStatus = (id) => (e) => {
-
-    let changeFileName;
-    initialUploadFile[id].type = e.target.value
-    // changeFileName = initialUploadFile[id].fileName.split('.').slice(0, -1).join('.');
-    // initialUploadFile[id].fileName = changeFileName + "." + e.target.value
-    //initialUploadFile[id].type = e.target.value
+    initialUploadFile[id].type = e.target.value;
     setUploadedfiles([...initialUploadFile]);
 
   }
@@ -311,7 +304,6 @@ export const FileUpload = ({ fileTypes, setUploadFile, dialogTargetPath, setShow
 
   const handleDrop = e => {
     e.preventDefault();
-    console.log(e)
     const draggedFiles = [];
     let id = Number;
     if ((!dialogTargetPath && e.dataTransfer.items) || (dialogTargetPath && e.dataTransfer.items.length == 1)) {
@@ -322,18 +314,16 @@ export const FileUpload = ({ fileTypes, setUploadFile, dialogTargetPath, setShow
           let file = item.getAsFile();
           let tempObj = {};
           tempObj.type = file.name.split('.').pop();
-          tempObj.fileName = file.name
-          tempObj.id = i
+          tempObj.fileName = file.name;
+          tempObj.id = i;
           tempObj.status = "-";
           tempObj['contents'] = file;
-          //fileData.push(tempObj);
-          console.log(file);
           draggedFiles.push(tempObj);
         }
       });
 
-      setUploadedfiles([...draggedFiles])
-      setDisableButton(false)
+      setUploadedfiles([...draggedFiles]);
+      setDisableButton(false);
     }
 
     setDrag(false);
@@ -355,7 +345,7 @@ export const FileUpload = ({ fileTypes, setUploadFile, dialogTargetPath, setShow
             {breadcrumbArr?<div className="flex text-16 sm:text-16" style={breadcrumb_wrap}>
               {breadcrumbArr.map((path, i) => (
                 <div key={i} className="flex items-center" >
-                  <div className="cursor-pointer" title={path} style={ellipsis} >{path} </div>
+                  <div  title={path} style={ellipsis} >{path} </div>
                   {breadcrumbArr.length - 1 !== i && (
                     <Icon>chevron_right</Icon>
                   )}

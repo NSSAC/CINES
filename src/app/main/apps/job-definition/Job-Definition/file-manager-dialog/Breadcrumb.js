@@ -31,19 +31,19 @@ function Breadcrumb(props)
 
     }
 
-    const arr = props.targetPath.split('/');
+    const breadcrumb_Array = props.targetPath.split('/');
     if(props.fileManager)
-      arr[0]="files"
+      breadcrumb_Array[0]="files"
     else
-      arr[0]="home"
+      breadcrumb_Array[0]="home"
 
 
     return  (
         <div className="flex text-16 pb-8 sm:text-16" style={breadcrumb_wrap} >
-            {arr.map((path, i) => (  
+            {breadcrumb_Array.map((path, i) => (  
                 <div key={i}  className="flex items-center"> 
                      <div  onClick={() => onclickRoute(path)} className="cursor-pointer" style={ellipsis} title={path} >{path} </div>
-                      {arr.length - 1 !== i && (
+                      {breadcrumb_Array.length - 1 !== i && (
                         <Icon>chevron_right</Icon>
                     )}
                 </div>))}
