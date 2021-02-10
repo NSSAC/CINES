@@ -227,7 +227,7 @@ function JobDefinitionForm(props) {
         setIsToasterFlag(true);
         //setIsToasterFlag(prevMovies => (true));
         setSuccess(true);
-        var timeOutHandle = window.setTimeout(delayNavigation, 3000);
+        var timeOutHandle = window.setTimeout(delayNavigation, 4000);
       },
       (error) => {
         setSuccess(false);
