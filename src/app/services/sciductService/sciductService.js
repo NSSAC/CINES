@@ -21,7 +21,6 @@ class SciDuctService {
     }
 
     login = () => {
-        console.log("Redirect to sciduct login here")
         window.open(`${AUTH_CONFIG.userServiceURL}/authenticate/${AUTH_CONFIG.app_id}`, "_self")
     };
 
@@ -83,6 +82,7 @@ class SciDuctService {
     // Clear access token and ID token from local storage
     localStorage.removeItem('id_token');
     localStorage.clear();
+    sessionStorage.clear();
     window.clearTimeout (timeOutHandle)
     window.open(`${AUTH_CONFIG.userServiceURL}/logout?redirect=${encodeURIComponent(`${AUTH_CONFIG.logout_local_dev}`)}`,"_self")
 };
@@ -102,11 +102,10 @@ class SciDuctService {
     };
 
     updateUserData = (user_metadata) => {
-        console.log("updateUserData", user_metadata)
+      
     };
 
     getIdToken = () => {
-        console.log("getIdToken()")
         return localStorage.getItem('id_token');
     };
 
@@ -114,8 +113,6 @@ class SciDuctService {
         const token = this.getIdToken();
         const decoded = jwtDecode(token);
         localStorage.setItem('loggedIn' ,'true')
-        console.log(decoded)
-        console.log("Decoded: ", JSON.stringify(decoded,null,4))
         if ( !decoded )
         {
             return null;

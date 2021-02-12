@@ -1,0 +1,38 @@
+.pagination  ul{
+    display: inline-block;
+    padding-left: 10px;
+    padding-right: 5px;
+  }
+  
+   .pagination li {
+    display: inline-block;
+    padding: 7px;
+  }
+
+  .pagination a[role=button]{
+      padding: 10px;
+  }
+  .pagination .next {
+display: none;
+  }
+
+  .next-button{
+    margin-left: 12px;
+    margin-top: 10px;
+    margin-bottom: 5px;
+   
+  }
+  .count-info{
+    margin-left: 12px;
+    margin-top: 0px;
+     margin-bottom: 5px;
+  }
+  .sort-arrow{
+    opacity: 0;
+  }
+  .sort-arrow:hover{
+    opacity: .5;
+  }
+  /* .sort-arrow1:hover{
+    opacity: 1;
+  } */
