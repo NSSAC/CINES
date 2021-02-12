@@ -13,6 +13,7 @@ import {create} from 'jss';
 import {StylesProvider, jssPreset, createGenerateClassName} from '@material-ui/styles';
 import {MuiPickersUtilsProvider} from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
+import IdleTimerComponent from './main/Idle-Timer/Idle-Timer';
 
 const jss = create({
     ...jssPreset(),
@@ -35,6 +36,7 @@ const App = () => {
                         <Auth>
                             <Router history={history}>
                                 <FuseAuthorization>
+                                    <IdleTimerComponent/>
                                     <FuseTheme>
                                         <FuseLayout/>
                                     </FuseTheme>

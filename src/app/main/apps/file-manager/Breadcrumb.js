@@ -1,21 +1,40 @@
 import React from 'react';
-import {Icon, Typography} from '@material-ui/core';
+import {Icon, Typography, Link} from '@material-ui/core';
+import { withRouter } from 'react-router-dom';
 
-function Breadcrumb({className, selected})
+
+function Breadcrumb({props,className, styles, path})
 {
-    const arr = selected.location.split('>');
+    const ellipsis={
+        textOverflow:'ellipsis',
+        whiteSpace: 'nowrap',
+        overflow: 'hidden',
+        maxWidth: '170px'
+    }
+    
+   function onclickRoute(path) {
+        var target = window.location.pathname.split(path)
+        var targetPath= target[0] + path + "/"
+         props.history.push(targetPath)
 
-    return (
-        <Typography className={className}>
-            {arr.map((path, i) => (
-                <span key={i} className="flex items-center">
-                            <span>{path}</span>
-                    {arr.length - 1 !== i && (
+    }
+
+    const arr = path.split('/');
+    arr[0]="files"
+
+    return  (
+        <div className={className} style={styles} >
+            {arr.map((path, i) => (   
+                <div key={i}  className="flex items-center"> 
+                     <div  onClick={() => onclickRoute(path)} className="cursor-pointer" style={ellipsis} title={path} >{path} </div>
+                      {arr.length - 1 !== i && (
                         <Icon>chevron_right</Icon>
                     )}
-                        </span>))}
-        </Typography>
+                </div>))}
+        </div>
     )
+
 }
 
-export default Breadcrumb;
+
+export default withRouter(Breadcrumb);

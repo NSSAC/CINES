@@ -52,7 +52,7 @@ function NavbarLayout1(props)
 
             <FuseScrollbars className={clsx(classes.content)} option={{suppressScrollX: true}}>
 
-                {/* <UserNavbarHeader/> */}
+                <UserNavbarHeader/>
 
                 <Navigation layout="vertical"/>
 

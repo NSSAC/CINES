@@ -7,7 +7,7 @@ const config = {
             display: true
         },
         toolbar       : {
-            display : false,
+            display : true,
             position: 'below'
         },
         footer        : {

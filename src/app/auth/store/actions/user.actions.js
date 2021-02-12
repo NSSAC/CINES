@@ -7,6 +7,7 @@ import firebase from 'firebase/app';
 import firebaseService from 'app/services/firebaseService';
 import auth0Service from 'app/services/auth0Service';
 import jwtService from 'app/services/jwtService';
+import sciductService from 'app/services/sciductService';
 
 export const SET_USER_DATA = '[USER] SET DATA';
 export const REMOVE_USER_DATA = '[USER] REMOVE DATA';
@@ -26,6 +27,32 @@ export function setUserDataAuth0(tokenData)
             email      : tokenData.email,
             settings   : (tokenData.user_metadata && tokenData.user_metadata.settings) ? tokenData.user_metadata.settings : {},
             shortcuts  : (tokenData.user_metadata && tokenData.user_metadata.shortcuts) ? tokenData.user_metadata.shortcuts : []
+        }
+    };
+
+    return setUserData(user);
+}
+
+/**
+ * Set user data from SciDuct token data
+ */
+export function setUserDataSciDuct(tokenData)
+{
+
+
+    const roles = ["user"].concat(tokenData.roles||[]);
+    const user = {
+        role: roles,
+        from: 'sciduct',
+        data: {
+            displayName: `${tokenData.first_name} ${tokenData.last_name}`,
+            lastName:`${tokenData.last_name}`,
+            photoURL   : tokenData.picture,
+            email      : tokenData.email,
+            roles      : roles,
+            teams:      tokenData.teams||[],
+            settings   : (tokenData.usermeta && tokenData.usermeta.settings) ? tokenData.usermeta.settings : {},
+            shortcuts  : (tokenData.usermeta && tokenData.usermeta.shortcuts) ? tokenData.usermeta.shortcuts : []
         }
     };
 
@@ -184,6 +211,11 @@ export function logoutUser()
                 auth0Service.logout();
                 break;
             }
+            case 'sciduct':
+                {
+                    sciductService.logout();
+                    break;
+                }
             default:
             {
                 jwtService.logout();

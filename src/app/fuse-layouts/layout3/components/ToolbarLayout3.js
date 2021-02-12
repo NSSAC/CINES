@@ -44,20 +44,20 @@ function ToolbarLayout3(props)
                     </Hidden>
 
                     <div className="flex flex-1">
-                        <Hidden xsDown>
+                        { <Hidden xsDown>
                             <FuseSearch className="mx-16 lg:mx-24" variant="basic"/>
-                        </Hidden>
+                        </Hidden> }
                     </div>
 
                     <div className="flex">
 
-                        <Hidden smUp>
+                        { <Hidden smUp>
                             <FuseSearch/>
                             <div className={classes.separator}/>
-                        </Hidden>
+                        </Hidden> }
 
                         <UserMenu/>
-
+{/* 
                         <Hidden lgUp>
 
                             <div className={classes.separator}/>
@@ -71,7 +71,7 @@ function ToolbarLayout3(props)
 
                         <Hidden mdDown>
                             <div className={classes.separator}/>
-                        </Hidden>
+                        </Hidden> */}
 
                     </div>
 

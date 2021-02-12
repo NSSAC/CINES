@@ -1,7 +1,7 @@
 const config = {
     title   : 'Layout 3 - Horizontal',
     defaults: {
-        mode          : 'container',
+        mode          : 'fullWidth',
         scroll        : 'content',
         navbar        : {
             display: true
@@ -11,14 +11,14 @@ const config = {
             position: 'above'
         },
         footer        : {
-            display: true,
+            display: false,
             style  : 'fixed'
         },
         leftSidePanel : {
-            display: true
+            display: false
         },
         rightSidePanel: {
-            display: true
+            display: false
         }
     },
     form    : {

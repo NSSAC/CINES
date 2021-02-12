@@ -21,7 +21,7 @@ const useStyles = makeStyles(theme => ({
         position  : 'absolute',
         top       : 92,
         padding   : 8,
-        background: theme.palette.background.default,
+        // background: theme.palette.background.default,
         boxSizing : 'content-box',
         left      : '50%',
         transform : 'translateX(-50%)',
@@ -50,12 +50,26 @@ function UserNavbarHeader(props)
             className="user relative flex flex-col items-center justify-center pt-24 pb-64 mb-32 z-0"
         >
             <Typography className="username text-16 whitespace-no-wrap" color="inherit">{user.data.displayName}</Typography>
-            <Typography className="email text-13 mt-8 opacity-50 whitespace-no-wrap" color="inherit">{user.data.email}</Typography>
-            <Avatar
+            <Typography style={{height:'25px'}} className="email text-13 mt-8 opacity-50 whitespace-no-wrap" color="inherit"></Typography>
+            {user.data.photoURL ?
+                    (
+                        <Avatar className={clsx(classes.avatar, "avatar")} alt="user photo" src={user.data.photoURL}/>
+                    )
+                    :
+                    (
+                        <Avatar className={clsx(classes.avatar, "avatar")}
+                        alt="user photo">
+                         
+                         {user.data.displayName[0]} {user.data.lastName[0]}
+                        </Avatar>
+                    )
+                }
+           
+            {/* <Avatar
                 className={clsx(classes.avatar, "avatar")}
                 alt="user photo"
                 src={user.data.photoURL && user.data.photoURL !== '' ? user.data.photoURL : "assets/images/avatars/profile.jpg"}
-            />
+            /> */}
         </AppBar>
     );
 }

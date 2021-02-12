@@ -26,16 +26,45 @@ function NavbarMobileLayout2(props)
     const classes = useStyles(props);
 
     return (
-        <div className="flex flex-auto justify-between items-center w-full h-full container p-0 lg:px-24">
+        <div className="flex flex-col h-full overflow-hidden">
+            <AppBar
+                color="primary"
+                position="static"
+                elevation={0}
+                className="flex flex-row items-center flex-shrink h-64 min-h-64 pl-20 pr-12"
+            >
+                <div className="flex flex-1 pr-8">
+                    <Logo/>
+                </div>
 
-            <div className="flex flex-shrink-0 items-center pl-8 pr-16">
-                <Logo/>
-            </div>
+                <Hidden mdDown>
+                    <NavbarFoldedToggleButton className="w-40 h-40 p-0"/>
+                </Hidden>
 
-            <FuseScrollbars className="flex h-full items-center">
-                <Navigation className="w-full" layout="horizontal"/>
+                <Hidden lgUp>
+                    <NavbarMobileToggleButton className="w-40 h-40 p-0">
+                        <Icon>arrow_back</Icon>
+                    </NavbarMobileToggleButton>
+                </Hidden>
+            </AppBar>
+
+            <FuseScrollbars className={clsx(classes.content)}>
+
+                <UserNavbarHeader/>
+
+                <Navigation layout="vertical"/>
             </FuseScrollbars>
         </div>
+        // <div className="flex flex-auto justify-between items-center w-full h-full container p-0 lg:px-24">
+
+        //     <div className="flex flex-shrink-0 items-center pl-8 pr-16">
+        //         <Logo/>
+        //     </div>
+
+        //     <FuseScrollbars className="flex h-full items-center">
+        //         <Navigation className="w-full" layout="horizontal"/>
+        //     </FuseScrollbars>
+        // </div>
     );
 }
 

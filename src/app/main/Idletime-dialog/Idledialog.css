@@ -1,0 +1,129 @@
+.Overlay {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: green(0, 0, 0, 0.7) !important;
+    transition: opacity 500ms;
+    visibility: hidden;
+    opacity: 0;
+  }
+  .overlay:target {
+    visibility: visible;
+    opacity: 1;
+  }
+  
+  .popup {
+    margin: 70px auto;
+    padding: 20px;
+    background: red !important;
+    border-radius: 5px;
+    width: 30%;
+    position: relative;
+    transition: all 5s ease-in-out;
+  }
+  
+  .popup h2 {
+    margin-top: 0;
+    color: #333 !important;
+    font-family: Tahoma, Arial, sans-serif;
+  }
+  .X{
+      background-color: red;
+  }
+
+  .modal{
+    position: fixed;
+    top: 20px;
+    left: 400px;
+    z-index: 1050;
+    display: none;
+    width:35%;
+    height: 100%;
+    overflow: hidden;
+    outline: 0;
+}
+.display{
+    display: block;
+}
+  .modal-content{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    pointer-events: auto;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid rgba(0,0,0,.2);
+    border-radius: .3rem;
+    outline: 0;
+  }
+  body.modal-open-noscroll 
+  {
+    margin-right: 0!important;
+    overflow: hidden;
+  }
+  .modal-open-noscroll .navbar-default, .modal-open .navbar-default 
+  {
+    margin-right: 0!important;
+  }
+  .modal-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 1rem 1rem;
+    border-bottom: 1px solid #dee2e6;
+    border-top-left-radius: calc(.3rem - 1px);
+    border-top-right-radius: calc(.3rem - 1px);
+    font-weight: 500;
+}
+.modal-title {
+    margin-bottom: 0;
+    line-height: 1.5;
+    font-weight: 500;
+    font-size: 2rem;
+}
+.modal-body {
+    position: relative;
+    flex: 1 1 auto;
+    padding: 1rem;
+    font-size: 1.5rem;
+}
+.modal-footer {
+    display: flex;
+    margin: .25rem;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    padding: .75rem;
+    border-top: 1px solid #dee2e6;
+    border-bottom-right-radius: calc(.3rem - 1px);
+    border-bottom-left-radius: calc(.3rem - 1px);
+}
+.btn {
+    display: inline-block;
+    font-weight: 400;
+    color: #212529;
+    text-align: center;
+    vertical-align: middle;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-color: transparent;
+    border: 1px solid transparent;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    border-radius: .25rem;
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+.btn-primary {
+    color: #fff;
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.MuiDialogContentText-root{
+    font-size: 1.5rem !important; 
+}
