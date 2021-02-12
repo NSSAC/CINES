@@ -45,12 +45,11 @@ function JobDefinitionForm(props) {
     padding: "6px",
     color: "black",
   };
-  const outputGrid ={
+  const outputGrid = {
     borderRight: "1px solid black",
     paddingLeft: "20px",
     borderTop: "2px solid black",
-    
-  }
+  };
 
   const buttonStyle = {
     backgroundColor: "lightgrey",
@@ -63,7 +62,6 @@ function JobDefinitionForm(props) {
   useEffect(() => {
     setIsToasterFlag(false);
     var userToken = localStorage.getItem("id_token");
-   
 
     axios({
       method: "get",
@@ -77,9 +75,7 @@ function JobDefinitionForm(props) {
       (res) => {
         setSpinnerFlag(false);
         if (res.data) {
-          console.log(res.data)
           var createFromData = JSON.parse(res.data.input_schema).properties;
-          console.log(createFromData)
           var inputFileData = res.data.input_files;
           var outputFiles = res.data.output_files;
           var requiredFeildArray = JSON.parse(res.data.input_schema).required;
@@ -151,14 +147,12 @@ function JobDefinitionForm(props) {
           value: "",
           type: "string",
           fileType: outputFiles.type,
-          required:true
-
+          required: true,
         };
         createFromData["output_container"] = outputContainer;
         createFromData["output_name"] = outputName;
       }
-       
-      
+
       setFormElementsArray({ ...createFromData });
     } else {
       setFlag(false);
@@ -240,10 +234,13 @@ function JobDefinitionForm(props) {
       (error) => {
         setSuccess(false);
         setIsToasterFlag(true);
+        var timeOutHandle = window.setTimeout(handlingError, 4000);
       }
     );
   }
-
+  function handlingError() {
+    setIsToasterFlag(false);
+  }
   function delayNavigation() {
     history.push("/apps/my-jobs/");
   }
@@ -300,34 +297,37 @@ function JobDefinitionForm(props) {
               className="flex flex-col justify-center"
             >
               <Grid style={parentGrid} container spacing={3}>
-                {Object.entries(formElementsArray).map((formElement) => (
-                  formElement[1].id < 200 ?
-                  <Grid style={childGrid} item container xs={12} sm={6}>
-                    <Input
-                      key={formElement.id}
-                      formData={formElement}
-                      key={formElement.id}
-                      elementType={formElement.type}
-                      value={formElement.value}
-                      buttonClicked={showDialog}
-                      changed={(event) =>
-                        inputChangedHandler(event, formElement[0])
-                      }
-                    />
-                  </Grid>:  <Grid style={outputGrid} item container xs={12} sm={6}>
-                    <Input
-                      key={formElement.id}
-                      formData={formElement}
-                      key={formElement.id}
-                      elementType={formElement.type}
-                      value={formElement.value}
-                      buttonClicked={showDialog}
-                      changed={(event) =>
-                        inputChangedHandler(event, formElement[0])
-                      }
-                    />
-                  </Grid>
-                ))}
+                {Object.entries(formElementsArray).map((formElement) =>
+                  formElement[1].id < 200 ? (
+                    <Grid style={childGrid} item container xs={12} sm={6}>
+                      <Input
+                        key={formElement.id}
+                        formData={formElement}
+                        key={formElement.id}
+                        elementType={formElement.type}
+                        value={formElement.value}
+                        buttonClicked={showDialog}
+                        changed={(event) =>
+                          inputChangedHandler(event, formElement[0])
+                        }
+                      />
+                    </Grid>
+                  ) : (
+                    <Grid style={outputGrid} item container xs={12} sm={6}>
+                      <Input
+                        key={formElement.id}
+                        formData={formElement}
+                        key={formElement.id}
+                        elementType={formElement.type}
+                        value={formElement.value}
+                        buttonClicked={showDialog}
+                        changed={(event) =>
+                          inputChangedHandler(event, formElement[0])
+                        }
+                      />
+                    </Grid>
+                  )
+                )}
               </Grid>
               <div style={{ alignSelf: "flex-end" }}>
                 <Button
