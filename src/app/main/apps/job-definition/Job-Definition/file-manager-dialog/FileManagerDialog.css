@@ -1,0 +1,40 @@
+.buttonDisabled {
+    pointer-events: none;
+    color: rgba(255, 255, 255, 0.3) !important;
+    box-shadow: none;
+    background-color: rgba(255, 255, 255, 0.12);
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+    background-color: lightgray;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: darkgray;
+}
+
+::-webkit-scrollbar:hover {
+    width: 10px;
+    height: 10px;
+    background-color: lightgray;
+}
+
+@media only screen and (max-width: 600px) {
+    ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+        background-color: lightgray;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+        background-color: darkgray;
+    }
+    
+    ::-webkit-scrollbar:hover {
+        width: 6px;
+        height: 6px;
+        background-color: lightgray;
+    }
+  }

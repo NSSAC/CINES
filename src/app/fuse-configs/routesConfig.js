@@ -11,6 +11,7 @@ import {RegisterConfig} from 'app/main/register/RegisterConfig';
 import {LogoutConfig} from 'app/main/logout/LogoutConfig';
 import {CallbackConfig} from 'app/main/callback/CallbackConfig';
 import {CineStaticConfig} from 'app/main/cines-static/CineStaticConfig';
+import {MyJobDefinitionAppConfig} from 'app/main/apps/job-definition/Job-Definition/MyJobDefinitionAppConfig'
 
 const routeConfigs = [
     ...appsConfigs,
@@ -23,7 +24,8 @@ const routeConfigs = [
     RegisterConfig,
     LogoutConfig,
     CallbackConfig,
-    CineStaticConfig
+    CineStaticConfig,
+    MyJobDefinitionAppConfig
 ];
 
 const routes = [

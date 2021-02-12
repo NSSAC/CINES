@@ -52,8 +52,8 @@ function MyJobsApp(props) {
         sessionStorage.setItem("isFilterApplied", JSON.stringify(false));
         dispatch(Actions.getFiles(10, 0, descShort, type, false, false));
         sessionStorage.setItem("count", start);
-        sessionStorage.setItem("shortOrder", JSON.stringify(descShort));
-
+        sessionStorage.setItem("sortOrder", JSON.stringify(descShort));
+        sessionStorage.setItem("type", JSON.stringify(type));
         sessionStorage.removeItem("selectedTypeArray")
         sessionStorage.removeItem("preStateValue")
         sessionStorage.removeItem("preJobTypeValue")
@@ -141,14 +141,15 @@ function MyJobsApp(props) {
 
 
                     <div className="flex flex-1 items-end">
-
-                        {/* <Link to="/apps/job-definition/">
+                    <Tooltip title="Create" placement="top">
+                         <Link to="/apps/job-definition/">
                         <FuseAnimate animation="transition.expandIn" delay={600}>
                             <Fab color="secondary"  aria-label="add" className="absolute bottom-0 left-0 ml-16 -mb-28 z-999">
                             <Icon>add</Icon>
                             </Fab>
                         </FuseAnimate>
-                            </Link>  */}
+                            </Link> 
+                            </Tooltip>
                         {/* <FuseAnimate delay={200}>
                             <div>
                                 {selectedItem && (

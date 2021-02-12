@@ -77,7 +77,7 @@ export function getFiles(count, start, descShort, type, clearArry) {
       let count1 = count;
       let start1 = start;
       var axios = require('axios');
-      let url = 'https://sciduct.bii.virginia.edu/jobsvc/job_instance?&in(state,(Completed,Running,Cancelled,Failed))&limit(' + count1 + ',' + start1 + ')&sort(' + ('-' + type) + ')'
+      let url = 'https://sciduct.bii.virginia.edu/jobsvc/job_instance?&in(state,(Completed,Running,Cancelled,Failed,UserQueued,Queued,Held,UserHeld))&limit(' + count1 + ',' + start1 + ')&sort(' + ('-' + type) + ')'
       var config = {
         method: 'get',
         url: url,
@@ -93,7 +93,7 @@ export function getFiles(count, start, descShort, type, clearArry) {
       let count1 = count;
       let start1 = start;
       var axios = require('axios');
-      let url = 'https://sciduct.bii.virginia.edu/jobsvc/job_instance?&in(state,(Completed,Running,Cancelled,Failed))&limit(' + count1 + ',' + start1 + ')&sort(' + ('+' + type) + ')'
+      let url = 'https://sciduct.bii.virginia.edu/jobsvc/job_instance?&in(state,(Completed,Running,Cancelled,Failed,UserQueued,Queued,Held,UserHeld))&limit(' + count1 + ',' + start1 + ')&sort(' + ('+' + type) + ')'
       var config = {
         method: 'get',
         url: url,
