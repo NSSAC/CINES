@@ -45,6 +45,12 @@ function JobDefinitionForm(props) {
     padding: "6px",
     color: "black",
   };
+  const outputGrid ={
+    borderRight: "1px solid black",
+    paddingLeft: "20px",
+    borderTop: "2px solid black",
+    
+  }
 
   const buttonStyle = {
     backgroundColor: "lightgrey",
@@ -145,6 +151,8 @@ function JobDefinitionForm(props) {
           value: "",
           type: "string",
           fileType: outputFiles.type,
+          required:true
+
         };
         createFromData["output_container"] = outputContainer;
         createFromData["output_name"] = outputName;
@@ -293,7 +301,20 @@ function JobDefinitionForm(props) {
             >
               <Grid style={parentGrid} container spacing={3}>
                 {Object.entries(formElementsArray).map((formElement) => (
+                  formElement[1].id < 200 ?
                   <Grid style={childGrid} item container xs={12} sm={6}>
+                    <Input
+                      key={formElement.id}
+                      formData={formElement}
+                      key={formElement.id}
+                      elementType={formElement.type}
+                      value={formElement.value}
+                      buttonClicked={showDialog}
+                      changed={(event) =>
+                        inputChangedHandler(event, formElement[0])
+                      }
+                    />
+                  </Grid>:  <Grid style={outputGrid} item container xs={12} sm={6}>
                     <Input
                       key={formElement.id}
                       formData={formElement}
