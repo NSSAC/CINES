@@ -234,11 +234,15 @@ const Epihiper_cell_simulation = () => {
             (error) => {
                 setSuccess(false)
                 setIsToasterFlag(true)
-
+                var timeOutHandle = window.setTimeout(handlingError, 4000);
             }
         )
 
     }
+
+    function handlingError() {
+        setIsToasterFlag(false);
+      }
 
     function delayNavigation() {
         history.push('/apps/my-jobs/');

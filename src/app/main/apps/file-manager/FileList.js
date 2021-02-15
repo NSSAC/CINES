@@ -195,7 +195,7 @@ function FileList(props)
                                         <TableCell className="text-center hidden sm:table-cell">{(!node.size && (node.size!==0))? '-' : filesize(node.size)}</TableCell>
                                         <TableCell className="hidden sm:table-cell">{moment(node.update_date).fromNow()}</TableCell>
                                         <Hidden lgUp>
-                                            <TableCell>
+                                            <TableCell style={{textAlignLast: 'right'}}>
                                                 <IconButton
                                                     onClick={(ev) => props.pageLayout.current.toggleRightSidebar()}
                                                     aria-label="open right sidebar"

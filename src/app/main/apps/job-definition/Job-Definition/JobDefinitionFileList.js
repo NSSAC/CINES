@@ -89,8 +89,16 @@ function JobDefinitionFileList(props) {
         (props.search === "" ||
           data.id.toLowerCase().includes(props.search.toLowerCase()))
       )
+      return data;
+
+      if (
+        (data.description !== "" && data.description !== undefined) &&
+        (props.search === "" ||
+          data.description.toLowerCase().includes(props.search.toLowerCase()))
+      )
         return data;
     });
+
     if (Object.keys(selectedItem).length === 0) {
       dispatch(Actions.setSelectedItem(searchResult[0].id));
     }

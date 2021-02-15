@@ -239,10 +239,10 @@ function FileManagerApp(props) {
                 <MainSidebarContent />
             }
             rightSidebarHeader={pathEnd == "/" &&
-                <DetailSidebarHeader />
+                <DetailSidebarHeader pageLayout={pageLayout}  />
             }
             rightSidebarContent={pathEnd == "/" &&
-                <DetailSidebarContent  setPrompt={(p)=>setPrompt(p)} editContent={editContent} setEditContent={(p)=>setEditContent(p)}  />
+                <DetailSidebarContent pageLayout={pageLayout}  setPrompt={(p)=>setPrompt(p)} editContent={editContent} setEditContent={(p)=>setEditContent(p)}  />
             }
             ref={pageLayout}
             innerScroll

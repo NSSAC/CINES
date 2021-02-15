@@ -73,11 +73,25 @@ input[type=submit]:hover {
     align-items: center;
   }
 
+  .infoIcon {
+      margin-top: 38px;
+  }
+
+  .toolTip {
+      width:280px;
+      white-space:pre-wrap;
+      word-break: break-all;
+  }
+
   @media only screen and (max-width: 600px) {
     .selectedFile {
         justify-content: space-between;
         align-items: center;
         display: block
       }
+
+      .infoIcon {
+        margin-top: 15px;
+    }
     
   }

@@ -247,7 +247,7 @@ return (
                             {checkFlag && <FuseAnimate className="hidden md:flex flex-col" animation="transition.expandIn" delay={600}>
                               <Tooltip title="Click to Upload" aria-label="add">
                                 <Fab className="hidden sm:flex flex-col" color="secondary" aria-label="add" size="small" >
-                                    <Icon className="hidden sm:flex flex-col" title="Upload a file" onClick={showFileUploadDialog}>add</Icon>
+                                    <Icon className="hidden sm:flex flex-col" title="Click to Upload" onClick={showFileUploadDialog}>add</Icon>
                                 </Fab>
                               </Tooltip>
                             </FuseAnimate>}

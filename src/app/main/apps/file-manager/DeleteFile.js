@@ -33,6 +33,7 @@ function DeleteFile(props){
           props.setDeleteFile(false)
           dispatch(Actions.getFiles(currPath,'DELETE_FILE', props.fileId))
         }, 3000);
+        props.pageLayout.current.toggleRightSidebar()
       })
       .catch(err => {
         setError(true)

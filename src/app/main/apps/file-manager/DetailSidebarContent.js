@@ -79,21 +79,22 @@ function DetailSidebarContent(props)
     
     if(editItem && selectedItem && !props.editContent && path == lastPath ){
          if(editItem !== selectedItem.id){
-            (confirmAlert({
-                title: 'Confirm',
-                message: 'Are you sure you want to leave without saving the changes?',
-                buttons: [
-                    { 
-                    label: 'No',
-                    onClick: ()=>OnConfirm()
-                    },
-                    {
-                    label: 'Yes',
-                    onClick: ()=>OnCancelClick()
-                    }
-                ],
-                closeOnClickOutside: false
-            }))     
+                (confirmAlert({
+                    title: 'Confirm',
+                    message: 'Are you sure you want to leave without saving the changes?',
+                    buttons: [
+                        { 
+                        label: 'No',
+                        onClick: ()=>OnConfirm()
+                        },
+                        {
+                        label: 'Yes',
+                        onClick: ()=>OnCancelClick()
+                        }
+                    ],
+                    closeOnClickOutside: false
+                }))   
+                props.pageLayout.current.toggleRightSidebar()
         } 
     }
 

@@ -288,6 +288,7 @@ export const FileUpload = ({ fileTypes, setUploadFile, dialogTargetPath, setShow
 
   }
   const openFileDialog = () => {
+    fileInput.current.value=''
     fileInput.current.click();
   };
   const handleDragOver = e => {

@@ -29,7 +29,7 @@ const Snap_GetBfsFullDiam = () => {
     const formRef = useRef(null);
     const [formElementsArray, setFormElementsArray] = useState({});
     const [jobSubmissionArray, setJobSubmissionArray] = useState({})
-    const [flag, setFlag] = useState(false)
+    const [flag, setFlag] = useState(true)
     const [response, setResponse] = useState('')
     const [success, setSuccess] = useState(false);
     const [isToasterFlag, setIsToasterFlag] = useState(false);
@@ -110,7 +110,7 @@ const Snap_GetBfsFullDiam = () => {
         setResponse(responseData)
         var count = 0;
         if (createFromData !== undefined) {
-            setFlag(false)
+            setFlag(true)
             if (inputFileData !== undefined) {
                 for (let [index, obj] of inputFileData.entries()) {
                     obj['id'] = index;
@@ -144,7 +144,7 @@ const Snap_GetBfsFullDiam = () => {
         }
 
         else {
-            setFlag(true)
+            setFlag(false)
         }
     };
 
@@ -227,17 +227,21 @@ const Snap_GetBfsFullDiam = () => {
             setSuccess(true)
             var timeOutHandle = window.setTimeout(
                 delayNavigation
-                , 3000);
+                , 4000);
 
         },
             (error) => {
                 setSuccess(false)
                 setIsToasterFlag(true)
-
+                var timeOutHandle = window.setTimeout(handlingError, 4000);
             }
         )
 
     }
+
+    function handlingError() {
+        setIsToasterFlag(false);
+      }
 
     function delayNavigation() {
         history.push('/apps/my-jobs/');
@@ -252,7 +256,7 @@ const Snap_GetBfsFullDiam = () => {
             </div>
         );
 
-    if (spinnerFlag === false)
+    if (spinnerFlag === false  && flag === true)
         return (
             <FusePageSimple
                 classes={{

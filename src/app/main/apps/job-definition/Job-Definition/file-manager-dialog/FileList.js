@@ -143,7 +143,7 @@ function Filelist(props) {
 
     if (Object.values(files).length > 0 && searchResults.length > 0) {
         return (
-            <div style={tableStyle}>
+            <div className='tableStyle'>
                 <FuseAnimate animation="transition.slideUpIn" delay={300}>
                     <Table >
                         <TableHead>
