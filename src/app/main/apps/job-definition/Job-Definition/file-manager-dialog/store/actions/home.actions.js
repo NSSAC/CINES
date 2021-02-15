@@ -8,7 +8,7 @@ export function getHome(path)
         if(typeof(token) == "string") {
         var config = {
           method: 'get',
-          url: `https://sciduct.bii.virginia.edu/filesvc/file/home/${path}`,
+          url: `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file/home/${path}`,
           headers: { 
             'Accept': '*/*',
             'Authorization': token
@@ -19,7 +19,7 @@ export function getHome(path)
     if(typeof(token) == "object") {
       var config = {
         method: 'get',
-        url: `https://sciduct.bii.virginia.edu/filesvc/file/home/${path}`,
+        url: `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file/home/${path}`,
         headers: { 
           'Accept': '*/*',
         }

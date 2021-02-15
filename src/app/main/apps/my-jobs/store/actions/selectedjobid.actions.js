@@ -7,7 +7,7 @@ export function setSelectedItem(id){
 
 
     var axios = require('axios');
-    let url = `https://sciduct.bii.virginia.edu/jobsvc/job_instance/${id}`
+    let url = `${process.env.REACT_APP_SCIDUCT_JOB_SERVICE}/job_instance/${id}`
         var config = {
       method: 'get',
       url: url,

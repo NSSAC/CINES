@@ -229,7 +229,7 @@ function DetailSidebarContent(props)
         if(data.length > 0){
         var config = {
             method: 'patch',
-            url: `https://sciduct.bii.virginia.edu/filesvc/file${path}` + `${selectedItem.name}` ,
+            url: `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file${path}` + `${selectedItem.name}` ,
             headers: { 
               'Content-Type': 'application/json-patch+json', 
               'Authorization': token 

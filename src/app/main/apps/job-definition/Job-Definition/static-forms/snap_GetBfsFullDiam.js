@@ -77,7 +77,7 @@ const Snap_GetBfsFullDiam = () => {
 
         axios({
             method: 'get',
-            url: 'https://sciduct.bii.virginia.edu/jobsvc/job_definition/snap_GetBfsFullDiam',
+            url: `${process.env.REACT_APP_SCIDUCT_JOB_SERVICE}/job_definition/snap_GetBfsFullDiam`,
             headers: {
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': '* ',
@@ -214,7 +214,7 @@ const Snap_GetBfsFullDiam = () => {
         const userToken = localStorage.getItem('id_token')
         axios({
             method: 'post',
-            url: "https://sciduct.bii.virginia.edu/jobsvc/job_instance/",
+            url: `${process.env.REACT_APP_SCIDUCT_JOB_SERVICE}/job_instance/`,
             headers: {
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': '* ',

@@ -1,15 +1,17 @@
-import React, { useState } from 'react';
-import {Icon, IconButton, Typography, Tooltip} from '@material-ui/core';
-import {FuseAnimate} from '@fuse';
-import {useSelector} from 'react-redux';
+import { Icon, IconButton, Tooltip, Typography } from '@material-ui/core';
 import moment from 'moment';
-import Download from './Download'
-import DeleteFile from './DeleteFile'
-import 'react-responsive-modal/styles.css';
-import instance from  'app/services/sciductService/sciductService.js'
-import { confirmAlert } from 'react-confirm-alert'; 
-import './Confirm-alert.css' 
+import React, { useState } from 'react';
+import { confirmAlert } from 'react-confirm-alert';
+import { useSelector } from 'react-redux';
 
+import { FuseAnimate } from '@fuse';
+import instance from  'app/services/sciductService/sciductService.js'
+
+import DeleteFile from './DeleteFile'
+import Download from './Download'
+
+import './Confirm-alert.css'
+import 'react-responsive-modal/styles.css';
 
 function DetailSidebarHeader(props)
 {

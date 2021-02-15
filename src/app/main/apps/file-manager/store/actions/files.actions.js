@@ -5,22 +5,26 @@ var token=localStorage.getItem('id_token')
 export function getFiles(path, type, id)
 {
             
-        var axios = require('axios');
-        if(typeof(token) == "string") {
-        var config = {
-          method: 'get',
-          url: `https://sciduct.bii.virginia.edu/filesvc/file/${path}`,
-          headers: { 
-            'Accept': '*/*',
-            'Authorization': token
-          }
-       };
+    var axios = require('axios');
+    if (path[0]==="/") {
+      path=path.substr(1)
+    }
+    
+    if(typeof(token) == "string") {
+      var config = {
+        method: 'get',
+        url: `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file/${path}`,
+        headers: { 
+          'Accept': '*/*',
+          'Authorization': token
+        }
+      };
     }
 
     if(typeof(token) == "object") {
       var config = {
         method: 'get',
-        url: `https://sciduct.bii.virginia.edu/filesvc/file/${path}`,
+        url: `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file/${path}`,
         headers: { 
           'Accept': '*/*',
         }

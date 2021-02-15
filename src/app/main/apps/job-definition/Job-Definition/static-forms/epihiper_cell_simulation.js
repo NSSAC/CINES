@@ -56,7 +56,7 @@ const Epihiper_cell_simulation = () => {
         setIsToasterFlag(false);
         axios({
             method: 'get',
-            url: 'https://sciduct.bii.virginia.edu/jobsvc/job_definition/epihiper_cell_simulation',
+            url: `${process.env.REACT_APP_SCIDUCT_JOB_SERVICE}/job_definition/epihiper_cell_simulation`,
             headers: {
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': '* ',
@@ -215,7 +215,7 @@ const Epihiper_cell_simulation = () => {
         const userToken = localStorage.getItem('id_token')
         axios({
             method: 'post',
-            url: "https://sciduct.bii.virginia.edu/jobsvc/job_instance/",
+            url: `${process.env.REACT_APP_SCIDUCT_JOB_SERVICE}/job_instance/`,
             headers: {
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': '* ',
