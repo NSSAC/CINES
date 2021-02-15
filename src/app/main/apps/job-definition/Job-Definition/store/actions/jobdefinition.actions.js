@@ -1,4 +1,3 @@
-import axios from 'axios';
 
 export const GET_FILES = '[FILE MANAGER APP] GET FILES';
 var token = localStorage.getItem('id_token')

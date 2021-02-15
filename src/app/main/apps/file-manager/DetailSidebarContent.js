@@ -1,18 +1,16 @@
 import React, {useState, useEffect} from 'react';
-import {Hidden, Typography,Tabs,Tab, Icon, IconButton, Modal} from '@material-ui/core';
-import { Edit, InsertDriveFile as FileIcon, ListAlt as MetadataIcon, History as ProvenanceIcon, Share as ShareIcon, Computer  } from "@material-ui/icons";
+import { Typography,Tabs,Tab, Icon, IconButton, Modal} from '@material-ui/core';
+import {  InsertDriveFile as FileIcon, ListAlt as MetadataIcon, History as ProvenanceIcon, Share as ShareIcon  } from "@material-ui/icons";
 import {makeStyles} from '@material-ui/styles';
 import {FuseAnimate} from '@fuse';
 import {useSelector, useDispatch} from 'react-redux';
 import clsx from 'clsx';
-import moment from 'moment';
 import filesize from 'filesize';
 import * as Actions from './store/actions';
 import JSONTree from 'react-json-tree'
 import Tooltip from "@material-ui/core/Tooltip";
 import instance from  'app/services/sciductService/sciductService.js'
 import { JsonEditor as Editor } from './jsoneditor-react/es';
-// import 'jsoneditor-react/es/editor.min.css';
 import { isEqual } from 'lodash';
 import { ToastsStore, ToastsContainer, ToastsContainerPosition } from 'react-toasts';
 import NavigationPrompt from 'react-router-navigation-prompt';

@@ -80,7 +80,7 @@ export const Input = (props) => {
 								if (props.formData[0] == "SampleEdges" || props.formData[0] == "SampleNodes")
 									return (RegExp(/^(?:[+]?(?:0|[1-9]\d*))$/).test(value) || RegExp(/^(?:[-]?(?:1))$/).test(value));
 								else
-									return RegExp(/^(?:[+]?(?:0|[1-9]\d*))$/).test(value) && value !== '+9+';
+									return RegExp(/^(?:[+]?(?:0|[1-9]\d*))$/).test(value);
 							},
 						}}
 						validationError="This is not a valid value"
@@ -167,7 +167,7 @@ export const Input = (props) => {
 							name="related"
 							// label={`${props.formData[0]}${<span style={{ color: 'red' }}>&nbsp;*</span>}`}
 							label={props.formData[0]}
-							value={props.formData[1].value}
+							value=""
 							onChange={props.changed}
 							required
 						>
@@ -348,10 +348,10 @@ export const Input = (props) => {
 					{inputElement}
 					{props.formData[1].description &&
 						(typeFlag == 0 ? <span className='infoIcon' data-tip={props.formData[1].description}>
-							<Icon onClick fontSize="small">info</Icon>
+							<Icon  fontSize="small">info</Icon>
 						</span> :
 						<span style={{ marginTop: '38px' }}  data-tip={props.formData[1].description}>
-							<Icon onClick fontSize="small">info</Icon>
+							<Icon  fontSize="small">info</Icon>
 						</span>
 						)}{' '}
 					<ReactTooltip clickable={true} className='toolTip' place='top' effect='solid' />

@@ -230,7 +230,7 @@ function JobDefinitionFileList(props) {
                   }
                 }
                 return (
-                  <React.Fragment>
+                  <React.Fragment key={row.id}>
                     <div className={classes.root}>
                       <Grid
                         className={row.id === selectedId ? "selceted-row" : ""}
@@ -242,7 +242,6 @@ function JobDefinitionFileList(props) {
                         <Grid item xs={3} style={{ paddingLeft: "15px" }}>
                           <Typography>Name</Typography>
                           <Typography
-                            variant="h7"
                             style={{ fontWeight: "700" , wordBreak:"break-word"}}
                           >
                             {row.id}

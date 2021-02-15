@@ -1,4 +1,3 @@
-import axios from 'axios';
 export const SET_SELECTED_ITEM_ID = '[My Jobs APP] SET SELECTED ITEM';
 
 var token = localStorage.getItem('id_token')

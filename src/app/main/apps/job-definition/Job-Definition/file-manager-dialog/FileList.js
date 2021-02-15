@@ -1,6 +1,5 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@material-ui/core"
-import React, { useState, useRef, useEffect } from 'react';
-import { Hidden, Typography, Icon, IconButton, Table, TableBody, TableCell, TableHead, TableRow, Link } from '@material-ui/core';
+import React, { useState, useEffect } from 'react';
+import { Typography, Icon, Table, TableBody, TableCell, TableHead, TableRow, Link } from '@material-ui/core';
 import { FuseAnimate } from '@fuse';
 import { useDispatch, useSelector } from "react-redux";
 import moment from 'moment';
@@ -76,26 +75,17 @@ function Filelist(props) {
     const dispatch = useDispatch()
     const [click, setClick] = useState(false);
 
-    const tableStyle = {
-        overflow: 'auto',
-        maxHeight: '320px',
-        backgroundColor: 'black',
-        borderRadius: '10px'
-        // marginTop:'15px',
-
-    }
     const nameStyle = {
         overflow: 'hidden',
         maxWidth: '200px',
         textOverflow: 'ellipsis',
-        // display:'inline-block',
         whiteSpace: 'nowrap'
     }
 
     var searchResults = Object.values(files).filter((data) => {
         var reqType = false
         for (var f in props.fileTypes) {
-            if (data.type == props.fileTypes[f] || data.type === "folder" || data.type === "epihiperOutput" || data.type === "epihiper_multicell_analysis") {
+            if (data.type === props.fileTypes[f] || data.type === "folder" || data.type === "epihiperOutput" || data.type === "epihiper_multicell_analysis") {
                 reqType = true;
                 break;
             }
@@ -109,12 +99,12 @@ function Filelist(props) {
         var i = 0;
         // if (props.fileManager) {
         for (i = 0; i < props.fileTypes.length; i++) {
-            if (document.getElementById('selectFile') && selectedItem && (selectedItem.type == props.fileTypes[i])) {
+            if (document.getElementById('selectFile') && selectedItem && (selectedItem.type === props.fileTypes[i])) {
                 document.getElementById('selectFile').classList.remove('buttonDisabled');
                 flag = 1;
             }
         }
-        if (flag == 0)
+        if (flag === 0)
             document.getElementById('selectFile').classList.add('buttonDisabled');
         // }
 
@@ -203,7 +193,7 @@ function Filelist(props) {
         )
     }
 
-    else if (props.fileTypes[0]=="folder") {
+    else if (props.fileTypes[0]==="folder") {
         return (
             <div className="flex flex-1 flex-col items-center justify-center mt-20">
                 <Typography className="text-13 mt-16" color="textPrimary">This folder does not contain any folders.</Typography>

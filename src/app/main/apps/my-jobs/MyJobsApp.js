@@ -130,8 +130,8 @@ function MyJobsApp(props) {
 
                         <FuseAnimate animation="transition.expandIn" delay={200}>
                             <Tooltip title="Filter" placement="bottom">
-                                <IconButton aria-label="search">
-                                    <Icon onClick={showFileUploadDialog}>filter_list</Icon>
+                                <IconButton aria-label="search"  onClick={showFileUploadDialog}>
+                                    <Icon>filter_list</Icon>
                                 </IconButton>
                             </Tooltip>
                         </FuseAnimate>

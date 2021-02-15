@@ -1,13 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { FormControlLabel, withStyles, Icon, Switch, Typography, Divider } from '@material-ui/core';
+import React, { useState } from 'react';
+import {withStyles, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import { FuseAnimate } from '@fuse';
 import { useSelector } from 'react-redux';
 import clsx from 'clsx';
-import { Hidden, Tabs, Tab, IconButton, Modal } from '@material-ui/core';
+import { Tabs, Tab } from '@material-ui/core';
 import MetadataInfoDialog from 'app/main/apps/my-jobs/MetadataDialog'
-import { Edit, InsertDriveFile as FileIcon, ListAlt as MetadataIcon, History as ProvenanceIcon, Share as ShareIcon, Computer } from "@material-ui/icons";
-import { read } from 'vega';
+import { ListAlt as MetadataIcon } from "@material-ui/icons";
 import Tooltip from '@material-ui/core/Tooltip';
 
 const useStyles = makeStyles({
@@ -44,9 +43,7 @@ const HtmlTooltip = withStyles((theme) => ({
 }))(Tooltip);
 
 function DetailSidebarContent(props) {
-    const files = useSelector(({ JobDefinitionApp }) => JobDefinitionApp.jobdefinition);
     const selectedItem = useSelector(({ JobDefinitionApp }) => JobDefinitionApp.selectedjobid);
-    console.log(selectedItem)
     const [selectedTab, setSelectedTab] = useState(0);
     const [showDialog, setshowDialog] = useState(false);
     const [standardOut, setStandardOut] = useState("")

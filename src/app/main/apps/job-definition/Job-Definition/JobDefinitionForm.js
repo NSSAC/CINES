@@ -299,11 +299,10 @@ function JobDefinitionForm(props) {
               <Grid style={parentGrid} container spacing={3}>
                 {Object.entries(formElementsArray).map((formElement) =>
                   formElement[1].id < 200 ? (
-                    <Grid style={childGrid} item container xs={12} sm={6}>
+                    <Grid key={formElement[1].id} style={childGrid} item container xs={12} sm={6}>
                       <Input
                         key={formElement.id}
                         formData={formElement}
-                        key={formElement.id}
                         elementType={formElement.type}
                         value={formElement.value}
                         buttonClicked={showDialog}
@@ -313,11 +312,10 @@ function JobDefinitionForm(props) {
                       />
                     </Grid>
                   ) : (
-                    <Grid style={outputGrid} item container xs={12} sm={6}>
+                    <Grid  key={formElement[1].id} style={outputGrid} item container xs={12} sm={6}>
                       <Input
                         key={formElement.id}
                         formData={formElement}
-                        key={formElement.id}
                         elementType={formElement.type}
                         value={formElement.value}
                         buttonClicked={showDialog}

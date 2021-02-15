@@ -114,12 +114,8 @@ function FileManagerApp(props) {
 
 
     const dispatch = useDispatch();
-    const files = useSelector(({ fileManagerApp }) => fileManagerApp.files);
-    const selectedItem = useSelector(({ fileManagerApp }) => files[fileManagerApp.selectedItemId]);
     const pageLayout = useRef(null);
     var targetPath = props.location.pathname.replace("/apps/files", "")
-    var path = window.location.pathname
-    var pathEnd = path.charAt(path.length - 1)
     var targetMeta = ""
     if (pathEnd === '/') {
         targetMeta = targetPath.slice(0, -1)
@@ -238,10 +234,10 @@ function FileManagerApp(props) {
             leftSidebarContent={
                 <MainSidebarContent />
             }
-            rightSidebarHeader={pathEnd == "/" &&
+            rightSidebarHeader={pathEnd === "/" &&
                 <DetailSidebarHeader pageLayout={pageLayout}  />
             }
-            rightSidebarContent={pathEnd == "/" &&
+            rightSidebarContent={pathEnd === "/" &&
                 <DetailSidebarContent pageLayout={pageLayout}  setPrompt={(p)=>setPrompt(p)} editContent={editContent} setEditContent={(p)=>setEditContent(p)}  />
             }
             ref={pageLayout}
