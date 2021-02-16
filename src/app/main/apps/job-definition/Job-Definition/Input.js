@@ -69,7 +69,7 @@ export const Input = (props) => {
 				inputElement = (
 					<TextFieldFormsy
 						className="my-16 inputStyle"
-						type="number"
+						type="text"
 						name="SrcColId"
 						style={{ width: "18px" }}
 						value=""
@@ -92,7 +92,7 @@ export const Input = (props) => {
 				inputElement = (
 					<TextFieldFormsy
 						className="my-16 inputStyle"
-						type="number"
+						type="text"
 						name="SrcColId"
 						style={{ width: "18px" }}
 						value=""
@@ -119,7 +119,7 @@ export const Input = (props) => {
 				inputElement = (
 					<TextFieldFormsy
 						className="my-16 inputStyle"
-						type="number"
+						type="text"
 						name="SrcColId"
 						style={{ width: "18px" }}
 						value={props.formData[1].value}
@@ -139,7 +139,7 @@ export const Input = (props) => {
 				inputElement = (
 					<TextFieldFormsy
 						className="my-16 inputStyle"
-						type="number"
+						type="text"
 						name="SrcColId"
 						style={{ width: "18px" }}
 						value={props.formData[1].value}
@@ -295,7 +295,7 @@ export const Input = (props) => {
 						<TextFieldFormsy
 							id={props.formData[1].formLabel}
 							className="my-16 hidden"
-							type="number"
+							type="text"
 							name="SrcColId"
 							style={{ width: '18px' }}
 							value={props.formData[1].value}
@@ -314,6 +314,10 @@ export const Input = (props) => {
 			document.getElementById(props.formData[1].formLabel).value = 1;
 		}
 	})
+
+
+	if(props.formData[0]==='extraObj')
+	 return null;
 
 	return (
 		<FusePageSimple

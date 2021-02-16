@@ -126,11 +126,26 @@ function JobDefinitionForm(props) {
         }
       }
       if (inputFileData !== undefined) {
+        count++;
         for (let obj of inputFileData) {
           let keyName = obj.name;
           createFromData[keyName] = obj;
         }
       }
+
+      if( count % 2 !== 0 )
+      {
+        count++;
+        let extraObj = {
+          id: count + 100,
+          formLabel: "",
+          value: "",
+          required: true
+        };
+        createFromData["extraObj"] = extraObj;
+
+      }
+
       if (outputFiles != undefined) {
         let outputContainer = {
           id: 200,

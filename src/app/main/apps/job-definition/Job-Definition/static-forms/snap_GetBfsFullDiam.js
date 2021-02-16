@@ -18,34 +18,21 @@ import { FusePageSimple } from '@fuse';
 import axios from 'axios';
 import { Input } from './SelectFile.js'
 import Toaster from "../Toaster";
-import FMPopup from '../file-manager-dialog/FileManagerDialog.js';
 import { Icon, LinearProgress, Tooltip } from '@material-ui/core';
 
 const Snap_GetBfsFullDiam = () => {
     const [isFormValid, setIsFormValid] = useState(false);
-    const [showFMDialog, setShowFMDialog] = useState(false);
-    const [fileChosen, setFileChosen] = useState('');
-    const [fileChosenPath, setFileChosenPath] = useState('');
-    const formRef = useRef(null);
     const [formElementsArray, setFormElementsArray] = useState({});
     const [jobSubmissionArray, setJobSubmissionArray] = useState({})
     const [flag, setFlag] = useState(true)
     const [response, setResponse] = useState('')
-    const [success, setSuccess] = useState(false);
+    const [success, setSuccess] = useState();
     const [isToasterFlag, setIsToasterFlag] = useState(false);
     const [showDialog, setshowDialog] = useState(false);
     const [spinnerFlag, setSpinnerFlag] = useState(true);
     const history = useHistory();
     var path = window.location.pathname;
-    var pathEnd = path.replace("/apps/job-definition/", "");
 
-    const selectButtonStyle = {
-        backgroundColor: '#61dafb',
-        fontSize: 'inherit',
-        margin: '5px',
-        padding: '6px',
-        color: 'black'
-    };
 
     const parentGrid = {
         borderTop: '2px solid black',
@@ -94,9 +81,7 @@ const Snap_GetBfsFullDiam = () => {
                     var responseData = res.data;
 
                     creatForm(createFromData, inputFileData, outputFiles, requiredFeildArray, responseData);
-                    return (
-                        setSuccess(true)
-                    )
+
                 }
             },
             (error) => {
@@ -300,7 +285,7 @@ const Snap_GetBfsFullDiam = () => {
                                             <Grid style={childGrid} item container xs={12} sm={6}>
                                                 <TextFieldFormsy
                                                     className="my-16 inputStyle"
-                                                    type="number"
+                                                    type="text"
                                                     name={formElementsArray['NTestNodes'].formLabel}
                                                     style={{ width: '18px' }}
                                                     value=""
@@ -320,7 +305,7 @@ const Snap_GetBfsFullDiam = () => {
                                             <Grid style={childGrid} item container xs={12} sm={6}>
                                                 <TextFieldFormsy
                                                     className="my-16 inputStyle"
-                                                    type="number"
+                                                    type="text"
                                                     name={formElementsArray['desCol'].formLabel}
                                                     style={{ width: '18px' }}
                                                     value=""
@@ -340,7 +325,7 @@ const Snap_GetBfsFullDiam = () => {
                                             <Grid style={childGrid} item container xs={12} sm={6}>
                                                 <TextFieldFormsy
                                                     className="my-16 inputStyle"
-                                                    type="number"
+                                                    type="text"
                                                     name={formElementsArray['srcCol'].formLabel}
                                                     style={{ width: '18px' }}
                                                     value=""
