@@ -58,9 +58,7 @@ export function getFiles(count, start, descShort, type, clearArry) {
       method: 'get',
       url: url,
       headers: {
-
         'Accept': 'application/json',
-
         'Authorization': token
       }
     };
@@ -73,15 +71,13 @@ export function getFiles(count, start, descShort, type, clearArry) {
     if (descShort) {
       let count1 = count;
       let start1 = start;
-      var axios = require('axios');
+       axios = require('axios');
       let url = 'https://sciduct.bii.virginia.edu/jobsvc/job_instance?&in(state,(Completed,Running,Cancelled,Failed,UserQueued,Queued,Held,UserHeld))&limit(' + count1 + ',' + start1 + ')&sort(' + ('-' + type) + ')'
-      var config = {
+      config = {
         method: 'get',
         url: url,
         headers: {
-
           'Accept': 'application/json',
-
           'Authorization': token
         }
       };
@@ -89,15 +85,13 @@ export function getFiles(count, start, descShort, type, clearArry) {
     else {
       let count1 = count;
       let start1 = start;
-      var axios = require('axios');
+       axios = require('axios');
       let url = 'https://sciduct.bii.virginia.edu/jobsvc/job_instance?&in(state,(Completed,Running,Cancelled,Failed,UserQueued,Queued,Held,UserHeld))&limit(' + count1 + ',' + start1 + ')&sort(' + ('+' + type) + ')'
-      var config = {
+      config = {
         method: 'get',
         url: url,
         headers: {
-
           'Accept': 'application/json',
-
           'Authorization': token
         }
       }

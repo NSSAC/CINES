@@ -60,9 +60,6 @@ export const FileUpload = ({ fileTypes, setUploadFile, dialogTargetPath, setShow
 
   });
 
-  var fileName = "";
-  var contents;
-  var type = "";
   var fileData = [];
   var fileTypeArray = FILEUPLOAD_CONFIG.fileType
   if (dialogTargetPath) {
@@ -70,14 +67,11 @@ export const FileUpload = ({ fileTypes, setUploadFile, dialogTargetPath, setShow
   }
   const [initialUploadFile, setUploadedfiles] = useState([]);
   const [disableButton, setDisableButton] = useState(true);
-  const [files, setFiles] = useState([]);
   const classes = useStyles();
   const dispatch = useDispatch();
-  var responseArry = [];
   const fileInput = useRef();
   var vaildTypeFileArray = [];
   const [uploading, setUploading] = useState(false);
-  const [previews, setPreviews] = useState([]);
 
   const ellipsis = {
     textOverflow: 'ellipsis',
@@ -100,9 +94,8 @@ export const FileUpload = ({ fileTypes, setUploadFile, dialogTargetPath, setShow
     for (let i = 0; i <= event.target.files.length - 1; i++) {
       let fileDataObject = {};
       fileDataObject.type = event.target.files[i].name.split('.').pop();
-      if(fileTypeArray.length == 1)
+      if(fileTypeArray.length === 1)
          fileDataObject.type = fileTypeArray[0];
-      // fileDataObject.fileName = event.target.files[i].name.split('.').slice(0, -1).join('.');
       fileDataObject.fileName = event.target.files[i].name;
       fileDataObject.size = event.target.files[i].size;
       fileDataObject.id = i;
@@ -118,10 +111,10 @@ export const FileUpload = ({ fileTypes, setUploadFile, dialogTargetPath, setShow
   const progressStatus = (status, id) => {
     var fileList = []
     initialUploadFile.forEach(item => {
-      if (item.id == id) {
+      if (item.id === id) {
         if (status !== 100) {
           if (initialUploadFile[id].status !== "Uploading-Failed (file already exist) 0%") {
-            if (initialUploadFile[id].status != "Uploading-Failed (unsupported file name only '-_.'are allowed) 0%") {
+            if (initialUploadFile[id].status !== "Uploading-Failed (unsupported file name only '-_.'are allowed) 0%") {
               item.status = "Uploading-" + status + "%";
               fileList.push(item);
             }
@@ -132,7 +125,7 @@ export const FileUpload = ({ fileTypes, setUploadFile, dialogTargetPath, setShow
         }
         else {
           if (initialUploadFile[id].status !== "Uploading-Failed (file already exist) 0%") {
-            if (initialUploadFile[id].status != "Uploading-Failed (unsupported file name only '-_.'are allowed) 0%") {
+            if (initialUploadFile[id].status !== "Uploading-Failed (unsupported file name only '-_.'are allowed) 0%") {
               item.status = "Uploaded successfully";
               fileList.push(item);
             }
@@ -226,7 +219,6 @@ export const FileUpload = ({ fileTypes, setUploadFile, dialogTargetPath, setShow
       },
 
         (error) => {
-          //vaildTypeFileArray.splice(id ,1)
           if (error.response.data.message === "File already exists") {
             progressStatus("Failed (file already exist) 0", id);
           }
@@ -377,7 +369,7 @@ export const FileUpload = ({ fileTypes, setUploadFile, dialogTargetPath, setShow
                   <TableCell className="hidden sm:table-cell">Type</TableCell>
                   <TableCell className="hidden sm:table-cell">Status</TableCell>
 
-                  {initialUploadFile.length == 0 ? null : <TableCell className=" p-0 text-center">
+                  {initialUploadFile.length === 0 ? null : <TableCell className=" p-0 text-center">
                     Remove
           </TableCell>}
                   <TableCell className="max-w-64 w-64 p-0 text-center"> </TableCell>
@@ -386,7 +378,7 @@ export const FileUpload = ({ fileTypes, setUploadFile, dialogTargetPath, setShow
               </TableHead>
 
               <TableBody className="max-w-100 w-100 p-0 text-center">
-                {initialUploadFile.length == 0 ?
+                {initialUploadFile.length === 0 ?
                   <TableRow className="cursor-pointer">
                     <TableCell className="max-w-30 w-30 p-0 text-center"> </TableCell>
                     <TableCell className="hidden sm:table-cell">No file selected</TableCell>
@@ -451,14 +443,14 @@ export const FileUpload = ({ fileTypes, setUploadFile, dialogTargetPath, setShow
               color="default"
               className={classes.button}
               startIcon={<CloudUploadIcon />}
-              disabled={initialUploadFile.length == 0 || disableButton} >
+              disabled={initialUploadFile.length === 0 || disableButton} >
               Upload and Submit
           </Button> :
             <Button onClick={OnUpload} variant="contained"
               color="default"
               className={classes.button}
               startIcon={<CloudUploadIcon />}
-              disabled={initialUploadFile.length == 0 || disableButton} >
+              disabled={initialUploadFile.length === 0 || disableButton} >
               Upload
           </Button>
           }

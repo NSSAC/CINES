@@ -2,30 +2,15 @@ import React, { useState, useEffect } from "react";
 import {
   Typography,
   LinearProgress,
-  Hidden,
   Button,
-  Icon,
-  TableFooter,
-  Fragment,
-  Tooltip,
-  IconButton,
-  TablePagination,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-  Paper,
-  TableContainer,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 import { FuseAnimate } from "@fuse";
 import { useDispatch, useSelector } from "react-redux";
-import clsx from "clsx";
 import Grid from "@material-ui/core/Grid";
 import * as Actions from "./store/actions";
 import "./JobDefinitionFileList.css";
-import { Link, withRouter } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import JobDefinitionForm from "./JobDefinitionForm";
 
 const useStyles = makeStyles((theme) => ({
@@ -54,7 +39,6 @@ function JobDefinitionFileList(props) {
   const [searchString, setPreviousString] = useState("");
   const [rowLength, setrowLength] = useState();
   
-  var type;
   var lengthOfRow;
   const dispatch = useDispatch();
   const jobDefinitionData = useSelector(

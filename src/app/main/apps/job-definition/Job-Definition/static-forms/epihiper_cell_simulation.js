@@ -4,7 +4,7 @@ import {
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Formsy from 'formsy-react';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
 import { FusePageSimple } from '@fuse';
@@ -24,8 +24,6 @@ const Epihiper_cell_simulation = () => {
     const [showDialog, setshowDialog] = useState(false);
     const [spinnerFlag, setSpinnerFlag] = useState(true);
     const history = useHistory();
-    var path = window.location.pathname;
-    var pathEnd = path.replace("/apps/job-definition/", "");
 
 
     const parentGrid = {
@@ -226,7 +224,7 @@ const Epihiper_cell_simulation = () => {
         }).then(res => {
             setIsToasterFlag(true)
             setSuccess(true)
-            var timeOutHandle = window.setTimeout(
+            window.setTimeout(
                 delayNavigation
                 , 3000);
 
@@ -234,7 +232,7 @@ const Epihiper_cell_simulation = () => {
             (error) => {
                 setSuccess(false)
                 setIsToasterFlag(true)
-                var timeOutHandle = window.setTimeout(handlingError, 4000);
+               window.setTimeout(handlingError, 4000);
             }
         )
 

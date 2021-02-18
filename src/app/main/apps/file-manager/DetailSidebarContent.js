@@ -410,7 +410,7 @@ function DetailSidebarContent(props)
                 {selectedTab === 2 && (
                     <React.Fragment>
                         <div><Typography variant="h6">PROVENANCE</Typography></div>
-                        <JSONTree data={selectedItem.provenance} hideRoot={true} theme={{
+                        {selectedItem.provenance?<JSONTree data={selectedItem.provenance} hideRoot={true} theme={{
                                                                         tree: {
                                                                           backgroundColor: '#F7F7F7'
                                                                          },
@@ -419,7 +419,7 @@ function DetailSidebarContent(props)
                                                                             fontSize:'14px',
                                                                             fontWeight: 'bold'
                                                                         },
-                                                                     }}/>
+                                                                     }}/>:null}
                     </React.Fragment>
                 )}
 
