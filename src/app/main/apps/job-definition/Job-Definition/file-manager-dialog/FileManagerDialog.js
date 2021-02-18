@@ -1,7 +1,7 @@
 import { FuseAnimate } from "@fuse";
-import { Button, ClickAwayListener, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Fab, Icon, IconButton, Input, Tooltip, Typography } from "@material-ui/core"
+import { Button, ClickAwayListener, Dialog, DialogActions, DialogContent, DialogTitle, Fab, Icon, IconButton, Input, Tooltip } from "@material-ui/core"
 import withReducer from "app/store/withReducer";
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import Breadcrumb from "./Breadcrumb";
 import Filelist from "./FileList";
@@ -46,7 +46,6 @@ function FMPopup({ showModal, setShowModal, handleFMClose, setFileChosen, setFil
 
     const dispatch = useDispatch()
     const files = useSelector(({fMApp}) => fMApp.files);
-    const selectedItemId = useSelector(({fMApp}) => fMApp.selectedItemId);
     const selectedItem = useSelector(({fMApp}) => files[fMApp.selectedItemId]);
     const [targetPath, setTargetPath] = useState('/')
     const [searchbool, setSearchbool] = useState(false);
@@ -54,14 +53,13 @@ function FMPopup({ showModal, setShowModal, handleFMClose, setFileChosen, setFil
     const [checkFlag, setcheckFlag] = useState(false);
     const [showDialog, setshowDialog] = useState(false);
     const [uploadFile, setUploadFile] = useState("");
-    const classes = useStyles();
     var token = localStorage.getItem('id_token')
     const breadcrumbArr = targetPath.split('/');
     breadcrumbArr[0]="files"
 
     if(uploadFile !== ""){
         files !== {} && Object.values(files).map(node => {
-            if(node.name == uploadFile){
+            if(node.name === uploadFile){
                 dispatch(Actions.setSelectedItem(node.id))
                 setFileChosen("")
                 setFileChosenPath("")
@@ -137,7 +135,7 @@ function FMPopup({ showModal, setShowModal, handleFMClose, setFileChosen, setFil
         setcheckFlag(false);
 
         var axios = require('axios');
-        if (typeof (token) == "string") {
+        if (typeof (token) === "string") {
             var config = {
                 method: 'get',
                 url: `https://sciduct.bii.virginia.edu/filesvc/file${targetMeta}`,
@@ -184,7 +182,7 @@ function FMPopup({ showModal, setShowModal, handleFMClose, setFileChosen, setFil
     useEffect(() => {
         dispatch(Actions.getFiles(targetPath, 'GET_FILES'))
         var targetMeta = ""
-        if (token === null || !showModal || targetPath == "/") {
+        if (token === null || !showModal || targetPath === "/") {
             setcheckFlag(false)
         }
         else {

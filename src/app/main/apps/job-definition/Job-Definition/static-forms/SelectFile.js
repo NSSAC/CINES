@@ -1,15 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Fab, Icon, Tooltip, Typography, Grid } from '@material-ui/core';
+import { Button, Icon, Tooltip} from '@material-ui/core';
 import './SelectFile.css';
 import FMPopup from '../file-manager-dialog/FileManagerDialog.js';
 import FolderPopup from '../file-manager-dialog/FolderManagerDialog.js';
 import {
-	SelectFormsy,
 	TextFieldFormsy
 } from '@fuse/components/formsy';
 import { FusePageSimple } from '@fuse';
 import { useDispatch } from 'react-redux';
-import FolderManagerDialog from '../file-manager-dialog/FolderManagerDialog.js';
 
 export const Input = (props) => {
 
@@ -22,7 +20,6 @@ export const Input = (props) => {
 	};
 
 
-	const dispatch = useDispatch()
 	const [showFMDialog, setShowFMDialog] = useState(false);
 	const [showFolderDialog, setShowFolderDialog] = useState(false);
 	const [fileChosen, setFileChosen] = useState('');

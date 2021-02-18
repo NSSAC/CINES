@@ -1,52 +1,26 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Fab, Icon, IconButton, Typography, Tooltip ,ClickAwayListener,Input} from '@material-ui/core';
+import { Icon, IconButton, Typography, Tooltip ,ClickAwayListener,Input} from '@material-ui/core';
 import { FuseAnimate, FusePageSimple } from '@fuse';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import withReducer from 'app/store/withReducer';
 import * as Actions from './store/actions';
 import reducer from './store/reducers';
 import JobDefinitionFileList from './JobDefinitionFileList';
-import Paper from '@material-ui/core/Paper';
 import DetailSidebarHeader from './DetailSidebarHeader';
 import DetailSidebarContent from './DetailSidebarContent';
 import MainSidebarHeader from './MainSidebarHeader';
 import MainSidebarContent from './MainSidebarContent';
-import Breadcrumb from './Breadcrumb';
 import { MyJobFilter } from 'app/main/apps/my-jobs/MyJobFilter-dialog/Filterdialog';
-import { makeStyles } from '@material-ui/core/styles';
-import Chip from '@material-ui/core/Chip';
 import clsx from 'clsx';
-//import "./JobDefinitionApp.css"
-const useStyles = makeStyles((theme) => ({
-    root: {
-        display: 'inline-block',
-        justifyContent: 'start',
-
-        listStyle: 'none',
-        padding: theme.spacing(0.5),
-        margin: 0,
-    },
-    chip: {
-        display: 'inline-block',
-        margin: theme.spacing(0.5),
-        paddingTop: "5px"
-
-    },
-    dialogwidth: {
-        minWidth: "100px !important"
-    }
-}));
 
 function JobDefinitionApp(props) {
 
     const dispatch = useDispatch();
-    const files = useSelector(({ JobDefinitionApp }) => JobDefinitionApp.jobdefinition);
     const [showDialog, setshowDialog] = useState(false);
     const pageLayout = useRef(null);
     const [flag, setFilterFlag] = useState(false);
     const [searchbool, setSearchbool] = useState(false);
     const [search, setSearch] = useState("");
-    const [editContent, setEditContent] = useState(true);
     const [preview, setPreview] = useState(true);
 
     var path = window.location.pathname
@@ -65,11 +39,6 @@ function JobDefinitionApp(props) {
         sessionStorage.removeItem("preStateValue")
         sessionStorage.removeItem("preJobTypeValue")
     }, [dispatch]);
-
-    function showFileUploadDialog() {
-        setshowDialog(true)
-    }
-
 
     function showSearch() {
         setSearchbool(true);
@@ -93,13 +62,10 @@ function JobDefinitionApp(props) {
         }
     }
 
-    const childRef = useRef();
     function handleClose() {
         setshowDialog(false)
         setFilterFlag(true)
-        //  childRef.current.getAlert()
     }
-    const classes = useStyles();
 
     return (
         <FusePageSimple
@@ -165,12 +131,10 @@ function JobDefinitionApp(props) {
                             </Tooltip>
                         </FuseAnimate> */}
 
-
-
 {preview && (
                             <FuseAnimate animation="transition.expandIn" delay={200}>
                                 <span>
-                                {pathEnd == "/" && <div className={clsx("flex", props.className)}>
+                                {pathEnd === "/" && <div className={clsx("flex", props.className)}>
                                         <Tooltip title="Click to search" placement="bottom">
                                             <div onClick={showSearch}>
                                                 <IconButton className="w-64 h-64"><Icon>search</Icon></IconButton>    </div>
@@ -233,10 +197,10 @@ function JobDefinitionApp(props) {
             leftSidebarContent={
                 <MainSidebarContent />
             }
-            rightSidebarHeader={pathEnd == "/" &&
+            rightSidebarHeader={pathEnd === "/" &&
                 <DetailSidebarHeader />
             }
-            rightSidebarContent={pathEnd == "/" &&
+            rightSidebarContent={pathEnd === "/" &&
                 <DetailSidebarContent />
             }
             ref={pageLayout}

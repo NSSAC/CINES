@@ -1,23 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Fab, Icon, Tooltip, Typography, Grid } from '@material-ui/core';
+import { Button, Icon } from '@material-ui/core';
 import './Input.css';
 import FMPopup from './file-manager-dialog/FileManagerDialog.js';
-import * as Actions from './file-manager-dialog/store/actions';
 import FolderPopup from './file-manager-dialog/FolderManagerDialog.js';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Radio from '@material-ui/core/Radio';
 
 import {
-	CheckboxFormsy,
-	FuseChipSelectFormsy,
 	RadioGroupFormsy,
 	SelectFormsy,
 	TextFieldFormsy
 } from '@fuse/components/formsy';
 import { FusePageSimple } from '@fuse';
 import { useDispatch } from 'react-redux';
-import FolderManagerDialog from './file-manager-dialog/FolderManagerDialog.js';
 import ReactTooltip from 'react-tooltip';
 
 export const Input = (props) => {
@@ -32,7 +28,6 @@ export const Input = (props) => {
 
 
 
-	const dispatch = useDispatch()
 	const [showFMDialog, setShowFMDialog] = useState(false);
 	const [showFolderDialog, setShowFolderDialog] = useState(false);
 	const [fileChosen, setFileChosen] = useState('');
@@ -77,7 +72,7 @@ export const Input = (props) => {
 						onChange={props.changed}
 						validations={{
 							isPositiveInt: function (values, value) {
-								if (props.formData[0] == "SampleEdges" || props.formData[0] == "SampleNodes")
+								if (props.formData[0] === "SampleEdges" || props.formData[0] === "SampleNodes")
 									return (RegExp(/^(?:[+]?(?:0|[1-9]\d*))$/).test(value) || RegExp(/^(?:[-]?(?:1))$/).test(value));
 								else
 									return RegExp(/^(?:[+]?(?:0|[1-9]\d*))$/).test(value);
@@ -100,7 +95,7 @@ export const Input = (props) => {
 						onChange={props.changed}
 						validations={{
 							isPositiveInt: function (values, value) {
-								if (props.formData[0] == "SampleEdges" || props.formData[0] == "SampleNodes")
+								if (props.formData[0] === "SampleEdges" || props.formData[0] === "SampleNodes")
 									return (RegExp(/^(?:[+]?(?:0|[1-9]\d*))$/).test(value) || RegExp(/^(?:[-]?(?:1))$/).test(value));
 								else
 									return RegExp(/^(?:[+]?(?:0|[1-9]\d*))$/).test(value);
@@ -159,7 +154,7 @@ export const Input = (props) => {
 			break;
 
 		case "string":
-			if (props.formData[1].required || props.formData[0]== 'output_name') {
+			if (props.formData[1].required || props.formData[0]=== 'output_name') {
 				if (props.formData[1].enum) {
 					inputElement = (
 						<SelectFormsy
@@ -304,8 +299,8 @@ export const Input = (props) => {
 							required
 						/>
 					</label>
-					{props.formData[1].outputFlag ? <div className="folderPath">{folderChosenPath == '' ? 'No folder specified' : <b onChange={props.changed} >{folderChosenPath}</b>}</div>
-						: <div className="folderPath">{fileChosen == '' ? 'No file chosen' : <b onChange={props.changed} >{fileChosen}</b>}</div>}
+					{props.formData[1].outputFlag ? <div className="folderPath">{folderChosenPath === '' ? 'No folder specified' : <b onChange={props.changed} >{folderChosenPath}</b>}</div>
+						: <div className="folderPath">{fileChosen === '' ? 'No file chosen' : <b onChange={props.changed} >{fileChosen}</b>}</div>}
 				</div>
 			);
 	}
@@ -327,7 +322,7 @@ export const Input = (props) => {
 			}}
 			header={
 				<div>
-					{props.formData[1].type == undefined && <FMPopup
+					{props.formData[1].type === undefined && <FMPopup
 						showModal={showFMDialog}
 						setShowModal={(p) => setShowFMDialog(p)}
 						handleFMClose={handleFMClose}
@@ -351,7 +346,7 @@ export const Input = (props) => {
 				<div className="flex content">
 					{inputElement}
 					{props.formData[1].description &&
-						(typeFlag == 0 ? <span className='infoIcon' data-tip={props.formData[1].description}>
+						(typeFlag === 0 ? <span className='infoIcon' data-tip={props.formData[1].description}>
 							<Icon  fontSize="small">info</Icon>
 						</span> :
 						<span style={{ marginTop: '38px' }}  data-tip={props.formData[1].description}>

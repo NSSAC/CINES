@@ -1,7 +1,7 @@
 import { FuseAnimate } from "@fuse";
-import { Button, ClickAwayListener, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Fab, Icon, IconButton, Input, Tooltip, Typography } from "@material-ui/core"
+import { Button, ClickAwayListener, Dialog, DialogActions, DialogContent, DialogTitle, Icon, IconButton, Input, Tooltip,} from "@material-ui/core"
 import withReducer from "app/store/withReducer";
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import Breadcrumb from "./Breadcrumb";
 import Filelist from "./FileList";
@@ -9,7 +9,6 @@ import * as Actions from './store/actions';
 import reducer from './store/reducers';
 import clsx from 'clsx';
 import './FileManagerDialog.css'
-import sciductService from "app/services/sciductService";
 import { makeStyles } from "@material-ui/styles";
 
 function FolderPopup({ showModal, handleFMClose, folderPath, setFolderPath, fileTypes })  {
@@ -50,10 +49,6 @@ function FolderPopup({ showModal, handleFMClose, folderPath, setFolderPath, file
     const [targetPath, setTargetPath] = useState('/')
     const [searchbool, setSearchbool] = useState(false);
     const [search, setSearch] = useState("");
-    const [checkFlag, setcheckFlag] = useState(false);
-    const [showDialog, setshowDialog] = useState(false);
-    const [uploadFile, setUploadFile] = useState("");
-    const classes = useStyles();
     var token = localStorage.getItem('id_token')
 
     const onCancel = () => {

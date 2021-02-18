@@ -1,6 +1,4 @@
 import {
-    CheckboxFormsy,
-    FuseChipSelectFormsy,
     RadioGroupFormsy,
     SelectFormsy,
     TextFieldFormsy
@@ -11,7 +9,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Radio from '@material-ui/core/Radio';
 import Typography from '@material-ui/core/Typography';
 import Formsy from 'formsy-react';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
 import { FusePageSimple } from '@fuse';
@@ -31,8 +29,6 @@ const Snap_GetBfsFullDiam = () => {
     const [showDialog, setshowDialog] = useState(false);
     const [spinnerFlag, setSpinnerFlag] = useState(true);
     const history = useHistory();
-    var path = window.location.pathname;
-
 
     const parentGrid = {
         borderTop: '2px solid black',
@@ -50,7 +46,6 @@ const Snap_GetBfsFullDiam = () => {
 
 
     const onFormCancel = () => {
-        // localStorage.removeItem('selectedJobDefinition')
     };
 
     function enableButton() {
@@ -210,7 +205,7 @@ const Snap_GetBfsFullDiam = () => {
         }).then(res => {
             setIsToasterFlag(true)
             setSuccess(true)
-            var timeOutHandle = window.setTimeout(
+             window.setTimeout(
                 delayNavigation
                 , 4000);
 
@@ -218,7 +213,7 @@ const Snap_GetBfsFullDiam = () => {
             (error) => {
                 setSuccess(false)
                 setIsToasterFlag(true)
-                var timeOutHandle = window.setTimeout(handlingError, 4000);
+                 window.setTimeout(handlingError, 4000);
             }
         )
 
