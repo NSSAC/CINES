@@ -99,7 +99,7 @@ function JobDefinitionForm(props) {
   ) => {
     setResponse(responseData);
     var count = 0;
-    if (createFromData !== undefined && pathEnd.split("_")[0] === "snap") {
+    if (createFromData !== undefined) {
       setFlag(true);
       if (inputFileData !== undefined) {
         for (let [index, obj] of inputFileData.entries()) {
@@ -116,7 +116,7 @@ function JobDefinitionForm(props) {
         createFromData[key]["formLabel"] = key;
         // createFromData[key]["value"] = "";
 
-        if (requiredFeildArray.includes(key)) {
+        if (requiredFeildArray !== undefined && requiredFeildArray.includes(key)) {
           createFromData[key]["required"] = true;
         } else {
           createFromData[key]["required"] = false;
