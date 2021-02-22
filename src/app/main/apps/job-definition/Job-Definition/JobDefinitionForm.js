@@ -13,9 +13,6 @@ import Toaster from "./Toaster";
 import Formsy from "formsy-react";
 import { useHistory } from "react-router-dom";
 function JobDefinitionForm(props) {
-  const [showFMDialog, setShowFMDialog] = useState(false);
-  const [showDialog, setshowDialog] = useState(false);
-  const [fileChosen, setFileChosen] = useState("");
   const [formElementsArray, setFormElementsArray] = useState({});
   const [jobSubmissionArray, setJobSubmissionArray] = useState({});
   const [isFormValid, setIsFormValid] = useState(false);
@@ -35,25 +32,13 @@ function JobDefinitionForm(props) {
     borderRight: "1px solid black",
     paddingLeft: "20px",
   };
-  const selectButtonStyle = {
-    backgroundColor: "#61dafb",
-    fontSize: "inherit",
-    margin: "5px",
-    padding: "6px",
-    color: "black",
-  };
+ 
   const outputGrid = {
     borderRight: "1px solid black",
     paddingLeft: "20px",
     borderTop: "2px solid black",
   };
 
-  const buttonStyle = {
-    backgroundColor: "lightgrey",
-    margin: "5px",
-    padding: "6px",
-    color: "black",
-  };
   const history = useHistory();
 
   useEffect(() => {
@@ -142,8 +127,7 @@ function JobDefinitionForm(props) {
         createFromData["extraObj"] = extraObj;
 
       }
-
-      if (outputFiles != undefined) {
+      if (outputFiles !== undefined) {
         let outputContainer = {
           id: 200,
           formLabel: "output_container",
@@ -207,12 +191,12 @@ function JobDefinitionForm(props) {
     for (let key in formElementsArray) {
       if (
         formElementsArray[key].id >= 200 &&
-        formElementsArray[key].formLabel == "output_container"
+        formElementsArray[key].formLabel === "output_container"
       ) {
         requestJson["output_container"] = formElementsArray[key].value;
       } else if (
         formElementsArray[key].id >= 200 &&
-        formElementsArray[key].formLabel == "output_name"
+        formElementsArray[key].formLabel === "output_name"
       ) {
         requestJson["output_name"] = formElementsArray[key].value;
       } else {
@@ -264,14 +248,6 @@ function JobDefinitionForm(props) {
     setIsFormValid(true);
   }
 
-  function showFileManagerDialog() {
-    setShowFMDialog(true);
-  }
-
-  function handleFMClose() {
-    setShowFMDialog(false);
-  }
-
   const onFormCancel = () => {
     // localStorage.removeItem('selectedJobDefinition')
   };
@@ -296,10 +272,10 @@ function JobDefinitionForm(props) {
           <Toaster success={success} id={response.id}></Toaster>
         ) : null}
         <Typography className="h2">
-          &nbsp;{response != "" ? response.id : null}
+          &nbsp;{response !== "" ? response.id : null}
         </Typography>
         <Typography className="h4 mb-12">
-          &nbsp;{response != "" ? response.description : null}
+          &nbsp;{response !== "" ? response.description : null}
         </Typography>
         <div>
           {Object.entries(formElementsArray).length !== 0 ? (
@@ -317,7 +293,7 @@ function JobDefinitionForm(props) {
                         formData={formElement}
                         elementType={formElement.type}
                         value={formElement.value}
-                        buttonClicked={showDialog}
+                        
                         changed={(event) =>
                           inputChangedHandler(event, formElement[0])
                         }
@@ -330,7 +306,6 @@ function JobDefinitionForm(props) {
                         formData={formElement}
                         elementType={formElement.type}
                         value={formElement.value}
-                        buttonClicked={showDialog}
                         changed={(event) =>
                           inputChangedHandler(event, formElement[0])
                         }
@@ -378,10 +353,10 @@ function JobDefinitionForm(props) {
             <Toaster success={success} id={response.id}></Toaster>
           ) : null}
           <Typography className="h2">
-            &nbsp;{response != "" ? response.id : null}
+            &nbsp;{response !== "" ? response.id : null}
           </Typography>
           <Typography className="h4 mb-12">
-            &nbsp;{response != "" ? response.description : null}
+            &nbsp;{response !== "" ? response.description : null}
           </Typography>
         </div>
         <div
