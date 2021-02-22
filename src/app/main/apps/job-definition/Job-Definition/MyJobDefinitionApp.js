@@ -197,12 +197,7 @@ function JobDefinitionApp(props) {
             leftSidebarContent={
                 <MainSidebarContent />
             }
-            rightSidebarHeader={pathEnd === "/" &&
-                <DetailSidebarHeader />
-            }
-            rightSidebarContent={pathEnd === "/" &&
-                <DetailSidebarContent />
-            }
+            
             ref={pageLayout}
             innerScroll
         />
