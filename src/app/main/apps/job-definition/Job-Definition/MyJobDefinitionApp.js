@@ -134,7 +134,7 @@ function JobDefinitionApp(props) {
 {preview && (
                             <FuseAnimate animation="transition.expandIn" delay={200}>
                                 <span>
-                                {pathEnd === "/" && <div className={clsx("flex", props.className)}>
+                                {path.endsWith('job-definition/') && <div className={clsx("flex", props.className)}>
                                         <Tooltip title="Click to search" placement="bottom">
                                             <div onClick={showSearch}>
                                                 <IconButton className="w-64 h-64"><Icon>search</Icon></IconButton>    </div>

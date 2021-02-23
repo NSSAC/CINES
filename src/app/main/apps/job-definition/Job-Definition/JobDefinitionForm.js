@@ -23,6 +23,8 @@ function JobDefinitionForm(props) {
   const [spinnerFlag, setSpinnerFlag] = useState(true);
   var path = window.location.pathname;
   var pathEnd = path.replace("/apps/job-definition/", "");
+  if(pathEnd.endsWith('/'))
+  pathEnd = pathEnd.slice(0, -1)
   const parentGrid = {
     borderTop: "2px solid black",
     borderBottom: "2px solid black",

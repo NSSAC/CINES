@@ -48,7 +48,6 @@ function JobDefinitionFileList(props) {
     ({ JobDefinitionApp }) => JobDefinitionApp.selectedjobid
   );
   var path = window.location.pathname;
-  var pathEnd = path.charAt(path.length - 1);
   var pathArray = window.location.pathname.split("/");
   var pathArrayEnd = pathArray.slice(-1)[0];
 
@@ -160,7 +159,7 @@ function JobDefinitionFileList(props) {
     }
   }
 
-  if (pathEnd !== "/") {
+  if (path.endsWith('job-definition/') == false) {
     var selectedJobDefinition = JSON.parse(
       localStorage.getItem("selectedJobDefinition")
     );

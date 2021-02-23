@@ -39,7 +39,10 @@ function Download(props){
   useEffect(() => {
     InsertData() 
     setTimeout(() => {
-      props.setDownload(false)
+      if (props.setDownloadFlag)
+        props.setDownloadFlag(false)
+      else
+        props.setDownload(false)
     }, 5500);
   },[]) 
 
