@@ -44,7 +44,7 @@ function DetailSidebarHeader(props)
         localStorage.setItem("delete_id",item.id)
         confirmAlert({
           title: 'Confirm',
-          message: 'Are you sure you want to delete ' + `'${item.name}'` + '?',
+          message: `Are you sure you want to delete ${item.name}?`,
           buttons: [
             { 
               label: 'No',
@@ -67,7 +67,7 @@ function DetailSidebarHeader(props)
                    break;
                 }
             }
-            for(var readRights in selectedItem.writeACL){
+            for(readRights in selectedItem.writeACL){
                 if(team === readRights){
                        canRead = true
                        break;

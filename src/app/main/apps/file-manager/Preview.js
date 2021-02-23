@@ -20,7 +20,6 @@ function Preview(props) {
     setPreviewmsg(issue)
   }
 
-  var axios = require('axios');
 
   if (typeof (token) === "string" && (props.type === "pdf" || props.type === "png" || props.type === "jpeg" || props.type === "jpg" || props.type === "excel" || props.type === "mp3" || props.type === "mp4")) {
     var config = {
@@ -73,6 +72,8 @@ function Preview(props) {
   }
 
   useEffect(() => {
+    var axios = require('axios');
+
     setTimeout(() => {
       async function insertData() {
         var request = axios(config)
@@ -127,9 +128,9 @@ function Preview(props) {
     return (
       <div className="flex flex-1 flex-col items-center justify-center">
         {previewmsg === 'unable' ?
-          <Typography className="text-20 mt-16" color="textPrimary">Unable to preview files of this type. Click <a className='cursor-pointer' onClick={() => DownloadFile()}>here</a> to download.</Typography>
+          <Typography className="text-20 mt-16" color="textPrimary">Unable to preview files of this type. Click <a href={() => false}className='cursor-pointer' onClick={() => DownloadFile()}>here</a> to download.</Typography>
           :
-          <Typography className="text-20 mt-16" color="textPrimary">The file size is too large and is not available for preview.  Click <a className='cursor-pointer' onClick={() => DownloadFile('large')}>here</a> to download.</Typography>}
+          <Typography className="text-20 mt-16" color="textPrimary">The file size is too large and is not available for preview.  Click <a href={() => false}className='cursor-pointer' onClick={() => DownloadFile('large')}>here</a> to download.</Typography>}
         <Download setDownloadFlag={(p) => setDownloadFlag(p)} name={props.name} size={props.size} fileId={props.fileId} type={props.type}></Download>
       </div>
     )
@@ -145,16 +146,16 @@ function Preview(props) {
   else if (props.size > 3200000)
     return (
       <div className="flex flex-1 flex-col items-center justify-center">
-        <Typography className="text-20 mt-16" color="textPrimary">The file size is too large and is not available for preview.  Click <a className='cursor-pointer' onClick={() => DownloadFile('large')}>here</a> to download.</Typography>
+        <Typography className="text-20 mt-16" color="textPrimary">The file size is too large and is not available for preview.  Click <a href={() => false}className='cursor-pointer' onClick={() => DownloadFile('large')}>here</a> to download.</Typography>
       </div>
     );
 
   else if ((extentionType === 'text' || extentionType === 'txt'))
-    return (<iframe width="100%" height="400" src={`data:text/plain;,${data}`}>  </iframe>
+    return (<iframe title='extentionType' width="100%" height="400" src={`data:text/plain;,${data}`}>  </iframe>
     );
   else if ((extentionType === 'pdf')) {
     var pdfData = Buffer.from(data, 'binary').toString('base64')
-    return (<iframe width="100%" height="400" src={`data:application/pdf;base64,${pdfData}`}>  </iframe>
+    return (<iframe title='extentionType' width="100%" height="400" src={`data:application/pdf;base64,${pdfData}`}>  </iframe>
     );
   }
 
@@ -350,7 +351,7 @@ function Preview(props) {
   else
     return (
       <div className="flex flex-1 flex-col items-center justify-center">
-        <Typography className="text-20 mt-16" color="textPrimary">Unable to preview files of this type. Click <a className='cursor-pointer' onClick={() => DownloadFile("unable")}>here</a> to download.</Typography>
+        <Typography className="text-20 mt-16" color="textPrimary">Unable to preview files of this type. Click <a href={() => false}className='cursor-pointer' onClick={() => DownloadFile("unable")}>here</a> to download.</Typography>
       </div>
     );
 }

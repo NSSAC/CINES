@@ -1,13 +1,12 @@
 import React from 'react'
-import { Switch, Route } from 'react-router-dom'
+// import { Switch, Route } from 'react-router-dom'
 import IdleTimer from 'react-idle-timer';
 //import { DashboardPage } from './dashboard/Dashboard'
 import {IdleTimeOutDialog}from  'app/main/Idletime-dialog/Idledialog'
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import sciductService from 'app/services/sciductService';
 
-//import './App.css'
-import * as  HomeContent from 'app/main/cines-static/home/HomeContent'
+// import * as  HomeContent from 'app/main/cines-static/home/HomeContent'
 
 var timeOutHandle
 class IdleTimerComponent extends React.Component {

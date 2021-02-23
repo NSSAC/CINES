@@ -1,5 +1,5 @@
 import React from 'react';
-import {Icon, Typography, Link} from '@material-ui/core';
+import {Icon} from '@material-ui/core';
 import { withRouter } from 'react-router-dom';
 
 

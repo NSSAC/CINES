@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { Typography,Tabs,Tab, Icon, IconButton, Modal} from '@material-ui/core';
+import { Typography,Tabs,Tab, Icon, IconButton} from '@material-ui/core';
 import {  InsertDriveFile as FileIcon, ListAlt as MetadataIcon, History as ProvenanceIcon, Share as ShareIcon  } from "@material-ui/icons";
 import {makeStyles} from '@material-ui/styles';
 import {FuseAnimate} from '@fuse';
@@ -75,7 +75,7 @@ function DetailSidebarContent(props)
         }
     }
     
-    if(editItem && selectedItem && !props.editContent && path == lastPath ){
+    if(editItem && selectedItem && !props.editContent && path === lastPath ){
          if(editItem !== selectedItem.id){
                 (confirmAlert({
                     title: 'Confirm',
@@ -157,7 +157,7 @@ function DetailSidebarContent(props)
     }
 
     const diffInMeta =(obj1, obj2) => {
-        if(metaBool && currName == selectedItem.name){
+        if(metaBool && currName === selectedItem.name){
             var updatedMeta = JSON.parse(localStorage.getItem("tempMeta"))
             obj2 = updatedMeta
         }
@@ -228,7 +228,7 @@ function DetailSidebarContent(props)
         if(data.length > 0){
         var config = {
             method: 'patch',
-            url: `https://sciduct.bii.virginia.edu/filesvc/file${path}` + `${selectedItem.name}` ,
+            url: `https://sciduct.bii.virginia.edu/filesvc/file${path}${selectedItem.name}` ,
             headers: { 
               'Content-Type': 'application/json-patch+json', 
               'Authorization': token 
@@ -397,8 +397,8 @@ function DetailSidebarContent(props)
                 }))}
           </NavigationPrompt> 
 
-                {UsermetaSuccess && currName == selectedItem.name && props.editContent && 
-                   <div> {ToastsStore.success(`'${selectedItem.name}'` + " Usermeta modified successfully")}
+                {UsermetaSuccess && currName === selectedItem.name && props.editContent && 
+                   <div> {ToastsStore.success(`'${selectedItem.name}' Usermeta modified successfully`)}
                         <ToastsContainer store={ToastsStore} position={ToastsContainerPosition.TOP_RIGHT}/></div>
                 }
 

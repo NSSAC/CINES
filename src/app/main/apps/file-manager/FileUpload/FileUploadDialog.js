@@ -298,8 +298,7 @@ export const FileUpload = ({ fileTypes, setUploadFile, dialogTargetPath, setShow
   const handleDrop = e => {
     e.preventDefault();
     const draggedFiles = [];
-    let id = Number;
-    if ((!dialogTargetPath && e.dataTransfer.items) || (dialogTargetPath && e.dataTransfer.items.length == 1)) {
+    if ((!dialogTargetPath && e.dataTransfer.items) || (dialogTargetPath && e.dataTransfer.items.length === 1)) {
       Array.from(e.dataTransfer.items).forEach((item, i) => {
 
         if (item.kind === "file") {

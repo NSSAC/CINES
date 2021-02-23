@@ -25,6 +25,9 @@ function DeleteFile(props){
         DeleteData()
     },[]) 
 
+    if(success){}
+
+
   function DeleteData() {
       var request = axios(config)
        request.then(response=> {
@@ -50,7 +53,7 @@ return (
  )
 else 
 return (
-     <div> {ToastsStore.success(`'${props.name}'` + " deleted successfully")}
+     <div> {ToastsStore.success(`'${props.name}'  deleted successfully`)}
      <ToastsContainer store={ToastsStore} position={ToastsContainerPosition.TOP_RIGHT}/></div>
  )
 }
