@@ -215,7 +215,7 @@ function FileList(props) {
         else if (Object.values(files).length === 0) {
             return (
                 <div className="flex flex-1 flex-col items-center justify-center mt-20">
-                    <Typography className="text-18 mt-16" color="textPrimary">This folder is empty.</Typography>
+                    <Typography className="text-18 mt-16" color="textPrimary">This folder is empty &nbsp; OR &nbsp; No such file / folder exists.</Typography>
                 </div>
             )
         }
@@ -252,6 +252,14 @@ function FileList(props) {
             <div className="flex flex-1 flex-col items-center justify-center mt-40">
                 <Typography className="text-20 mt-16" color="textPrimary">Loading</Typography>
                 <LinearProgress className="w-xs" color="secondary" />
+            </div>
+        )
+    }
+
+    else if (props.containerFlag === "error") {
+        return (
+            <div className="flex flex-1 flex-col items-center justify-center">
+                <Typography className="text-20 mt-16" color="textPrimary">No such file / folder exists.</Typography>
             </div>
         )
     }

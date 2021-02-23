@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { ClickAwayListener, Tooltip, Typography, Icon, IconButton, Input, Fab } from '@material-ui/core';
 import { FuseAnimate, FusePageSimple } from '@fuse';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import withReducer from 'app/store/withReducer';
 import * as Actions from './store/actions';
 import reducer from './store/reducers';
@@ -28,10 +28,13 @@ function FileManagerApp(props) {
     const [prompt, setPrompt] = useState(true);
     const [isFolder, setIsFolder] = useState(false);
     const [containerFlag, setContainerFlag] = useState("");
+    const files = useSelector(({ fileManagerApp }) => fileManagerApp.files);
     var path = window.location.pathname
     var pathEnd = path.charAt(path.length - 1);
     var token = localStorage.getItem('id_token')
-    let tokenData = sciductService.getTokenData().teams;
+    let tokenData = []
+    if(token !== null)
+       tokenData = sciductService.getTokenData().teams;
     const dispatch = useDispatch();
     const pageLayout = useRef(null);
     var targetPath = props.location.pathname.replace("/apps/files", "")
@@ -87,6 +90,15 @@ function FileManagerApp(props) {
                 }
             };
         }
+        else {
+            var config = {
+                method: 'get',
+                url: `https://sciduct.bii.virginia.edu/filesvc/file${targetMeta}`,
+                headers: {
+                    'Accept': 'application/vsmetadata+json',
+                }
+            };
+        }
         addData()
         function addData() {
             const request = axios(config)
@@ -114,7 +126,7 @@ function FileManagerApp(props) {
                 if (metaData !== undefined)
                     checkPermission(metaData, ownerId, type, readPermission)
             }).catch(err => {
-                setContainerFlag(false)
+                 setContainerFlag('error')
             })
         }
     }
@@ -195,7 +207,7 @@ function FileManagerApp(props) {
                                 props={props}
                                 handleClose={handleClose} />
                         </div>
-                        {(preview && containerFlag) && (
+                        {((containerFlag && isFolder && (Object.values(files).length !== 0)) || targetMeta === '') && (
                             <FuseAnimate animation="transition.expandIn" delay={200}>
                                 <span>
                                     <div className={clsx("flex", props.className)}>
@@ -266,10 +278,10 @@ function FileManagerApp(props) {
             leftSidebarContent={
                 <MainSidebarContent />
             }
-            rightSidebarHeader={((containerFlag === true && isFolder) || targetMeta === '') &&
+            rightSidebarHeader={((containerFlag && isFolder && (Object.values(files).length !== 0)) || targetMeta === '') &&
                 <DetailSidebarHeader pageLayout={pageLayout} />
             }
-            rightSidebarContent={((containerFlag === true && isFolder) || targetMeta === '') &&
+            rightSidebarContent={((containerFlag && isFolder && (Object.values(files).length !== 0)) || targetMeta === '') &&
                 <DetailSidebarContent pageLayout={pageLayout} setPrompt={(p) => setPrompt(p)} editContent={editContent} setEditContent={(p) => setEditContent(p)} />
             }
             ref={pageLayout}
