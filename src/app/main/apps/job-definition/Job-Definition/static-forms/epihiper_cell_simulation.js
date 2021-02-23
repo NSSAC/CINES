@@ -114,7 +114,7 @@ const Epihiper_cell_simulation = () => {
                     createFromData[keyName] = obj;
                 }
             }
-            if (outputFiles != undefined) {
+            if (outputFiles !== undefined) {
 
                 let outputContainer = {
                     "id": 200,
@@ -188,10 +188,10 @@ const Epihiper_cell_simulation = () => {
         }
         for (let key in formElementsArray) {
 
-            if (formElementsArray[key].id >= 200 && formElementsArray[key].formLabel == "output_container") {
+            if (formElementsArray[key].id >= 200 && formElementsArray[key].formLabel === "output_container") {
                 requestJson['output_container'] = formElementsArray[key].value
             }
-            else if (formElementsArray[key].id >= 200 && formElementsArray[key].formLabel == "output_name") {
+            else if (formElementsArray[key].id >= 200 && formElementsArray[key].formLabel === "output_name") {
                 requestJson['output_name'] = formElementsArray[key].value
             }
             else {
@@ -208,8 +208,6 @@ const Epihiper_cell_simulation = () => {
     }
     function onFormSubmit(requestJson) {
         //createSubmissionData() 
-        var path = window.location.pathname.replace("/apps/job-definition/", "")
-        var jobDefinition = path
         const userToken = localStorage.getItem('id_token')
         axios({
             method: 'post',
@@ -232,7 +230,7 @@ const Epihiper_cell_simulation = () => {
             (error) => {
                 setSuccess(false)
                 setIsToasterFlag(true)
-               window.setTimeout(handlingError, 4000);
+                window.setTimeout(handlingError, 4000);
             }
         )
 
@@ -240,7 +238,7 @@ const Epihiper_cell_simulation = () => {
 
     function handlingError() {
         setIsToasterFlag(false);
-      }
+    }
 
     function delayNavigation() {
         history.push('/apps/my-jobs/');
@@ -320,12 +318,11 @@ const Epihiper_cell_simulation = () => {
                                                 />
                                                 {formElementsArray['endTick'].description && (description(formElementsArray['endTick'].description))}
                                             </Grid>
-                                            {Object.entries(formElementsArray).filter(data => { if (data[1].type == undefined) return data }).map((formElement) => (
+                                            {Object.entries(formElementsArray).filter(data => { if (data[1].type === undefined) return data; return null }).map((formElement) => (
                                                 <Grid style={childGrid} item container xs={12} sm={6}>
                                                     <Input
                                                         key={formElement.id}
                                                         formData={formElement}
-                                                        key={formElement.id}
                                                         elementType={formElement.type}
                                                         value={formElement.value}
                                                         buttonClicked={showDialog}

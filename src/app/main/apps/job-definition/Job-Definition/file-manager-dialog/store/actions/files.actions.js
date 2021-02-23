@@ -18,7 +18,7 @@ export function getFiles(path, type, id)
     }
 
     if(typeof(token) == "object") {
-      var config = {
+     config = {
         method: 'get',
         url: `https://sciduct.bii.virginia.edu/filesvc/file/${path}`,
         headers: { 

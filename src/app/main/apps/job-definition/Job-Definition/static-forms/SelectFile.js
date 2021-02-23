@@ -7,7 +7,6 @@ import {
 	TextFieldFormsy
 } from '@fuse/components/formsy';
 import { FusePageSimple } from '@fuse';
-import { useDispatch } from 'react-redux';
 
 export const Input = (props) => {
 
@@ -57,8 +56,8 @@ export const Input = (props) => {
 					required
 				/>
 			</label>
-			{props.formData[1].outputFlag ? <div className="folderPath">{folderChosenPath == '' ? 'No folder specified' : <b onChange={props.changed} >{folderChosenPath}</b>}</div>
-				: <div className="folderPath">{fileChosen == '' ? 'No file chosen' : <b onChange={props.changed} >{fileChosen}</b>}</div>}
+			{props.formData[1].outputFlag ? <div className="folderPath">{folderChosenPath === '' ? 'No folder specified' : <b onChange={props.changed} >{folderChosenPath}</b>}</div>
+				: <div className="folderPath">{fileChosen === '' ? 'No file chosen' : <b onChange={props.changed} >{fileChosen}</b>}</div>}
 		</div>
 	);
 
@@ -93,7 +92,7 @@ export const Input = (props) => {
 			}}
 			header={
 				<div>
-					{props.formData[1].type==undefined && <FMPopup
+					{props.formData[1].type===undefined && <FMPopup
 						showModal={showFMDialog}
 						setShowModal={(p) => setShowFMDialog(p)}
 						handleFMClose={handleFMClose}

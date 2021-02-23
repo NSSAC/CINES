@@ -172,10 +172,10 @@ const Snap_GetBfsFullDiam = () => {
         }
         for (let key in formElementsArray) {
 
-            if (formElementsArray[key].id >= 200 && formElementsArray[key].formLabel == "output_container") {
+            if (formElementsArray[key].id >= 200 && formElementsArray[key].formLabel === "output_container") {
                 requestJson['output_container'] = formElementsArray[key].value
             }
-            else if (formElementsArray[key].id >= 200 && formElementsArray[key].formLabel == "output_name") {
+            else if (formElementsArray[key].id >= 200 && formElementsArray[key].formLabel === "output_name") {
                 requestJson['output_name'] = formElementsArray[key].value
             }
             else {
@@ -190,7 +190,6 @@ const Snap_GetBfsFullDiam = () => {
 
     function onFormSubmit(requestJson) {
         var path = window.location.pathname.replace("/apps/job-definition/", "")
-        var jobDefinition = path
         const userToken = localStorage.getItem('id_token')
         axios({
             method: 'post',
@@ -356,12 +355,11 @@ const Snap_GetBfsFullDiam = () => {
                                                 </SelectFormsy>
                                                 {formElementsArray['graphType'].description && (description(formElementsArray['graphType'].description))}
                                             </Grid>
-                                            {Object.entries(formElementsArray).filter(data => { if (data[1].type == undefined) return data }).map((formElement) => (
+                                            {Object.entries(formElementsArray).filter(data => { if (data[1].type === undefined) return data; return null }).map((formElement) => (
                                                 <Grid style={childGrid} item container xs={12} sm={6}>
                                                     <Input
                                                         key={formElement.id}
                                                         formData={formElement}
-                                                        key={formElement.id}
                                                         elementType={formElement.type}
                                                         value={formElement.value}
                                                         buttonClicked={showDialog}

@@ -1,7 +1,6 @@
 export const GET_FILES = "[FILE MANAGER APP] GET FILES";
 var token = localStorage.getItem("id_token");
 let arr = [];
-let url1 = "";
 
 export function getJobDefinitionFiles() {
   arr = [];

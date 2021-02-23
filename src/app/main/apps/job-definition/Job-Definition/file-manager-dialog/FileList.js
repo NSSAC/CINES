@@ -90,7 +90,7 @@ function Filelist(props) {
                 break;
             }
         }
-        if (data.name !== "" && reqType && (props.search === "" || (data.name.toLowerCase().includes(props.search.toLowerCase()) || data.type.toLowerCase().includes(props.search.toLowerCase()) || data.owner_id.toLowerCase().includes(props.search.toLowerCase())))) return data
+        if (data.name !== "" && reqType && (props.search === "" || (data.name.toLowerCase().includes(props.search.toLowerCase()) || data.type.toLowerCase().includes(props.search.toLowerCase()) || data.owner_id.toLowerCase().includes(props.search.toLowerCase())))) return data; return null
     })
 
 

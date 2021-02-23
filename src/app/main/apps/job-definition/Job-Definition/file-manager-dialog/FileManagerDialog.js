@@ -11,38 +11,8 @@ import clsx from 'clsx';
 import './FileManagerDialog.css'
 import { FileUpload } from "app/main/apps/file-manager/FileUpload/FileUploadDialog";
 import sciductService from "app/services/sciductService";
-import { makeStyles } from "@material-ui/styles";
 
 function FMPopup({ showModal, setShowModal, handleFMClose, setFileChosen, setFileChosenPath, fileTypes})  {
-
-    const useStyles = makeStyles({
-        table: {
-          minWidth: 450,
-        },
-        customeButton: {
-          alignSelf: 'baseline',
-          border: '2px solid ',
-          color: 'black',
-          backgroundColor: 'white',
-          width: '100px',
-          height: '31px',
-    
-        },
-        input: {
-          padding: 10,
-          display: "none",
-        },
-        typeIcon: {
-          '&.clear:before': {
-            content: "'clear'",
-            color: 'white'
-          },
-          '&:before': {
-            content: "'clear'",
-            color: '#1565C0'
-          }
-        }
-    })
 
     const dispatch = useDispatch()
     const files = useSelector(({fMApp}) => fMApp.files);
@@ -74,6 +44,7 @@ function FMPopup({ showModal, setShowModal, handleFMClose, setFileChosen, setFil
                 }
                 
             }
+            return null
         })
     }
 

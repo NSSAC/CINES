@@ -13,7 +13,6 @@ import {
 	TextFieldFormsy
 } from '@fuse/components/formsy';
 import { FusePageSimple } from '@fuse';
-import { useDispatch } from 'react-redux';
 import ReactTooltip from 'react-tooltip';
 
 export const Input = (props) => {

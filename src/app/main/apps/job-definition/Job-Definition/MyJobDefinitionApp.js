@@ -6,8 +6,8 @@ import withReducer from 'app/store/withReducer';
 import * as Actions from './store/actions';
 import reducer from './store/reducers';
 import JobDefinitionFileList from './JobDefinitionFileList';
-import DetailSidebarHeader from './DetailSidebarHeader';
-import DetailSidebarContent from './DetailSidebarContent';
+// import DetailSidebarHeader from './DetailSidebarHeader';
+// import DetailSidebarContent from './DetailSidebarContent';
 import MainSidebarHeader from './MainSidebarHeader';
 import MainSidebarContent from './MainSidebarContent';
 import { MyJobFilter } from 'app/main/apps/my-jobs/MyJobFilter-dialog/Filterdialog';
@@ -22,9 +22,7 @@ function JobDefinitionApp(props) {
     const [searchbool, setSearchbool] = useState(false);
     const [search, setSearch] = useState("");
     const [preview, setPreview] = useState(true);
-
     var path = window.location.pathname
-    var pathEnd = path.charAt(path.length - 1);
 
     useEffect(() => {
         let start = 0

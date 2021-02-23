@@ -20,7 +20,7 @@ function Breadcrumb(props)
    function onclickRoute(path) {
         props.setSearch("")
         var target = props.targetPath.split(path)
-        if(target.length == 1)
+        if(target.length === 1)
          props.setTargetPath("/")
         else
          props.setTargetPath(target[0] + path + "/")

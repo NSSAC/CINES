@@ -7,7 +7,7 @@ import Grid from '@material-ui/core/Grid';
 import { FusePageSimple } from '@fuse';
 import axios from 'axios';
 import { Input } from './SelectFile.js'
-import { Icon, LinearProgress, Tooltip } from '@material-ui/core';
+import { LinearProgress } from '@material-ui/core';
 import Toaster from "../Toaster";
 
 const Snap_GetBfsFullDiam = () => {
@@ -48,7 +48,7 @@ const Snap_GetBfsFullDiam = () => {
     useEffect(() => {
         setIsToasterFlag(false);
         var userToken = localStorage.getItem('id_token');
-       
+
         axios({
             method: 'get',
             url: 'https://sciduct.bii.virginia.edu/jobsvc/job_definition/epihiper_db_service',
@@ -160,10 +160,10 @@ const Snap_GetBfsFullDiam = () => {
         }
         for (let key in formElementsArray) {
 
-            if (formElementsArray[key].id >= 200 && formElementsArray[key].formLabel == "output_container") {
+            if (formElementsArray[key].id >= 200 && formElementsArray[key].formLabel === "output_container") {
                 requestJson['output_container'] = formElementsArray[key].value
             }
-            else if (formElementsArray[key].id >= 200 && formElementsArray[key].formLabel == "output_name") {
+            else if (formElementsArray[key].id >= 200 && formElementsArray[key].formLabel === "output_name") {
                 requestJson['output_name'] = formElementsArray[key].value
             }
             else {
@@ -177,9 +177,8 @@ const Snap_GetBfsFullDiam = () => {
         requestJson.input = input
         setJobSubmissionArray({ ...requestJson })
         onFormSubmit(requestJson)
-       }
+    }
     function onFormSubmit(requestJson) {
-        var path = window.location.pathname.replace("/apps/job-definition/", "")
         const userToken = localStorage.getItem('id_token')
         axios({
             method: 'post',
@@ -202,7 +201,7 @@ const Snap_GetBfsFullDiam = () => {
             (error) => {
                 setSuccess(false)
                 setIsToasterFlag(true)
-                 window.setTimeout(handlingError, 4000);
+                window.setTimeout(handlingError, 4000);
             }
         )
 
@@ -210,7 +209,7 @@ const Snap_GetBfsFullDiam = () => {
 
     function handlingError() {
         setIsToasterFlag(false);
-      }
+    }
 
     function delayNavigation() {
         history.push('/apps/my-jobs/');
@@ -250,12 +249,11 @@ const Snap_GetBfsFullDiam = () => {
                                     >
                                         {console.log(formElementsArray)}
                                         <Grid style={parentGrid} container spacing={3}>
-                                            {Object.entries(formElementsArray).filter(data => { if (data[1].type == undefined) return data }).map((formElement) => (
+                                            {Object.entries(formElementsArray).filter(data => { if (data[1].type === undefined) return data; else return null }).map((formElement) => (
                                                 <Grid style={childGrid} item container xs={12} sm={6}>
                                                     <Input
                                                         key={formElement.id}
                                                         formData={formElement}
-                                                        key={formElement.id}
                                                         elementType={formElement.type}
                                                         value={formElement.value}
                                                         buttonClicked={showDialog}

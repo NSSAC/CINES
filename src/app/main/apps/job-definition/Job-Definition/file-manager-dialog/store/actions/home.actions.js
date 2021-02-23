@@ -17,7 +17,7 @@ export function getHome(path)
     }
 
     if(typeof(token) == "object") {
-      var config = {
+     config = {
         method: 'get',
         url: `https://sciduct.bii.virginia.edu/filesvc/file/home/${path}`,
         headers: { 

@@ -9,51 +9,19 @@ import * as Actions from './store/actions';
 import reducer from './store/reducers';
 import clsx from 'clsx';
 import './FileManagerDialog.css'
-import { makeStyles } from "@material-ui/styles";
 
 function FolderPopup({ showModal, handleFMClose, folderPath, setFolderPath, fileTypes })  {
 
-    const useStyles = makeStyles({
-        table: {
-          minWidth: 450,
-        },
-        customeButton: {
-          alignSelf: 'baseline',
-          border: '2px solid ',
-          color: 'black',
-          backgroundColor: 'white',
-          width: '100px',
-          height: '31px',
-    
-        },
-        input: {
-          padding: 10,
-          display: "none",
-        },
-        typeIcon: {
-          '&.clear:before': {
-            content: "'clear'",
-            color: 'white'
-          },
-          '&:before': {
-            content: "'clear'",
-            color: '#1565C0'
-          }
-        }
-    })
-
     const dispatch = useDispatch()
     const files = useSelector(({fMApp}) => fMApp.home);
-    const selectedItemId = useSelector(({fMApp}) => fMApp.selectedItemId);
     const selectedItem = useSelector(({fMApp}) => files[fMApp.selectedItemId]);
     const [targetPath, setTargetPath] = useState('/')
     const [searchbool, setSearchbool] = useState(false);
     const [search, setSearch] = useState("");
-    var token = localStorage.getItem('id_token')
 
     const onCancel = () => {
         setSearch("")
-        if(folderPath == '')
+        if(folderPath === '')
           setTargetPath("/")
         else 
           setTargetPath(localStorage.getItem('selectedFolder'))
