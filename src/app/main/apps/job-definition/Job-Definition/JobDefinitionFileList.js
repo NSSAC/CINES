@@ -23,12 +23,6 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.text.secondary,
   },
 }));
-const useStyles2 = makeStyles({
-  table: {
-    minWidth: 500,
-  },
-});
-
 function JobDefinitionFileList(props) {
   const [page, setPage] = React.useState(0);
   const [searchPage, setSearchPage] = React.useState(0);
@@ -37,8 +31,6 @@ function JobDefinitionFileList(props) {
   const [spinnerFlag, setSpinnerFlag] = useState(true);
   const [selectedFlag, setSelectedFlag] = useState(true);
   const [searchString, setPreviousString] = useState("");
-  const [rowLength, setrowLength] = useState();
-  
   var lengthOfRow;
   const dispatch = useDispatch();
   const jobDefinitionData = useSelector(
@@ -53,19 +45,10 @@ function JobDefinitionFileList(props) {
 
   var jobDefinitionList = Object.values(jobDefinitionData);
   var totalRecords = "";
-  var contentRange = "";
-  var lastResult = "";
   const [selectedId, setSelectedId] = useState();
   if (jobDefinitionList.length !== 0) {
-
-    contentRange = jobDefinitionList[2]["content-range"];
     totalRecords = jobDefinitionList[2]["content-range"].split("/")[1];
-    //setSelectedId(jobDefinitionList[0].id)
-    lastResult = jobDefinitionList[2]["content-range"]
-      .split("/")[0]
-      .split("-")[1];
     jobDefinitionList = jobDefinitionList[1];
-
     var searchResult = jobDefinitionList.filter((data) => {
       if (
         data.id !== "" &&
@@ -87,15 +70,10 @@ function JobDefinitionFileList(props) {
     }
   }
   const classes = useStyles();
-
-  const tableClasses = useStyles2();
-  const emptyRows =
-    rowsPerPage -
-    Math.min(rowsPerPage, jobDefinitionList.length - page * rowsPerPage);
   useEffect(() => {
       setSpinnerFlag(false)
     setPreviousString(props.search);
-    if (props.search != searchString) {
+    if (props.search !== searchString) {
       setSearchPage(0);
       setSearchRowperPage(10);
     }
@@ -123,10 +101,7 @@ function JobDefinitionFileList(props) {
     setSearchPage(currentPage);
   };
 
-  const arrLength = (rowLength) => {
-    setrowLength(rowLength);
-  };
-
+ 
   const onSelectClick = (row) => {
     localStorage.setItem("selectedJobDefinition", JSON.stringify(row));
     console.log(row);
@@ -142,7 +117,6 @@ function JobDefinitionFileList(props) {
     let currentPage = page - 1;
     setPage(currentPage);
   };
-  const pageCount = (Math.round(jobDefinitionList.length / 10) * 10) / 10;
   function onRowClick(selectedId) {
     setSelectedFlag(false);
     setSelectedId(selectedId);
@@ -159,7 +133,7 @@ function JobDefinitionFileList(props) {
     }
   }
 
-  if (path.endsWith('job-definition/') == false) {
+  if (path.endsWith('job-definition/') === false) {
     var selectedJobDefinition = JSON.parse(
       localStorage.getItem("selectedJobDefinition")
     );
@@ -197,7 +171,7 @@ function JobDefinitionFileList(props) {
         <FuseAnimate animation="transition.slideUpIn" delay={300}>
           {jobDefinitionList.length > 0 ? (
             <React.Fragment>
-              {(rowsPerPage > 0 && props.search == ""
+              {(rowsPerPage > 0 && props.search === ""
                 ? searchResult.slice(
                     page * rowsPerPage,
                     page * rowsPerPage + rowsPerPage
@@ -275,7 +249,7 @@ function JobDefinitionFileList(props) {
           )}
         </FuseAnimate>
 
-        {props.search == "" ? (
+        {props.search === "" ? (
           <div>
             <Button
               disabled={page * rowsPerPage + 1 === 1}
