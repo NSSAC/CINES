@@ -1,6 +1,4 @@
 import {
-    CheckboxFormsy,
-    FuseChipSelectFormsy,
     RadioGroupFormsy,
     SelectFormsy,
     TextFieldFormsy
@@ -11,41 +9,26 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Radio from '@material-ui/core/Radio';
 import Typography from '@material-ui/core/Typography';
 import Formsy from 'formsy-react';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
 import { FusePageSimple } from '@fuse';
 import axios from 'axios';
 import { Input } from './SelectFile.js'
 import Toaster from "../Toaster";
-import FMPopup from '../file-manager-dialog/FileManagerDialog.js';
 import { Icon, LinearProgress, Tooltip } from '@material-ui/core';
 
 const Snap_GetBfsFullDiam = () => {
     const [isFormValid, setIsFormValid] = useState(false);
-    const [showFMDialog, setShowFMDialog] = useState(false);
-    const [fileChosen, setFileChosen] = useState('');
-    const [fileChosenPath, setFileChosenPath] = useState('');
-    const formRef = useRef(null);
     const [formElementsArray, setFormElementsArray] = useState({});
     const [jobSubmissionArray, setJobSubmissionArray] = useState({})
-    const [flag, setFlag] = useState(false)
+    const [flag, setFlag] = useState(true)
     const [response, setResponse] = useState('')
-    const [success, setSuccess] = useState(false);
+    const [success, setSuccess] = useState();
     const [isToasterFlag, setIsToasterFlag] = useState(false);
     const [showDialog, setshowDialog] = useState(false);
     const [spinnerFlag, setSpinnerFlag] = useState(true);
     const history = useHistory();
-    var path = window.location.pathname;
-    var pathEnd = path.replace("/apps/job-definition/", "");
-
-    const selectButtonStyle = {
-        backgroundColor: '#61dafb',
-        fontSize: 'inherit',
-        margin: '5px',
-        padding: '6px',
-        color: 'black'
-    };
 
     const parentGrid = {
         borderTop: '2px solid black',
@@ -63,7 +46,6 @@ const Snap_GetBfsFullDiam = () => {
 
 
     const onFormCancel = () => {
-        // localStorage.removeItem('selectedJobDefinition')
     };
 
     function enableButton() {
@@ -94,9 +76,7 @@ const Snap_GetBfsFullDiam = () => {
                     var responseData = res.data;
 
                     creatForm(createFromData, inputFileData, outputFiles, requiredFeildArray, responseData);
-                    return (
-                        setSuccess(true)
-                    )
+
                 }
             },
             (error) => {
@@ -110,7 +90,7 @@ const Snap_GetBfsFullDiam = () => {
         setResponse(responseData)
         var count = 0;
         if (createFromData !== undefined) {
-            setFlag(false)
+            setFlag(true)
             if (inputFileData !== undefined) {
                 for (let [index, obj] of inputFileData.entries()) {
                     obj['id'] = index;
@@ -144,7 +124,7 @@ const Snap_GetBfsFullDiam = () => {
         }
 
         else {
-            setFlag(true)
+            setFlag(false)
         }
     };
 
@@ -192,10 +172,10 @@ const Snap_GetBfsFullDiam = () => {
         }
         for (let key in formElementsArray) {
 
-            if (formElementsArray[key].id >= 200 && formElementsArray[key].formLabel == "output_container") {
+            if (formElementsArray[key].id >= 200 && formElementsArray[key].formLabel === "output_container") {
                 requestJson['output_container'] = formElementsArray[key].value
             }
-            else if (formElementsArray[key].id >= 200 && formElementsArray[key].formLabel == "output_name") {
+            else if (formElementsArray[key].id >= 200 && formElementsArray[key].formLabel === "output_name") {
                 requestJson['output_name'] = formElementsArray[key].value
             }
             else {
@@ -210,7 +190,6 @@ const Snap_GetBfsFullDiam = () => {
 
     function onFormSubmit(requestJson) {
         var path = window.location.pathname.replace("/apps/job-definition/", "")
-        var jobDefinition = path
         const userToken = localStorage.getItem('id_token')
         axios({
             method: 'post',
@@ -225,19 +204,23 @@ const Snap_GetBfsFullDiam = () => {
         }).then(res => {
             setIsToasterFlag(true)
             setSuccess(true)
-            var timeOutHandle = window.setTimeout(
+             window.setTimeout(
                 delayNavigation
-                , 3000);
+                , 4000);
 
         },
             (error) => {
                 setSuccess(false)
                 setIsToasterFlag(true)
-
+                 window.setTimeout(handlingError, 4000);
             }
         )
 
     }
+
+    function handlingError() {
+        setIsToasterFlag(false);
+      }
 
     function delayNavigation() {
         history.push('/apps/my-jobs/');
@@ -252,7 +235,7 @@ const Snap_GetBfsFullDiam = () => {
             </div>
         );
 
-    if (spinnerFlag === false)
+    if (spinnerFlag === false  && flag === true)
         return (
             <FusePageSimple
                 classes={{
@@ -296,7 +279,7 @@ const Snap_GetBfsFullDiam = () => {
                                             <Grid style={childGrid} item container xs={12} sm={6}>
                                                 <TextFieldFormsy
                                                     className="my-16 inputStyle"
-                                                    type="number"
+                                                    type="text"
                                                     name={formElementsArray['NTestNodes'].formLabel}
                                                     style={{ width: '18px' }}
                                                     value=""
@@ -316,7 +299,7 @@ const Snap_GetBfsFullDiam = () => {
                                             <Grid style={childGrid} item container xs={12} sm={6}>
                                                 <TextFieldFormsy
                                                     className="my-16 inputStyle"
-                                                    type="number"
+                                                    type="text"
                                                     name={formElementsArray['desCol'].formLabel}
                                                     style={{ width: '18px' }}
                                                     value=""
@@ -336,7 +319,7 @@ const Snap_GetBfsFullDiam = () => {
                                             <Grid style={childGrid} item container xs={12} sm={6}>
                                                 <TextFieldFormsy
                                                     className="my-16 inputStyle"
-                                                    type="number"
+                                                    type="text"
                                                     name={formElementsArray['srcCol'].formLabel}
                                                     style={{ width: '18px' }}
                                                     value=""
@@ -372,12 +355,11 @@ const Snap_GetBfsFullDiam = () => {
                                                 </SelectFormsy>
                                                 {formElementsArray['graphType'].description && (description(formElementsArray['graphType'].description))}
                                             </Grid>
-                                            {Object.entries(formElementsArray).filter(data => { if (data[1].type == undefined) return data }).map((formElement) => (
+                                            {Object.entries(formElementsArray).filter(data => { if (data[1].type === undefined) return data; return null }).map((formElement) => (
                                                 <Grid style={childGrid} item container xs={12} sm={6}>
                                                     <Input
                                                         key={formElement.id}
                                                         formData={formElement}
-                                                        key={formElement.id}
                                                         elementType={formElement.type}
                                                         value={formElement.value}
                                                         buttonClicked={showDialog}

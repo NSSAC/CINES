@@ -1,7 +1,7 @@
 import { FuseAnimate } from "@fuse";
-import { Button, ClickAwayListener, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Fab, Icon, IconButton, Input, Tooltip, Typography } from "@material-ui/core"
+import { Button, ClickAwayListener, Dialog, DialogActions, DialogContent, DialogTitle, Fab, Icon, IconButton, Input, Tooltip } from "@material-ui/core"
 import withReducer from "app/store/withReducer";
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import Breadcrumb from "./Breadcrumb";
 import Filelist from "./FileList";
@@ -11,42 +11,11 @@ import clsx from 'clsx';
 import './FileManagerDialog.css'
 import { FileUpload } from "app/main/apps/file-manager/FileUpload/FileUploadDialog";
 import sciductService from "app/services/sciductService";
-import { makeStyles } from "@material-ui/styles";
 
 function FMPopup({ showModal, setShowModal, handleFMClose, setFileChosen, setFileChosenPath, fileTypes})  {
 
-    const useStyles = makeStyles({
-        table: {
-          minWidth: 450,
-        },
-        customeButton: {
-          alignSelf: 'baseline',
-          border: '2px solid ',
-          color: 'black',
-          backgroundColor: 'white',
-          width: '100px',
-          height: '31px',
-    
-        },
-        input: {
-          padding: 10,
-          display: "none",
-        },
-        typeIcon: {
-          '&.clear:before': {
-            content: "'clear'",
-            color: 'white'
-          },
-          '&:before': {
-            content: "'clear'",
-            color: '#1565C0'
-          }
-        }
-    })
-
     const dispatch = useDispatch()
     const files = useSelector(({fMApp}) => fMApp.files);
-    const selectedItemId = useSelector(({fMApp}) => fMApp.selectedItemId);
     const selectedItem = useSelector(({fMApp}) => files[fMApp.selectedItemId]);
     const [targetPath, setTargetPath] = useState('/')
     const [searchbool, setSearchbool] = useState(false);
@@ -54,14 +23,13 @@ function FMPopup({ showModal, setShowModal, handleFMClose, setFileChosen, setFil
     const [checkFlag, setcheckFlag] = useState(false);
     const [showDialog, setshowDialog] = useState(false);
     const [uploadFile, setUploadFile] = useState("");
-    const classes = useStyles();
     var token = localStorage.getItem('id_token')
     const breadcrumbArr = targetPath.split('/');
     breadcrumbArr[0]="files"
 
     if(uploadFile !== ""){
         files !== {} && Object.values(files).map(node => {
-            if(node.name == uploadFile){
+            if(node.name === uploadFile){
                 dispatch(Actions.setSelectedItem(node.id))
                 setFileChosen("")
                 setFileChosenPath("")
@@ -76,6 +44,7 @@ function FMPopup({ showModal, setShowModal, handleFMClose, setFileChosen, setFil
                 }
                 
             }
+            return null
         })
     }
 
@@ -137,7 +106,7 @@ function FMPopup({ showModal, setShowModal, handleFMClose, setFileChosen, setFil
         setcheckFlag(false);
 
         var axios = require('axios');
-        if (typeof (token) == "string") {
+        if (typeof (token) === "string") {
             var config = {
                 method: 'get',
                 url: `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file${targetMeta}`,
@@ -184,7 +153,7 @@ function FMPopup({ showModal, setShowModal, handleFMClose, setFileChosen, setFil
     useEffect(() => {
         dispatch(Actions.getFiles(targetPath, 'GET_FILES'))
         var targetMeta = ""
-        if (token === null || !showModal || targetPath == "/") {
+        if (token === null || !showModal || targetPath === "/") {
             setcheckFlag(false)
         }
         else {
@@ -247,7 +216,7 @@ return (
                             {checkFlag && <FuseAnimate className="hidden md:flex flex-col" animation="transition.expandIn" delay={600}>
                               <Tooltip title="Click to Upload" aria-label="add">
                                 <Fab className="hidden sm:flex flex-col" color="secondary" aria-label="add" size="small" >
-                                    <Icon className="hidden sm:flex flex-col" title="Upload a file" onClick={showFileUploadDialog}>add</Icon>
+                                    <Icon className="hidden sm:flex flex-col" title="Click to Upload" onClick={showFileUploadDialog}>add</Icon>
                                 </Fab>
                               </Tooltip>
                             </FuseAnimate>}

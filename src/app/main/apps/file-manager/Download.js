@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import 'react-responsive-modal/styles.css';
 import { Modal } from 'react-responsive-modal';
-import { ToastsStore, ToastsContainerPosition, ToastsContainer } from 'react-toasts';
+// import { ToastsStore, ToastsContainerPosition, ToastsContainer } from 'react-toasts';
 
 function Download(props){
   const [error, setError] = useState(false);
@@ -25,7 +25,7 @@ function Download(props){
     }
 
     else if(typeof(token) === "object") {
-      var config = {
+       config = {
         method: 'get',
         url: `/filesvc/file/${props.fileId}`,
         headers: { 
@@ -39,7 +39,10 @@ function Download(props){
   useEffect(() => {
     InsertData() 
     setTimeout(() => {
-      props.setDownload(false)
+      if (props.setDownloadFlag)
+        props.setDownloadFlag(false)
+      else
+        props.setDownload(false)
     }, 5500);
   },[]) 
 
@@ -110,7 +113,7 @@ function Download(props){
 
   if(error === true)
   return(
-    <Modal center={true} open={true} showCloseIcon={false} closeOnOverlayClick={false} classNames styles center>
+    <Modal center={true} open={true} showCloseIcon={false} closeOnOverlayClick={false} classNames styles>
       <p>{errormsg}</p>
     </Modal>
     )
@@ -120,7 +123,7 @@ function Download(props){
   // )
   else if(isLarge)
     return(
-      <Modal center={true} open={true} showCloseIcon={false} closeOnOverlayClick={false} classNames styles center>
+      <Modal center={true} open={true} showCloseIcon={false} closeOnOverlayClick={false} classNames styles >
         <p>Please wait... Downloading will start in few minutes.</p>
       </Modal>
     )

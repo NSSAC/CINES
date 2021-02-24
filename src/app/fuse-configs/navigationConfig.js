@@ -1,6 +1,5 @@
-import {MaterialUIComponentsNavigation} from 'app/main/documentation/material-ui-components/MaterialUIComponentsNavigation';
-import {authRoles} from 'app/auth';
-
+// import {MaterialUIComponentsNavigation} from 'app/main/documentation/material-ui-components/MaterialUIComponentsNavigation';
+// import {authRoles} from 'app/auth';const navigationConfig = [
 const navigationConfig = [
         {
             'id'   : 'dashboards',

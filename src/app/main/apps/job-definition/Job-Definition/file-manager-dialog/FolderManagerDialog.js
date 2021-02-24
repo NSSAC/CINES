@@ -1,7 +1,7 @@
 import { FuseAnimate } from "@fuse";
-import { Button, ClickAwayListener, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Fab, Icon, IconButton, Input, Tooltip, Typography } from "@material-ui/core"
+import { Button, ClickAwayListener, Dialog, DialogActions, DialogContent, DialogTitle, Icon, IconButton, Input, Tooltip,} from "@material-ui/core"
 import withReducer from "app/store/withReducer";
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import Breadcrumb from "./Breadcrumb";
 import Filelist from "./FileList";
@@ -9,56 +9,19 @@ import * as Actions from './store/actions';
 import reducer from './store/reducers';
 import clsx from 'clsx';
 import './FileManagerDialog.css'
-import sciductService from "app/services/sciductService";
-import { makeStyles } from "@material-ui/styles";
 
 function FolderPopup({ showModal, handleFMClose, folderPath, setFolderPath, fileTypes })  {
 
-    const useStyles = makeStyles({
-        table: {
-          minWidth: 450,
-        },
-        customeButton: {
-          alignSelf: 'baseline',
-          border: '2px solid ',
-          color: 'black',
-          backgroundColor: 'white',
-          width: '100px',
-          height: '31px',
-    
-        },
-        input: {
-          padding: 10,
-          display: "none",
-        },
-        typeIcon: {
-          '&.clear:before': {
-            content: "'clear'",
-            color: 'white'
-          },
-          '&:before': {
-            content: "'clear'",
-            color: '#1565C0'
-          }
-        }
-    })
-
     const dispatch = useDispatch()
     const files = useSelector(({fMApp}) => fMApp.home);
-    const selectedItemId = useSelector(({fMApp}) => fMApp.selectedItemId);
     const selectedItem = useSelector(({fMApp}) => files[fMApp.selectedItemId]);
     const [targetPath, setTargetPath] = useState('/')
     const [searchbool, setSearchbool] = useState(false);
     const [search, setSearch] = useState("");
-    const [checkFlag, setcheckFlag] = useState(false);
-    const [showDialog, setshowDialog] = useState(false);
-    const [uploadFile, setUploadFile] = useState("");
-    const classes = useStyles();
-    var token = localStorage.getItem('id_token')
 
     const onCancel = () => {
         setSearch("")
-        if(folderPath == '')
+        if(folderPath === '')
           setTargetPath("/")
         else 
           setTargetPath(localStorage.getItem('selectedFolder'))

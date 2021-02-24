@@ -1,9 +1,6 @@
-import axios from 'axios';
-
-export const GET_FILES = '[FILE MANAGER APP] GET FILES';
-var token = localStorage.getItem('id_token')
-let arr = []
-let url1 = ''
+export const GET_FILES = "[FILE MANAGER APP] GET FILES";
+var token = localStorage.getItem("id_token");
+let arr = [];
 
 export function getJobDefinitionFiles() {
 arr=[];
@@ -61,13 +58,14 @@ arr=[];
 
   const request = axios(config)
 
+
   return (dispatch) =>
     request.then((response) => {
-      arr.push(...response.data)
+      arr.push(...response.data);
       dispatch({
         type: GET_FILES,
         payload: arr,
-        totalFiles: response.headers
-      })
+        totalFiles: response.headers,
+      });
     });
 }

@@ -46,7 +46,7 @@ function DetailSidebarHeader(props)
         localStorage.setItem("delete_id",item.id)
         confirmAlert({
           title: 'Confirm',
-          message: 'Are you sure you want to delete ' + `'${item.name}'` + '?',
+          message: `Are you sure you want to delete ${item.name}?`,
           buttons: [
             { 
               label: 'No',
@@ -69,7 +69,7 @@ function DetailSidebarHeader(props)
                    break;
                 }
             }
-            for(var readRights in selectedItem.writeACL){
+            for(readRights in selectedItem.writeACL){
                 if(team === readRights){
                        canRead = true
                        break;
@@ -89,7 +89,7 @@ function DetailSidebarHeader(props)
                   <Tooltip title="Click to Delete" placement="bottom">
                     <IconButton onClick={()=>OnDelete(selectedItem)}>
                         <Icon >delete</Icon>
-                        {(delete_id === selectedItem.id ) && deleteFile?<DeleteFile setDeleteFile={(p)=>setDeleteFile(p)} name={selectedItem.name} size={selectedItem.size} fileId={selectedItem.id} type={selectedItem.type}></DeleteFile>:null}
+                        {(delete_id === selectedItem.id ) && deleteFile?<DeleteFile pageLayout={props.pageLayout}  setDeleteFile={(p)=>setDeleteFile(p)} name={selectedItem.name} size={selectedItem.size} fileId={selectedItem.id} type={selectedItem.type}></DeleteFile>:null}
                     </IconButton>
                   </Tooltip>
                 </FuseAnimate>}

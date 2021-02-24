@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import {Hidden, Typography, Icon, IconButton, Table, TableBody, TableCell, TableHead, TableRow,Link} from '@material-ui/core';
-import {makeStyles} from '@material-ui/styles';
-import {FuseAnimate} from '@fuse';
-import {useDispatch, useSelector} from 'react-redux';
+import { Hidden, Typography, Icon, IconButton, Table, TableBody, TableCell, TableHead, TableRow, Link, LinearProgress } from '@material-ui/core';
+import { makeStyles } from '@material-ui/styles';
+import { FuseAnimate } from '@fuse';
+import { useDispatch, useSelector } from 'react-redux';
 import clsx from 'clsx';
 import * as Actions from './store/actions';
 import { withRouter } from 'react-router-dom';
@@ -13,153 +13,153 @@ import instance from 'app/services/sciductService/sciductService.js'
 
 const useStyles = makeStyles({
     typeIcon: {
-        '&.folder:before' : {
+        '&.folder:before': {
             content: "'folder'",
-            color  : '#FFB300'
+            color: '#FFB300'
         },
-        '&.epihiperOutput:before'     : {
+        '&.epihiperOutput:before': {
             content: "'folder'",
-            color  : '#FFB300'
+            color: '#FFB300'
         },
-        '&.pdf:before'     : {
+        '&.pdf:before': {
             content: "'picture_as_pdf'",
-            color  : 'red'
+            color: 'red'
         },
-        '&.epihiper_multicell_analysis:before' : {
+        '&.epihiper_multicell_analysis:before': {
             content: "'folder'",
-            color  : '#FFB300'
+            color: '#FFB300'
         },
-        '&.png:before'     : {
+        '&.png:before': {
             content: "'image'",
-            color  : 'blue'
+            color: 'blue'
         },
-        '&.jpg:before'     : {
+        '&.jpg:before': {
             content: "'image'",
-            color  : 'blue'
+            color: 'blue'
         },
-        '&.jpeg:before'     : {
+        '&.jpeg:before': {
             content: "'image'",
-            color  : 'blue'
+            color: 'blue'
         },
-        '&.mp3:before'     : {
+        '&.mp3:before': {
             content: "'library_music'",
-            color  : 'blue'
+            color: 'blue'
         },
-        '&.mp4:before'     : {
+        '&.mp4:before': {
             content: "'video_library'",
-            color  : 'blue'
+            color: 'blue'
         },
         '&.csv:before': {
             content: "'table_chart'",
-            color  : '#4CAF50'
+            color: '#4CAF50'
         },
         '&.excel:before': {
             content: "'table_chart'",
-            color  : '#4CAF50'
+            color: '#4CAF50'
         },
-        '&:before'   : {
+        '&:before': {
             content: "'insert_drive_file'",
-            color  : '#1565C0'
+            color: '#1565C0'
         }
     }
 });
 
-function FileList(props)
-{
+function FileList(props) {
     const dispatch = useDispatch();
-    const files = useSelector(({fileManagerApp}) => fileManagerApp.files);
-    const selectedItemId = useSelector(({fileManagerApp}) => fileManagerApp.selectedItemId);
-    const selectedItem = useSelector(({fileManagerApp}) => files[fileManagerApp.selectedItemId]);
+    const files = useSelector(({ fileManagerApp }) => fileManagerApp.files);
+    const selectedItemId = useSelector(({ fileManagerApp }) => fileManagerApp.selectedItemId);
+    const selectedItem = useSelector(({ fileManagerApp }) => files[fileManagerApp.selectedItemId]);
     const classes = useStyles();
-    var path = window.location.pathname
-    var pathEnd=path.charAt(path.length-1)
-    var token=localStorage.getItem('id_token')
-    const [click, setClick] = useState(false)
-    
-    var searchResults = Object.values(files).filter((data)=>{
-        if(data.name !== "" && (props.search === ""  || (data.name.toLowerCase().includes(props.search.toLowerCase()) || data.type.toLowerCase().includes(props.search.toLowerCase())  || data.owner_id.toLowerCase().includes(props.search.toLowerCase())))) return data })
-  
-        if(pathEnd === "/"){
-            if(!selectedItem){
-             if(Object.values(files).length > 0  && (searchResults[0].id !== undefined)) {
-                dispatch(Actions.setSelectedItem(searchResults[0].id))
-              }
+    var token = localStorage.getItem('id_token');
+    const [click, setClick] = useState(false);
+
+    var searchResults = Object.values(files).filter((data) => {
+        if (data.name !== "" && (props.search === "" || (data.name.toLowerCase().includes(props.search.toLowerCase()) || data.type.toLowerCase().includes(props.search.toLowerCase()) || data.owner_id.toLowerCase().includes(props.search.toLowerCase())))) return data;
+        else return null;
+    })
+
+    if (props.containerFlag || props.targetMeta === '') {
+        if (!selectedItem) {
+            if (Object.values(files).length > 0 && (searchResults[0].id !== undefined)) {
+                dispatch(Actions.setSelectedItem(searchResults[0].id));
             }
-         }
+        }
+    }
 
 
-    const tableStyle={
+
+    const tableStyle = {
         overflow: 'hidden',
         maxWidth: '200px',
         textOverflow: 'ellipsis',
-        display:'inline-block',
+        display: 'inline-block',
         whiteSpace: 'nowrap'
     }
 
-    function onClickHandler(node,canLink){
-        return function(evt){
-            if(click === false)
-            if (evt.target && evt.target.getAttribute("to") ){
-                setClick(true)
-                setTimeout(() => {
-                   setClick(false)
-                }, 1500);
-                if(node.type === "folder" || node.type === "epihiperOutput" || node.type === "epihiper_multicell_analysis"){
-                  var target = window.location.pathname + evt.target.getAttribute("to") + "/";
-                }
-                else{
-                  var target = window.location.pathname + evt.target.getAttribute("to");
-                  props.setPreview(false)
-                  localStorage.setItem('nodeType',node.type)
-                  localStorage.setItem('nodeId',node.id)
-                  localStorage.setItem('nodeSize',node.size)
-          
-                   if(token !==null){
-                       var canRead = false;
-                     for(var team in instance.getTokenData().teams){
-                         for(var readRights in node.readACL){
-                             if(team === readRights){
-                                canRead = true;
-                                localStorage.setItem('readPermission',true)
-                                break;
-                             }  
-                         }
-                         for(var writeRights in node.writeACL){
-                            if(team === writeRights){
-                                canRead = true;
-                                localStorage.setItem('readPermission',true)
-                                   break;
-                            } 
-                         }
-                     }
-                   if(instance.getTokenData().sub === node.owner_id){
-                       canRead = true;
-                       localStorage.setItem('readPermission',true)
+    function onClickHandler(node, canLink) {
+        return function (evt) {
+            if (click === false)
+                if (evt.target && evt.target.getAttribute("to")) {
+                    setClick(true);
+                    setTimeout(() => {
+                        setClick(false);
+                    }, 1500);
+                    if (node.type === "folder" || node.type === "epihiperOutput" || node.type === "epihiper_multicell_analysis") {
+                        var target = window.location.pathname + evt.target.getAttribute("to") + "/";
                     }
-                   if(canRead === false){
-                        localStorage.setItem('readPermission',false)
-                    } 
-                  }
-                  else{
-                    localStorage.setItem('readPermission',false)
-                  }
+                    else {
+                        target = window.location.pathname + evt.target.getAttribute("to");
+                        props.setPreview(false)
+                        localStorage.setItem('nodeType', node.type);
+                        localStorage.setItem('nodeId', node.id);
+                        localStorage.setItem('nodeSize', node.size);
+                        localStorage.setItem('nodeName', node.name);
+
+                        if (token !== null) {
+                            var canRead = false;
+                            for (var team in instance.getTokenData().teams) {
+                                for (var readRights in node.readACL) {
+                                    if (team === readRights) {
+                                        canRead = true;
+                                        localStorage.setItem('readPermission', true);
+                                        break;
+                                    }
+                                }
+                                for (var writeRights in node.writeACL) {
+                                    if (team === writeRights) {
+                                        canRead = true;
+                                        localStorage.setItem('readPermission', true);
+                                        break;
+                                    }
+                                }
+                            }
+                            if (instance.getTokenData().sub === node.owner_id) {
+                                canRead = true;
+                                localStorage.setItem('readPermission', true);
+                            }
+                            if (canRead === false) {
+                                localStorage.setItem('readPermission', false);
+                            }
+                        }
+                        else {
+                            localStorage.setItem('readPermission', false);
+                        }
+                    }
+
+                    props.history.push(target);
                 }
-                 
-               props.history.push(target)
-            }
-            dispatch(Actions.setSelectedItem(node.id))
+            dispatch(Actions.setSelectedItem(node.id));
         }
     }
-        
-    if(!props.prompt && props.pageLayout.current){
-      props.pageLayout.current.toggleRightSidebar() 
-      props.setPrompt(true)
+
+    if (!props.prompt && props.pageLayout.current) {
+        props.pageLayout.current.toggleRightSidebar();
+        props.setPrompt(true);
     }
-    
-    if(pathEnd === "/"){
-        props.setPreview(true)
-        // localStorage.removeItem('nodeId', 'nodeSize','nodeType')
-        if(Object.values(files).length > 0 && searchResults.length > 0)
+
+    if ((props.containerFlag && props.isFolder) || props.targetMeta === '') {
+        props.setPreview(true);
+        if (Object.values(files).length > 0 && searchResults.length > 0)
             return (
                 <FuseAnimate animation="transition.slideUpIn" delay={300}>
                     <Table>
@@ -175,27 +175,27 @@ function FileList(props)
                         </TableHead>
 
                         <TableBody>
-                            {searchResults.map((node)=>{
-                                    return(
+                            {searchResults.map((node) => {
+                                return (
                                     <TableRow
                                         key={node.id}
                                         hover
-                                        onClick={onClickHandler(node,node.isContainer)}
+                                        onClick={onClickHandler(node, node.isContainer)}
 
                                         selected={node.id === selectedItemId}
                                         className="cursor-pointer"
                                     >
                                         <TableCell className="max-w-64 w-64 p-0 text-center">
-                                            <Icon className={clsx(classes.typeIcon, node.type)}/>
+                                            <Icon className={clsx(classes.typeIcon, node.type)} />
                                         </TableCell>
-                                        <TableCell >{window.innerWidth<1224?<Link style={tableStyle} title={node.name} to={node.name}>{node.name}</Link>:
-                                                                            <Link title={node.name} to={node.name}>{node.name}</Link>}</TableCell>
+                                        <TableCell >{window.innerWidth < 1224 ? <Link style={tableStyle} title={node.name} to={node.name}>{node.name}</Link> :
+                                            <Link title={node.name} to={node.name}>{node.name}</Link>}</TableCell>
                                         <TableCell className="hidden sm:table-cell">{node.type}</TableCell>
                                         <TableCell className="hidden sm:table-cell">{node.owner_id}</TableCell>
-                                        <TableCell className="text-center hidden sm:table-cell">{(!node.size && (node.size!==0))? '-' : filesize(node.size)}</TableCell>
+                                        <TableCell className="text-center hidden sm:table-cell">{(!node.size && (node.size !== 0)) ? '-' : filesize(node.size)}</TableCell>
                                         <TableCell className="hidden sm:table-cell">{moment(node.update_date).fromNow()}</TableCell>
                                         <Hidden lgUp>
-                                            <TableCell>
+                                            <TableCell style={{ textAlignLast: 'right' }}>
                                                 <IconButton
                                                     onClick={(ev) => props.pageLayout.current.toggleRightSidebar()}
                                                     aria-label="open right sidebar"
@@ -212,39 +212,59 @@ function FileList(props)
                     </Table>
                 </FuseAnimate>
             );
-            else if(Object.values(files).length === 0){              
-                        return (
-                            <div className="flex flex-1 flex-col items-center justify-center mt-20">
-                            <Typography className="text-18 mt-16" color="textPrimary">This folder is empty.</Typography>
-                            </div>
-                        )             
-            }
-               
-            else if(searchResults.length  === 0)
-                return (
-                    <div className="flex flex-1 flex-col items-center justify-center mt-20">
+        else if (Object.values(files).length === 0) {
+            return (
+                <div className="flex flex-1 flex-col items-center justify-center mt-20">
+                    <Typography className="text-18 mt-16" color="textPrimary">This folder is empty &nbsp; OR &nbsp; No such file / folder exists.</Typography>
+                </div>
+            )
+        }
+
+        else if (searchResults.length === 0)
+            return (
+                <div className="flex flex-1 flex-col items-center justify-center mt-20">
                     <Typography className="text-18 mt-16" color="textPrimary">No match found for "{props.search}". Please try finding something else.</Typography>
-                    </div>
-                )
-           
-  
-}
-    else{
-    var type = localStorage.getItem('nodeType')
-    var id = localStorage.getItem('nodeId')
-    var size = localStorage.getItem('nodeSize')
-    var readPermission = localStorage.getItem('readPermission')
-    props.setPreview(false)
-    if(id !== null)
-      return (
-          <Preview type={type} fileId={id} size={size} perm={readPermission}  ></Preview>
-      )
-     else  return (
-        <div className="flex flex-1 flex-col items-center justify-center">
-         <Typography className="text-20 mt-16" color="textPrimary">No such file exists</Typography>
-        </div>
-       )
+                </div>
+            )
+
+
     }
- }
+    else if (props.containerFlag === false) {
+        var type = localStorage.getItem('nodeType')
+        var id = localStorage.getItem('nodeId')
+        var size = localStorage.getItem('nodeSize')
+        var name = localStorage.getItem('nodeName')
+        var readPermission = localStorage.getItem('readPermission')
+        props.setPreview(false)
+        if (id !== null)
+            return (
+                <Preview type={type} fileId={id} size={size} perm={readPermission} name={name} ></Preview>
+            )
+        else return (
+            <div className="flex flex-1 flex-col items-center justify-center">
+                <Typography className="text-20 mt-16" color="textPrimary">No such file / folder exists.</Typography>
+            </div>
+        )
+    }
+
+    else if (props.containerFlag === "") {
+        return (
+            <div className="flex flex-1 flex-col items-center justify-center mt-40">
+                <Typography className="text-20 mt-16" color="textPrimary">Loading</Typography>
+                <LinearProgress className="w-xs" color="secondary" />
+            </div>
+        )
+    }
+
+    else if (props.containerFlag === "error") {
+        return (
+            <div className="flex flex-1 flex-col items-center justify-center">
+                <Typography className="text-20 mt-16" color="textPrimary">No such file / folder exists.</Typography>
+            </div>
+        )
+    }
+
+    else return null;
+}
 
 export default withRouter(FileList);

@@ -17,7 +17,7 @@ export function getHome(path)
     }
 
     if(typeof(token) == "object") {
-      var config = {
+     config = {
         method: 'get',
         url: `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file/home/${path}`,
         headers: { 

@@ -2,30 +2,15 @@ import React, { useState, useEffect } from "react";
 import {
   Typography,
   LinearProgress,
-  Hidden,
   Button,
-  Icon,
-  TableFooter,
-  Fragment,
-  Tooltip,
-  IconButton,
-  TablePagination,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-  Paper,
-  TableContainer,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 import { FuseAnimate } from "@fuse";
 import { useDispatch, useSelector } from "react-redux";
-import clsx from "clsx";
 import Grid from "@material-ui/core/Grid";
 import * as Actions from "./store/actions";
 import "./JobDefinitionFileList.css";
-import { Link, withRouter } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import JobDefinitionForm from "./JobDefinitionForm";
 
 const useStyles = makeStyles((theme) => ({
@@ -54,7 +39,6 @@ function JobDefinitionFileList(props) {
   const [searchString, setPreviousString] = useState("");
   const [rowLength, setrowLength] = useState();
   
-  var type;
   var lengthOfRow;
   const dispatch = useDispatch();
   const jobDefinitionData = useSelector(
@@ -64,7 +48,6 @@ function JobDefinitionFileList(props) {
     ({ JobDefinitionApp }) => JobDefinitionApp.selectedjobid
   );
   var path = window.location.pathname;
-  var pathEnd = path.charAt(path.length - 1);
   var pathArray = window.location.pathname.split("/");
   var pathArrayEnd = pathArray.slice(-1)[0];
 
@@ -89,8 +72,16 @@ function JobDefinitionFileList(props) {
         (props.search === "" ||
           data.id.toLowerCase().includes(props.search.toLowerCase()))
       )
+      return data;
+
+      if (
+        (data.description !== "" && data.description !== undefined) &&
+        (props.search === "" ||
+          data.description.toLowerCase().includes(props.search.toLowerCase()))
+      )
         return data;
     });
+
     if (Object.keys(selectedItem).length === 0) {
       dispatch(Actions.setSelectedItem(searchResult[0].id));
     }
@@ -168,7 +159,7 @@ function JobDefinitionFileList(props) {
     }
   }
 
-  if (pathEnd !== "/") {
+  if (path.endsWith('job-definition/') == false) {
     var selectedJobDefinition = JSON.parse(
       localStorage.getItem("selectedJobDefinition")
     );
@@ -222,7 +213,7 @@ function JobDefinitionFileList(props) {
                   }
                 }
                 return (
-                  <React.Fragment>
+                  <React.Fragment key={row.id}>
                     <div className={classes.root}>
                       <Grid
                         className={row.id === selectedId ? "selceted-row" : ""}
@@ -234,7 +225,6 @@ function JobDefinitionFileList(props) {
                         <Grid item xs={3} style={{ paddingLeft: "15px" }}>
                           <Typography>Name</Typography>
                           <Typography
-                            variant="h7"
                             style={{ fontWeight: "700" , wordBreak:"break-word"}}
                           >
                             {row.id}

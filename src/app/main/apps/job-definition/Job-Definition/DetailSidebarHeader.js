@@ -1,11 +1,10 @@
 import React from 'react';
-import {Icon, IconButton, Typography} from '@material-ui/core';
+import {Icon, IconButton} from '@material-ui/core';
 import {FuseAnimate} from '@fuse';
 import {useSelector} from 'react-redux';
 
 function DetailSidebarHeader(props)
 {
-    const files = useSelector(({JobDefinitionApp}) => JobDefinitionApp.jobdefinition);
     const selectedItem = useSelector(({JobDefinitionApp}) => JobDefinitionApp.selectedItemId);
 
     if ( !selectedItem )

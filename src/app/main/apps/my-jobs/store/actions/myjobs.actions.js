@@ -1,5 +1,3 @@
-import axios from 'axios';
-
 export const GET_FILES = '[FILE MANAGER APP] GET FILES';
 var token = localStorage.getItem('id_token')
 let arr = []
@@ -53,15 +51,13 @@ export function getFiles(count, start, descShort, type, clearArry) {
         url1 = `${process.env.REACT_APP_SCIDUCT_JOB_SERVICE}/job_instance?&in(state,(${selectedState}))&in(job_definition,(${selectedJobType}))&limit(count,${start})&sort(+${type}))`
       }
     }
-    let count1 = count;
-    let start1 = start;
+
     var axios = require('axios');
     let url = url1
     var config = {
       method: 'get',
       url: url,
       headers: {
-
         'Accept': 'application/json',
         'Authorization': token
       }
@@ -81,7 +77,6 @@ export function getFiles(count, start, descShort, type, clearArry) {
         method: 'get',
         url: url,
         headers: {
-
           'Accept': 'application/json',
           'Authorization': token
         }
@@ -96,7 +91,6 @@ export function getFiles(count, start, descShort, type, clearArry) {
         method: 'get',
         url: url,
         headers: {
-
           'Accept': 'application/json',
           'Authorization': token
         }

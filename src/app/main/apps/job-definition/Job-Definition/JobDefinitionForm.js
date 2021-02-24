@@ -1,8 +1,5 @@
 import {
   Button,
-  Fab,
-  Icon,
-  Tooltip,
   Typography,
   Grid,
   LinearProgress,
@@ -16,9 +13,6 @@ import Toaster from "./Toaster";
 import Formsy from "formsy-react";
 import { useHistory } from "react-router-dom";
 function JobDefinitionForm(props) {
-  const [showFMDialog, setShowFMDialog] = useState(false);
-  const [showDialog, setshowDialog] = useState(false);
-  const [fileChosen, setFileChosen] = useState("");
   const [formElementsArray, setFormElementsArray] = useState({});
   const [jobSubmissionArray, setJobSubmissionArray] = useState({});
   const [isFormValid, setIsFormValid] = useState(false);
@@ -29,6 +23,8 @@ function JobDefinitionForm(props) {
   const [spinnerFlag, setSpinnerFlag] = useState(true);
   var path = window.location.pathname;
   var pathEnd = path.replace("/apps/job-definition/", "");
+  if(pathEnd.endsWith('/'))
+  pathEnd = pathEnd.slice(0, -1)
   const parentGrid = {
     borderTop: "2px solid black",
     borderBottom: "2px solid black",
@@ -38,25 +34,13 @@ function JobDefinitionForm(props) {
     borderRight: "1px solid black",
     paddingLeft: "20px",
   };
-  const selectButtonStyle = {
-    backgroundColor: "#61dafb",
-    fontSize: "inherit",
-    margin: "5px",
-    padding: "6px",
-    color: "black",
-  };
+ 
   const outputGrid = {
     borderRight: "1px solid black",
     paddingLeft: "20px",
     borderTop: "2px solid black",
   };
 
-  const buttonStyle = {
-    backgroundColor: "lightgrey",
-    margin: "5px",
-    padding: "6px",
-    color: "black",
-  };
   const history = useHistory();
 
   useEffect(() => {
@@ -102,7 +86,7 @@ function JobDefinitionForm(props) {
   ) => {
     setResponse(responseData);
     var count = 0;
-    if (createFromData !== undefined && pathEnd.split("_")[0] === "snap") {
+    if (createFromData !== undefined) {
       setFlag(true);
       if (inputFileData !== undefined) {
         for (let [index, obj] of inputFileData.entries()) {
@@ -119,19 +103,33 @@ function JobDefinitionForm(props) {
         createFromData[key]["formLabel"] = key;
         // createFromData[key]["value"] = "";
 
-        if (requiredFeildArray.includes(key)) {
+        if (requiredFeildArray !== undefined && requiredFeildArray.includes(key)) {
           createFromData[key]["required"] = true;
         } else {
           createFromData[key]["required"] = false;
         }
       }
       if (inputFileData !== undefined) {
+        count++;
         for (let obj of inputFileData) {
           let keyName = obj.name;
           createFromData[keyName] = obj;
         }
       }
-      if (outputFiles != undefined) {
+
+      if( count % 2 !== 0 )
+      {
+        count++;
+        let extraObj = {
+          id: count + 100,
+          formLabel: "",
+          value: "",
+          required: true
+        };
+        createFromData["extraObj"] = extraObj;
+
+      }
+      if (outputFiles !== undefined) {
         let outputContainer = {
           id: 200,
           formLabel: "output_container",
@@ -195,12 +193,12 @@ function JobDefinitionForm(props) {
     for (let key in formElementsArray) {
       if (
         formElementsArray[key].id >= 200 &&
-        formElementsArray[key].formLabel == "output_container"
+        formElementsArray[key].formLabel === "output_container"
       ) {
         requestJson["output_container"] = formElementsArray[key].value;
       } else if (
         formElementsArray[key].id >= 200 &&
-        formElementsArray[key].formLabel == "output_name"
+        formElementsArray[key].formLabel === "output_name"
       ) {
         requestJson["output_name"] = formElementsArray[key].value;
       } else {
@@ -252,14 +250,6 @@ function JobDefinitionForm(props) {
     setIsFormValid(true);
   }
 
-  function showFileManagerDialog() {
-    setShowFMDialog(true);
-  }
-
-  function handleFMClose() {
-    setShowFMDialog(false);
-  }
-
   const onFormCancel = () => {
     // localStorage.removeItem('selectedJobDefinition')
   };
@@ -284,10 +274,10 @@ function JobDefinitionForm(props) {
           <Toaster success={success} id={response.id}></Toaster>
         ) : null}
         <Typography className="h2">
-          &nbsp;{response != "" ? response.id : null}
+          &nbsp;{response !== "" ? response.id : null}
         </Typography>
         <Typography className="h4 mb-12">
-          &nbsp;{response != "" ? response.description : null}
+          &nbsp;{response !== "" ? response.description : null}
         </Typography>
         <div>
           {Object.entries(formElementsArray).length !== 0 ? (
@@ -299,28 +289,25 @@ function JobDefinitionForm(props) {
               <Grid style={parentGrid} container spacing={3}>
                 {Object.entries(formElementsArray).map((formElement) =>
                   formElement[1].id < 200 ? (
-                    <Grid style={childGrid} item container xs={12} sm={6}>
+                    <Grid key={formElement[1].id} style={childGrid} item container xs={12} sm={6}>
                       <Input
                         key={formElement.id}
                         formData={formElement}
-                        key={formElement.id}
                         elementType={formElement.type}
                         value={formElement.value}
-                        buttonClicked={showDialog}
+                        
                         changed={(event) =>
                           inputChangedHandler(event, formElement[0])
                         }
                       />
                     </Grid>
                   ) : (
-                    <Grid style={outputGrid} item container xs={12} sm={6}>
+                    <Grid  key={formElement[1].id} style={outputGrid} item container xs={12} sm={6}>
                       <Input
                         key={formElement.id}
                         formData={formElement}
-                        key={formElement.id}
                         elementType={formElement.type}
                         value={formElement.value}
-                        buttonClicked={showDialog}
                         changed={(event) =>
                           inputChangedHandler(event, formElement[0])
                         }
@@ -368,10 +355,10 @@ function JobDefinitionForm(props) {
             <Toaster success={success} id={response.id}></Toaster>
           ) : null}
           <Typography className="h2">
-            &nbsp;{response != "" ? response.id : null}
+            &nbsp;{response !== "" ? response.id : null}
           </Typography>
           <Typography className="h4 mb-12">
-            &nbsp;{response != "" ? response.description : null}
+            &nbsp;{response !== "" ? response.description : null}
           </Typography>
         </div>
         <div

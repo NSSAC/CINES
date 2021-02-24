@@ -6,22 +6,18 @@ import withReducer from 'app/store/withReducer';
 import * as Actions from './store/actions';
 import reducer from './store/reducers';
 import FileList from './FileList';
-import Paper from '@material-ui/core/Paper';
 import DetailSidebarHeader from './DetailSidebarHeader';
 import DetailSidebarContent from './DetailSidebarContent';
 import MainSidebarHeader from './MainSidebarHeader';
 import MainSidebarContent from './MainSidebarContent';
-import Breadcrumb from './Breadcrumb';
 import { MyJobFilter } from 'app/main/apps/my-jobs/MyJobFilter-dialog/Filterdialog';
 import { makeStyles } from '@material-ui/core/styles';
-import Chip from '@material-ui/core/Chip';
 import { useHistory, Link } from "react-router-dom";
 import "./MyJobsApp.css"
 const useStyles = makeStyles((theme) => ({
     root: {
         display: 'inline-block',
         justifyContent: 'start',
-
         listStyle: 'none',
         padding: theme.spacing(0.5),
         margin: 0,
@@ -30,7 +26,6 @@ const useStyles = makeStyles((theme) => ({
         display: 'inline-block',
         margin: theme.spacing(0.5),
         paddingTop: "5px"
-
     },
     dialogwidth: {
         minWidth: "100px !important"
@@ -38,9 +33,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function MyJobsApp(props) {
-    const history = useHistory();
     const dispatch = useDispatch();
-    const files = useSelector(({ myJobsApp }) => myJobsApp.myjobs);
     const [showDialog, setshowDialog] = useState(false);
     const pageLayout = useRef(null);
     const [flag, setFilterFlag] = useState(false);
@@ -63,14 +56,10 @@ function MyJobsApp(props) {
         setshowDialog(true)
     }
 
-
-    const childRef = useRef();
     function handleClose() {
         setshowDialog(false)
         setFilterFlag(true)
-        //  childRef.current.getAlert()
     }
-    const classes = useStyles();
 
     return (
         <FusePageSimple
@@ -130,13 +119,11 @@ function MyJobsApp(props) {
 
                         <FuseAnimate animation="transition.expandIn" delay={200}>
                             <Tooltip title="Filter" placement="bottom">
-                                <IconButton aria-label="search">
-                                    <Icon onClick={showFileUploadDialog}>filter_list</Icon>
+                                <IconButton aria-label="search"  onClick={showFileUploadDialog}>
+                                    <Icon>filter_list</Icon>
                                 </IconButton>
                             </Tooltip>
                         </FuseAnimate>
-
-
                     </div>
 
 
@@ -150,13 +137,6 @@ function MyJobsApp(props) {
                         </FuseAnimate>
                             </Link> 
                             </Tooltip>
-                        {/* <FuseAnimate delay={200}>
-                            <div>
-                                {selectedItem && (
-                                    <Breadcrumb selected={selectedItem} className="flex flex-1 pl-72 pb-12 text-16 sm:text-24"/>
-                                )}
-                            </div>
-                        </FuseAnimate> */}
                     </div>
                 </div>
             }

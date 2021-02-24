@@ -1,13 +1,9 @@
 import React from 'react';
-import {Icon, Typography, Link} from '@material-ui/core';
+import {Icon} from '@material-ui/core';
 import { withRouter } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
 
 function Breadcrumb(props)
 {
-    const dispatch = useDispatch()
-    const path = window.location.pathname
-
     const ellipsis={
         textOverflow:'ellipsis',
         whiteSpace: 'nowrap',
@@ -24,7 +20,7 @@ function Breadcrumb(props)
    function onclickRoute(path) {
         props.setSearch("")
         var target = props.targetPath.split(path)
-        if(target.length == 1)
+        if(target.length === 1)
          props.setTargetPath("/")
         else
          props.setTargetPath(target[0] + path + "/")

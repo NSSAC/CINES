@@ -1,12 +1,11 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState} from 'react';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
-import { TextFieldFormsy, SelectFormsy } from '@fuse';
+import {  SelectFormsy } from '@fuse';
 import Formsy from 'formsy-react';
 import './Filterdialog.css';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -15,9 +14,8 @@ import Chip from '@material-ui/core/Chip';
 import TagFacesIcon from '@material-ui/icons/TagFaces';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import * as Actions from '../store/actions';
-import { Fab, Icon, IconButton, Tooltip, Typography } from '@material-ui/core';
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -44,7 +42,6 @@ export const MyJobFilter = ({ showModal, handleClose, handleLogout, remainingTim
   }));
   const dispatch = useDispatch();
   const [state, setState1] = React.useState("");
-  const [prevState, setState] = React.useState([]);
   const [preStateValue, setPreStateValue] = useState([])
   const [preJobTypeValue, setPreJobTypeValue] = useState([])
   const [jobTypeArray, setjobTypeArray] = useState([]);
@@ -52,7 +49,6 @@ export const MyJobFilter = ({ showModal, handleClose, handleLogout, remainingTim
   const [selectedTypeArray, setSelectedTypeArray] = useState([])
   const [selectedValue, setselectedValue] = useState("")
   const [stateFlag, setStateFlag] = useState(false)
-  const prevRef = useRef([]);
 
   function handleSubmit(model) {
     console.info('submit', model);
@@ -126,9 +122,6 @@ export const MyJobFilter = ({ showModal, handleClose, handleLogout, remainingTim
   const onCancle = () => {
     setState1("");
     setselectedValue("")
-    // setPreStateValue([]);
-    // setSelectedTypeArray([]);
-    // setPreJobTypeValue([]);
     handleClose()
   }
 
@@ -147,10 +140,6 @@ export const MyJobFilter = ({ showModal, handleClose, handleLogout, remainingTim
       }
 
     }
-
-    // setPreStateValue(preStateValue => [...preStateValue, preStateValue.splice( index, 1 )])
-    //setPreStateValue((preStateValue) => preStateValue.filter((preStateValue) => preStateValue !== chipToDelete));
-    //let status = preStateValue
   };
 
   const handleDeleteJob = (chipToDelete) => {
@@ -231,7 +220,7 @@ export const MyJobFilter = ({ showModal, handleClose, handleLogout, remainingTim
 
           <div className="absolut mt-5" >
             {
-              preStateValue.length != 0 ? <spa> Status : </spa> : null
+              preStateValue.length !== 0 ? <spa> Status : </spa> : null
             }
             {preStateValue.map((data) => {
               let icon;
@@ -257,7 +246,7 @@ export const MyJobFilter = ({ showModal, handleClose, handleLogout, remainingTim
           <div>
 
             {
-              preJobTypeValue.length != 0 ? <spa> Job Type :</spa> : null
+              preJobTypeValue.length !== 0 ? <spa> Job Type :</spa> : null
             }
             {preJobTypeValue.map((data) => {
               let icon;
