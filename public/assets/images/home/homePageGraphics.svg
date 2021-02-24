@@ -29,7 +29,7 @@
     </filter>
   </defs>
   <metadata> Produced by OmniGraffle 7.15.2 
-    <dc:date>2020-05-29 03:58:58 +0000</dc:date>
+    <dc:date>2020-05-29 13:10:28 +0000</dc:date>
   </metadata>
   <g id="Canvas_1" stroke-opacity="1" stroke-dasharray="none" stroke="none" fill="none" fill-opacity="1">
     <title>Canvas 1</title>
@@ -39,14 +39,14 @@
         <rect x="322" y="314" width="291" height="66" fill="#567eff"/>
         <rect x="322" y="314" width="291" height="66" stroke="#1c1c1c" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
         <text transform="translate(327 337.776)" fill="black">
-          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="84.94" y="15">net.science API</tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="82.428" y="15">Net.Science API</tspan>
         </text>
       </g>
       <g id="Graphic_3">
         <rect x="322" y="420" width="141" height="66" fill="#01a702"/>
         <rect x="322" y="420" width="141" height="66" stroke="#1c1c1c" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
         <text transform="translate(327 434.552)" fill="black">
-          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="24.604" y="15">net.science </tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="22.092" y="15">Net.Science </tspan>
           <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="34.988" y="33.448">Services</tspan>
         </text>
       </g>
@@ -68,7 +68,7 @@
         <rect x="310" y="193" width="141" height="66" fill="#ff9300"/>
         <rect x="310" y="193" width="141" height="66" stroke="#1c1c1c" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
         <text transform="translate(315 207.552)" fill="black">
-          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="24.604" y="15">net.science </tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="22.092" y="15">Net.Science </tspan>
           <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="7.132" y="33.448">Web Application</tspan>
         </text>
       </g>
@@ -142,7 +142,7 @@
           <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="1.266" y="15">HTTP API for internal </tspan>
           <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="16.21" y="33.448">and external app </tspan>
           <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="41.994" y="51.895996">access to </tspan>
-          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="35.618" y="70.34399">net.science</tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="33.106" y="70.34399">Net.Science</tspan>
         </text>
       </g>
       <g id="Line_38">
@@ -154,7 +154,7 @@
       <g id="Graphic_42" filter="url(#Shadow)"/>
       <g id="Graphic_41">
         <text transform="translate(243.472 52.104004)" fill="black">
-          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="9.92" y="15">Main net.science </tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="7.408" y="15">Main Net.Science </tspan>
           <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="37.64" y="33.448">Web App</tspan>
           <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x=".7519999" y="51.895996">Explore, Download, </tspan>
           <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="49.488" y="70.34399">Teach</tspan>

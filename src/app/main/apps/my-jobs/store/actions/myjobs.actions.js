@@ -17,11 +17,11 @@ export function getFiles(count, start, descShort, type, clearArry) {
         let filterStateArray = JSON.parse(sessionStorage.getItem("preStateValue"));
         let selectedState = filterStateArray.toString();
         if (descShort) {
-          url1 = 'https://sciduct.bii.virginia.edu/jobsvc/job_instance?&in(state,(' + selectedState + '))&limit(' + count + ',' + start + ')&sort(' + ('-' + type) + ')'
+          url1 = `${process.env.REACT_APP_SCIDUCT_JOB_SERVICE}/job_instance?&in(state,(${selectedState}))&limit(${count},${start})&sort((-${type}))`
 
         }
         else {
-          url1 = 'https://sciduct.bii.virginia.edu/jobsvc/job_instance?&in(state,(' + selectedState + '))&limit(' + count + ',' + start + ')&sort(' + ('+' + type) + ')'
+          url1 = `${process.env.REACT_APP_SCIDUCT_JOB_SERVICE}/job_instance?&in(state,(${selectedState}))&limit(${count},${start})&sort((+${type}))`
         }
 
       }
@@ -29,11 +29,11 @@ export function getFiles(count, start, descShort, type, clearArry) {
         let filterJobTypeArray = JSON.parse(sessionStorage.getItem("preJobTypeValue"));
         let selectedState = filterJobTypeArray.toString();
         if (descShort) {
-          url1 = 'https://sciduct.bii.virginia.edu/jobsvc/job_instance?&in(job_definition,(' + selectedState + '))&limit(' + count + ',' + start + ')&sort(' + ('-' + type) + ')'
+          url1 = `${process.env.REACT_APP_SCIDUCT_JOB_SERVICE}/job_instance?&in(job_definition,,(${selectedState}))&limit(${count},${start})&sort((-${type}))`
 
         }
         else {
-          url1 = 'https://sciduct.bii.virginia.edu/jobsvc/job_instance?&in(job_definition,(' + selectedState + '))&limit(' + count + ',' + start + ')&sort(' + ('+' + type) + ')'
+          url1 = `${process.env.REACT_APP_SCIDUCT_JOB_SERVICE}/job_instance?&in(job_definition,,(${selectedState}))&limit(${count},${start})&sort((+${type}))`
         }
 
       }
@@ -45,10 +45,10 @@ export function getFiles(count, start, descShort, type, clearArry) {
       let filterJobTypeArray = JSON.parse(sessionStorage.getItem("preJobTypeValue"));
       let selectedJobType = filterJobTypeArray.toString();
       if (descShort) {
-        url1 = 'https://sciduct.bii.virginia.edu/jobsvc/job_instance?&in(state,(' + selectedState + '))&in(job_definition,(' + selectedJobType + '))&limit(' + count + ',' + start + ')&sort(' + ('-' + type) + ')'
+        url1 = `${process.env.REACT_APP_SCIDUCT_JOB_SERVICE}/job_instance?&in(state,(${selectedState}))&in(job_definition,(${selectedJobType}))&limit(count,${start})&sort(-${type}))`
       }
       else {
-        url1 = 'https://sciduct.bii.virginia.edu/jobsvc/job_instance?&in(state,(' + selectedState + '))&in(job_definition,(' + selectedJobType + '))&limit(' + count + ',' + start + ')&sort(' + ('+' + type) + ')'
+        url1 = `${process.env.REACT_APP_SCIDUCT_JOB_SERVICE}/job_instance?&in(state,(${selectedState}))&in(job_definition,(${selectedJobType}))&limit(count,${start})&sort(+${type}))`
       }
     }
 
@@ -71,9 +71,9 @@ export function getFiles(count, start, descShort, type, clearArry) {
     if (descShort) {
       let count1 = count;
       let start1 = start;
-       axios = require('axios');
-      let url = 'https://sciduct.bii.virginia.edu/jobsvc/job_instance?&in(state,(Completed,Running,Cancelled,Failed,UserQueued,Queued,Held,UserHeld))&limit(' + count1 + ',' + start1 + ')&sort(' + ('-' + type) + ')'
-      config = {
+      var axios = require('axios');
+      let url = `${process.env.REACT_APP_SCIDUCT_JOB_SERVICE}/job_instance?&in(state,(Completed,Running,Cancelled,Failed,UserQueued,Queued,Held,UserHeld))&limit(${count1},${start1})&sort(-${type})`
+      var config = {
         method: 'get',
         url: url,
         headers: {
@@ -85,9 +85,9 @@ export function getFiles(count, start, descShort, type, clearArry) {
     else {
       let count1 = count;
       let start1 = start;
-       axios = require('axios');
-      let url = 'https://sciduct.bii.virginia.edu/jobsvc/job_instance?&in(state,(Completed,Running,Cancelled,Failed,UserQueued,Queued,Held,UserHeld))&limit(' + count1 + ',' + start1 + ')&sort(' + ('+' + type) + ')'
-      config = {
+      var axios = require('axios');
+      let url = `${process.env.REACT_APP_SCIDUCT_JOB_SERVICE}/job_instance?&in(state,(Completed,Running,Cancelled,Failed,UserQueued,Queued,Held,UserHeld))&limit(${count1},${start1})&sort(+${type}))`
+      var config = {
         method: 'get',
         url: url,
         headers: {

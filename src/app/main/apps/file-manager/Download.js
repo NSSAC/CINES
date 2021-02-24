@@ -14,7 +14,7 @@ function Download(props){
         if(typeof(token) === "string") {
         var config = {
           method: 'get',
-          url: `https://sciduct.bii.virginia.edu/filesvc/file/${props.fileId}`,
+          url: `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file/${props.fileId}`,
           headers: { 
             'Accept': '*/*',
             'Authorization': token

@@ -3,21 +3,61 @@ var token = localStorage.getItem("id_token");
 let arr = [];
 
 export function getJobDefinitionFiles() {
-  arr = [];
-  var axios = require("axios");
-  let url =
-    "https://sciduct.bii.virginia.edu/jobsvc/job_definition?limit(99999)";
-  var config = {
-    method: "get",
-    url: url,
-    headers: {
-      Accept: "application/json",
+arr=[];
+    var axios = require('axios');
+    let url = `${process.env.REACT_APP_SCIDUCT_JOB_SERVICE}/job_definition?limit(99999)`
+    var config = {
+      method: 'get',
+      url: url,
+      headers: {
 
-      Authorization: token,
-    },
-  };
+        'Accept': 'application/json',
 
-  const request = axios(config);
+        'Authorization': token
+      }
+    };
+  
+
+  // else {
+  //   sessionStorage.removeItem("selectedTypeArray");
+  //   sessionStorage.removeItem("preStateValue");
+  //   sessionStorage.removeItem("preJobTypeValue");
+  //   if (descShort) {
+  //     let count1 = count;
+  //     let start1 = start;
+  //     var axios = require('axios');
+  //     let url = '${process.env.REACT_APP_SCIDUCT_JOB_SERVICE}/job_instance?&in(state,(Completed,Running,Cancelled,Failed))&limit(' + count1 + ',' + start1 + ')&sort(' + ('-' + type) + ')'
+  //     var config = {
+  //       method: 'get',
+  //       url: url,
+  //       headers: {
+
+  //         'Accept': 'application/json',
+
+  //         'Authorization': token
+  //       }
+  //     };
+  //   }
+  //   else {
+  //     let count1 = count;
+  //     let start1 = start;
+  //     var axios = require('axios');
+  //     let url = '${process.env.REACT_APP_SCIDUCT_JOB_SERVICE}/job_instance?&in(state,(Completed,Running,Cancelled,Failed))&limit(' + count1 + ',' + start1 + ')&sort(' + ('+' + type) + ')'
+  //     var config = {
+  //       method: 'get',
+  //       url: url,
+  //       headers: {
+
+  //         'Accept': 'application/json',
+
+  //         'Authorization': token
+  //       }
+  //     }
+  //   };
+  // }
+
+  const request = axios(config)
+
 
   return (dispatch) =>
     request.then((response) => {

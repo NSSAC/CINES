@@ -1,6 +1,5 @@
 import React, {useEffect} from 'react';
 import {FuseSplashScreen} from '@fuse';
-import auth0Service from 'app/services/auth0Service';
 import * as userActions from 'app/auth/store/actions';
 import * as Actions from 'app/store/actions';
 import {useDispatch} from 'react-redux';

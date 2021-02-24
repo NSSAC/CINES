@@ -49,7 +49,7 @@ function JobDefinitionForm(props) {
 
     axios({
       method: "get",
-      url: `https://sciduct.bii.virginia.edu/jobsvc/job_definition/${pathEnd}`,
+      url: `${process.env.REACT_APP_SCIDUCT_JOB_SERVICE}/job_definition/${pathEnd}`,
       headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "* ",
@@ -215,7 +215,7 @@ function JobDefinitionForm(props) {
     const userToken = localStorage.getItem("id_token");
     axios({
       method: "post",
-      url: "https://sciduct.bii.virginia.edu/jobsvc/job_instance/",
+      url: `${process.env.REACT_APP_SCIDUCT_JOB_SERVICE}/job_instance/`,
       headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "* ",

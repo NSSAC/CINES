@@ -20,40 +20,37 @@ function Preview(props) {
     setPreviewmsg(issue)
   }
 
+        if(typeof(token) === "string" && (props.type === "pdf" || props.type === "png" || props.type === "jpeg" || props.type === "jpg" || props.type === "excel" || props.type === "mp3" || props.type === "mp4")) {
+          var config = {
+            method: 'get',
+            url: `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file/${props.fileId}`,
+            headers: { 
+              'Accept': '*/*',
+              'Authorization': token
+            },
+            responseType: 'arraybuffer' 
+         };
+      }
 
-  if (typeof (token) === "string" && (props.type === "pdf" || props.type === "png" || props.type === "jpeg" || props.type === "jpg" || props.type === "excel" || props.type === "mp3" || props.type === "mp4")) {
-    var config = {
-      method: 'get',
-      url: `https://sciduct.bii.virginia.edu/filesvc/file/${props.fileId}`,
-      headers: {
-        'Accept': '*/*',
-        'Authorization': token
-      },
-      responseType: 'arraybuffer'
-    };
-  }
+       else if(typeof(token) == "string") {
+        var config = {
+          method: 'get',
+          url: `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file/${props.fileId}`,
+          headers: { 
+            'Accept': '*/*',
+            'Authorization': token
+          },
+       };
+    }
 
-  // else if ((props.type === 'json' || props.type === 'geographical_region' || props.type === 'epihiperDiseaseModel' || extentionType === 'epihiperInitialization' || props.type === 'epihiperIntervention' || props.type === 'epihiperTraits')) {
-  //   var config = {
-  //     method: 'get',
-  //     url: `https://sciduct.bii.virginia.edu/filesvc/file/${props.fileId}`,
-  //     headers: {
-  //       'Accept': 'application/octet-stream',
-  //       'Authorization': token
-  //     },
-  //     // responseType: 'arraybuffer'
-  //   };
-  // }
-
-  else if (typeof (token) == "string") {
-    config = {
-      method: 'get',
-      url: `https://sciduct.bii.virginia.edu/filesvc/file/${props.fileId}`,
-      headers: {
-        'Accept': '*/*',
-        'Authorization': token
-      },
-    };
+    else if(typeof(token) == "object") {
+      var config = {
+        method: 'get',
+        url: `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file/${props.fileId}`,
+        headers: { 
+          'Accept': '*/*'
+        }
+     };
   }
 
   else if (typeof (token) == "object") {

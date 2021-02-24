@@ -4,9 +4,6 @@ import {darken} from '@material-ui/core/styles/colorManipulator';
 import {FuseAnimate} from '@fuse';
 import {Link} from 'react-router-dom';
 import clsx from 'clsx';
-import JWTLoginTab from './tabs/JWTLoginTab';
-import FirebaseLoginTab from './tabs/FirebaseLoginTab';
-import Auth0LoginTab from './tabs/Auth0LoginTab';
 import {makeStyles} from '@material-ui/styles';
 import SciDuctLoginTab from './tabs/SciDuctLoginTab';
 

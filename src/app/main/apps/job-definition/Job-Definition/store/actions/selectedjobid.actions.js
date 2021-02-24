@@ -4,17 +4,15 @@ var token = localStorage.getItem("id_token");
 export function setSelectedItem(id) {
   var axios = require("axios");
 
-  let url = `https://sciduct.bii.virginia.edu/jobsvc/job_definition/${id}`;
-  var config = {
+  let url = `${process.env.REACT_APP_SCIDUCT_JOB_SERVICE}/job_definition/${id}`
+    var config = {
     method: "get",
     url: url,
     headers: {
       Accept: "application/json",
-
-      Authorization: token,
+      Authorization: token
     },
   };
-
   const request = axios(config);
 
   return (dispatch) =>
