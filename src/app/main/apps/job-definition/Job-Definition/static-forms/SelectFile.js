@@ -7,6 +7,7 @@ import {
 	TextFieldFormsy
 } from '@fuse/components/formsy';
 import { FusePageSimple } from '@fuse';
+import ReactTooltip from 'react-tooltip';
 
 export const Input = (props) => {
 
@@ -117,12 +118,11 @@ export const Input = (props) => {
 				<div className="flex content">
 					{inputElement}
 					{props.formData[1].description && (
-						<Tooltip title={<h4>{props.formData[1].description}</h4>} placement="right">
-							<span style={{ marginTop: '38px' }}>
+							<span className='infoIcon' data-tip={props.formData[1].description}>
 								<Icon fontSize="small">info</Icon>
 							</span>
-						</Tooltip>
 					)}{' '}
+					<ReactTooltip clickable={true} className='toolTip' place='top' effect='solid' />
 				</div>
 			}
 		/>

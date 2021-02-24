@@ -12,6 +12,7 @@ import axios from 'axios';
 import { Input } from './SelectFile.js'
 import { Icon, LinearProgress, Tooltip } from '@material-ui/core';
 import Toaster from "../Toaster";
+import ReactTooltip from 'react-tooltip';
 
 const Epihiper_cell_simulation = () => {
     const [isFormValid, setIsFormValid] = useState(false);
@@ -146,7 +147,7 @@ const Epihiper_cell_simulation = () => {
     };
 
     const description = (desc) => <Tooltip title={<h4>{desc}</h4>} placement="right">
-        <span style={{ marginTop: '38px' }}>
+        <span style={{ marginTop: '38px' }}  data-tip={desc}>
             <Icon fontSize="small">info</Icon>
         </span>
     </Tooltip>
@@ -377,6 +378,7 @@ const Epihiper_cell_simulation = () => {
                                 ) : null}
                             </div>
                         </div>
+                       <ReactTooltip clickable={true} className='toolTip' place='top' effect='solid' />
                     </div>
                 }
             />

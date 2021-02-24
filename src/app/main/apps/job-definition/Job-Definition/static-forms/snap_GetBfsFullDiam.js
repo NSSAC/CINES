@@ -17,6 +17,7 @@ import axios from 'axios';
 import { Input } from './SelectFile.js'
 import Toaster from "../Toaster";
 import { Icon, LinearProgress, Tooltip } from '@material-ui/core';
+import ReactTooltip from 'react-tooltip';
 
 const Snap_GetBfsFullDiam = () => {
     const [isFormValid, setIsFormValid] = useState(false);
@@ -128,11 +129,10 @@ const Snap_GetBfsFullDiam = () => {
         }
     };
 
-    const description = (desc) => <Tooltip title={<h4>{desc}</h4>} placement="right">
-        <span style={{ marginTop: '38px' }}>
+    const description = (desc) => 
+        <span style={{ marginTop: '38px' }}  data-tip={desc}>
             <Icon fontSize="small">info</Icon>
         </span>
-    </Tooltip>
 
     const inputChangedHandler = (event, inputIdentifier) => {
         if (event.target.value !== "") {
@@ -394,6 +394,7 @@ const Snap_GetBfsFullDiam = () => {
                                 ) : null}
                             </div>
                         </div>
+                        <ReactTooltip clickable={true} className='toolTip' place='top' effect='solid' />
                     </div>
                 }
             />

@@ -43,6 +43,17 @@ input[type=submit]:hover {
     white-space: pre-wrap;
 }
 
+.infoIcon {
+    margin-top: 38px;
+}
+
+.toolTip {
+    width:280px;
+    white-space:pre-wrap;
+    word-break: break-all;
+}
+
+
 .root {
     white-space: nowrap;
     width:100%;
@@ -71,6 +82,10 @@ input[type=submit]:hover {
         align-items: center;
         display: block
       }
+
+      .infoIcon {
+        margin-top: 15px;
+    }
     
   }
   
