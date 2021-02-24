@@ -93,7 +93,7 @@ function FileManagerApp(props) {
         else {
             var config = {
                 method: 'get',
-                url: `https://sciduct.bii.virginia.edu/filesvc/file${targetMeta}`,
+                url: `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file${targetMeta}`,
                 headers: {
                     'Accept': 'application/vsmetadata+json',
                 }

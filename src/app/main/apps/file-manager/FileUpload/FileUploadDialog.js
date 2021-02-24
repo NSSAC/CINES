@@ -204,7 +204,7 @@ export const FileUpload = ({ fileTypes, setUploadFile, dialogTargetPath, setShow
 
       return axios({
         method: 'post',
-        url: "${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file/" + targetPath,
+        url: `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file/${targetPath}`,
         headers: {
           'Content-Type': 'application/json',
           'Authorization': userToken,
@@ -250,7 +250,7 @@ export const FileUpload = ({ fileTypes, setUploadFile, dialogTargetPath, setShow
 
       axios({
         method: 'put',
-        url: "${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file/" + targetPath + fileName,
+        url: `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file/${targetPath}` + `${fileName}`,
         headers: {
           'Content-Type': 'application/json',
           'Access-Control-Allow-Origin': '* ',

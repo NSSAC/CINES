@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Typography, LinearProgress, TableRow, Table, TableCell, TableHead, TableBody } from '@material-ui/core';
+import { AccountTree as FileIcon, Code as MetadataIcon } from "@material-ui/icons";
+import { Typography, LinearProgress, TableRow, Table, TableCell, TableHead, TableBody, Tab, Tabs } from '@material-ui/core';
 import JSONTree from 'react-json-tree'
 import { FuseAnimate } from '@fuse';
 import { Vega } from 'react-vega';
 import Download from './Download';
+
 
 function Preview(props) {
   var extentionType = props.type;
@@ -14,51 +16,42 @@ function Preview(props) {
   const [errormsg, setErrormsg] = useState("");
   const [previewmsg, setPreviewmsg] = useState("");
   var token = localStorage.getItem('id_token')
+  const [selectedTab, setSelectedTab] = useState(0);
 
   function DownloadFile(issue) {
     setDownloadFlag(true)
     setPreviewmsg(issue)
   }
 
-        if(typeof(token) === "string" && (props.type === "pdf" || props.type === "png" || props.type === "jpeg" || props.type === "jpg" || props.type === "excel" || props.type === "mp3" || props.type === "mp4")) {
-          var config = {
-            method: 'get',
-            url: `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file/${props.fileId}`,
-            headers: { 
-              'Accept': '*/*',
-              'Authorization': token
-            },
-            responseType: 'arraybuffer' 
-         };
-      }
+  if (typeof (token) === "string" && (props.type === "pdf" || props.type === "png" || props.type === "jpeg" || props.type === "jpg" || props.type === "excel" || props.type === "mp3" || props.type === "mp4")) {
+    var config = {
+      method: 'get',
+      url: `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file/${props.fileId}`,
+      headers: {
+        'Accept': 'application/octet-stream',
+        'Authorization': token
+      },
+      responseType: 'arraybuffer'
+    };
+  }
 
-       else if(typeof(token) == "string") {
-        var config = {
-          method: 'get',
-          url: `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file/${props.fileId}`,
-          headers: { 
-            'Accept': '*/*',
-            'Authorization': token
-          },
-       };
-    }
-
-    else if(typeof(token) == "object") {
-      var config = {
-        method: 'get',
-        url: `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file/${props.fileId}`,
-        headers: { 
-          'Accept': '*/*'
-        }
-     };
+  else if (typeof (token) == "string") {
+     config = {
+      method: 'get',
+      url: `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file/${props.fileId}`,
+      headers: {
+        'Accept': 'application/octet-stream',
+        'Authorization': token
+      },
+    };
   }
 
   else if (typeof (token) == "object") {
-    config = {
+     config = {
       method: 'get',
-      url: `https://sciduct.bii.virginia.edu/filesvc/file/${props.fileId}`,
+      url: `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file/${props.fileId}`,
       headers: {
-        'Accept': '*/*'
+        'Accept': 'application/octet-stream'
       }
     };
   }
@@ -66,6 +59,10 @@ function Preview(props) {
   function HandleError() {
     setError(true)
     setErrormsg("The file might be corrupted and can't be previewed.")
+  }
+
+  function handleTabChange(event, value) {
+    setSelectedTab(value);
   }
 
   useEffect(() => {
@@ -125,9 +122,9 @@ function Preview(props) {
     return (
       <div className="flex flex-1 flex-col items-center justify-center">
         {previewmsg === 'unable' ?
-          <Typography className="text-20 mt-16" color="textPrimary">Unable to preview files of this type. Click <a href={() => false}className='cursor-pointer' onClick={() => DownloadFile()}>here</a> to download.</Typography>
+          <Typography className="text-20 mt-16" color="textPrimary">Unable to preview files of this type. Click <a href={() => false} className='cursor-pointer' onClick={() => DownloadFile()}>here</a> to download.</Typography>
           :
-          <Typography className="text-20 mt-16" color="textPrimary">The file size is too large and is not available for preview.  Click <a href={() => false}className='cursor-pointer' onClick={() => DownloadFile('large')}>here</a> to download.</Typography>}
+          <Typography className="text-20 mt-16" color="textPrimary">The file size is too large and is not available for preview.  Click <a href={() => false} className='cursor-pointer' onClick={() => DownloadFile('large')}>here</a> to download.</Typography>}
         <Download setDownloadFlag={(p) => setDownloadFlag(p)} name={props.name} size={props.size} fileId={props.fileId} type={props.type}></Download>
       </div>
     )
@@ -143,7 +140,7 @@ function Preview(props) {
   else if (props.size > 3200000)
     return (
       <div className="flex flex-1 flex-col items-center justify-center">
-        <Typography className="text-20 mt-16" color="textPrimary">The file size is too large and is not available for preview.  Click <a href={() => false}className='cursor-pointer' onClick={() => DownloadFile('large')}>here</a> to download.</Typography>
+        <Typography className="text-20 mt-16" color="textPrimary">The file size is too large and is not available for preview.  Click <a href={() => false} className='cursor-pointer' onClick={() => DownloadFile('large')}>here</a> to download.</Typography>
       </div>
     );
 
@@ -251,16 +248,42 @@ function Preview(props) {
   else if ((extentionType === 'json' || extentionType === 'geographical_region' || extentionType === 'epihiperDiseaseModel' || extentionType === 'epihiperInitialization' || extentionType === 'epihiperIntervention' || extentionType === 'epihiperTraits')) {
     if (typeof (data) === "object")
       return (
-        <JSONTree data={data} hideRoot={true} theme={{
-          tree: {
-            backgroundColor: '#F7F7F7'
-          },
-          label: {
-            color: 'black',
-            fontSize: '14px',
-            fontWeight: 'bold'
-          },
-        }} />
+        <FuseAnimate animation="transition.slideUpIn" delay={200}>
+          <div className="file-details p-16 sm:p-24">
+
+            <Tabs
+              value={selectedTab}
+              onChange={handleTabChange}
+              variant="fullWidth"
+              className="w-full mb-32"
+            >
+              <Tab
+                icon={<FileIcon alt="JSON Tree" />}
+                className="min-w-0"
+                title="JSON Tree"
+
+              />
+              <Tab
+                className="min-w-0"
+                icon={<MetadataIcon alt="JSON Original" />}
+                title="JSON Original"
+              />
+            </Tabs>
+            {selectedTab === 0 && <JSONTree data={data} hideRoot={true} theme={{
+              tree: {
+                backgroundColor: '#F7F7F7'
+              },
+              label: {
+                color: 'black',
+                fontSize: '14px',
+                fontWeight: 'bold'
+              },
+            }} />}
+            {selectedTab === 1 && JSON.stringify(data, null, 2)}
+          </div>
+
+        </FuseAnimate>
+
       )
     else {
       return (
@@ -348,7 +371,7 @@ function Preview(props) {
   else
     return (
       <div className="flex flex-1 flex-col items-center justify-center">
-        <Typography className="text-20 mt-16" color="textPrimary">Unable to preview files of this type. Click <a href={() => false}className='cursor-pointer' onClick={() => DownloadFile("unable")}>here</a> to download.</Typography>
+        <Typography className="text-20 mt-16" color="textPrimary">Unable to preview files of this type. Click <a href={() => false} className='cursor-pointer' onClick={() => DownloadFile("unable")}>here</a> to download.</Typography>
       </div>
     );
 }
