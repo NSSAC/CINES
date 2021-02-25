@@ -18,6 +18,13 @@ function Preview(props) {
   var token = localStorage.getItem('id_token')
   const [selectedTab, setSelectedTab] = useState(0);
 
+  const hereButton = {
+    fontFamily: 'Muli,Roboto,"Helvetica",Arial,sans-serif',
+    fontSize: '2rem',
+    fontWeight: '400',
+    color: 'deepskyblue'
+  }
+
   function DownloadFile(issue) {
     setDownloadFlag(true)
     setPreviewmsg(issue)
@@ -36,7 +43,7 @@ function Preview(props) {
   }
 
   else if (typeof (token) == "string") {
-     config = {
+    config = {
       method: 'get',
       url: `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file/${props.fileId}`,
       headers: {
@@ -47,7 +54,7 @@ function Preview(props) {
   }
 
   else if (typeof (token) == "object") {
-     config = {
+    config = {
       method: 'get',
       url: `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file/${props.fileId}`,
       headers: {
@@ -119,15 +126,22 @@ function Preview(props) {
     );
 
   if (downloadFlag) {
-    return (
-      <div className="flex flex-1 flex-col items-center justify-center">
-        {previewmsg === 'unable' ?
-          <Typography className="text-20 mt-16" color="textPrimary">Unable to preview files of this type. Click <a href={() => false} className='cursor-pointer' onClick={() => DownloadFile()}>here</a> to download.</Typography>
-          :
-          <Typography className="text-20 mt-16" color="textPrimary">The file size is too large and is not available for preview.  Click <a href={() => false} className='cursor-pointer' onClick={() => DownloadFile('large')}>here</a> to download.</Typography>}
-        <Download setDownloadFlag={(p) => setDownloadFlag(p)} name={props.name} size={props.size} fileId={props.fileId} type={props.type}></Download>
-      </div>
-    )
+    if (previewmsg === 'unable')
+      return (
+        <div className="flex flex-1 flex-col items-center justify-center">
+          <Typography className="text-20 mt-16" color="textPrimary">Unable to preview files of this type. Click <button className='cursor-pointer' style={hereButton} onClick={() => DownloadFile()}>here</button> to download.</Typography>
+          <Download setDownloadFlag={(p) => setDownloadFlag(p)} name={props.name} size={props.size} fileId={props.fileId} type={props.type}></Download>
+        </div>
+      )
+    if (previewmsg === 'large')
+      return (
+        <div className="flex flex-1 flex-col items-center justify-center">
+          <Typography className="text-20 mt-16" color="textPrimary">The file size is too large and is not available for preview.  Click <button style={hereButton} className='cursor-pointer' onClick={() => DownloadFile('large')}>here</button> to download.</Typography>
+          <Download setDownloadFlag={(p) => setDownloadFlag(p)} name={props.name} size={props.size} fileId={props.fileId} type={props.type}></Download>
+        </div>
+      )
+
+    else return null;
   }
 
   else if (error === true)
@@ -140,7 +154,7 @@ function Preview(props) {
   else if (props.size > 3200000)
     return (
       <div className="flex flex-1 flex-col items-center justify-center">
-        <Typography className="text-20 mt-16" color="textPrimary">The file size is too large and is not available for preview.  Click <a href={() => false} className='cursor-pointer' onClick={() => DownloadFile('large')}>here</a> to download.</Typography>
+        <Typography className="text-20 mt-16" color="textPrimary">The file size is too large and is not available for preview.  Click <button style={hereButton} className='cursor-pointer' onClick={() => DownloadFile('large')}>here</button> to download.</Typography>
       </div>
     );
 
@@ -371,7 +385,7 @@ function Preview(props) {
   else
     return (
       <div className="flex flex-1 flex-col items-center justify-center">
-        <Typography className="text-20 mt-16" color="textPrimary">Unable to preview files of this type. Click <a href={() => false} className='cursor-pointer' onClick={() => DownloadFile("unable")}>here</a> to download.</Typography>
+        <Typography className="text-20 mt-16" color="textPrimary">Unable to preview files of this type. Click <button className='cursor-pointer' style={hereButton} onClick={() => DownloadFile("unable")}>here</button> to download.</Typography>
       </div>
     );
 }

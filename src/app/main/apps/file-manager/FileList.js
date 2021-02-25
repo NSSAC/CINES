@@ -181,7 +181,6 @@ function FileList(props) {
                                         key={node.id}
                                         hover
                                         onClick={onClickHandler(node, node.isContainer)}
-
                                         selected={node.id === selectedItemId}
                                         className="cursor-pointer"
                                     >
@@ -213,9 +212,15 @@ function FileList(props) {
                 </FuseAnimate>
             );
         else if (Object.values(files).length === 0) {
-            return (
+            if (props.containerFlag === 'error')
+                return (
+                    <div className="flex flex-1 flex-col items-center justify-center mt-20">
+                        <Typography className="text-18 mt-16" color="textPrimary">No such file / folder exists.</Typography>
+                    </div>
+                )
+            else return (
                 <div className="flex flex-1 flex-col items-center justify-center mt-20">
-                    <Typography className="text-18 mt-16" color="textPrimary">This folder is empty &nbsp; OR &nbsp; No such file / folder exists.</Typography>
+                    <Typography className="text-18 mt-16" color="textPrimary">The folder is empty.</Typography>
                 </div>
             )
         }
