@@ -85,7 +85,7 @@ function FileManagerApp(props) {
                 method: 'get',
                 url: `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file${targetMeta}`,
                 headers: {
-                    'Accept': 'application/vsmetadata+json',
+                    'Accept': '*/*',
                     'Authorization': token
                 }
             };
@@ -95,7 +95,7 @@ function FileManagerApp(props) {
                 method: 'get',
                 url: `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file${targetMeta}`,
                 headers: {
-                    'Accept': 'application/vsmetadata+json',
+                    'Accept': '*/*',
                 }
             };
         }

@@ -17,7 +17,7 @@ function DeleteFile(props){
           method: 'delete',
           url: `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file/${props.fileId}?recursive=true`,
           headers: { 
-            'Accept': 'application/vsmetadata+json',
+            'Accept': '*/*',
             'Authorization': token
           },
        }

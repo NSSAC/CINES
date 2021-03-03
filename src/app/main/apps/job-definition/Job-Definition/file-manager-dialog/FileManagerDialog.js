@@ -111,7 +111,7 @@ function FMPopup({ showModal, setShowModal, handleFMClose, setFileChosen, setFil
                 method: 'get',
                 url: `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file${targetMeta}`,
                 headers: {
-                    'Accept': 'application/vsmetadata+json',
+                    'Accept': '*/*',
                     'Authorization': token
                 }
             };
