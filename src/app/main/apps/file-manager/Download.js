@@ -16,7 +16,7 @@ function Download(props){
           method: 'get',
           url: `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file/${props.fileId}`,
           headers: { 
-            'Accept': 'octet-stream',
+            'Accept': 'application/octet-stream',
             'Authorization': token
           },
           responseType: 'blob' 

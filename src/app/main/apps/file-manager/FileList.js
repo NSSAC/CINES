@@ -79,7 +79,7 @@ function FileList(props) {
     })
 
     if (props.containerFlag || props.targetMeta === '') {
-        if (!selectedItem) {
+        if (!selectedItem && searchResults[0]) {
             if (Object.values(files).length > 0 && (searchResults[0].id !== undefined)) {
                 dispatch(Actions.setSelectedItem(searchResults[0].id));
             }
@@ -225,12 +225,14 @@ function FileList(props) {
             )
         }
 
-        else if (searchResults.length === 0)
+        else if (searchResults.length === 0 && props.search !== '')
             return (
                 <div className="flex flex-1 flex-col items-center justify-center mt-20">
                     <Typography className="text-18 mt-16" color="textPrimary">No match found for "{props.search}". Please try finding something else.</Typography>
                 </div>
             )
+
+       else return null
 
 
     }
