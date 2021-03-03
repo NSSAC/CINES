@@ -77,6 +77,23 @@ function FileManagerApp(props) {
         document.removeEventListener("keydown", escFunction, false);
     }
 
+    function initUser(){
+        if(path.endsWith('/home/')){
+        var axios = require('axios');
+        if(typeof(token) === "string"){
+            let config1 = {
+                method: 'get',
+                url: `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/initialize`,
+                headers:{
+                    'Accept': 'application/json',
+                    'Authorization': token
+                }
+            };
+            const request = axios(config1)
+            }
+        }
+    }
+
     async function getMetadata(targetMeta) {
 
         var axios = require('axios');
@@ -161,14 +178,13 @@ function FileManagerApp(props) {
         }
     }
 
-
-
     useEffect(() => {
         dispatch(Actions.getFiles(targetPath, 'GET_FILES'))
         setIsFolder(true)
         setcheckFlag(false);
         getMetadata(targetMeta)
         setSearch("")
+        initUser();
     }, [dispatch, props, props.location, props.history]);
 
 
