@@ -51,15 +51,16 @@ function JobDefinitionForm(props) {
       method: "get",
       url: `${process.env.REACT_APP_SCIDUCT_JOB_SERVICE}/job_definition/${pathEnd}`,
       headers: {
-        "Content-Type": "application/json",
+       
+        'Accept': '*/*',
         "Access-Control-Allow-Origin": "* ",
+
         Authorization: userToken,
       },
     }).then(
       (res) => {
         setSpinnerFlag(false);
         if (res.data) {
-          // var createFromData = JSON.parse(res.data.input_schema).properties;
           var createFromData = res.data.input_schema.properties;
           var inputFileData = res.data.input_files;
           var outputFiles = res.data.output_files;

@@ -65,7 +65,7 @@ function JobDefinitionFileList(props) {
         return data;
     });
 
-    if (Object.keys(selectedItem).length === 0) {
+    if (Object.keys(selectedItem).length === 0 && searchResult.length > 0) {
       dispatch(Actions.setSelectedItem(searchResult[0].id));
     }
   }

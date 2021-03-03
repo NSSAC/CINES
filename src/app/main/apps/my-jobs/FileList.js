@@ -43,7 +43,7 @@ function FileList(props) {
         //setSelectedId(files[0].id)
         lastResult = files[2]['content-range'].split('/')[0].split('-')[1]
         files = files[1]
-        if (Object.keys(selectedItem).length === 0) {
+        if (Object.keys(selectedItem).length === 0 && files.length > 0) {
             dispatch(Actions.setSelectedItem(files[0].id));
 
         }
