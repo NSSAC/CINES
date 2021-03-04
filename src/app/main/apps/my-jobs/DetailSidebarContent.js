@@ -52,7 +52,6 @@ const useStyles = makeStyles({
 function DetailSidebarContent(props) {
   const files = useSelector(({ myJobsApp }) => myJobsApp.myjobs);
   const selectedItem = useSelector(({ myJobsApp }) => myJobsApp.selectedjobid);
-  console.log(selectedItem);
   const [selectedTab, setSelectedTab] = useState(0);
   const [showDialog, setshowDialog] = useState(false);
   const [standardOut, setStandardOut] = useState("");

@@ -1,169 +1,164 @@
-import React, { useState } from 'react';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Slide from '@material-ui/core/Slide';
-import {  SelectFormsy } from '@fuse';
-import Formsy from 'formsy-react';
-import './Filterdialog.css';
-import MenuItem from '@material-ui/core/MenuItem';
-import JOBTYPEVALUE from './jobtypevalueconfig.js';
-import Chip from '@material-ui/core/Chip';
-import TagFacesIcon from '@material-ui/icons/TagFaces';
-import { makeStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
-import { useDispatch } from 'react-redux';
-import * as Actions from '../store/actions';
+import React, { useState } from "react";
+import Button from "@material-ui/core/Button";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import Slide from "@material-ui/core/Slide";
+import { SelectFormsy } from "@fuse";
+import Formsy from "formsy-react";
+import "./Filterdialog.css";
+import MenuItem from "@material-ui/core/MenuItem";
+import JOBTYPEVALUE from "./jobtypevalueconfig.js";
+import Chip from "@material-ui/core/Chip";
+import TagFacesIcon from "@material-ui/icons/TagFaces";
+import { makeStyles } from "@material-ui/core/styles";
+import Paper from "@material-ui/core/Paper";
+import { useDispatch } from "react-redux";
+import * as Actions from "../store/actions";
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 //var state = ""
-export const MyJobFilter = ({ showModal, handleClose, handleLogout, remainingTime }) => {
+export const MyJobFilter = ({
+  showModal,
+  handleClose,
+  handleLogout,
+  remainingTime,
+}) => {
   const useStyles = makeStyles((theme) => ({
     root: {
-      display: 'inline-block',
-      justifyContent: 'start',
+      display: "inline-block",
+      justifyContent: "start",
 
-      listStyle: 'none',
+      listStyle: "none",
       padding: theme.spacing(0.5),
       margin: 0,
     },
     chip: {
-      display: 'inline-block',
+      display: "inline-block",
       margin: theme.spacing(0.5),
-      paddingTop: "5px"
-
+      paddingTop: "5px",
     },
     dialogwidth: {
-      minWidth: "100px !important"
-    }
+      minWidth: "100px !important",
+    },
   }));
   const dispatch = useDispatch();
   const [state, setState1] = React.useState("");
-  const [preStateValue, setPreStateValue] = useState([])
-  const [preJobTypeValue, setPreJobTypeValue] = useState([])
+  const [preStateValue, setPreStateValue] = useState([]);
+  const [preJobTypeValue, setPreJobTypeValue] = useState([]);
   const [jobTypeArray, setjobTypeArray] = useState([]);
   const [selectedStateFlag, setselectedStateFlag] = useState(false);
-  const [selectedTypeArray, setSelectedTypeArray] = useState([])
-  const [selectedValue, setselectedValue] = useState("")
-  const [stateFlag, setStateFlag] = useState(false)
+  const [selectedTypeArray, setSelectedTypeArray] = useState([]);
+  const [selectedValue, setselectedValue] = useState("");
+  const [stateFlag, setStateFlag] = useState(false);
 
- 
   const changeHandler = (e) => {
     /* Flag to enable value dropdown */
-    setStateFlag(true)
-    setState1(e.target.value)
-    setselectedValue("")
+    setStateFlag(true);
+    setState1(e.target.value);
+    setselectedValue("");
 
-    if (e.target.value === 'State') {
-      setjobTypeArray(JOBTYPEVALUE.statusType)
-      setselectedStateFlag(true)
+    if (e.target.value === "State") {
+      setjobTypeArray(JOBTYPEVALUE.statusType);
+      setselectedStateFlag(true);
+    } else {
+      setjobTypeArray(JOBTYPEVALUE.jobDefinationType);
+      setselectedStateFlag(false);
     }
-    else {
-      setjobTypeArray(JOBTYPEVALUE.jobDefinationType)
-      setselectedStateFlag(false)
-    }
-  }
+  };
 
   const onvalueChangeHandeler = (e) => {
-    setselectedValue(e.target.value)
-  }
+    setselectedValue(e.target.value);
+  };
 
   function addData() {
-
-
     if (!selectedTypeArray.includes(state)) {
-      setSelectedTypeArray(selectedTypeArray => [...selectedTypeArray, state]);
+      setSelectedTypeArray((selectedTypeArray) => [
+        ...selectedTypeArray,
+        state,
+      ]);
     }
     if (selectedStateFlag) {
       if (!preStateValue.includes(selectedValue)) {
-        setPreStateValue(preStateValue => [...preStateValue, selectedValue]);
+        setPreStateValue((preStateValue) => [...preStateValue, selectedValue]);
       }
-    }
-    else {
+    } else {
       if (!preJobTypeValue.includes(selectedValue)) {
-        setPreJobTypeValue(preJobTypeValue => [...preJobTypeValue, selectedValue]);
+        setPreJobTypeValue((preJobTypeValue) => [
+          ...preJobTypeValue,
+          selectedValue,
+        ]);
       }
     }
     setState1("");
-    setselectedValue("")
-    setStateFlag(false)
-
+    setselectedValue("");
+    setStateFlag(false);
   }
 
   const applyFilter = () => {
-    sessionStorage.setItem("resetPage", JSON.stringify(true))
-    sessionStorage.setItem("selectedTypeArray", JSON.stringify(selectedTypeArray));
+    sessionStorage.setItem("resetPage", JSON.stringify(true));
+    sessionStorage.setItem(
+      "selectedTypeArray",
+      JSON.stringify(selectedTypeArray)
+    );
     sessionStorage.setItem("preStateValue", JSON.stringify(preStateValue));
     sessionStorage.setItem("preJobTypeValue", JSON.stringify(preJobTypeValue));
     sessionStorage.setItem("isFilterApplied", JSON.stringify(true));
-    handleClose()
-    dispatch(Actions.getFiles(10, 0, true, 'creation_date', true, true));
-
-  }
+    handleClose();
+    dispatch(Actions.getFiles(10, 0, true, "creation_date", true, true));
+  };
   const reset = () => {
-    sessionStorage.setItem("resetPage", JSON.stringify(true))
+    sessionStorage.setItem("resetPage", JSON.stringify(true));
     setPreStateValue([]);
     setSelectedTypeArray([]);
     setPreJobTypeValue([]);
-    let start = 1
-    let type = 'creation_date';
+    let start = 1;
+    let type = "creation_date";
     let descShort = true;
     sessionStorage.setItem("isFilterApplied", JSON.stringify(false));
     dispatch(Actions.getFiles(10, 1, descShort, type, true));
     sessionStorage.setItem("count", start);
     sessionStorage.setItem("shortOrder", JSON.stringify(descShort));
-  }
+  };
 
   const onCancle = () => {
     setState1("");
-    setselectedValue("")
-    // setPreStateValue([]);
-    // setSelectedTypeArray([]);
-    // setPreJobTypeValue([]);
-    handleClose()
-  }
+    setselectedValue("");
+    handleClose();
+  };
 
   const handleDelete = (chipToDelete) => {
     var index = preStateValue.indexOf(chipToDelete);
 
     preStateValue.splice(index, 1);
-    setPreStateValue([...preStateValue])
+    setPreStateValue([...preStateValue]);
 
     if (preStateValue.length === 0) {
-       index = selectedTypeArray.indexOf('State');
+      index = selectedTypeArray.indexOf("State");
       selectedTypeArray.splice(index, 1);
-      setSelectedTypeArray([...selectedTypeArray])
+      setSelectedTypeArray([...selectedTypeArray]);
       if (selectedTypeArray.length === 0) {
-        reset()
+        reset();
       }
-
     }
-
-    // setPreStateValue(preStateValue => [...preStateValue, preStateValue.splice( index, 1 )])
-    //setPreStateValue((preStateValue) => preStateValue.filter((preStateValue) => preStateValue !== chipToDelete));
-    //let status = preStateValue
   };
 
   const handleDeleteJob = (chipToDelete) => {
-
     var index = preJobTypeValue.indexOf(chipToDelete);
 
     preJobTypeValue.splice(index, 1);
-    setPreJobTypeValue([...preJobTypeValue])
+    setPreJobTypeValue([...preJobTypeValue]);
 
     if (preJobTypeValue.length === 0) {
-       index = selectedTypeArray.indexOf('Job Type');
+      index = selectedTypeArray.indexOf("Job Type");
       selectedTypeArray.splice(index, 1);
-      setSelectedTypeArray([...selectedTypeArray])
+      setSelectedTypeArray([...selectedTypeArray]);
       if (selectedTypeArray.length === 0) {
-        reset()
+        reset();
       }
-
     }
-
 
     //setPreJobTypeValue((preJobTypeValue) => preJobTypeValue.filter((preJobTypeValue) => preJobTypeValue !== chipToDelete));
   };
@@ -178,65 +173,64 @@ export const MyJobFilter = ({ showModal, handleClose, handleLogout, remainingTim
         aria-labelledby="alert-dialog-slide-title"
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle id="alert-dialog-slide-title">{"Filter By"}
-        </DialogTitle>
+        <DialogTitle id="alert-dialog-slide-title">{"Filter By"}</DialogTitle>
         <DialogContent>
-          {<Formsy
-
-            className="flex flex-col justify-center">
-            <SelectFormsy
-              className="my-16"
-              name="related"
-              label="Select type"
-              value={state}
-              onChange={(e) => changeHandler(e)}
-              variant="outlined">
-              <MenuItem value="State">Status</MenuItem>
-              <MenuItem value="Job Type">Job Type</MenuItem>
-            </SelectFormsy>
-            {stateFlag ? <SelectFormsy
-              className="my-16"
-              name="related"
-              label="Select value"
-              value={state}
-              variant="outlined"
-              onChange={(e) => onvalueChangeHandeler(e)}>
-              {
-                jobTypeArray.map((item) => {
-                  return (
-                    <MenuItem key={item} value={item}>{item}</MenuItem>
-                  )
-
-                })}
-
-            </SelectFormsy> : null
-            }
-          </Formsy>}
+          {
+            <Formsy className="flex flex-col justify-center">
+              <SelectFormsy
+                className="my-16"
+                name="related"
+                label="Select type"
+                value={state}
+                onChange={(e) => changeHandler(e)}
+                variant="outlined"
+              >
+                <MenuItem value="State">Status</MenuItem>
+                <MenuItem value="Job Type">Job Type</MenuItem>
+              </SelectFormsy>
+              {stateFlag ? (
+                <SelectFormsy
+                  className="my-16"
+                  name="related"
+                  label="Select value"
+                  value={state}
+                  variant="outlined"
+                  onChange={(e) => onvalueChangeHandeler(e)}
+                >
+                  {jobTypeArray.map((item) => {
+                    return (
+                      <MenuItem key={item} value={item}>
+                        {item}
+                      </MenuItem>
+                    );
+                  })}
+                </SelectFormsy>
+              ) : null}
+            </Formsy>
+          }
 
           <DialogActions>
-            <Button onClick={addData} variant="contained"
+            <Button
+              onClick={addData}
+              variant="contained"
               disabled={selectedValue === ""}
-
             >
               Add
-          </Button>
+            </Button>
           </DialogActions>
 
-
-          <div className="absolut mt-5" >
-            {
-              preStateValue.length !== 0 ? <spa> Status: </spa> : null
-            }
-            {preStateValue.map((data) => {
+          <div className="absolut mt-5">
+            {preStateValue.length !== 0 ? <span> Status: </span> : null}
+            {preStateValue.map((data, index) => {
               let icon;
 
-              if (data.label === 'React') {
+              if (data.label === "React") {
                 icon = <TagFacesIcon />;
               }
 
               return (
-                <Paper component="ul" className={classes.root}>
-                  <li key={data.key}>
+                <Paper key={index} component="ul" className={classes.root}>
+                  <li key={index}>
                     <Chip
                       icon={icon}
                       label={data}
@@ -249,22 +243,19 @@ export const MyJobFilter = ({ showModal, handleClose, handleLogout, remainingTim
             })}
           </div>
           <div>
-
-            {
-              preJobTypeValue.length !== 0 ? <spa> Job Type:</spa> : null
-            }
-            {preJobTypeValue.map((data) => {
+            {preJobTypeValue.length !== 0 ? <span> Job Type:</span> : null}
+            {preJobTypeValue.map((data, index) => {
               let icon;
 
-
               return (
-                <Paper component="ul" className={classes.root}>
-                  <li key={data.key}>
+                <Paper key={index} component="ul" className={classes.root}>
+                  <li key={index}>
                     <Chip
                       icon={icon}
                       label={data}
                       onDelete={() => handleDeleteJob(data)}
-                      className={classes.chip} />
+                      className={classes.chip}
+                    />
                   </li>
                 </Paper>
               );
@@ -272,25 +263,29 @@ export const MyJobFilter = ({ showModal, handleClose, handleLogout, remainingTim
           </div>
         </DialogContent>
         <DialogActions>
-          <Button onClick={applyFilter}
+          <Button
+            onClick={applyFilter}
             disabled={selectedTypeArray.length === 0}
             variant="contained"
             color="default"
           >
-
             Apply
           </Button>
-          <Button onClick={reset}
-            disabled={selectedTypeArray.length === 0 && (preStateValue.length === 0 && preJobTypeValue.length === 0)}
+          <Button
+            onClick={reset}
+            disabled={
+              selectedTypeArray.length === 0 &&
+              preStateValue.length === 0 &&
+              preJobTypeValue.length === 0
+            }
             variant="contained"
-            color="default"  >
+            color="default"
+          >
             Reset
           </Button>
-          <Button onClick={onCancle}    >
-            Close
-          </Button>
+          <Button onClick={onCancle}>Close</Button>
         </DialogActions>
       </Dialog>
     </div>
   );
-}
+};

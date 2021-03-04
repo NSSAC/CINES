@@ -104,7 +104,6 @@ function JobDefinitionFileList(props) {
  
   const onSelectClick = (row) => {
     localStorage.setItem("selectedJobDefinition", JSON.stringify(row));
-    console.log(row);
     var target = window.location.pathname + row.id;
     props.history.push(target);
   };

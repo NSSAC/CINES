@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import withReducer from 'app/store/withReducer';
 import * as Actions from './store/actions';
 import reducer from './store/reducers';
-import FileList from './FileList';
+import MyJobsFileList from './MyJobsFileList';
 import DetailSidebarHeader from './DetailSidebarHeader';
 import DetailSidebarContent from './DetailSidebarContent';
 import MainSidebarHeader from './MainSidebarHeader';
@@ -141,7 +141,7 @@ function MyJobsApp(props) {
                 </div>
             }
             content={
-                <FileList flag={flag} pageLayout={pageLayout} />
+                <MyJobsFileList flag={flag} pageLayout={pageLayout} />
             }
             leftSidebarVariant="temporary"
 
