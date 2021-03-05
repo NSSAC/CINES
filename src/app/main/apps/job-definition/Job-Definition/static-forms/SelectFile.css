@@ -94,7 +94,7 @@ input[type=submit]:hover {
     width: 100%
 }
 
-.MuiGrid-spacing-xs-1{
+.MuiGrid-spacing-xs-3 {
     width: auto !important;
     margin: auto !important;
-  }
+}
