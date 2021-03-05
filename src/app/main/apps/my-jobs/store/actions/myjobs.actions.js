@@ -86,7 +86,7 @@ export function getFiles(count, start, descShort, type, clearArry) {
       let count1 = count;
       let start1 = start;
        axios = require('axios');
-      let url = `${process.env.REACT_APP_SCIDUCT_JOB_SERVICE}/job_instance?&in(state,(Completed,Running,Cancelled,Failed,UserQueued,Queued,Held,UserHeld))&limit(${count1},${start1})&sort(+${type}))`
+      let url = `${process.env.REACT_APP_SCIDUCT_JOB_SERVICE}/job_instance?&in(state,(Completed,Running,Cancelled,Failed,UserQueued,Queued,Held,UserHeld))&limit(${count1},${start1})&sort(+${type})`
        config = {
         method: 'get',
         url: url,

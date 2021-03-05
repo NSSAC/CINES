@@ -1,19 +1,16 @@
 import React, { useState } from "react";
-import {
-  Typography,
-  Divider,
-} from "@material-ui/core";
+import { Typography, Divider } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 import { FuseAnimate } from "@fuse";
 import { useSelector } from "react-redux";
 import clsx from "clsx";
-import {Tabs, Tab} from "@material-ui/core";
+import { Tabs, Tab } from "@material-ui/core";
 import MetadataInfoDialog from "app/main/apps/my-jobs/MetadataDialog";
 import {
   InsertDriveFile as FileIcon,
   ListAlt as MetadataIcon,
 } from "@material-ui/icons";
-import {useHistory} from "react-router-dom"
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles({
   table: {
@@ -55,23 +52,23 @@ function DetailSidebarContent(props) {
   const [showDialog, setshowDialog] = useState(false);
   const [standardOut, setStandardOut] = useState("");
   const [headerTitle, setHeaderTitle] = useState("");
-  const x =false;
+  const x = false;
+  //const opendialog =Boolean;
+const classes = useStyles();
 
-  const classes = useStyles();
-
-  const navigateStyle={
-    color: 'deepskyblue',
-    overflowWrap: 'anywhere',
-    cursor: 'pointer'
-  }
+  const navigateStyle = {
+    color: "deepskyblue",
+    overflowWrap: "anywhere",
+    cursor: "pointer",
+  };
   const openoutputDialog = () => {
     setshowDialog(true);
-    setStandardOut(selectedItem.standard_out);
+    setStandardOut(selectedItem.stdout);
     setHeaderTitle("Output");
   };
   const openErrorDialog = () => {
     setshowDialog(true);
-    setStandardOut(selectedItem.standard_err);
+    setStandardOut(selectedItem.stderr);
     setHeaderTitle("Error");
   };
 
@@ -84,21 +81,21 @@ function DetailSidebarContent(props) {
   }
 
   function navigateFile(selectedItem) {
-    history.push("/apps/files" + selectedItem.output_container + "/")
+    history.push("/apps/files" + selectedItem.output_container + "/");
   }
 
   return (
     <FuseAnimate animation="transition.slideUpIn" delay={200}>
       <div className="file-details p-16 sm:p-24">
         {
-          <div>
+          
             <MetadataInfoDialog
-              openDialog={showDialog}
-              closeDialog={handleClose}
-              standardOut={standardOut}
-              headerTitle={headerTitle}
+              opendialog={showDialog}
+              closedialog={handleClose}
+              standardout={standardOut}
+              headertitle={headerTitle}
             ></MetadataInfoDialog>
-          </div>
+          
         }
 
         <Tabs
@@ -159,7 +156,7 @@ function DetailSidebarContent(props) {
                   </tr>
                 ) : null}
 
-                 {selectedItem.output_data ? (
+                {selectedItem.output_data ? (
                   <tr>
                     <th> Output data- {x}</th>
                     <td> {String(selectedItem.output_data.output)} </td>
@@ -173,38 +170,46 @@ function DetailSidebarContent(props) {
                       // <Link
                       //   to={"/apps/files" + selectedItem.output_container + "/"}
                       // >
-                        <td style={navigateStyle} onClick={()=>navigateFile(selectedItem)}>
-                          &nbsp;&nbsp;{selectedItem.output_container}{" "}
-                        </td>
-                      // </Link>
+                      <td
+                        style={navigateStyle}
+                        onClick={() => navigateFile(selectedItem)}
+                      >
+                        &nbsp;&nbsp;{selectedItem.output_container}{" "}
+                      </td>
                     ) : (
+                      // </Link>
                       "-"
                     )}
                   </tr>
                 ) : null}
 
-                <tr className="state">
-                  <th> Std out</th>
-                  {selectedItem.standard_out ? (
-                    <td onClick={openoutputDialog}>
-                                 { /* eslint-disable-next-line */}
-                      <a className="cursor-pointer">Click here</a>
-                    </td>
-                  ) : (
-                    <td>-</td>
-                  )}
-                </tr>
-                <tr className="state">
-                  <th> Std error</th>
-                  {selectedItem.standard_err ? (
-                    <td onClick={openErrorDialog}>
-                                  { /* eslint-disable-next-line */}
-                      <a className="cursor-pointer">Click here</a>
-                    </td>
-                  ) : (
-                    <td>-</td>
-                  )}
-                </tr>
+                {selectedItem.stdout !== "" ? (
+                  <tr className="state">
+                    <th> Std out</th>
+                    {selectedItem.stdout ? (
+                      <td onClick={openoutputDialog}>
+                        {/* eslint-disable-next-line */}
+                        <a className="cursor-pointer">Click here</a>
+                      </td>
+                    ) : (
+                      <td>-</td>
+                    )}
+                  </tr>
+                ) : null}
+
+                {selectedItem.stderr !== "" ? (
+                  <tr className="state">
+                    <th> Std error</th>
+                    {selectedItem.stderr ? (
+                      <td onClick={openErrorDialog}>
+                        {/* eslint-disable-next-line */}
+                        <a className="cursor-pointer">Click here</a>
+                      </td>
+                    ) : (
+                      <td>-</td>
+                    )}
+                  </tr>
+                ) : null}
               </tbody>
             </table>
           </React.Fragment>

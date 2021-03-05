@@ -9,7 +9,7 @@ import './MetadataDialog.css';
 function MetadataInfoDialog(props) {
   const { onClose, value: valueProp, open, ...other } = props;
   const handleCancel = () => {
-    props.closeDialog()
+    props.closedialog()
   };
 
   return (
@@ -18,12 +18,12 @@ function MetadataInfoDialog(props) {
       disableEscapeKeyDown
       maxWidth="xs"
       aria-labelledby="confirmation-dialog-title"
-      open={props.openDialog}
+      open={props.opendialog}
       {...other}
     >
-      <DialogTitle > {props.headerTitle}</DialogTitle>
+      <DialogTitle > {props.headertitle}</DialogTitle>
       <DialogContent dividers>
-        <pre>{props.standardOut}</pre>
+        <pre>{props.standardout}</pre>
       </DialogContent>
 
       <DialogActions>
