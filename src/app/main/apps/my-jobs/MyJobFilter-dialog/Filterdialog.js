@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -7,6 +7,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import Slide from "@material-ui/core/Slide";
 import { SelectFormsy } from "@fuse";
 import Formsy from "formsy-react";
+import axios from "axios";
 import "./Filterdialog.css";
 import MenuItem from "@material-ui/core/MenuItem";
 import JOBTYPEVALUE from "./jobtypevalueconfig.js";
@@ -53,6 +54,45 @@ export const MyJobFilter = ({
   const [selectedTypeArray, setSelectedTypeArray] = useState([]);
   const [selectedValue, setselectedValue] = useState("");
   const [stateFlag, setStateFlag] = useState(false);
+  const [jobDefinationType ,setJobDefinationType] =useState([])
+  
+  var jobArray =[];
+  useEffect(() => {
+  
+    var userToken = localStorage.getItem("id_token");
+
+    axios({
+      method: "get",
+      url: `${process.env.REACT_APP_SCIDUCT_JOB_SERVICE}/job_definition?limit(99999)`,
+      headers: {
+       
+        'Accept': '*/*',
+        "Access-Control-Allow-Origin": "* ",
+
+        Authorization: userToken,
+      },
+    }).then(
+      (res) => {
+        if (res.data) {
+          var responseData = res.data;
+          createjobTypeArray(responseData)
+        }
+      },
+      (error) => {}
+    );
+  }, [axios]);
+
+
+
+const createjobTypeArray = (responseData) => {
+
+ for(let i= 0 ;i< responseData.length ; i++){
+   jobArray.push(responseData[i].id)
+   
+ }
+ setJobDefinationType(jobArray)
+}
+
 
   const changeHandler = (e) => {
     /* Flag to enable value dropdown */
@@ -64,7 +104,8 @@ export const MyJobFilter = ({
       setjobTypeArray(JOBTYPEVALUE.statusType);
       setselectedStateFlag(true);
     } else {
-      setjobTypeArray(JOBTYPEVALUE.jobDefinationType);
+     // setjobTypeArray(JOBTYPEVALUE.jobDefinationType);
+     setjobTypeArray(jobDefinationType)
       setselectedStateFlag(false);
     }
   };
