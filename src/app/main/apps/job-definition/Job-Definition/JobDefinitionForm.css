@@ -42,3 +42,8 @@ input[type=submit]:hover {
     flex-wrap: wrap;
     flex-direction: row;
 }
+
+.MuiGrid-spacing-xs-1{
+    width: auto !important;
+    margin: auto !important;
+}

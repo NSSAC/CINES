@@ -36,3 +36,8 @@ display: none;
   /* .sort-arrow1:hover{
     opacity: 1;
   } */
+
+  .MuiGrid-spacing-xs-1{
+    width: auto !important;
+    margin: auto !important;
+  }
