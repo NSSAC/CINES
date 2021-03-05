@@ -29,11 +29,11 @@ export function getFiles(count, start, descShort, type, clearArry) {
         let filterJobTypeArray = JSON.parse(sessionStorage.getItem("preJobTypeValue"));
         let selectedState = filterJobTypeArray.toString();
         if (descShort) {
-          url1 = `${process.env.REACT_APP_SCIDUCT_JOB_SERVICE}/job_instance?&in(job_definition,,(${selectedState}))&limit(${count},${start})&sort((-${type}))`
+          url1 = `${process.env.REACT_APP_SCIDUCT_JOB_SERVICE}/job_instance?&in(job_definition,(${selectedState}))&limit(${count},${start})&sort((-${type}))`
 
         }
         else {
-          url1 = `${process.env.REACT_APP_SCIDUCT_JOB_SERVICE}/job_instance?&in(job_definition,,(${selectedState}))&limit(${count},${start})&sort((+${type}))`
+          url1 = `${process.env.REACT_APP_SCIDUCT_JOB_SERVICE}/job_instance?&in(job_definition,(${selectedState}))&limit(${count},${start})&sort((+${type}))`
         }
 
       }
@@ -102,7 +102,10 @@ export function getFiles(count, start, descShort, type, clearArry) {
 
   return (dispatch) =>
     request.then((response) => {
-      arr.push(...response.data)
+      if(response != undefined && response.data.length > 0){
+        arr.push(...response.data)
+      }
+     
       dispatch({
         type: GET_FILES,
         payload: arr,

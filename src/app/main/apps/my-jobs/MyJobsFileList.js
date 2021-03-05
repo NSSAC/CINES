@@ -34,14 +34,16 @@ function MyJobsFileList(props) {
     const selectedItem = useSelector(({ myJobsApp }) => myJobsApp.selectedjobid);
     var files = Object.values(files1);
     var totalRecords = "";
-    var contentRange = "";
+ 
     var lastResult = ""
     const [selectedId, setSelectedId] = useState();
     if (files.length !== 0) {
-        contentRange = files[2]['content-range']
-        totalRecords = files[2]['content-range'].split('/')[1]
+        if(files[2]['content-range'] !== undefined){
+            totalRecords = files[2]['content-range'].split('/')[1]
+        }
+
+       
         //setSelectedId(files[0].id)
-        lastResult = files[2]['content-range'].split('/')[0].split('-')[1]
         files = files[1]
         if (Object.keys(selectedItem).length === 0 && files.length > 0) {
             dispatch(Actions.setSelectedItem(files[0].id));
@@ -242,16 +244,7 @@ function MyJobsFileList(props) {
                                             <IconButton aria-label="arrow_downward" onClick={() => toggleSorting('creation_date', 'sortByCreationDdate')}> <Icon className={sortByCreationDdateFlag ? "" : "sort-arrow"}>arrow_downward</Icon></IconButton>
                                         </Tooltip>
                                     }Creation Date</TableCell>
-                                    {/* <TableCell > {(sortByCreationDdate) ?
-                                        <Tooltip title="Sort by creation date" placement="bottom">
-                                            <IconButton aria-label="arrow_upward" onClick={() => toggleSorting('creation_date', 'sortByCreationDdate')}> <Icon>arrow_upward</Icon></IconButton>
-                                        </Tooltip>
-                                        :
-                                        <Tooltip title="Sort by creation date" placement="bottom">
-                                            <IconButton aria-label="arrow_downward" onClick={() => toggleSorting('creation_date', 'sortByCreationDdate')}></IconButton>
-                                        </Tooltip>
-                                    }Updated date</TableCell> */}
-                                    {/* <TableCell className="hidden sm:table-cell">{(sortByCompletedDdate) ? <IconButton aria-label="arrow_upward" onClick={() => toggleSorting('creation_date', 'sortByCreationDdate')}> <Icon>arrow_upward</Icon></IconButton> : <IconButton aria-label="arrow_downward" onClick={() => toggleSorting('creation_date', 'sortByCreationDdate')}> <Icon>arrow_downward</Icon></IconButton>} Completed Date</TableCell> */}
+                                  
                                 </TableRow>
                             </TableHead>
                             {files.length > 0 ?
@@ -323,22 +316,6 @@ function MyJobsFileList(props) {
                     </div> : null
                 }
 
-                {/* { <div className="">
-            <IconButton disabled={page * rowsPerPage + 1 === 1} className={'next-button'} color="primary" variant="contained" onClick={fetchPreviousSetData}> <Icon >chevron_left</Icon></IconButton><span className={'count-info'}>{contentRange}</span>  <IconButton disabled={page * rowsPerPage + rowsPerPage === totalRecords} color="primary" className={'next-button'} variant="contained" onClick={handleChangePage}> <Icon >chevron_right</Icon></IconButton> 
-                <span className={'count-info'}>Page - {page + 1}</span>
-                    </div>} */}
-
-                {/* <Button disabled={page * rowsPerPage + 1 === 1} className={'next-button'} 
-                color="primary" variant="contained"
-                 onClick={fetchPreviousSetData}>Previous</Button>
-                <span className={'count-info'}> 
-
-              {contentRange}
-                
-              
-                 </span>
-                  <Button disabled={lastResult === totalRecords} color="primary" className={'next-button'} variant="contained" onClick={handleChangePage}>Next</Button>
-                <span className={'count-info'}>Page - {page + 1}</span> */}
             </div>
         );
     }

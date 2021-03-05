@@ -43,7 +43,7 @@ function MyJobsApp(props) {
         let type = 'creation_date';
         let descShort = true;
         sessionStorage.setItem("isFilterApplied", JSON.stringify(false));
-        dispatch(Actions.getFiles(10, 0, descShort, type, false, false));
+        dispatch(Actions.getFiles(10, 0, descShort, type, true));
         sessionStorage.setItem("count", start);
         sessionStorage.setItem("sortOrder", JSON.stringify(descShort));
         sessionStorage.setItem("type", JSON.stringify(type));
