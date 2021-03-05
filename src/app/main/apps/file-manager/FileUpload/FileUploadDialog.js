@@ -334,15 +334,15 @@ export const FileUpload = ({ fileTypes, setUploadFile, dialogTargetPath, setShow
         <DialogTitle id="alert-dialog-slide-title" divider="true">{"File Upload (Click or Drag and Drop)"}</DialogTitle>
         <DialogContent divider="true">
           <DialogContentText className='mb-0' id="alert-dialog-slide-description">
-            {breadcrumbArr?<div className="flex text-16 sm:text-16" style={breadcrumb_wrap}>
+            {breadcrumbArr?<span className="flex text-16 sm:text-16" style={breadcrumb_wrap}>
               {breadcrumbArr.map((path, i) => (
-                <div key={i} className="flex items-center" >
-                  <div  title={path} style={ellipsis} >{path} </div>
+                <span key={i} className="flex items-center" >
+                  <span  title={path} style={ellipsis} >{path} </span>
                   {breadcrumbArr.length - 1 !== i && (
                     <Icon>chevron_right</Icon>
                   )}
-                </div>))}
-            </div>:null}
+                </span>))}
+            </span>:null}
           </DialogContentText>
           {/* <input className={classes.input} ref={fileInput} type="file" multiple onChange={onChangeHandler} />
           <button className={classes.customeButton} onClick={openFileDialog} type="button" >Choose File</button> */}
@@ -454,7 +454,7 @@ export const FileUpload = ({ fileTypes, setUploadFile, dialogTargetPath, setShow
           }
 
           <Button onClick={onCancle}>
-            Cancel
+            Close
           </Button>
 
         </DialogActions>

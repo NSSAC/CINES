@@ -13,7 +13,8 @@ import {
   InsertDriveFile as FileIcon,
   ListAlt as MetadataIcon,
 } from "@material-ui/icons";
-import { Link } from "react-router-dom";
+import {useHistory} from "react-router-dom"
+
 const useStyles = makeStyles({
   table: {
     "& th": {
@@ -48,6 +49,7 @@ const useStyles = makeStyles({
 // }))(Tooltip);
 
 function DetailSidebarContent(props) {
+  const history = useHistory();
   const selectedItem = useSelector(({ myJobsApp }) => myJobsApp.selectedjobid);
   const [selectedTab, setSelectedTab] = useState(0);
   const [showDialog, setshowDialog] = useState(false);
@@ -57,6 +59,11 @@ function DetailSidebarContent(props) {
 
   const classes = useStyles();
 
+  const navigateStyle={
+    color: 'deepskyblue',
+    overflowWrap: 'anywhere',
+    cursor: 'pointer'
+  }
   const openoutputDialog = () => {
     setshowDialog(true);
     setStandardOut(selectedItem.standard_out);
@@ -75,6 +82,11 @@ function DetailSidebarContent(props) {
   function handleTabChange(event, value) {
     setSelectedTab(value);
   }
+
+  function navigateFile(selectedItem) {
+    history.push("/apps/files" + selectedItem.output_container + "/")
+  }
+
   return (
     <FuseAnimate animation="transition.slideUpIn" delay={200}>
       <div className="file-details p-16 sm:p-24">
@@ -158,13 +170,13 @@ function DetailSidebarContent(props) {
                   <tr>
                     <th> Output Container</th>
                     {selectedItem.output_container ? (
-                      <Link
-                        to={"/apps/files" + selectedItem.output_container + "/"}
-                      >
-                        <td style={{ overflowWrap: "anywhere" }}>
-                          {selectedItem.output_container}{" "}
+                      // <Link
+                      //   to={"/apps/files" + selectedItem.output_container + "/"}
+                      // >
+                        <td style={navigateStyle} onClick={()=>navigateFile(selectedItem)}>
+                          &nbsp;&nbsp;{selectedItem.output_container}{" "}
                         </td>
-                      </Link>
+                      // </Link>
                     ) : (
                       "-"
                     )}
@@ -203,9 +215,9 @@ function DetailSidebarContent(props) {
             <div>
               <Typography variant="h5">Input File</Typography>
             </div>
-            {selectedItem.input_files.map((data) => {
+            {selectedItem.input_files.map((data, index) => {
               return (
-                <div>
+                <div key={index}>
                   <Typography variant="h6" gutterBottom>
                     {" "}
                     {data.name}{" "}

@@ -75,7 +75,7 @@ function Preview(props) {
   useEffect(() => {
     var axios = require('axios');
 
-    setTimeout(() => {
+    // setTimeout(() => {
       async function insertData() {
         var request = axios(config)
         await request.then((response) => {
@@ -99,7 +99,7 @@ function Preview(props) {
       else {
         setLoad(true)
       }
-    }, 2000);
+    // });
 
     return () => {
       localStorage.removeItem('nodeId')
