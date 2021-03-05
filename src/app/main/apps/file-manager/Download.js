@@ -44,6 +44,7 @@ function Download(props){
       else
         props.setDownload(false)
     }, 5500);
+            // eslint-disable-next-line
   },[]) 
 
  function InsertData() {

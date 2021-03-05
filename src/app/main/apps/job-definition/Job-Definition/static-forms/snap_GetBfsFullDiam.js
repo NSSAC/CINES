@@ -16,7 +16,7 @@ import { FusePageSimple } from '@fuse';
 import axios from 'axios';
 import { Input } from './SelectFile.js'
 import Toaster from "../Toaster";
-import { Icon, LinearProgress, Tooltip } from '@material-ui/core';
+import { Icon, LinearProgress } from '@material-ui/core';
 import ReactTooltip from 'react-tooltip';
 
 const Snap_GetBfsFullDiam = () => {
@@ -85,6 +85,7 @@ const Snap_GetBfsFullDiam = () => {
             }
 
         );
+                // eslint-disable-next-line
     }, [axios]);
 
     const creatForm = (createFromData, inputFileData, outputFiles, requiredFeildArray, responseData) => {
@@ -189,7 +190,6 @@ const Snap_GetBfsFullDiam = () => {
     }
 
     function onFormSubmit(requestJson) {
-        var path = window.location.pathname.replace("/apps/job-definition/", "")
         const userToken = localStorage.getItem('id_token')
         axios({
             method: 'post',

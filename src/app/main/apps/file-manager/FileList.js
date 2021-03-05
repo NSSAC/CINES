@@ -218,6 +218,15 @@ function FileList(props) {
                         <Typography className="text-18 mt-16" color="textPrimary">No such file / folder exists.</Typography>
                     </div>
                 )
+
+            else if (props.targetMeta === '')
+                return (
+                    <div className="flex flex-1 flex-col items-center justify-center mt-40">
+                        <Typography className="text-20 mt-16" color="textPrimary">Loading</Typography>
+                        <LinearProgress className="w-xs" color="secondary" />
+                    </div>
+                )
+
             else return (
                 <div className="flex flex-1 flex-col items-center justify-center mt-20">
                     <Typography className="text-18 mt-16" color="textPrimary">The folder is empty.</Typography>
@@ -232,7 +241,7 @@ function FileList(props) {
                 </div>
             )
 
-       else return null
+        else return null
 
 
     }

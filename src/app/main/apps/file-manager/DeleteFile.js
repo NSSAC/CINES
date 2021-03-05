@@ -23,6 +23,7 @@ function DeleteFile(props){
        }
    useEffect(() => {
         DeleteData()
+                // eslint-disable-next-line
     },[]) 
 
     if(success){}

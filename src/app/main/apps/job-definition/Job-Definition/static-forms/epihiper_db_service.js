@@ -79,6 +79,7 @@ const Snap_GetBfsFullDiam = () => {
             }
 
         );
+                // eslint-disable-next-line
     }, [axios]);
 
     const creatForm = (createFromData, inputFileData, outputFiles, requiredFeildArray, responseData) => {

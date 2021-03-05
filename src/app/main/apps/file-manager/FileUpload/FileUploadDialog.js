@@ -403,7 +403,7 @@ export const FileUpload = ({ fileTypes, setUploadFile, dialogTargetPath, setShow
 
                               fileTypeArray.map((item) => {
                                 return (
-                                  <MenuItem value={item}>{item}</MenuItem>
+                                  <MenuItem key={item} value={item}>{item}</MenuItem>
                                 )
 
                               })

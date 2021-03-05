@@ -160,6 +160,7 @@ function FMPopup({ showModal, setShowModal, handleFMClose, setFileChosen, setFil
             targetMeta = targetPath.slice(0, -1)
             getMetadata(targetMeta)
         }
+        // eslint-disable-next-line
     },[targetPath]);
 
 

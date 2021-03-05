@@ -108,6 +108,7 @@ function Preview(props) {
       localStorage.removeItem('nodeType')
 
     };
+    // eslint-disable-next-line
   }, []);
 
   if (load === false)

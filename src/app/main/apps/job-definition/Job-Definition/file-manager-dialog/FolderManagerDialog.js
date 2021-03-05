@@ -70,6 +70,7 @@ function FolderPopup({ showModal, handleFMClose, folderPath, setFolderPath, file
    
     useEffect(() => {
         dispatch(Actions.getHome(targetPath))
+                // eslint-disable-next-line
     },[targetPath]);
 
 

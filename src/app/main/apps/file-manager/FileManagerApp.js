@@ -22,6 +22,7 @@ function FileManagerApp(props) {
     const [searchbool, setSearchbool] = useState(false);
     const [search, setSearch] = useState("");
     const [editContent, setEditContent] = useState(true);
+                    // eslint-disable-next-line
     const [preview, setPreview] = useState(true);
     const [showDialog, setshowDialog] = useState(false);
     const [checkFlag, setcheckFlag] = useState(false);
@@ -89,7 +90,7 @@ function FileManagerApp(props) {
                     'Authorization': token
                 }
             };
-            const request = axios(config1)
+             axios(config1)
             }
         }
     }
@@ -108,7 +109,7 @@ function FileManagerApp(props) {
             };
         }
         else {
-            var config = {
+            config = {
                 method: 'get',
                 url: `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file${targetMeta}`,
                 headers: {
@@ -150,9 +151,8 @@ function FileManagerApp(props) {
     const checkPermission = (metaData, ownerId, type, readPermission) => {
         let fileMetaDate = metaData;
         if (sciductService.getTokenData().sub === ownerId) {
-
-            setcheckFlag(true);
             localStorage.setItem('readPermission', 'true')
+            setcheckFlag(true);
         }
         else {
             tokenData.forEach(element => {
@@ -185,9 +185,10 @@ function FileManagerApp(props) {
         getMetadata(targetMeta)
         setSearch("")
         initUser();
+                // eslint-disable-next-line
     }, [dispatch, props, props.location, props.history]);
 
-
+    
     var type = localStorage.getItem('nodeType')
     var id = localStorage.getItem('nodeId')
     var size = localStorage.getItem('nodeSize')

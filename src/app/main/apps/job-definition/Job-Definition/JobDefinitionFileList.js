@@ -55,7 +55,7 @@ function JobDefinitionFileList(props) {
         (props.search === "" ||
           data.id.toLowerCase().includes(props.search.toLowerCase()))
       )
-      return data;
+        return data;
 
       if (
         (data.description !== "" && data.description !== undefined) &&
@@ -65,13 +65,13 @@ function JobDefinitionFileList(props) {
         return data;
     });
 
-    if (Object.keys(selectedItem).length === 0 && searchResult.length > 0) {
+    if (Object.keys(selectedItem).length === 0 && searchResult.length > 0 && (path.endsWith('job-definition/') === true)) {
       dispatch(Actions.setSelectedItem(searchResult[0].id));
     }
   }
   const classes = useStyles();
   useEffect(() => {
-      setSpinnerFlag(false)
+    setSpinnerFlag(false)
     setPreviousString(props.search);
     if (props.search !== searchString) {
       setSearchPage(0);
@@ -101,7 +101,7 @@ function JobDefinitionFileList(props) {
     setSearchPage(currentPage);
   };
 
- 
+
   const onSelectClick = (row) => {
     localStorage.setItem("selectedJobDefinition", JSON.stringify(row));
     var target = window.location.pathname + row.id;
@@ -143,23 +143,35 @@ function JobDefinitionFileList(props) {
         import(`./static-forms/${pathArrayEnd}`)
       );
     }
-    return formExists ? (
-      <StaticJobDefinitionForm></StaticJobDefinitionForm>
-    ) : (
-      <JobDefinitionForm
-        selectedJob={selectedJobDefinition}
-      ></JobDefinitionForm>
-    );
+
+    if (jobDefinitionList.length === 0)
+      return (
+        <div className="flex flex-1 flex-col items-center justify-center mt-40">
+          <Typography className="text-20 mt-16" color="textPrimary">
+            Loading Form
+        </Typography>
+          <LinearProgress className="w-xs" color="secondary" />
+        </div>
+      );
+    else {
+      return formExists ? (
+        <StaticJobDefinitionForm></StaticJobDefinitionForm>
+      ) : (
+          <JobDefinitionForm
+            selectedJob={selectedJobDefinition}
+          ></JobDefinitionForm>
+        );
+    }
   }
   if (spinnerFlag === true)
-  return (
-    <div className="flex flex-1 flex-col items-center justify-center mt-40">
-      <Typography className="text-20 mt-16" color="textPrimary">
-        Loading 
+    return (
+      <div className="flex flex-1 flex-col items-center justify-center mt-40">
+        <Typography className="text-20 mt-16" color="textPrimary">
+          Loading
       </Typography>
-      <LinearProgress className="w-xs" color="secondary" />
-    </div>
-  );
+        <LinearProgress className="w-xs" color="secondary" />
+      </div>
+    );
   if (
     Object.values(jobDefinitionData).length > 0 &&
     Object.values(jobDefinitionData) !== undefined &&
@@ -172,13 +184,13 @@ function JobDefinitionFileList(props) {
             <React.Fragment>
               {(rowsPerPage > 0 && props.search === ""
                 ? searchResult.slice(
-                    page * rowsPerPage,
-                    page * rowsPerPage + rowsPerPage
-                  )
+                  page * rowsPerPage,
+                  page * rowsPerPage + rowsPerPage
+                )
                 : searchResult.slice(
-                    searchPage * searchRowperPage,
-                    searchPage * searchRowperPage + searchRowperPage
-                  )
+                  searchPage * searchRowperPage,
+                  searchPage * searchRowperPage + searchRowperPage
+                )
               ).map((row, ind, arr) => {
                 lengthOfRow = arr.length;
                 {
@@ -236,7 +248,7 @@ function JobDefinitionFileList(props) {
                             {row.description}
                           </Typography>
                         </Grid>
-                      
+
                       </Grid>
                     </div>
                   </React.Fragment>
@@ -244,8 +256,8 @@ function JobDefinitionFileList(props) {
               })}
             </React.Fragment>
           ) : (
-            <LinearProgress className="w-xs" color="secondary" />
-          )}
+              <LinearProgress className="w-xs" color="secondary" />
+            )}
         </FuseAnimate>
 
         {props.search === "" ? (
@@ -277,36 +289,36 @@ function JobDefinitionFileList(props) {
             <span className={"count-info"}>Page - {page + 1}</span>
           </div>
         ) : (
-          <div>
-            <Button
-              disabled={searchPage * searchRowperPage + 1 === 1}
-              className={"next-button"}
-              color="primary"
-              variant="contained"
-              onClick={searchFetchPreviousSetData}
-            >
-              Previous
+            <div>
+              <Button
+                disabled={searchPage * searchRowperPage + 1 === 1}
+                className={"next-button"}
+                color="primary"
+                variant="contained"
+                onClick={searchFetchPreviousSetData}
+              >
+                Previous
             </Button>
-            <span className={"count-info"}>
-              Items {searchPage * searchRowperPage + 1}-
+              <span className={"count-info"}>
+                Items {searchPage * searchRowperPage + 1}-
               {searchPage * searchRowperPage + lengthOfRow} /
               {searchResult.length}
-            </span>
-            <Button
-              disabled={
-                searchPage * searchRowperPage + lengthOfRow ===
-                searchResult.length
-              }
-              color="primary"
-              className={"next-button"}
-              variant="contained"
-              onClick={searchHandleChangePage}
-            >
-              Next
+              </span>
+              <Button
+                disabled={
+                  searchPage * searchRowperPage + lengthOfRow ===
+                  searchResult.length
+                }
+                color="primary"
+                className={"next-button"}
+                variant="contained"
+                onClick={searchHandleChangePage}
+              >
+                Next
             </Button>
-            <span className={"count-info"}>Page - {searchPage + 1}</span>
-          </div>
-        )}
+              <span className={"count-info"}>Page - {searchPage + 1}</span>
+            </div>
+          )}
       </div>
     );
   else if (Object.values(jobDefinitionData).length === 0 && spinnerFlag === false) {
@@ -317,7 +329,7 @@ function JobDefinitionFileList(props) {
         </Typography>
       </div>
     );
-  } 
+  }
   else if (searchResult.length === 0)
     return (
       <div className="flex flex-1 flex-col items-center justify-center mt-20">
