@@ -71,7 +71,7 @@ export const FileUpload = ({ fileTypes, setUploadFile, dialogTargetPath, setShow
   const dispatch = useDispatch();
   const fileInput = useRef();
   var vaildTypeFileArray = [];
-  const [uploading, setUploading] = useState(false);
+  // const [uploading, setUploading] = useState(false);
 
   const ellipsis = {
     textOverflow: 'ellipsis',
@@ -250,7 +250,7 @@ export const FileUpload = ({ fileTypes, setUploadFile, dialogTargetPath, setShow
 
       axios({
         method: 'put',
-        url: `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file/${targetPath}` + `${fileName}`,
+        url: `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file/${targetPath}${fileName}`,
         headers: {
           'Content-Type': 'application/json',
           'Access-Control-Allow-Origin': '* ',
@@ -349,8 +349,7 @@ export const FileUpload = ({ fileTypes, setUploadFile, dialogTargetPath, setShow
         </DialogContent>
 
 
-        <div className={`file-upload-container ${isDrag ? "drag" : ""} ${uploading ? "uploading" : ""
-          }`}
+        <div className={`file-upload-container ${isDrag ? "drag" : ""}`}
           onDrop={handleDrop}
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}

@@ -21,7 +21,7 @@ function JobDefinitionApp(props) {
     const [flag, setFilterFlag] = useState(false);
     const [searchbool, setSearchbool] = useState(false);
     const [search, setSearch] = useState("");
-    const [preview, setPreview] = useState(true);
+    // const [preview, setPreview] = useState(true);
     var path = window.location.pathname
 
     useEffect(() => {
@@ -129,7 +129,7 @@ function JobDefinitionApp(props) {
                             </Tooltip>
                         </FuseAnimate> */}
 
-{preview && (
+{(
                             <FuseAnimate animation="transition.expandIn" delay={200}>
                                 <span>
                                 {path.endsWith('job-definition/') && <div className={clsx("flex", props.className)}>

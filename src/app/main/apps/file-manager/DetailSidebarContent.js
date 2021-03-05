@@ -228,6 +228,7 @@ function DetailSidebarContent(props)
         if(data.length > 0){
         var config = {
             method: 'patch',
+            /* eslint-disable-next-line */
             url: `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file${path}` + `${selectedItem.name}` ,
             headers: { 
               'Content-Type': 'application/json-patch+json', 

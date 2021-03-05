@@ -14,7 +14,7 @@ import Formsy from "formsy-react";
 import { useHistory } from "react-router-dom";
 function JobDefinitionForm(props) {
   const [formElementsArray, setFormElementsArray] = useState({});
-  const [jobSubmissionArray, setJobSubmissionArray] = useState({});
+  // const [jobSubmissionArray, setJobSubmissionArray] = useState({});
   const [isFormValid, setIsFormValid] = useState(false);
   const [flag, setFlag] = useState(false);
   const [response, setResponse] = useState("");
@@ -77,6 +77,7 @@ function JobDefinitionForm(props) {
       },
       (error) => {}
     );
+                    // eslint-disable-next-line
   }, [axios]);
 
   const creatForm = (
@@ -208,12 +209,10 @@ function JobDefinitionForm(props) {
       }
     }
     requestJson.input = input;
-    setJobSubmissionArray({ ...requestJson });
+    // setJobSubmissionArray({ ...requestJson });
     onFormSubmit(requestJson);
   };
   function onFormSubmit(requestJson) {
-    var path = window.location.pathname.replace("/apps/job-definition/", "");
-    var jobDefinition = path;
     const userToken = localStorage.getItem("id_token");
     axios({
       method: "post",
@@ -229,12 +228,12 @@ function JobDefinitionForm(props) {
         setIsToasterFlag(true);
         //setIsToasterFlag(prevMovies => (true));
         setSuccess(true);
-        var timeOutHandle = window.setTimeout(delayNavigation, 4000);
+         window.setTimeout(delayNavigation, 4000);
       },
       (error) => {
         setSuccess(false);
         setIsToasterFlag(true);
-        var timeOutHandle = window.setTimeout(handlingError, 4000);
+         window.setTimeout(handlingError, 4000);
       }
     );
   }

@@ -22,12 +22,11 @@ import ReactTooltip from 'react-tooltip';
 const Snap_GetBfsFullDiam = () => {
     const [isFormValid, setIsFormValid] = useState(false);
     const [formElementsArray, setFormElementsArray] = useState({});
-    const [jobSubmissionArray, setJobSubmissionArray] = useState({})
-    const [flag, setFlag] = useState(true)
+    // const [jobSubmissionArray, setJobSubmissionArray] = useState({})
+    // const [flag, setFlag] = useState(true)
     const [response, setResponse] = useState('')
     const [success, setSuccess] = useState();
     const [isToasterFlag, setIsToasterFlag] = useState(false);
-    const [showDialog, setshowDialog] = useState(false);
     const [spinnerFlag, setSpinnerFlag] = useState(true);
     const history = useHistory();
 
@@ -92,7 +91,7 @@ const Snap_GetBfsFullDiam = () => {
         setResponse(responseData)
         var count = 0;
         if (createFromData !== undefined) {
-            setFlag(true)
+            // setFlag(true)
             if (inputFileData !== undefined) {
                 for (let [index, obj] of inputFileData.entries()) {
                     obj['id'] = index;
@@ -126,7 +125,7 @@ const Snap_GetBfsFullDiam = () => {
         }
 
         else {
-            setFlag(false)
+            // setFlag(false)
         }
     };
 
@@ -185,7 +184,7 @@ const Snap_GetBfsFullDiam = () => {
         }
 
         requestJson.input = input
-        setJobSubmissionArray({ ...requestJson })
+        // setJobSubmissionArray({ ...requestJson })
         onFormSubmit(requestJson)
     }
 
@@ -235,7 +234,7 @@ const Snap_GetBfsFullDiam = () => {
             </div>
         );
 
-    if (spinnerFlag === false  && flag === true)
+    if (spinnerFlag === false)
         return (
             <FusePageSimple
                 classes={{
@@ -362,7 +361,6 @@ const Snap_GetBfsFullDiam = () => {
                                                         formData={formElement}
                                                         elementType={formElement.type}
                                                         value={formElement.value}
-                                                        buttonClicked={showDialog}
                                                         changed={(event) => inputChangedHandler(event, formElement[0])}
                                                     />
                                                 </Grid>))}

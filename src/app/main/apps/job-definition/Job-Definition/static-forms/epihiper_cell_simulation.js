@@ -17,12 +17,11 @@ import ReactTooltip from 'react-tooltip';
 const Epihiper_cell_simulation = () => {
     const [isFormValid, setIsFormValid] = useState(false);
     const [formElementsArray, setFormElementsArray] = useState({});
-    const [jobSubmissionArray, setJobSubmissionArray] = useState({})
-    const [flag, setFlag] = useState(false)
+    // const [jobSubmissionArray, setJobSubmissionArray] = useState({})
+    // const [flag, setFlag] = useState(false)
     const [response, setResponse] = useState('')
     const [success, setSuccess] = useState(false);
     const [isToasterFlag, setIsToasterFlag] = useState(false);
-    const [showDialog, setshowDialog] = useState(false);
     const [spinnerFlag, setSpinnerFlag] = useState(true);
     const history = useHistory();
 
@@ -90,7 +89,7 @@ const Epihiper_cell_simulation = () => {
         setResponse(responseData)
         var count = 0;
         if (createFromData !== undefined) {
-            setFlag(false)
+            // setFlag(false)
             if (inputFileData !== undefined) {
                 for (let [index, obj] of inputFileData.entries()) {
                     obj['id'] = index;
@@ -143,7 +142,7 @@ const Epihiper_cell_simulation = () => {
         }
 
         else {
-            setFlag(true)
+            // setFlag(true)
         }
     };
 
@@ -205,7 +204,7 @@ const Epihiper_cell_simulation = () => {
         }
 
         requestJson.input = input
-        setJobSubmissionArray({ ...requestJson })
+        // setJobSubmissionArray({ ...requestJson })
         onFormSubmit(requestJson)
     }
     function onFormSubmit(requestJson) {
@@ -327,7 +326,6 @@ const Epihiper_cell_simulation = () => {
                                                         formData={formElement}
                                                         elementType={formElement.type}
                                                         value={formElement.value}
-                                                        buttonClicked={showDialog}
                                                         changed={(event) => inputChangedHandler(event, formElement[0])}
                                                     />
                                                 </Grid>))}

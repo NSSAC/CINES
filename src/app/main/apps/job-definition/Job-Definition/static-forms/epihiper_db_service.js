@@ -13,12 +13,11 @@ import Toaster from "../Toaster";
 const Snap_GetBfsFullDiam = () => {
     const [isFormValid, setIsFormValid] = useState(false);
     const [formElementsArray, setFormElementsArray] = useState({});
-    const [jobSubmissionArray, setJobSubmissionArray] = useState({})
-    const [flag, setFlag] = useState(false)
+    // const [jobSubmissionArray, setJobSubmissionArray] = useState({})
+    // const [flag, setFlag] = useState(false)
     const [response, setResponse] = useState('')
     const [success, setSuccess] = useState(false);
     const [isToasterFlag, setIsToasterFlag] = useState(false);
-    const [showDialog, setshowDialog] = useState(false);
     const [spinnerFlag, setSpinnerFlag] = useState(true);
     const history = useHistory();
 
@@ -86,7 +85,7 @@ const Snap_GetBfsFullDiam = () => {
         setResponse(responseData)
         var count = 0;
         if (1) {
-            setFlag(false)
+            // setFlag(false)
             if (inputFileData !== undefined) {
                 for (let [index, obj] of inputFileData.entries()) {
                     obj['id'] = index;
@@ -120,7 +119,7 @@ const Snap_GetBfsFullDiam = () => {
         }
 
         else {
-            setFlag(true)
+            // setFlag(true)
         }
     };
 
@@ -176,7 +175,7 @@ const Snap_GetBfsFullDiam = () => {
         }
 
         requestJson.input = input
-        setJobSubmissionArray({ ...requestJson })
+        // setJobSubmissionArray({ ...requestJson })
         onFormSubmit(requestJson)
     }
     function onFormSubmit(requestJson) {
@@ -257,7 +256,6 @@ const Snap_GetBfsFullDiam = () => {
                                                         formData={formElement}
                                                         elementType={formElement.type}
                                                         value={formElement.value}
-                                                        buttonClicked={showDialog}
                                                         changed={(event) => inputChangedHandler(event, formElement[0])}
                                                     />
                                                 </Grid>))}

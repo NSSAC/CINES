@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Fab, Icon, IconButton, Typography, Tooltip } from '@material-ui/core';
 import { FuseAnimate, FusePageSimple } from '@fuse';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import withReducer from 'app/store/withReducer';
 import * as Actions from './store/actions';
 import reducer from './store/reducers';
@@ -11,26 +11,8 @@ import DetailSidebarContent from './DetailSidebarContent';
 import MainSidebarHeader from './MainSidebarHeader';
 import MainSidebarContent from './MainSidebarContent';
 import { MyJobFilter } from 'app/main/apps/my-jobs/MyJobFilter-dialog/Filterdialog';
-import { makeStyles } from '@material-ui/core/styles';
-import { useHistory, Link } from "react-router-dom";
+import {Link } from "react-router-dom";
 import "./MyJobsApp.css"
-const useStyles = makeStyles((theme) => ({
-    root: {
-        display: 'inline-block',
-        justifyContent: 'start',
-        listStyle: 'none',
-        padding: theme.spacing(0.5),
-        margin: 0,
-    },
-    chip: {
-        display: 'inline-block',
-        margin: theme.spacing(0.5),
-        paddingTop: "5px"
-    },
-    dialogwidth: {
-        minWidth: "100px !important"
-    }
-}));
 
 function MyJobsApp(props) {
     const dispatch = useDispatch();
@@ -93,10 +75,9 @@ function MyJobsApp(props) {
                         <div >
 
                             {
-                                sessionStorage.getItem("preJobTypeValue") && JSON.parse(sessionStorage.getItem("preJobTypeValue")).length != 0 ? <span> Job Type:</span> : null
+                                sessionStorage.getItem("preJobTypeValue") && JSON.parse(sessionStorage.getItem("preJobTypeValue")).length !== 0 ? <span> Job Type:</span> : null
                             }
-                            {sessionStorage.getItem("preJobTypeValue") && JSON.parse(sessionStorage.getItem("preJobTypeValue")).length != 0 ? JSON.parse(sessionStorage.getItem("preJobTypeValue")).map((data) => {
-                                let icon;
+                            {sessionStorage.getItem("preJobTypeValue") && JSON.parse(sessionStorage.getItem("preJobTypeValue")).length !== 0 ? JSON.parse(sessionStorage.getItem("preJobTypeValue")).map((data) => {
                                 return (
                                     <span className="chips">{data}</span>
                                 );
@@ -105,10 +86,9 @@ function MyJobsApp(props) {
 
 
                             {
-                                sessionStorage.getItem("preStateValue") && JSON.parse(sessionStorage.getItem("preStateValue")).length != 0 ? <span style={{ marginLeft: "4px" }}> Status:</span> : null
+                                sessionStorage.getItem("preStateValue") && JSON.parse(sessionStorage.getItem("preStateValue")).length !== 0 ? <span style={{ marginLeft: "4px" }}> Status:</span> : null
                             }
-                            {sessionStorage.getItem("preStateValue") && JSON.parse(sessionStorage.getItem("preStateValue")).length != 0 ? JSON.parse(sessionStorage.getItem("preStateValue")).map((data) => {
-                                let icon;
+                            {sessionStorage.getItem("preStateValue") && JSON.parse(sessionStorage.getItem("preStateValue")).length !== 0 ? JSON.parse(sessionStorage.getItem("preStateValue")).map((data) => {
                                 return (
                                     <span className="chips">{data}</span>
                                 );

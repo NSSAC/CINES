@@ -63,6 +63,7 @@ function JobDefinitionFileList(props) {
           data.description.toLowerCase().includes(props.search.toLowerCase()))
       )
         return data;
+        return null;
     });
 
     if (Object.keys(selectedItem).length === 0 && searchResult.length > 0 && (path.endsWith('job-definition/') === true)) {
@@ -193,10 +194,6 @@ function JobDefinitionFileList(props) {
                 )
               ).map((row, ind, arr) => {
                 lengthOfRow = arr.length;
-                {
-                  if (true) {
-                  }
-                }
                 return (
                   <React.Fragment key={row.id}>
                     <div className={classes.root}>

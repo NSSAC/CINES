@@ -1,32 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Typography, LinearProgress, Hidden, Button, Icon, TableFooter, Tooltip, IconButton, TablePagination, Table, TableBody, TableCell, TableHead, TableRow, Paper, TableContainer } from '@material-ui/core';
-import { makeStyles } from '@material-ui/styles';
+import { Typography, LinearProgress, Hidden, Button, Icon, TableFooter, Tooltip, IconButton, Table, TableBody, TableCell, TableHead, TableRow, Paper, TableContainer } from '@material-ui/core';
 import { FuseAnimate } from '@fuse';
 import { useDispatch, useSelector } from 'react-redux';
-import clsx from 'clsx';
 import * as Actions from './store/actions';
 import './FileList.css'
-const useStyles = makeStyles({
-    typeIcon: {
-        '&.folder:before': {
-            content: "'folder'",
-            color: '#FFB300'
-        },
-        '&.document:before': {
-            content: "'insert_drive_file'",
-            color: '#1565C0'
-        },
-        '&.spreadsheet:before': {
-            content: "'insert_chart'",
-            color: '#4CAF50'
-        }
-    }
-});
-const useStyles2 = makeStyles({
-    table: {
-        minWidth: 500,
-    },
-});
 
 function MyJobsFileList(props) {
     const dispatch = useDispatch();
@@ -50,11 +27,8 @@ function MyJobsFileList(props) {
 
         }
     }
-    const classes = useStyles();
 
-    const tableClasses = useStyles2();
     const [page, setPage] = React.useState(0);
-    const [filterFlag, setFilterFlag] = useState(true);
     const [sortById, setsortById] = useState(false);
     const [sortByjobdef, setsortByjobdef] = useState(false);
     const [sortIdFlag, setSortIdFlag] = useState(false);
@@ -63,14 +37,13 @@ function MyJobsFileList(props) {
     const [sortByCreationDdateFlag, setSortByCreationDdateFlag] = useState(true);
     const [sortByCreationDdate, setsortByCreationDdate] = useState(false)
     const [sortBystate, setsortBystate] = useState(false);
-    const [sortByCompletedDdate, setsortByCompletedDdate] = useState(false);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
     const [spinnerFlag, setSpinnerFlag] = useState(true);
     const [selectedFlag, setSelectedFlag] = useState(true)
     const [showRange, setShowRange] = useState(false)
     var type;
     var rowLength;
-    const emptyRows = rowsPerPage - Math.min(rowsPerPage, files.length - page * rowsPerPage);
+
     useEffect(() => {
         setSpinnerFlag(false)
         if (files.length !== 0) {
@@ -95,12 +68,12 @@ function MyJobsFileList(props) {
         setPage(currentPage);
         fetchNextSetData()
     };
-    const pageCount = (Math.round(files.length / 10) * 10) / 10;
-    const handleChangeRowsPerPage = (event) => {
+    // const pageCount = (Math.round(files.length / 10) * 10) / 10;
+    // const handleChangeRowsPerPage = (event) => {
 
-        setRowsPerPage(parseInt(event.target.value, 10));
-        setPage(0);
-    };
+    //     setRowsPerPage(parseInt(event.target.value, 10));
+    //     setPage(0);
+    // };
     const toggleSorting = (sortType, toggleArrow) => {
         let sortOrder = ""
         if (toggleArrow === 'sortByjobdef') {
@@ -309,7 +282,7 @@ function MyJobsFileList(props) {
                             variant="contained" onClick={fetchPreviousSetData}>Previous</Button>
                         <span className={'count-info'}>Items  {page * rowsPerPage + 1}-{page * rowsPerPage + rowLength} /{totalRecords}</span>
                         <Button
-                            disabled={page * rowsPerPage + rowLength == totalRecords}
+                            disabled={page * rowsPerPage + rowLength === totalRecords}
                             color="primary" className={'next-button'} variant="contained"
                             onClick={handleChangePage}>Next</Button>
                         <span className={'count-info'}>Page - {page + 1}</span>

@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import {
-  withStyles,
   Typography,
   Divider,
 } from "@material-ui/core";
@@ -14,7 +13,6 @@ import {
   InsertDriveFile as FileIcon,
   ListAlt as MetadataIcon,
 } from "@material-ui/icons";
-import Tooltip from "@material-ui/core/Tooltip";
 import { Link } from "react-router-dom";
 const useStyles = makeStyles({
   table: {
@@ -50,7 +48,6 @@ const useStyles = makeStyles({
 // }))(Tooltip);
 
 function DetailSidebarContent(props) {
-  const files = useSelector(({ myJobsApp }) => myJobsApp.myjobs);
   const selectedItem = useSelector(({ myJobsApp }) => myJobsApp.selectedjobid);
   const [selectedTab, setSelectedTab] = useState(0);
   const [showDialog, setshowDialog] = useState(false);
@@ -178,6 +175,7 @@ function DetailSidebarContent(props) {
                   <th> Std out</th>
                   {selectedItem.standard_out ? (
                     <td onClick={openoutputDialog}>
+                                 { /* eslint-disable-next-line */}
                       <a className="cursor-pointer">Click here</a>
                     </td>
                   ) : (
@@ -188,6 +186,7 @@ function DetailSidebarContent(props) {
                   <th> Std error</th>
                   {selectedItem.standard_err ? (
                     <td onClick={openErrorDialog}>
+                                  { /* eslint-disable-next-line */}
                       <a className="cursor-pointer">Click here</a>
                     </td>
                   ) : (

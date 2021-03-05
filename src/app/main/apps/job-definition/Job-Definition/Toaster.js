@@ -13,7 +13,7 @@ if(props.success === false){
 else {
  
   return (
-    <div> {ToastsStore.success(`'${props.id}'` + " job submitted successfully")}
+    <div> {ToastsStore.success(`'${props.id}' job submitted successfully`)}
     <ToastsContainer store={ToastsStore} position={ToastsContainerPosition.TOP_RIGHT}/></div>
     
 )
