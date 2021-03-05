@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Icon, Tooltip} from '@material-ui/core';
+import { Button, Icon} from '@material-ui/core';
 import './SelectFile.css';
 import FMPopup from '../file-manager-dialog/FileManagerDialog.js';
 import FolderPopup from '../file-manager-dialog/FolderManagerDialog.js';

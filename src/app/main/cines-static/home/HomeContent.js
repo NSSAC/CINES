@@ -1,9 +1,9 @@
 import React from 'react';
-import {Icon, Typography} from '@material-ui/core';
-import {FusePageSimple, FuseHighlight} from '@fuse';
-import {FuseAnimate, FuseAnimateGroup} from '@fuse';
+import {Typography} from '@material-ui/core';
+import {FusePageSimple} from '@fuse';
+import {FuseAnimate} from '@fuse';
 import clsx from 'clsx';
-import {makeStyles, useTheme} from '@material-ui/styles';
+import {makeStyles} from '@material-ui/styles';
 
 const useStyles = makeStyles(theme => ({
     header    : {
@@ -24,10 +24,6 @@ const useStyles = makeStyles(theme => ({
 
 function HomeContent(props)
 {
-    const graphicContainerStyle ={
-        display: "flex",
-        justifyContent: "center"
-    }
     const graphicStyle ={
         width: "60%",
         maxWidth: "600px",

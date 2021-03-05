@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useState, useEffect } from 'react';
 import { Typography, LinearProgress, Hidden, Button, Icon, TableFooter, Tooltip, IconButton, Table, TableBody, TableCell, TableHead, TableRow, Paper, TableContainer } from '@material-ui/core';
 import { FuseAnimate } from '@fuse';
@@ -9,22 +10,18 @@ function MyJobsFileList(props) {
     const dispatch = useDispatch();
     const files1 = useSelector(({ myJobsApp }) => myJobsApp.myjobs);
     const selectedItem = useSelector(({ myJobsApp }) => myJobsApp.selectedjobid);
+    const [selectedId, setSelectedId] = useState();
+ 
     var files = Object.values(files1);
     var totalRecords = "";
  
-    var lastResult = ""
-    const [selectedId, setSelectedId] = useState();
     if (files.length !== 0) {
         if(files[2]['content-range'] !== undefined){
             totalRecords = files[2]['content-range'].split('/')[1]
         }
-
-       
-        //setSelectedId(files[0].id)
         files = files[1]
         if (Object.keys(selectedItem).length === 0 && files.length > 0) {
             dispatch(Actions.setSelectedItem(files[0].id));
-
         }
     }
 
@@ -46,10 +43,6 @@ function MyJobsFileList(props) {
 
     useEffect(() => {
         setSpinnerFlag(false)
-        if (files.length !== 0) {
-
-        }
-
         if (JSON.parse(sessionStorage.getItem("resetPage"))) {
             let currentPage = 0
             setPage(currentPage)
@@ -68,12 +61,7 @@ function MyJobsFileList(props) {
         setPage(currentPage);
         fetchNextSetData()
     };
-    // const pageCount = (Math.round(files.length / 10) * 10) / 10;
-    // const handleChangeRowsPerPage = (event) => {
-
-    //     setRowsPerPage(parseInt(event.target.value, 10));
-    //     setPage(0);
-    // };
+   
     const toggleSorting = (sortType, toggleArrow) => {
         let sortOrder = ""
         if (toggleArrow === 'sortByjobdef') {

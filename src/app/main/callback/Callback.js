@@ -1,7 +1,6 @@
 import React, {useEffect} from 'react';
 import {FuseSplashScreen} from '@fuse';
 import * as userActions from 'app/auth/store/actions';
-import * as Actions from 'app/store/actions';
 import {useDispatch} from 'react-redux';
 import sciductService from 'app/services/sciductService';
 

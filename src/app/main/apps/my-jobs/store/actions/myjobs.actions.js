@@ -102,7 +102,7 @@ export function getFiles(count, start, descShort, type, clearArry) {
 
   return (dispatch) =>
     request.then((response) => {
-      if(response != undefined && response.data.length > 0){
+      if(response !== undefined && response.data.length > 0){
         arr.push(...response.data)
       }
      

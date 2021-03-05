@@ -1,6 +1,6 @@
 import React from 'react';
 import {Icon, Typography} from '@material-ui/core';
-import {FusePageSimple, FuseHighlight} from '@fuse';
+import {FusePageSimple} from '@fuse';
 
 function DevelopmentDoc()
 {

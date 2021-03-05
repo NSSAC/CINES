@@ -62,7 +62,6 @@ class IdleTimerComponent extends React.Component {
     }
 
     render(){
-      const { match } = this.props
       return(
         <div>
 <>
