@@ -160,7 +160,7 @@ const createjobTypeArray = (responseData) => {
     let type = "creation_date";
     let descShort = true;
     sessionStorage.setItem("isFilterApplied", JSON.stringify(false));
-    dispatch(Actions.getFiles(10, 1, descShort, type, true));
+    dispatch(Actions.getFiles(10, 0, descShort, type, true));
     sessionStorage.setItem("count", start);
     sessionStorage.setItem("shortOrder", JSON.stringify(descShort));
   };
