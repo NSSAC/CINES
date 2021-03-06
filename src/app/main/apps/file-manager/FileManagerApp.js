@@ -22,7 +22,7 @@ function FileManagerApp(props) {
     const [searchbool, setSearchbool] = useState(false);
     const [search, setSearch] = useState("");
     const [editContent, setEditContent] = useState(true);
-                    // eslint-disable-next-line
+    // eslint-disable-next-line
     const [preview, setPreview] = useState(true);
     const [showDialog, setshowDialog] = useState(false);
     const [checkFlag, setcheckFlag] = useState(false);
@@ -35,12 +35,12 @@ function FileManagerApp(props) {
     var token = localStorage.getItem('id_token')
     let tokenData = []
     if(token !== null)
-       tokenData = sciductService.getTokenData().teams;
+        tokenData = sciductService.getTokenData().teams;
     const dispatch = useDispatch();
     const pageLayout = useRef(null);
     var targetPath = props.location.pathname.replace("/apps/files", "")
     var targetMeta = targetPath
-    if (pathEnd === '/') 
+    if (pathEnd === '/')
         targetMeta = targetPath.slice(0, -1).replace("/apps/files", "")
 
     const style = {
@@ -78,19 +78,19 @@ function FileManagerApp(props) {
         document.removeEventListener("keydown", escFunction, false);
     }
 
-    function initUser(){
-        if(path.endsWith('/home/')){
-        var axios = require('axios');
-        if(typeof(token) === "string"){
-            let config1 = {
-                method: 'get',
-                url: `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/initialize`,
-                headers:{
-                    'Accept': 'application/json',
-                    'Authorization': token
-                }
-            };
-             axios(config1)
+    function initUser() {
+        if (path.endsWith('/home/')) {
+            var axios = require('axios');
+            if (typeof (token) === "string") {
+                let config1 = {
+                    method: 'get',
+                    url: `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/initialize`,
+                    headers: {
+                        'Accept': 'application/json',
+                        'Authorization': token
+                    }
+                };
+                axios(config1)
             }
         }
     }
@@ -143,11 +143,15 @@ function FileManagerApp(props) {
                 }
                 if (metaData !== undefined)
                     checkPermission(metaData, ownerId, type, readPermission)
-            }).catch(err => {
-                 setContainerFlag('error')
+            }).catch(error => {
+                if (typeof(token) === 'string'){
+                    setContainerFlag('error')}
+                else{
+                    setContainerFlag('true')}
             })
         }
     }
+
     const checkPermission = (metaData, ownerId, type, readPermission) => {
         let fileMetaDate = metaData;
         if (sciductService.getTokenData().sub === ownerId) {
@@ -185,10 +189,10 @@ function FileManagerApp(props) {
         getMetadata(targetMeta)
         setSearch("")
         initUser();
-                // eslint-disable-next-line
+        // eslint-disable-next-line
     }, [dispatch, props, props.location, props.history]);
 
-    
+
     var type = localStorage.getItem('nodeType')
     var id = localStorage.getItem('nodeId')
     var size = localStorage.getItem('nodeSize')
