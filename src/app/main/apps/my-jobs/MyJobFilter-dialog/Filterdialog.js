@@ -77,8 +77,7 @@ export const MyJobFilter = ({
           var responseData = res.data;
           createjobTypeArray(responseData)
         }
-      },
-      (error) => {}
+      }
     );
                     // eslint-disable-next-line
   }, [axios]);
