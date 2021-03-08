@@ -13,12 +13,15 @@ import MainSidebarContent from './MainSidebarContent';
 import { MyJobFilter } from 'app/main/apps/my-jobs/MyJobFilter-dialog/Filterdialog';
 import {Link } from "react-router-dom";
 import "./MyJobsApp.css"
+import { useHistory } from "react-router-dom";
+
 
 function MyJobsApp(props) {
     const dispatch = useDispatch();
     const [showDialog, setshowDialog] = useState(false);
     const pageLayout = useRef(null);
     const [flag, setFilterFlag] = useState(false);
+    const history = useHistory();
 
     useEffect(() => {
         let start = 0
@@ -36,6 +39,10 @@ function MyJobsApp(props) {
 
     function showFileUploadDialog() {
         setshowDialog(true)
+    }
+
+    function navigateHome() {
+        history.push('/home/')
     }
 
     function handleClose() {
@@ -65,7 +72,7 @@ function MyJobsApp(props) {
                     <div className="flex items-center justify-between">
                         <div className="flex flex-col" style={{ flexGrow: "1" }}>
                             <div className="flex items-center mb-16">
-                                <Icon className="text-18" color="action">home</Icon>
+                                <Icon className="text-18" color="action" onClick={navigateHome}>home</Icon>
                                 <Icon className="text-16" color="action">chevron_right</Icon>
                                 <Typography style={{ width: '100px' }} color="textSecondary">My Jobs</Typography>
                             </div>

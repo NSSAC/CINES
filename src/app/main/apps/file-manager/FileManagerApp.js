@@ -16,6 +16,7 @@ import clsx from 'clsx';
 import { FileUpload } from 'app/main/apps/file-manager/FileUpload/FileUploadDialog';
 import sciductService from 'app/services/sciductService/sciductService.js'
 import Preview from './Preview';
+import { useHistory } from "react-router-dom";
 
 function FileManagerApp(props) {
 
@@ -29,6 +30,7 @@ function FileManagerApp(props) {
     const [prompt, setPrompt] = useState(true);
     const [isFolder, setIsFolder] = useState(false);
     const [containerFlag, setContainerFlag] = useState("");
+    const history = useHistory();
     const files = useSelector(({ fileManagerApp }) => fileManagerApp.files);
     var path = window.location.pathname
     var pathEnd = path.charAt(path.length - 1);
@@ -46,6 +48,10 @@ function FileManagerApp(props) {
     const style = {
         width: "100%",
         flexWrap: "wrap"
+    }
+
+    function navigateHome() {
+        history.push('/home/')
     }
 
     function showSearch() {
@@ -214,7 +220,7 @@ function FileManagerApp(props) {
                             <div className="flex flex-1 items-center justify-between ">
                                 <div className="flex flex-col">
                                     <div className="flex items-center mb-16">
-                                        <Icon className="text-18" color="action">home</Icon>
+                                        <Icon className="text-18" color="action" onClick={navigateHome}>home</Icon>
                                         <Icon className="text-16" color="action">chevron_right</Icon>
                                         <Typography color="textSecondary">File Manager</Typography>
                                     </div>

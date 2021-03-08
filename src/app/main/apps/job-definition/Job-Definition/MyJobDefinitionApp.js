@@ -12,6 +12,7 @@ import MainSidebarHeader from './MainSidebarHeader';
 import MainSidebarContent from './MainSidebarContent';
 import { MyJobFilter } from 'app/main/apps/my-jobs/MyJobFilter-dialog/Filterdialog';
 import clsx from 'clsx';
+import { useHistory } from "react-router-dom";
 
 function JobDefinitionApp(props) {
 
@@ -21,6 +22,7 @@ function JobDefinitionApp(props) {
     const [flag, setFilterFlag] = useState(false);
     const [searchbool, setSearchbool] = useState(false);
     const [search, setSearch] = useState("");
+    const history = useHistory();
     // const [preview, setPreview] = useState(true);
     var path = window.location.pathname
 
@@ -65,6 +67,10 @@ function JobDefinitionApp(props) {
         setFilterFlag(true)
     }
 
+    function navigateHome() {
+        history.push('/home/')
+    }
+
     return (
         <FusePageSimple
             classes={{
@@ -87,7 +93,7 @@ function JobDefinitionApp(props) {
                     <div className="flex items-center justify-between">
                         <div className="flex flex-col" style={{ flexGrow: "1" }}>
                             <div className="flex items-center mb-16">
-                                <Icon className="text-18" color="action">home</Icon>
+                                <Icon className="text-18" color="action" onClick={navigateHome}>home</Icon>
                                 <Icon className="text-16" color="action">chevron_right</Icon>
                                 <Typography style={{ width: '100px' }} color="textSecondary">Job Definition</Typography>
                             </div>

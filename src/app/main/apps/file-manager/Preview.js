@@ -294,7 +294,7 @@ function Preview(props) {
                 fontWeight: 'bold'
               },
             }} />}
-            {selectedTab === 1 && JSON.stringify(data, null, 2)}
+            {selectedTab === 1 && <pre>{JSON.stringify(data, null,2)}</pre>}
           </div>
 
         </FuseAnimate>

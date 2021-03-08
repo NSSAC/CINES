@@ -192,7 +192,7 @@ function FileList(props) {
                                         <TableCell className="hidden sm:table-cell">{node.type}</TableCell>
                                         <TableCell className="hidden sm:table-cell">{node.owner_id}</TableCell>
                                         <TableCell className="text-center hidden sm:table-cell">{(!node.size && (node.size !== 0)) ? '-' : filesize(node.size)}</TableCell>
-                                        <TableCell className="hidden sm:table-cell">{moment(node.update_date).fromNow()}</TableCell>
+                                        <TableCell className="hidden sm:table-cell">{moment.utc(node.update_date).local().fromNow()}</TableCell>
                                         <Hidden lgUp>
                                             <TableCell style={{ textAlignLast: 'right' }}>
                                                 <IconButton
