@@ -27,7 +27,7 @@ function MetadataInfoDialog(props) {
       </DialogContent>
 
       <DialogActions>
-        <Button onClick={handleCancel} color="primary">
+        <Button variant='contained' onClick={handleCancel} color="primary">
           Close
         </Button>
 
