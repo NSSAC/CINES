@@ -84,9 +84,9 @@ function MyJobsApp(props) {
                             {
                                 sessionStorage.getItem("preJobTypeValue") && JSON.parse(sessionStorage.getItem("preJobTypeValue")).length !== 0 ? <span> Job Type:</span> : null
                             }
-                            {sessionStorage.getItem("preJobTypeValue") && JSON.parse(sessionStorage.getItem("preJobTypeValue")).length !== 0 ? JSON.parse(sessionStorage.getItem("preJobTypeValue")).map((data) => {
+                            {sessionStorage.getItem("preJobTypeValue") && JSON.parse(sessionStorage.getItem("preJobTypeValue")).length !== 0 ? JSON.parse(sessionStorage.getItem("preJobTypeValue")).map((data,index) => {
                                 return (
-                                    <span className="chips">{data}</span>
+                                    <span key={index} className="chips">{data}</span>
                                 );
                             }) : null}
 
@@ -95,9 +95,9 @@ function MyJobsApp(props) {
                             {
                                 sessionStorage.getItem("preStateValue") && JSON.parse(sessionStorage.getItem("preStateValue")).length !== 0 ? <span style={{ marginLeft: "4px" }}> Status:</span> : null
                             }
-                            {sessionStorage.getItem("preStateValue") && JSON.parse(sessionStorage.getItem("preStateValue")).length !== 0 ? JSON.parse(sessionStorage.getItem("preStateValue")).map((data) => {
+                            {sessionStorage.getItem("preStateValue") && JSON.parse(sessionStorage.getItem("preStateValue")).length !== 0 ? JSON.parse(sessionStorage.getItem("preStateValue")).map((data,index) => {
                                 return (
-                                    <span className="chips">{data}</span>
+                                    <span key ={index} className="chips">{data}</span>
                                 );
                             }) : null}
 

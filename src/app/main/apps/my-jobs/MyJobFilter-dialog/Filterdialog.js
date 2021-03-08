@@ -155,7 +155,7 @@ const createjobTypeArray = (responseData) => {
     setPreStateValue([]);
     setSelectedTypeArray([]);
     setPreJobTypeValue([]);
-    let start = 1;
+    let start = 0;
     let type = "creation_date";
     let descShort = true;
     sessionStorage.setItem("isFilterApplied", JSON.stringify(false));

@@ -52,6 +52,7 @@ function DetailSidebarContent(props) {
   const [showDialog, setshowDialog] = useState(false);
   const [standardOut, setStandardOut] = useState("");
   const [headerTitle, setHeaderTitle] = useState("");
+  const [opendialog ,setOpendialog] = useState(false)
   const x = false;
   //const opendialog =Boolean;
 const classes = useStyles();

@@ -17,11 +17,11 @@ export function getFiles(count, start, descShort, type, clearArry) {
         let filterStateArray = JSON.parse(sessionStorage.getItem("preStateValue"));
         let selectedState = filterStateArray.toString();
         if (descShort) {
-          url1 = `${process.env.REACT_APP_SCIDUCT_JOB_SERVICE}/job_instance?&in(state,(${selectedState}))&limit(${count},${start})&sort((-${type}))`
+          url1 = `${process.env.REACT_APP_SCIDUCT_JOB_SERVICE}/job_instance?&in(state,(${selectedState}))&limit(${count},${start})&sort(-${type})`
 
         }
         else {
-          url1 = `${process.env.REACT_APP_SCIDUCT_JOB_SERVICE}/job_instance?&in(state,(${selectedState}))&limit(${count},${start})&sort((+${type}))`
+          url1 = `${process.env.REACT_APP_SCIDUCT_JOB_SERVICE}/job_instance?&in(state,(${selectedState}))&limit(${count},${start})&sort(+${type})`
         }
 
       }
@@ -29,11 +29,11 @@ export function getFiles(count, start, descShort, type, clearArry) {
         let filterJobTypeArray = JSON.parse(sessionStorage.getItem("preJobTypeValue"));
         let selectedState = filterJobTypeArray.toString();
         if (descShort) {
-          url1 = `${process.env.REACT_APP_SCIDUCT_JOB_SERVICE}/job_instance?&in(job_definition,(${selectedState}))&limit(${count},${start})&sort((-${type}))`
+          url1 = `${process.env.REACT_APP_SCIDUCT_JOB_SERVICE}/job_instance?&in(job_definition,(${selectedState}))&limit(${count},${start})&sort(-${type})`
 
         }
         else {
-          url1 = `${process.env.REACT_APP_SCIDUCT_JOB_SERVICE}/job_instance?&in(job_definition,(${selectedState}))&limit(${count},${start})&sort((+${type}))`
+          url1 = `${process.env.REACT_APP_SCIDUCT_JOB_SERVICE}/job_instance?&in(job_definition,(${selectedState}))&limit(${count},${start})&sort(+${type})`
         }
 
       }
@@ -45,10 +45,10 @@ export function getFiles(count, start, descShort, type, clearArry) {
       let filterJobTypeArray = JSON.parse(sessionStorage.getItem("preJobTypeValue"));
       let selectedJobType = filterJobTypeArray.toString();
       if (descShort) {
-        url1 = `${process.env.REACT_APP_SCIDUCT_JOB_SERVICE}/job_instance?&in(state,(${selectedState}))&in(job_definition,(${selectedJobType}))&limit(count,${start})&sort(-${type}))`
+        url1 = `${process.env.REACT_APP_SCIDUCT_JOB_SERVICE}/job_instance?&in(state,(${selectedState}))&in(job_definition,(${selectedJobType}))&limit(${count},${start})&sort(-${type})`
       }
       else {
-        url1 = `${process.env.REACT_APP_SCIDUCT_JOB_SERVICE}/job_instance?&in(state,(${selectedState}))&in(job_definition,(${selectedJobType}))&limit(count,${start})&sort(+${type}))`
+        url1 = `${process.env.REACT_APP_SCIDUCT_JOB_SERVICE}/job_instance?&in(state,(${selectedState}))&in(job_definition,(${selectedJobType}))&limit(${count},${start})&sort(+${type})`
       }
     }
 

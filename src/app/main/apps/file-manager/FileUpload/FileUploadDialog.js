@@ -6,7 +6,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
-import { useState, useRef } from 'react';
+import { useState, useRef} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -20,7 +20,6 @@ import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import DeleteIcon from '@material-ui/icons/Delete';
 import MenuTableCell from "./MenuTableCell";
-import FILEUPLOAD_CONFIG from "./FileUploadconfig";
 import * as Actions from '../store/actions';
 import './FileUpload.css'
 
@@ -29,7 +28,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export const FileUpload = ({ fileTypes, setUploadFile, dialogTargetPath, setShowModal, showModal, handleClose, breadcrumbArr }) => {
+export const FileUpload = ({ allFilesType,fileTypes, setUploadFile, dialogTargetPath, setShowModal, showModal, handleClose, breadcrumbArr }) => {
   const useStyles = makeStyles({
     table: {
       minWidth: 450,
@@ -61,7 +60,7 @@ export const FileUpload = ({ fileTypes, setUploadFile, dialogTargetPath, setShow
   });
 
   var fileData = [];
-  var fileTypeArray = FILEUPLOAD_CONFIG.fileType
+  var fileTypeArray = allFilesType
   if (dialogTargetPath) {
     fileTypeArray = fileTypes
   }
@@ -72,6 +71,7 @@ export const FileUpload = ({ fileTypes, setUploadFile, dialogTargetPath, setShow
   const fileInput = useRef();
   var vaildTypeFileArray = [];
   // const [uploading, setUploading] = useState(false);
+  
 
   const ellipsis = {
     textOverflow: 'ellipsis',

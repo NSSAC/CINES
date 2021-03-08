@@ -13,11 +13,11 @@ function MyJobsFileList(props) {
     const [selectedId, setSelectedId] = useState();
  
     var files = Object.values(files1);
-    var totalRecords = "";
+    var totalRecords ;
  
     if (files.length !== 0) {
         if(files[2]['content-range'] !== undefined){
-            totalRecords = files[2]['content-range'].split('/')[1]
+            totalRecords = Number(files[2]['content-range'].split('/')[1])
         }
         files = files[1]
         if (Object.keys(selectedItem).length === 0 && files.length > 0) {
