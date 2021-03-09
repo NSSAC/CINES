@@ -37,7 +37,7 @@ display: none;
     opacity: 1;
   } */
 
-  .MuiGrid-spacing-xs-1{
-    width: auto !important;
+  .MuiGrid-spacing-xs-1 {
+    width: 100% !important;
     margin: auto !important;
   }
