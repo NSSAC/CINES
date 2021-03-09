@@ -157,10 +157,10 @@ const classes = useStyles();
                   </tr>
                 ) : null}
 
-                {selectedItem.output_data ? (
+                {selectedItem.output ? (
                   <tr>
                     <th> Output data- {x}</th>
-                    <td> {String(selectedItem.output_data.output)} </td>
+                    <td> {String(selectedItem.output.output)} </td>
                   </tr>
                 ) : null}
 
