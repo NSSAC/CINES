@@ -8,7 +8,6 @@ import Slide from "@material-ui/core/Slide";
 import { useState } from "react";
 import * as Actions from "../store/actions";
 import { makeStyles } from "@material-ui/core/styles";
-import "./CreateFolderDialog.css";
 import { Icon } from "@material-ui/core";
 import { TextFieldFormsy } from "@fuse/components/formsy";
 import Formsy from "formsy-react";

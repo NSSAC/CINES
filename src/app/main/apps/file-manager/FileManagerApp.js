@@ -258,8 +258,8 @@ function FileManagerApp(props) {
     <FusePageSimple
       classes={{
         root: "bg-red",
-        header: "h-auto min-h-128 sm:h-auto sm:min-h-160",
-        sidebarHeader: "h-auto min-h-128 sm:h-auto sm:min-h-160",
+        header: "h-auto min-h-128 sm:h-auto sm:min-h-140",
+        sidebarHeader: "h-auto min-h-128 sm:h-auto sm:min-h-140",
         rightSidebar: "w-320",
       }}
       header={

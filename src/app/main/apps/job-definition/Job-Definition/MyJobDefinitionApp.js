@@ -75,8 +75,8 @@ function JobDefinitionApp(props) {
         <FusePageSimple
             classes={{
                 root: "bg-red",
-                header: "h-96 min-h-96 sm:h-160 sm:min-h-160",
-                sidebarHeader: "h-96 min-h-96 sm:h-160 sm:min-h-160",
+                header: "h-128 min-h-128",
+                sidebarHeader: "h-128 min-h-128",
                 rightSidebar: "w-320"
             }}
             header={
