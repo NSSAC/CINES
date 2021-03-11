@@ -48,7 +48,10 @@ function JobDefinitionFileList(props) {
   var totalRecords = "";
   const [selectedId, setSelectedId] = useState();
   if (jobDefinitionList.length !== 0) {
-    totalRecords = jobDefinitionList[2]["content-range"].split("/")[1];
+    if(jobDefinitionList[2]['content-range'] !== undefined){
+      totalRecords = jobDefinitionList[2]["content-range"].split("/")[1];
+  }
+    
     jobDefinitionList = jobDefinitionList[1];
     var searchResult = jobDefinitionList.filter((data) => {
       if (
@@ -64,7 +67,7 @@ function JobDefinitionFileList(props) {
           data.description.toLowerCase().includes(props.search.toLowerCase()))
       )
         return data;
-        return null;
+        
     });
 
     if (Object.keys(selectedItem).length === 0 && searchResult.length > 0 && (path.endsWith('job-definition/') === true)) {
@@ -319,7 +322,7 @@ function JobDefinitionFileList(props) {
           )}
       </div>
     );
-  else if (Object.values(jobDefinitionData).length === 0 && spinnerFlag === false) {
+  else if ( jobDefinitionList.length === 0 ) {
     return (
       <div className="flex flex-1 flex-col items-center justify-center mt-20">
         <Typography className="text-18 mt-16" color="textPrimary">

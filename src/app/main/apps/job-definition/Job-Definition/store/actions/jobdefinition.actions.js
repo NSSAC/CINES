@@ -61,7 +61,9 @@ arr=[];
 
   return (dispatch) =>
     request.then((response) => {
-      arr.push(...response.data);
+      if(response !== undefined && response.data.length > 0){
+        arr.push(...response.data)
+      }
       dispatch({
         type: GET_FILES,
         payload: arr,

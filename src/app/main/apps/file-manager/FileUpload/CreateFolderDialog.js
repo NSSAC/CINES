@@ -13,15 +13,14 @@ import { TextFieldFormsy } from "@fuse/components/formsy";
 import Formsy from "formsy-react";
 import axios from "axios";
 import { useDispatch } from "react-redux";
+import DialogContentText from '@material-ui/core/DialogContentText';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
 export const CreateFolder = ({
-  allFilesType,
-  fileTypes,
-  setUploadFile,
+
   dialogTargetPath,
   setShowModal,
   showModal,
@@ -32,7 +31,22 @@ export const CreateFolder = ({
     inputsize: {
       width: 250,
     },
+
   });
+
+  const breadcrumb_wrap = {
+    width: '100%',
+    flexWrap: 'wrap'
+  }
+
+  const ellipsis = {
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    maxWidth: '170px',
+    cursor: 'default'
+  }
+
 
   const [isFormValid, setIsFormValid] = useState(false);
   const [status, setStatus] = useState("");
@@ -43,8 +57,9 @@ export const CreateFolder = ({
   const [flag ,setFlag] =useState(true);
   const classes = useStyles();
   const onCancle = () => {
+    setMessage("");
     handleClose();
-    if (dialogTargetPath) setShowModal(true);
+   
   };
 
   function inputChangedHandler(event) {
@@ -64,7 +79,11 @@ export const CreateFolder = ({
    
     const userToken = localStorage.getItem("id_token");
     let target = window.location.pathname;
+    if (dialogTargetPath) {
+      target = dialogTargetPath;
+    }
     let targetPath = target.replace("/apps/files", "");
+    
     return axios({
       method: "post",
       url: `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file${targetPath}`,
@@ -122,6 +141,17 @@ export const CreateFolder = ({
           {"Create Folder"}
         </DialogTitle>
         <DialogContent divider="true">
+        <DialogContentText className='mb-0' id="alert-dialog-slide-description">
+            {breadcrumbArr?<span className="flex text-16 sm:text-16" style={breadcrumb_wrap}>
+              {breadcrumbArr.map((path, i) => (
+                <span key={i} className="flex items-center" >
+                  <span  title={path} style={ellipsis} >{path} </span>
+                  {breadcrumbArr.length - 1 !== i && (
+                    <Icon>chevron_right</Icon>
+                  )}
+                </span>))}
+            </span>:null}
+          </DialogContentText>
           <Formsy
             onValid={enableButton}
             onInvalid={disableButton}
@@ -149,7 +179,9 @@ export const CreateFolder = ({
             { status ?
               <p style={{marginTop:12}}>
               {message}
-              <Icon>check_circle</Icon>
+             {message?
+              <Icon>check_circle</Icon>:null
+             } 
             </p>:<p style={{marginTop:12}}>
               {message}
             
