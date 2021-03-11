@@ -39,6 +39,7 @@ export const CreateFolder = ({
   const dispatch = useDispatch();
   const [name, setName] = useState("");
   const [ message,setMessage] = useState("");
+// eslint-disable-next-line 
   const [flag ,setFlag] =useState(true);
   const classes = useStyles();
   const onCancle = () => {

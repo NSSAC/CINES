@@ -133,11 +133,11 @@ const Snap_GetBfsFullDiam = () => {
             };
             if (updatedFormElement.type === 'integer') {
                 updatedFormElement.value = parseInt(event.target.value);
-            }
-            else if (updatedFormElement.type === 'boolean') {
+            } else if (updatedFormElement.type === "number") {
+                updatedFormElement.value = parseFloat(event.target.value);
+            } else if (updatedFormElement.type === 'boolean') {
                 updatedFormElement.value = Boolean(event.target.value);
-            }
-            else {
+            } else {
                 updatedFormElement.value = event.target.value;
             }
             updatedJobSubmissionForm[inputIdentifier] = updatedFormElement;

@@ -166,6 +166,9 @@ const Epihiper_cell_simulation = () => {
             else if (updatedFormElement.type === 'boolean') {
                 updatedFormElement.value = Boolean(event.target.value);
             }
+            else if (updatedFormElement.type === "number") {
+                updatedFormElement.value = parseFloat(event.target.value);
+            }
             else {
                 updatedFormElement.value = event.target.value;
             }

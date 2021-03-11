@@ -84,7 +84,7 @@ const Snap_GetBfsFullDiam = () => {
             }
 
         );
-                // eslint-disable-next-line
+        // eslint-disable-next-line
     }, [axios]);
 
     const creatForm = (createFromData, inputFileData, outputFiles, requiredFeildArray, responseData) => {
@@ -129,8 +129,8 @@ const Snap_GetBfsFullDiam = () => {
         }
     };
 
-    const description = (desc) => 
-        <span style={{ marginTop: '38px' }}  data-tip={desc}>
+    const description = (desc) =>
+        <span style={{ marginTop: '38px' }} data-tip={desc}>
             <Icon fontSize="small">info</Icon>
         </span>
 
@@ -147,8 +147,9 @@ const Snap_GetBfsFullDiam = () => {
             }
             else if (updatedFormElement.type === 'boolean') {
                 updatedFormElement.value = Boolean(event.target.value);
-            }
-            else {
+            } else if (updatedFormElement.type === "number") {
+                updatedFormElement.value = parseFloat(event.target.value);
+            } else {
                 updatedFormElement.value = event.target.value;
             }
             //updatedFormElement.value = event.target.value;
@@ -203,7 +204,7 @@ const Snap_GetBfsFullDiam = () => {
         }).then(res => {
             setIsToasterFlag(true)
             setSuccess(true)
-             window.setTimeout(
+            window.setTimeout(
                 delayNavigation
                 , 4000);
 
@@ -211,7 +212,7 @@ const Snap_GetBfsFullDiam = () => {
             (error) => {
                 setSuccess(false)
                 setIsToasterFlag(true)
-                 window.setTimeout(handlingError, 4000);
+                window.setTimeout(handlingError, 4000);
             }
         )
 
@@ -219,7 +220,7 @@ const Snap_GetBfsFullDiam = () => {
 
     function handlingError() {
         setIsToasterFlag(false);
-      }
+    }
 
     function delayNavigation() {
         history.push('/apps/my-jobs/');
