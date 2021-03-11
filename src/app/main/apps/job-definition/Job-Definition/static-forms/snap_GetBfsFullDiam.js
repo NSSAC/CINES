@@ -59,9 +59,8 @@ const Snap_GetBfsFullDiam = () => {
 
         axios({
             method: 'get',
-            url: `${process.env.REACT_APP_SCIDUCT_JOB_SERVICE}/job_definition/snap_GetBfsFullDiam`,
+            url: `${process.env.REACT_APP_SCIDUCT_JOB_SERVICE}/job_definition/net.science/snap_GetBfsFullDiam`,
             headers: {
-                'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': '* ',
                 Authorization: userToken
             }
@@ -69,10 +68,10 @@ const Snap_GetBfsFullDiam = () => {
             (res) => {
                 setSpinnerFlag(false)
                 if (res.data) {
-                    var createFromData = JSON.parse(res.data.input_schema).properties;
+                    var createFromData = res.data.input_schema.properties;
                     var inputFileData = res.data.input_files;
                     var outputFiles = res.data.output_files;
-                    var requiredFeildArray = JSON.parse(res.data.input_schema).required;
+                    var requiredFeildArray = res.data.input_schema.required;
                     var responseData = res.data;
 
                     creatForm(createFromData, inputFileData, outputFiles, requiredFeildArray, responseData);
@@ -356,7 +355,7 @@ const Snap_GetBfsFullDiam = () => {
                                                 {formElementsArray['graphType'].description && (description(formElementsArray['graphType'].description))}
                                             </Grid>
                                             {Object.entries(formElementsArray).filter(data => { if (data[1].type === undefined) return data; return null }).map((formElement) => (
-                                                <Grid style={childGrid} item container xs={12} sm={6}>
+                                                <Grid key={formElement.id} style={childGrid} item container xs={12} sm={6}>
                                                     <Input
                                                         key={formElement.id}
                                                         formData={formElement}
