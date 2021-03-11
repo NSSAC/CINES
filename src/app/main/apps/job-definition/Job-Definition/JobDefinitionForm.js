@@ -24,7 +24,7 @@ function JobDefinitionForm(props) {
   var path = window.location.pathname;
   var pathEnd = path.replace("/apps/job-definition/", "");
   if(pathEnd.endsWith('/'))
-  pathEnd = pathEnd.slice(0, -1)
+    pathEnd = pathEnd.slice(0, -1)
   const parentGrid = {
     borderTop: "2px solid black",
     borderBottom: "2px solid black",
@@ -34,7 +34,7 @@ function JobDefinitionForm(props) {
     borderRight: "1px solid black",
     paddingLeft: "20px",
   };
- 
+
   const outputGrid = {
     borderRight: "1px solid black",
     paddingLeft: "20px",
@@ -51,7 +51,7 @@ function JobDefinitionForm(props) {
       method: "get",
       url: `${process.env.REACT_APP_SCIDUCT_JOB_SERVICE}/job_definition/${pathEnd}`,
       headers: {
-       
+
         'Accept': '*/*',
         "Access-Control-Allow-Origin": "* ",
 
@@ -77,7 +77,7 @@ function JobDefinitionForm(props) {
       },
       (error) => {}
     );
-                    // eslint-disable-next-line
+    // eslint-disable-next-line
   }, [axios]);
 
   const creatForm = (
@@ -120,8 +120,7 @@ function JobDefinitionForm(props) {
         }
       }
 
-      if( count % 2 !== 0 )
-      {
+      if (count % 2 !== 0) {
         count++;
         let extraObj = {
           id: count + 100,
@@ -172,6 +171,8 @@ function JobDefinitionForm(props) {
         updatedFormElement.value = parseInt(event.target.value);
       } else if (updatedFormElement.type === "boolean") {
         updatedFormElement.value = Boolean(event.target.value);
+      } else if (updatedFormElement.type === "number") {
+        updatedFormElement.value = parseFloat(event.target.value);
       } else {
         updatedFormElement.value = event.target.value;
       }
@@ -228,12 +229,12 @@ function JobDefinitionForm(props) {
         setIsToasterFlag(true);
         //setIsToasterFlag(prevMovies => (true));
         setSuccess(true);
-         window.setTimeout(delayNavigation, 4000);
+        window.setTimeout(delayNavigation, 4000);
       },
       (error) => {
         setSuccess(false);
         setIsToasterFlag(true);
-         window.setTimeout(handlingError, 4000);
+        window.setTimeout(handlingError, 4000);
       }
     );
   }
@@ -296,25 +297,25 @@ function JobDefinitionForm(props) {
                         formData={formElement}
                         elementType={formElement.type}
                         value={formElement.value}
-                        
+
                         changed={(event) =>
                           inputChangedHandler(event, formElement[0])
                         }
                       />
                     </Grid>
                   ) : (
-                    <Grid  key={formElement[1].id} style={outputGrid} item container xs={12} sm={6}>
-                      <Input
-                        key={formElement.id}
-                        formData={formElement}
-                        elementType={formElement.type}
-                        value={formElement.value}
-                        changed={(event) =>
-                          inputChangedHandler(event, formElement[0])
-                        }
-                      />
-                    </Grid>
-                  )
+                      <Grid  key={formElement[1].id} style={outputGrid} item container xs={12} sm={6}>
+                        <Input
+                          key={formElement.id}
+                          formData={formElement}
+                          elementType={formElement.type}
+                          value={formElement.value}
+                          changed={(event) =>
+                            inputChangedHandler(event, formElement[0])
+                          }
+                        />
+                      </Grid>
+                    )
                 )}
               </Grid>
               <div style={{ alignSelf: "flex-end" }}>

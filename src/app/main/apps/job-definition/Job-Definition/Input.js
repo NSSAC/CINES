@@ -108,7 +108,7 @@ export const Input = (props) => {
 			typeFlag = 1;
 			break;
 
-		case "float":
+		case "number":
 			if (props.formData[1].required) {
 				inputElement = (
 					<TextFieldFormsy
