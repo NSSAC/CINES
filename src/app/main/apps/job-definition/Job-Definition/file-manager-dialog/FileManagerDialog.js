@@ -24,7 +24,6 @@ import "./FileManagerDialog.css";
 import { FileUpload } from "app/main/apps/file-manager/FileUpload/FileUploadDialog";
 import { CreateFolder } from "app/main/apps/file-manager/FileUpload/CreateFolderDialog";
 import sciductService from "app/services/sciductService";
-import { blue } from "@material-ui/core/colors";
 
 function FMPopup({
   showModal,
