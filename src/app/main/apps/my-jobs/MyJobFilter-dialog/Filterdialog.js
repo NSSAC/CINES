@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -54,45 +54,36 @@ export const MyJobFilter = ({
   const [selectedTypeArray, setSelectedTypeArray] = useState([]);
   const [selectedValue, setselectedValue] = useState("");
   const [stateFlag, setStateFlag] = useState(false);
-  const [jobDefinationType ,setJobDefinationType] =useState([])
-  
-  var jobArray =[];
+  const [jobDefinationType, setJobDefinationType] = useState([]);
+
+  var jobArray = [];
   useEffect(() => {
-  
     var userToken = localStorage.getItem("id_token");
 
     axios({
       method: "get",
       url: `${process.env.REACT_APP_SCIDUCT_JOB_SERVICE}/job_definition?limit(99999)`,
       headers: {
-       
-        'Accept': '*/*',
+        Accept: "*/*",
         "Access-Control-Allow-Origin": "* ",
 
         Authorization: userToken,
       },
-    }).then(
-      (res) => {
-        if (res.data) {
-          var responseData = res.data;
-          createjobTypeArray(responseData)
-        }
+    }).then((res) => {
+      if (res.data) {
+        var responseData = res.data;
+        createjobTypeArray(responseData);
       }
-    );
-                    // eslint-disable-next-line
+    });
+    // eslint-disable-next-line
   }, [axios]);
 
-
-
-const createjobTypeArray = (responseData) => {
-
- for(let i= 0 ;i< responseData.length ; i++){
-   jobArray.push(responseData[i].id)
-   
- }
- setJobDefinationType(jobArray)
-}
-
+  const createjobTypeArray = (responseData) => {
+    for (let i = 0; i < responseData.length; i++) {
+      jobArray.push(responseData[i].id);
+    }
+    setJobDefinationType(jobArray);
+  };
 
   const changeHandler = (e) => {
     /* Flag to enable value dropdown */
@@ -104,8 +95,8 @@ const createjobTypeArray = (responseData) => {
       setjobTypeArray(JOBTYPEVALUE.statusType);
       setselectedStateFlag(true);
     } else {
-     // setjobTypeArray(JOBTYPEVALUE.jobDefinationType);
-     setjobTypeArray(jobDefinationType)
+      // setjobTypeArray(JOBTYPEVALUE.jobDefinationType);
+      setjobTypeArray(jobDefinationType);
       setselectedStateFlag(false);
     }
   };
@@ -127,9 +118,11 @@ const createjobTypeArray = (responseData) => {
       }
     } else {
       if (!preJobTypeValue.includes(selectedValue)) {
+        var modifiedValue =
+          "eq(job_definition,re:" + selectedValue.replace("/", "%2F") + ")";
         setPreJobTypeValue((preJobTypeValue) => [
           ...preJobTypeValue,
-          selectedValue,
+          modifiedValue,
         ]);
       }
     }
@@ -293,7 +286,9 @@ const createjobTypeArray = (responseData) => {
                   <li key={index}>
                     <Chip
                       icon={icon}
-                      label={data}
+                      label={data
+                        .replace("eq(job_definition,re:", "")
+                        .replace("%2F", "/")}
                       onDelete={() => handleDeleteJob(data)}
                       className={classes.chip}
                     />

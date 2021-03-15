@@ -86,7 +86,7 @@ function MyJobsApp(props) {
                             }
                             {sessionStorage.getItem("preJobTypeValue") && JSON.parse(sessionStorage.getItem("preJobTypeValue")).length !== 0 ? JSON.parse(sessionStorage.getItem("preJobTypeValue")).map((data,index) => {
                                 return (
-                                    <span key={index} className="chips">{data}</span>
+                                    <span key={index} className="chips"> {data.replace("eq(job_definition,re:" ,"").replace("%2F" ,"/")}</span>
                                 );
                             }) : null}
 

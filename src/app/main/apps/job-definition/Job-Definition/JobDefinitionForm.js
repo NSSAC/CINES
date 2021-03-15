@@ -21,6 +21,7 @@ function JobDefinitionForm(props) {
   const [success, setSuccess] = useState();
   const [isToasterFlag, setIsToasterFlag] = useState(false);
   const [spinnerFlag, setSpinnerFlag] = useState(true);
+
   var path = window.location.pathname;
   var pathEnd = path.replace("/apps/job-definition/", "");
   if(pathEnd.endsWith('/'))
@@ -205,7 +206,9 @@ function JobDefinitionForm(props) {
         formElementsArray[key].formLabel === "output_name"
       ) {
         requestJson["output_name"] = formElementsArray[key].value;
-      } else {
+      } 
+      
+      else {
         input[key] = formElementsArray[key].value;
       }
     }
@@ -227,8 +230,8 @@ function JobDefinitionForm(props) {
     }).then(
       (res) => {
         setIsToasterFlag(true);
-        //setIsToasterFlag(prevMovies => (true));
         setSuccess(true);
+        //setOnSubmitFlag(true)
         window.setTimeout(delayNavigation, 4000);
       },
       (error) => {
@@ -326,7 +329,7 @@ function JobDefinitionForm(props) {
                   className="w-30  mt-32 mb-80"
                   aria-label="LOG IN"
                   onClick={createSubmissionData}
-                  disabled={!isFormValid}
+                  disabled={!isFormValid || success}
                 >
                   Submit
                 </Button>
@@ -338,8 +341,7 @@ function JobDefinitionForm(props) {
                     variant="contained"
                     onClick={onFormCancel}
                     color="primary"
-                    className="w-30 mx-8 mt-32 mb-80"
-                  >
+                    className="w-30 mx-8 mt-32 mb-80">
                     Cancel
                   </Button>
                 </Link>
