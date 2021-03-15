@@ -12,10 +12,13 @@ function Breadcrumb({props,className, styles, path})
         maxWidth: '170px'
     }
     
-   function onclickRoute(path) {
-        var target = window.location.pathname.split(path)
-        var targetPath= target[0] + path + "/"
-         props.history.push(targetPath)
+   function onclickRoute(i) {
+        arr.splice(i+1-arr.length)
+        var targetPath=''
+        for(i=0;i<arr.length;i++){
+            targetPath = targetPath + arr[i] + '/'
+        }
+         props.history.push('/apps/' + targetPath)
 
     }
 
@@ -26,7 +29,7 @@ function Breadcrumb({props,className, styles, path})
         <div className={className} style={styles} >
             {arr.map((path, i) => (   
                 <div key={i}  className="flex items-center"> 
-                     <div  onClick={() => onclickRoute(path)} className="cursor-pointer" style={ellipsis} title={path} >{path} </div>
+                     <div  onClick={() => onclickRoute(i)} className="cursor-pointer" style={ellipsis} title={path} >{path} </div>
                       {arr.length - 1 !== i && (
                         <Icon>chevron_right</Icon>
                     )}

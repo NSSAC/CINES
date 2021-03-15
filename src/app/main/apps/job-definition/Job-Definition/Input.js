@@ -116,7 +116,7 @@ export const Input = (props) => {
 						type="text"
 						name="SrcColId"
 						style={{ width: "18px" }}
-						value={props.formData[1].value}
+						value=''
 						label={props.formData[0]}
 						onChange={props.changed}
 						validations={{
@@ -136,7 +136,7 @@ export const Input = (props) => {
 						type="text"
 						name="SrcColId"
 						style={{ width: "18px" }}
-						value={props.formData[1].value}
+						value=''
 						label={props.formData[0]}
 						onChange={props.changed}
 						validations={{
@@ -184,6 +184,12 @@ export const Input = (props) => {
 							value={props.formData[1].value}
 							label={props.formData[0]}
 							onChange={props.changed}
+							validations={{
+								isPositiveInt: function (values, value) {
+									return RegExp(/^[^-\s]/).test(value);
+								},
+							}}
+							validationError="This is not a valid value"
 							autoComplete="off"
 							required
 						/>
@@ -218,6 +224,12 @@ export const Input = (props) => {
 							value={props.formData[1].value}
 							label={props.formData[0]}
 							onChange={props.changed}
+							validations={{
+								isPositiveInt: function (values, value) {
+									return RegExp(/^[^-\s]/).test(value);
+								},
+							}}
+							validationError="This is not a valid value"
 							autoComplete="off"
 						/>
 					);

@@ -154,6 +154,8 @@ function FMPopup({
         let metaData = response.data.writeACL;
         let ownerId = response.data.owner_id;
         let type = response.data.type;
+
+        if (metaData !== undefined)
         checkPermission(metaData, ownerId, type);
       });
     }

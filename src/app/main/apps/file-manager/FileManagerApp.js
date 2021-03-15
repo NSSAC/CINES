@@ -273,7 +273,7 @@ function FileManagerApp(props) {
                 <div className="flex flex-col">
                   <div className="flex items-center mb-16">
                     <Icon
-                      className="text-18"
+                      className="text-18  cursor-pointer"
                       color="action"
                       onClick={navigateHome}
                     >
