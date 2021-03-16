@@ -166,11 +166,11 @@ export const CreateFolder = ({
               autoComplete='off'
               onChange={(event) => inputChangedHandler(event)}
               validations={{
-                minLength: 1,
-              }}
-              validationErrors={{
-                minLength: "Min character length is 1",
-              }}
+								isPositiveInt: function (values, value) {
+									return RegExp(/^[^-\s]/).test(value);
+								},
+							}}
+							validationError="This is not a valid value"
               required
             />
           </Formsy>
