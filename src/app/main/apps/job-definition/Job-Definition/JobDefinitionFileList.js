@@ -43,11 +43,12 @@ function JobDefinitionFileList(props) {
   var path = window.location.pathname;
   var pathArray = window.location.pathname.split("/");
   var pathArrayEnd = pathArray.slice(-1)[0];
-
+var onloadSpinner =false
   var jobDefinitionList = Object.values(jobDefinitionData);
   var totalRecords = "";
   const [selectedId, setSelectedId] = useState();
   if (jobDefinitionList.length !== 0) {
+    onloadSpinner =true;
     if(jobDefinitionList[2]['content-range'] !== undefined){
       totalRecords = jobDefinitionList[2]["content-range"].split("/")[1];
   }
@@ -322,7 +323,7 @@ function JobDefinitionFileList(props) {
           )}
       </div>
     );
-  else if ( jobDefinitionList.length === 0 ) {
+  else if ( jobDefinitionList.length === 0  && onloadSpinner) {
     return (
       <div className="flex flex-1 flex-col items-center justify-center mt-20">
         <Typography className="text-18 mt-16" color="textPrimary">
@@ -331,6 +332,18 @@ function JobDefinitionFileList(props) {
       </div>
     );
   }
+ 
+  else if (Object.values(jobDefinitionData).length === 0)
+  return (
+      <div className="flex flex-1 flex-col items-center justify-center mt-40">
+          <Typography className="text-20 mt-16" color="textPrimary">Loading</Typography>
+          <LinearProgress className="w-xs" color="secondary" />
+      </div>
+  )
+
+
+
+
   else if (searchResult.length === 0)
     return (
       <div className="flex flex-1 flex-col items-center justify-center mt-20">

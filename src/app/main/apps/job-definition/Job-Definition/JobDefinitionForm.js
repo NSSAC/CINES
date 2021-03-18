@@ -243,6 +243,7 @@ function JobDefinitionForm(props) {
   }
   function handlingError() {
     setIsToasterFlag(false);
+    setSuccess();
   }
   function delayNavigation() {
     history.push("/apps/my-jobs/");

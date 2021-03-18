@@ -11,7 +11,7 @@ function MyJobsFileList(props) {
     const files1 = useSelector(({ myJobsApp }) => myJobsApp.myjobs);
     const selectedItem = useSelector(({ myJobsApp }) => myJobsApp.selectedjobid);
     const [selectedId, setSelectedId] = useState();
- 
+    var onloadSpinner =false;
     var files = Object.values(files1);
     var totalRecords ;
  
@@ -20,6 +20,7 @@ function MyJobsFileList(props) {
             totalRecords = Number(files[2]['content-range'].split('/')[1])
         }
         files = files[1]
+        onloadSpinner =true;
         if (Object.keys(selectedItem).length === 0 && files.length > 0) {
             dispatch(Actions.setSelectedItem(files[0].id));
         }
@@ -281,13 +282,20 @@ function MyJobsFileList(props) {
         );
     }
 
-    else if(files.length === 0){
+    else if(files.length === 0 && onloadSpinner){
         return (
             <div className="flex flex-1 flex-col items-center justify-center">
                 <Typography className="text-20 mt-16" color="textPrimary">No records exists.</Typography>
             </div>
         )
     }
+    else if (Object.values(files1).length === 0)
+    return (
+        <div className="flex flex-1 flex-col items-center justify-center mt-40">
+            <Typography className="text-20 mt-16" color="textPrimary">Loading</Typography>
+            <LinearProgress className="w-xs" color="secondary" />
+        </div>
+    )   
 }
 
 export default MyJobsFileList;
