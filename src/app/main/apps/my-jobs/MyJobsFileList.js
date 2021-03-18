@@ -21,7 +21,7 @@ function MyJobsFileList(props) {
         }
         files = files[1]
         onloadSpinner =true;
-        if (Object.keys(selectedItem).length === 0 && files.length > 0) {
+        if (selectedId === undefined ) {
             dispatch(Actions.setSelectedItem(files[0].id));
         }
     }

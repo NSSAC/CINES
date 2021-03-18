@@ -115,7 +115,7 @@ function MyJobsApp(props) {
 
 
                     <div className="flex flex-1 items-end">
-                    <Tooltip title="Create" placement="top">
+                    <Tooltip title="Job Definition" placement="top">
                          <Link to="/apps/job-definition/">
                         <FuseAnimate animation="transition.expandIn" delay={600}>
                             <Fab color="secondary"  aria-label="add" className="absolute bottom-0 left-0 ml-16 -mb-28 z-999">
