@@ -26,7 +26,8 @@ function ToolbarLayout2(props)
     return (
         <ThemeProvider theme={toolbarTheme}>
             <AppBar id="fuse-toolbar" className="flex relative z-10" color="default" style={{backgroundColor: toolbarTheme.palette.background.default}}>
-                <Toolbar className="container p-0 lg:px-24">
+            <Hidden lgUp>
+                <Toolbar className="  container  p-0 ">
 
                     {config.navbar.display && (
                         <Hidden lgUp>
@@ -42,8 +43,9 @@ function ToolbarLayout2(props)
                     </div>
 
                     <div className="flex">
-
+                   
                         <UserMenu/>
+                        
 
                         {/* <div className={classes.separator}/>
 
@@ -62,6 +64,7 @@ function ToolbarLayout2(props)
                     </div>
 
                 </Toolbar>
+                </Hidden>
             </AppBar>
         </ThemeProvider>
     );
