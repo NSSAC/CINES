@@ -58,6 +58,7 @@ export const CreateFolder = ({
   const classes = useStyles();
   const onCancle = () => {
     setMessage("");
+    setName("");
     handleClose();
    
   };

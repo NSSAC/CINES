@@ -76,7 +76,7 @@ function FileManagerApp(props) {
   function showFileUploadDialog() {
     axios({
       method: "get",
-      url: "https://sciduct.bii.virginia.edu/fs/type/",
+      url: "https://sciduct.bii.virginia.edu/fs/type/?limit(1000)",
       headers: {
         Accept: "*/*",
         "Access-Control-Allow-Origin": "* ",
@@ -85,6 +85,7 @@ function FileManagerApp(props) {
       if (res.data) {
         var responseData = res.data;
         for (let i = 0; i < responseData.length; i++) {
+          if(responseData[i].id !== "folder")
           fileTypeArray.push(responseData[i].id);
         }
         setFileTypeArray(fileTypeArray);
