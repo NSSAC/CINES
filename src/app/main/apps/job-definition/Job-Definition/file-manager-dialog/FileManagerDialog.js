@@ -51,21 +51,12 @@ function FMPopup({
     files !== {} &&
       Object.values(files).map((node) => {
         if (node.name === uploadFile) {
-          dispatch(Actions.setSelectedItem(node.id));
-          setFileChosen("");
-          setFileChosenPath("");
-          if (selectedItem) {
-            localStorage.setItem(
-              "selectedSnapFile",
-              JSON.stringify(selectedItem)
-            );
-            setFileChosen(targetPath + selectedItem.name);
-            setFileChosenPath(targetPath + selectedItem.name);
+            setFileChosen(targetPath + node.name);
+            setFileChosenPath(targetPath + node.name);
             setUploadFile("");
             setTargetPath("/");
             setSearch("");
             handleFMClose();
-          }
         }
         return null;
       });
@@ -78,11 +69,10 @@ function FMPopup({
   };
 
   const onSelect = () => {
-    setSearch("");
-    setTargetPath("/");
-    localStorage.setItem("selectedSnapFile", JSON.stringify(selectedItem));
     setFileChosen(targetPath + selectedItem.name);
     setFileChosenPath(targetPath + selectedItem.name);
+    setSearch("");
+    setTargetPath("/");
     handleFMClose();
   };
 
@@ -256,13 +246,13 @@ function FMPopup({
                 >
                   <Tooltip title="Click to Upload" aria-label="add">
                     <Fab
-                      className="hidden sm:flex flex-col"
+                      className="flex flex-col"
                       color="secondary"
                       aria-label="add"
                       size="small"
                     >
                       <Icon
-                        className="hidden sm:flex flex-col"
+                        className="flex flex-col"
                         title="Click to Upload"
                         onClick={showFileUploadDialog}
                       >

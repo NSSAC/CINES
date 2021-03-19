@@ -382,10 +382,10 @@ function FileManagerApp(props) {
                     color="secondary"
                     aria-label="add"
                     size="medium"
-                    className=" hidden sm:flex flex-col absolute bottom-0 d-none d-sm-block  left-0 ml-16 -mb-12 z-999"
+                    className="flex flex-col absolute bottom-0 d-none d-sm-block  left-0 ml-16 -mb-12 z-999"
                   >
                     <Icon
-                      className="hidden sm:flex flex-col"
+                      className="flex flex-col"
                       onClick={handleClick}
                     >
                       add

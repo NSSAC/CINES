@@ -10,7 +10,8 @@
     display: flex;
     flex-direction: column;
     padding: 20px;
-    margin:0px,2px
+    margin:0px,2px;
+    width: fit-content;
   }
   
   .file-upload-container.drag {

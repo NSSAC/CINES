@@ -5,6 +5,10 @@
     background-color: rgba(255, 255, 255, 0.12);
 }
 
+.createFolder {
+    text-align: end;
+}
+
 .tableStyle {
     overflow: auto;
     max-height: 320px;

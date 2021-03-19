@@ -158,7 +158,7 @@ function Preview(props) {
       </div>
     );
 
-    else if (props.size === '0')
+    else if (props.size === '0' || props.size === "undefined")
     return (
         <div className="flex flex-1 flex-col items-center justify-center">
           <Typography className="text-20 mt-16" color="textPrimary">The file is empty or might be corrupted.</Typography>
@@ -172,7 +172,7 @@ function Preview(props) {
       </div>
     );
 
-  else if ((extentionType === 'text' || extentionType === 'txt')) {
+  else if ((extentionType === 'text' || extentionType === 'txt') || (extentionType.includes('snap')) || (extentionType === 'PNGraph')  || (extentionType === 'PUNGraph')  || (extentionType === 'PNEANet')  ) {
     if (typeof (data) === 'object')
       return (<div style={textStyle}>{JSON.stringify(data, null, 2)}</div>);
     else
@@ -235,6 +235,46 @@ function Preview(props) {
       </div>
     );
   }
+
+//   else if ((extentionType === 'snap_graph') || (extentionType === 'snap_TIntPrV')) {
+//     allTextLines = data.split(/\r\n|\n/).filter(item => !item.includes('#'))
+//    var desc = data.split(/\r\n|\n/).filter(item => item.includes('#'))
+//    lines = [];
+
+//    for (i = 0; i < allTextLines.length; i++) {
+//      dataCsv = allTextLines[i].replace(/\s+/g, " ").replace(/\t/g, ' ');;
+//      dataCsv = dataCsv.split(" ");
+
+//      tarr = [];
+//      for (j = 0; j < 2; j++) {
+//        tarr.push(dataCsv[j]);
+//      }
+//      lines.push(tarr);
+
+//      outputData = lines;
+//    }
+//    return (
+//      <div style={{ overflow: 'auto' }}>
+//        { desc.map((a1, k) => {
+//          return (<div style={textStyle}>{a1}</div>);
+//        })
+//        }
+//        <FuseAnimate>
+//          <Table>
+//            <TableBody>
+//              {outputData.map((e1, k) => {
+//                return (
+//                  <TableRow key={k}>
+//                    {e1.map((e2, j) => (<TableCell key={j}>{e2}</TableCell>))}
+//                  </TableRow>
+//                )
+//              })}
+//            </TableBody>
+//          </Table>
+//        </FuseAnimate>
+//      </div>
+//    );
+//  }
 
   else if ((extentionType === 'csv')) {
     allTextLines = data.split(/\r\n|\n/);

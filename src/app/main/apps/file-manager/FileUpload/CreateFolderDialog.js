@@ -7,6 +7,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import Slide from "@material-ui/core/Slide";
 import { useState } from "react";
 import * as Actions from "../store/actions";
+import * as ActionsHome from "app/main/apps/job-definition/Job-Definition/file-manager-dialog/store/actions";
 import { makeStyles } from "@material-ui/core/styles";
 import { Icon } from "@material-ui/core";
 import { TextFieldFormsy } from "@fuse/components/formsy";
@@ -26,6 +27,7 @@ export const CreateFolder = ({
   showModal,
   handleClose,
   breadcrumbArr,
+  isFolderManager
 }) => {
   const useStyles = makeStyles({
     inputsize: {
@@ -102,8 +104,11 @@ export const CreateFolder = ({
         setFlag(true)
         setName("")
         progressStatus("Folder " + folderName  +  " created successfully",true );
-        dispatch(Actions.getFiles(targetPath, "GET_FILES"));
-     
+        if(isFolderManager === true)
+         dispatch(ActionsHome.getHome(targetPath.replace('/home/','')));
+        else 
+         dispatch(Actions.getFiles(targetPath, "GET_FILES"));
+  
       },
 
       (error) => {

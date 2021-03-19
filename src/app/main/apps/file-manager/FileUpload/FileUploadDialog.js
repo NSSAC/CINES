@@ -365,8 +365,8 @@ export const FileUpload = ({ allFilesType,fileTypes, setUploadFile, dialogTarget
                 <TableRow>
                   <TableCell className="max-w-64 w-64 p-0 text-center"> </TableCell>
                   <TableCell>Name</TableCell>
-                  <TableCell className="hidden sm:table-cell">Type</TableCell>
-                  <TableCell className="hidden sm:table-cell">Status</TableCell>
+                  <TableCell className="table-cell">Type</TableCell>
+                  <TableCell className="table-cell">Status</TableCell>
 
                   {initialUploadFile.length === 0 ? null : <TableCell className=" p-0 text-center">
                     Remove
@@ -380,9 +380,9 @@ export const FileUpload = ({ allFilesType,fileTypes, setUploadFile, dialogTarget
                 {initialUploadFile.length === 0 ?
                   <TableRow className="cursor-pointer">
                     <TableCell className="max-w-30 w-30 p-0 text-center"> </TableCell>
-                    <TableCell className="hidden sm:table-cell">No file selected</TableCell>
-                    <TableCell className="hidden sm:table-cell">--</TableCell>
-                    <TableCell className="text-center hidden sm:table-cell">--</TableCell>
+                    <TableCell className="table-cell">No file selected</TableCell>
+                    <TableCell className="table-cell">--</TableCell>
+                    <TableCell className="text-center table-cell">--</TableCell>
                     <TableCell className="max-w-64 w-64 p-0 text-center"> </TableCell>
 
                   </TableRow> :
@@ -393,7 +393,7 @@ export const FileUpload = ({ allFilesType,fileTypes, setUploadFile, dialogTarget
                         className="cursor-pointer" >
 
                         <TableCell className="max-w-30 w-30 p-0 text-center"> </TableCell>
-                        <TableCell style={{ wordBreak: 'break-all' }} className=" max-w-30 w-30 p-0 hidden sm:table-cell">{node.fileName}</TableCell>
+                        <TableCell style={{ wordBreak: 'break-all' }} className=" max-w-30 w-30 p-0 table-cell">{node.fileName}</TableCell>
                         {fileTypeArray.length > 1 ?
                           <MenuTableCell
                             value={node.type}
@@ -409,10 +409,10 @@ export const FileUpload = ({ allFilesType,fileTypes, setUploadFile, dialogTarget
                               })
                             }
                           </MenuTableCell> :
-                          <TableCell className=" hidden sm:table-cell">{fileTypeArray[0]}</TableCell>}
-                        <TableCell className=" hidden sm:table-cell">{node.status}
+                          <TableCell className="table-cell">{fileTypeArray[0]}</TableCell>}
+                        <TableCell className="table-cell">{node.status}
                         </TableCell>
-                        <TableCell className=" hidden sm:table-cell">
+                        <TableCell className="table-cell">
                           <Button
                             variant="contained"
                             ////size="small"

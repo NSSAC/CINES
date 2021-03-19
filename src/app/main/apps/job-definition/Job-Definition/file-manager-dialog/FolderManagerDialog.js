@@ -9,6 +9,7 @@ import * as Actions from './store/actions';
 import reducer from './store/reducers';
 import clsx from 'clsx';
 import './FileManagerDialog.css'
+import { CreateFolder } from "app/main/apps/file-manager/FileUpload/CreateFolderDialog";
 
 function FolderPopup({ showModal, handleFMClose, folderPath, setFolderPath, fileTypes })  {
 
@@ -18,6 +19,8 @@ function FolderPopup({ showModal, handleFMClose, folderPath, setFolderPath, file
     const [targetPath, setTargetPath] = useState('/')
     const [searchbool, setSearchbool] = useState(false);
     const [search, setSearch] = useState("");
+    const [showCreateDialog, setShowCreateDialog] = useState(false);
+    const breadcrumbArr = targetPath.split("/");
 
     const onCancel = () => {
         setSearch("")
@@ -35,6 +38,15 @@ function FolderPopup({ showModal, handleFMClose, folderPath, setFolderPath, file
         setFolderPath("/home" + targetPath + selectedItem.name)
         handleFMClose()
     }
+
+    
+  function showCreateFolderDialog() {
+    setShowCreateDialog(true);
+  }
+
+  function closeCreateFolderDialog() {
+    setShowCreateDialog(false);
+  }
 
     const dialogcontentStyle={
       overflowY:'hidden',
@@ -123,6 +135,22 @@ return (
                             </FuseAnimate>
                 </div>
             </div>
+            {targetPath !== '/' && <div className="createFolder">
+                {(
+                  <FuseAnimate
+                    className="hidden md:flex flex-col"
+                    animation="transition.expandIn"
+                    delay={600}
+                  >
+                    <Tooltip title="Click to Upload" aria-label="add">
+                        <h5 style ={{color:"#61dafb" , cursor:"pointer"}} onClick={showCreateFolderDialog}>
+                            Create Folder
+                        </h5>
+                   
+                    </Tooltip>
+                  </FuseAnimate>
+                )}
+              </div>}
             <div><h5>Please click on a row to select a folder path. Or else, click on folder name to navigate to the folder contents.</h5></div>
 
         </DialogTitle>
@@ -139,6 +167,13 @@ return (
           </Button>
         </DialogActions>
       </Dialog>
+      <CreateFolder
+          showModal={showCreateDialog}
+          dialogTargetPath={"/home"+targetPath}
+          handleClose={closeCreateFolderDialog}
+          breadcrumbArr={breadcrumbArr}
+          isFolderManager={true}
+        />
     </div>
   )
 
