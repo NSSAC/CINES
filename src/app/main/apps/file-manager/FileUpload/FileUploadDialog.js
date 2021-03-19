@@ -151,11 +151,12 @@ export const FileUpload = ({ allFilesType,fileTypes, setUploadFile, dialogTarget
 
       if (item.status === "Uploaded successfully" || item.status === "Uploading-Failed (file already exist) 0%" || item.status === "Uploading-Failed (unsupported file type) 0%" || item.status === "Uploading-Failed (unsupported file name only '-_.'are allowed) 0%") {
         count++
-        if (count === initialUploadFile.length) {
-          dispatch(Actions.getFiles(targetPath, 'GET_FILES'));
-        }
       }
     })
+    if (count === initialUploadFile.length) {
+      dispatch(Actions.getFiles(targetPath, 'GET_FILES'));
+      count ++;
+    }
   }
 
   const onCancle = () => {

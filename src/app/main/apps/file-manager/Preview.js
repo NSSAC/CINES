@@ -25,6 +25,12 @@ function Preview(props) {
     color: 'deepskyblue'
   }
 
+  const textStyle = {
+    paddingTop: '10px',
+    paddingLeft: '10px',
+    whiteSpace: 'break-spaces'
+  }
+
   function DownloadFile(issue) {
     setDownloadFlag(true)
     setPreviewmsg(issue)
@@ -76,29 +82,29 @@ function Preview(props) {
     var axios = require('axios');
 
     // setTimeout(() => {
-      async function insertData() {
-        var request = axios(config)
-        await request.then((response) => {
-          setData(response.data)
-          setLoad(true)
-        }).catch(err => {
-          setError(true)
-          setLoad(true)
-          if (err.response.status === 403) {
-            setErrormsg('You do not have permissions to preview this file.')
-          }
-          else if (err.response.status === 404) {
-            setErrormsg('File not found.')
-          }
-          else
-            setErrormsg('An error occurred while loading file preview. Please click on file again to reload.')
-        });
-      }
-      if (props.size <= 3200000 && props.perm === "true")
-        insertData()
-      else {
+    async function insertData() {
+      var request = axios(config)
+      await request.then((response) => {
+        setData(response.data)
         setLoad(true)
-      }
+      }).catch(err => {
+        setError(true)
+        setLoad(true)
+        if (err.response.status === 403) {
+          setErrormsg('You do not have permissions to preview this file.')
+        }
+        else if (err.response.status === 404) {
+          setErrormsg('File not found.')
+        }
+        else
+          setErrormsg('An error occurred while loading file preview. Please click on file again to reload.')
+      });
+    }
+    if (props.size <= 3200000 && props.perm === "true")
+      insertData()
+    else {
+      setLoad(true)
+    }
     // });
 
     return () => {
@@ -152,6 +158,13 @@ function Preview(props) {
       </div>
     );
 
+    else if (props.size === '0')
+    return (
+        <div className="flex flex-1 flex-col items-center justify-center">
+          <Typography className="text-20 mt-16" color="textPrimary">The file is empty or might be corrupted.</Typography>
+        </div>
+      );
+
   else if (props.size > 3200000)
     return (
       <div className="flex flex-1 flex-col items-center justify-center">
@@ -159,9 +172,13 @@ function Preview(props) {
       </div>
     );
 
-  else if ((extentionType === 'text' || extentionType === 'txt'))
-    return (<iframe title='extentionType' width="100%" height="400" src={`data:text/plain;,${data}`}>  </iframe>
-    );
+  else if ((extentionType === 'text' || extentionType === 'txt')) {
+    if (typeof (data) === 'object')
+      return (<div style={textStyle}>{JSON.stringify(data, null, 2)}</div>);
+    else
+      return (<div style={textStyle}>{data}</div>);
+
+  }
   else if ((extentionType === 'pdf')) {
     var pdfData = Buffer.from(data, 'binary').toString('base64')
     return (<iframe title='extentionType' width="100%" height="400" src={`data:application/pdf;base64,${pdfData}`}>  </iframe>

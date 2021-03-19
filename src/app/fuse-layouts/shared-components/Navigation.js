@@ -2,7 +2,6 @@ import React from 'react';
 import {FuseNavigation} from '@fuse';
 import clsx from 'clsx';
 import {useSelector} from 'react-redux';
-import UserMenu from 'app/fuse-layouts/shared-components/UserMenu';
 
 function Navigation(props)
 {

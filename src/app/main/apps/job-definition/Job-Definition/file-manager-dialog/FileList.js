@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Typography, Icon, Table, TableBody, TableCell, TableHead, TableRow, Link } from '@material-ui/core';
 import { FuseAnimate } from '@fuse';
 import { useDispatch, useSelector } from "react-redux";
@@ -73,7 +73,6 @@ function Filelist(props) {
     const selectedItem = useSelector(({ fMApp }) => files[fMApp.selectedItemId]);
     const classes = useStyles();
     const dispatch = useDispatch()
-    const [click, setClick] = useState(false);
 
     const nameStyle = {
         overflow: 'hidden',
@@ -113,12 +112,8 @@ function Filelist(props) {
     function onClickHandler(node, canLink) {
         // props.setSearch("")
         return function (evt) {
-            if (click === false)
+            if (evt.detail === 1)
                 if (evt.target && evt.target.getAttribute("to")) {
-                    setClick(true)
-                    setTimeout(() => {
-                        setClick(false)
-                    }, 1500);
                     if (node.type === "folder" || node.type === "epihiperOutput" || node.type === "epihiper_multicell_analysis") {
                         props.setTargetPath(props.targetPath + evt.target.getAttribute("to") + "/")
                         setTimeout(() => {
@@ -165,7 +160,7 @@ function Filelist(props) {
                                         <TableCell>{node.type}</TableCell>
                                         <TableCell>{node.owner_id}</TableCell>
                                         <TableCell className="text-center">{(!node.size && (node.size !== 0)) ? '-' : filesize(node.size)}</TableCell>
-                                        <TableCell>{moment(node.update_date).fromNow()}</TableCell>
+                                        <TableCell>{moment.utc(node.update_date).local().fromNow()}</TableCell>
                                     </TableRow>
                                 );
 

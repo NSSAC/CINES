@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Hidden, Typography, Icon, IconButton, Table, TableBody, TableCell, TableHead, TableRow, Link, LinearProgress } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import { FuseAnimate } from '@fuse';
@@ -71,7 +71,6 @@ function FileList(props) {
     const selectedItem = useSelector(({ fileManagerApp }) => files[fileManagerApp.selectedItemId]);
     const classes = useStyles();
     var token = localStorage.getItem('id_token');
-    const [click, setClick] = useState(false);
 
     var searchResults = Object.values(files).filter((data) => {
         if (data.name !== "" && (props.search === "" || (data.name.toLowerCase().includes(props.search.toLowerCase()) || data.type.toLowerCase().includes(props.search.toLowerCase()) || data.owner_id.toLowerCase().includes(props.search.toLowerCase())))) return data;
@@ -98,12 +97,8 @@ function FileList(props) {
 
     function onClickHandler(node, canLink) {
         return function (evt) {
-            if (click === false)
+            if (evt.detail === 1)
                 if (evt.target && evt.target.getAttribute("to")) {
-                    setClick(true);
-                    setTimeout(() => {
-                        setClick(false);
-                    }, 1500);
                     if (node.type === "folder" || node.type === "epihiperOutput" || node.type === "epihiper_multicell_analysis") {
                         var target = window.location.pathname + evt.target.getAttribute("to") + "/";
                     }

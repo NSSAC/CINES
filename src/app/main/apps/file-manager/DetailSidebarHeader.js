@@ -84,7 +84,7 @@ function DetailSidebarHeader(props)
     
     return (
         <div className="flex flex-col justify-between h-full p-4 sm:p-12">
-            <div className="toolbar flex align-center justify-end">
+            <div className="toolbar flex align-center justify-end h-48">
                {canDelete && <FuseAnimate animation="transition.expandIn" delay={200}>
                   <Tooltip title="Click to Delete" placement="bottom">
                     <IconButton onClick={()=>OnDelete(selectedItem)}>
@@ -103,7 +103,7 @@ function DetailSidebarHeader(props)
                 </FuseAnimate>}
             </div>
 
-            <div className="p-12">
+            <div>
                 <FuseAnimate delay={200}>
                     <Typography variant="subtitle1" className="mb-8">
                         <span style={tableStyle}>{selectedItem.name}</span></Typography>
@@ -111,7 +111,7 @@ function DetailSidebarHeader(props)
                 <FuseAnimate delay={300}>
                     <Typography variant="caption" className="">
                         <span>Updated</span>
-                        <span>: {moment(selectedItem.update_date).fromNow()}</span>
+                        <span>: {moment.utc(selectedItem.update_date).local().fromNow()}</span>
                     </Typography>
                 </FuseAnimate>
             </div>
