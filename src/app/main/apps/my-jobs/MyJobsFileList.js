@@ -11,17 +11,17 @@ function MyJobsFileList(props) {
     const files1 = useSelector(({ myJobsApp }) => myJobsApp.myjobs);
     const selectedItem = useSelector(({ myJobsApp }) => myJobsApp.selectedjobid);
     const [selectedId, setSelectedId] = useState();
-    var onloadSpinner =false;
+    var onloadSpinner = false;
     var files = Object.values(files1);
-    var totalRecords ;
- 
+    var totalRecords;
+
     if (files.length !== 0) {
-        if(files[2]['content-range'] !== undefined){
+        if (files[2]['content-range'] !== undefined) {
             totalRecords = Number(files[2]['content-range'].split('/')[1])
         }
         files = files[1]
-        onloadSpinner =true;
-        if (selectedId === undefined ) {
+        onloadSpinner = true;
+        if (selectedId === undefined) {
             dispatch(Actions.setSelectedItem(files[0].id));
         }
     }
@@ -52,6 +52,19 @@ function MyJobsFileList(props) {
             var selectedId = files[0].id
             setSelectedId(selectedId)
         }
+
+        if (files.length > 0) {
+            var i, changeState = false;
+            for (i = 0; i < files.length; i++) {
+                if (files[i].state !== 'Completed' && files[i].state !== 'Failed')
+                    changeState = true;
+                break;
+            }
+        }
+
+        const timer = setInterval(() => changeState && props.setChangeState(props.changeState + 1), 8000);
+        return () => clearInterval(timer)
+
     })
 
     const handleChangePage = (event, newPage) => {
@@ -62,7 +75,7 @@ function MyJobsFileList(props) {
         setPage(currentPage);
         fetchNextSetData()
     };
-   
+
     const toggleSorting = (sortType, toggleArrow) => {
         let sortOrder = ""
         if (toggleArrow === 'sortByjobdef') {
@@ -154,7 +167,7 @@ function MyJobsFileList(props) {
             </div>
         );
 
-    if (spinnerFlag === false &&  files.length > 0 ) {
+    if (spinnerFlag === false && files.length > 0) {
         return (
             <div>
 
@@ -206,7 +219,7 @@ function MyJobsFileList(props) {
                                             <IconButton aria-label="arrow_downward" onClick={() => toggleSorting('creation_date', 'sortByCreationDdate')}> <Icon className={sortByCreationDdateFlag ? "" : "sort-arrow"}>arrow_downward</Icon></IconButton>
                                         </Tooltip>
                                     }Creation Date</TableCell>
-                                  
+
                                 </TableRow>
                             </TableHead>
                             {files.length > 0 ?
@@ -282,7 +295,7 @@ function MyJobsFileList(props) {
         );
     }
 
-    else if(files.length === 0 && onloadSpinner){
+    else if (files.length === 0 && onloadSpinner) {
         return (
             <div className="flex flex-1 flex-col items-center justify-center">
                 <Typography className="text-20 mt-16" color="textPrimary">No records exists.</Typography>
@@ -290,12 +303,12 @@ function MyJobsFileList(props) {
         )
     }
     else if (Object.values(files1).length === 0)
-    return (
-        <div className="flex flex-1 flex-col items-center justify-center mt-40">
-            <Typography className="text-20 mt-16" color="textPrimary">Loading</Typography>
-            <LinearProgress className="w-xs" color="secondary" />
-        </div>
-    )   
+        return (
+            <div className="flex flex-1 flex-col items-center justify-center mt-40">
+                <Typography className="text-20 mt-16" color="textPrimary">Loading</Typography>
+                <LinearProgress className="w-xs" color="secondary" />
+            </div>
+        )
 }
 
 export default MyJobsFileList;

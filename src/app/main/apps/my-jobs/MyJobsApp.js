@@ -21,6 +21,7 @@ function MyJobsApp(props) {
     const [showDialog, setshowDialog] = useState(false);
     const pageLayout = useRef(null);
     const [flag, setFilterFlag] = useState(false);
+    const [changeState, setChangeState] = useState(0)
     const history = useHistory();
 
     useEffect(() => {
@@ -35,7 +36,7 @@ function MyJobsApp(props) {
         sessionStorage.removeItem("selectedTypeArray")
         sessionStorage.removeItem("preStateValue")
         sessionStorage.removeItem("preJobTypeValue")
-    }, [dispatch]);
+    }, [dispatch, changeState]);
 
     function showFileUploadDialog() {
         setshowDialog(true)
@@ -128,7 +129,7 @@ function MyJobsApp(props) {
                 </div>
             }
             content={
-                <MyJobsFileList flag={flag} pageLayout={pageLayout} />
+                <MyJobsFileList changeState={changeState} setChangeState={(p)=>setChangeState(p)} flag={flag} pageLayout={pageLayout} />
             }
             leftSidebarVariant="temporary"
 
