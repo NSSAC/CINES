@@ -24,8 +24,23 @@ function MyJobsFileList(props) {
         if (selectedId === undefined) {
             dispatch(Actions.setSelectedItem(files[0].id));
         }
-    }
 
+        if (files.length > 0) {
+            var i;
+            for (i = 0; i < files.length; i++) {
+                var t = new Date(files[i].creation_date.toLocaleString())
+                var date = ('0' + t.getDate()).slice(-2);
+                var month = ('0' + (t.getMonth() + 1)).slice(-2);
+                var year = t.getFullYear();
+                var hours = ('0' + t.getHours()).slice(-2);
+                var minutes = ('0' + t.getMinutes()).slice(-2);
+                var seconds = ('0' + t.getSeconds()).slice(-2);
+                var tempDate = `${year}-${month}-${date} ${hours}:${minutes}:${seconds}`;
+                files[i].creation_date = tempDate
+            }
+        }
+
+    }
     const [page, setPage] = React.useState(0);
     const [sortById, setsortById] = useState(false);
     const [sortByjobdef, setsortByjobdef] = useState(false);
@@ -178,7 +193,7 @@ function MyJobsFileList(props) {
                             <TableHead>
                                 <TableRow>
 
-                                    <TableCell> {(sortById) ?
+                                    <TableCell>Job Id {(sortById) ?
 
                                         <Tooltip title="Sort by job id" placement="bottom">
                                             <IconButton aria-label="arrow_upward" onClick={() => toggleSorting('id', 'sortById')}>
@@ -191,8 +206,8 @@ function MyJobsFileList(props) {
                                             <IconButton aria-label="arrow_downward" onClick={() => toggleSorting('id', 'sortById')}>
                                                 <Icon className={sortIdFlag ? "" : "sort-arrow"}>arrow_downward</Icon></IconButton>
                                         </Tooltip>
-                                    }Job Id</TableCell>
-                                    <TableCell >{(sortByjobdef) ?
+                                    }</TableCell>
+                                    <TableCell >Job Type{(sortByjobdef) ?
                                         <Tooltip title="Sort by job type" placement="bottom">
                                             <IconButton aria-label="arrow_upward" onClick={() => toggleSorting('job_definition', 'sortByjobdef')}> <Icon>arrow_upward</Icon></IconButton>
                                         </Tooltip>
@@ -200,8 +215,8 @@ function MyJobsFileList(props) {
                                         <Tooltip title="Sort by job type" placement="bottom">
                                             <IconButton aria-label="arrow_downward" onClick={() => toggleSorting('job_definition', 'sortByjobdef')}> <Icon className={sortByjobdefFlag ? "" : "sort-arrow"}>arrow_downward</Icon></IconButton>
                                         </Tooltip>
-                                    }Job Type</TableCell>
-                                    <TableCell  >{(sortBystate) ?
+                                    }</TableCell>
+                                    <TableCell  >Status {(sortBystate) ?
                                         <Tooltip title="Sort by status" placement="bottom">
                                             <IconButton aria-label="arrow_upward" onClick={() => toggleSorting('state', 'sortBystate')}> <Icon>arrow_upward</Icon></IconButton>
                                         </Tooltip>
@@ -209,8 +224,8 @@ function MyJobsFileList(props) {
                                         <Tooltip title="Sort by status" placement="bottom">
                                             <IconButton aria-label="arrow_downward" onClick={() => toggleSorting('state', 'sortBystate')}> <Icon className={sortBystateFlag ? "" : "sort-arrow"}>arrow_downward</Icon></IconButton>
                                         </Tooltip>
-                                    } Status</TableCell>
-                                    <TableCell > {(sortByCreationDdate) ?
+                                    }</TableCell>
+                                    <TableCell > Creation Date{(sortByCreationDdate) ?
                                         <Tooltip title="Sort by creation date" placement="bottom">
                                             <IconButton aria-label="arrow_upward" onClick={() => toggleSorting('creation_date', 'sortByCreationDdate')}> <Icon>arrow_upward</Icon></IconButton>
                                         </Tooltip>
@@ -218,7 +233,7 @@ function MyJobsFileList(props) {
                                         <Tooltip title="Sort by creation date" placement="bottom">
                                             <IconButton aria-label="arrow_downward" onClick={() => toggleSorting('creation_date', 'sortByCreationDdate')}> <Icon className={sortByCreationDdateFlag ? "" : "sort-arrow"}>arrow_downward</Icon></IconButton>
                                         </Tooltip>
-                                    }Creation Date</TableCell>
+                                    }</TableCell>
 
                                 </TableRow>
                             </TableHead>
