@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Hidden, Typography, Icon, IconButton, Table, TableBody, TableCell, TableHead, TableRow, Link, LinearProgress } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import { FuseAnimate } from '@fuse';
@@ -70,6 +70,7 @@ function FileList(props) {
     const selectedItemId = useSelector(({ fileManagerApp }) => fileManagerApp.selectedItemId);
     const selectedItem = useSelector(({ fileManagerApp }) => files[fileManagerApp.selectedItemId]);
     const classes = useStyles();
+    const [spinnerFlag, setSpinnerFlag] = useState(true);
     var token = localStorage.getItem('id_token');
 
     var searchResults = Object.values(files).filter((data) => {
@@ -94,6 +95,12 @@ function FileList(props) {
         display: 'inline-block',
         whiteSpace: 'nowrap'
     }
+
+    useEffect(() => {
+        setTimeout(() => {
+            setSpinnerFlag(false)
+        }, 5000);
+    })
 
     function onClickHandler(node, canLink) {
         return function (evt) {
@@ -206,6 +213,16 @@ function FileList(props) {
                     </Table>
                 </FuseAnimate>
             );
+
+        else if (spinnerFlag === true) {
+            return (
+                <div className="flex flex-1 flex-col items-center justify-center mt-40">
+                    <Typography className="text-20 mt-16" color="textPrimary">Loading</Typography>
+                    <LinearProgress className="w-xs" color="secondary" />
+                </div>
+            )
+        }
+
         else if (Object.values(files).length === 0) {
             if (props.containerFlag === 'error')
                 return (
@@ -214,15 +231,8 @@ function FileList(props) {
                     </div>
                 )
 
-            else if (props.targetMeta === '')
-                return (
-                    <div className="flex flex-1 flex-col items-center justify-center mt-40">
-                        <Typography className="text-20 mt-16" color="textPrimary">Loading</Typography>
-                        <LinearProgress className="w-xs" color="secondary" />
-                    </div>
-                )
-
-            else return (
+        else
+            return (
                 <div className="flex flex-1 flex-col items-center justify-center mt-20">
                     <Typography className="text-18 mt-16" color="textPrimary">The folder is empty.</Typography>
                 </div>

@@ -1,7 +1,17 @@
 export const GET_FILES = '[FILE MANAGER APP] GET FILES';
+export const CLEAR = 'CLEAR'
 var token = localStorage.getItem('id_token')
 let arr = []
 let url1 = ''
+
+export function clearData(){
+  return (dispatch) =>
+      dispatch({
+        type: CLEAR,
+        payload: [],
+      })
+    };
+
 
 export function getFiles(count, start, descShort, type, clearArry) {
   if (clearArry) {

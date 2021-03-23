@@ -31,7 +31,6 @@ function JobDefinitionApp(props) {
         let type = 'creation_date';
         let descShort = true;
         sessionStorage.setItem("isFilterApplied", JSON.stringify(false));
-        dispatch(Actions.getJobDefinitionFiles(10, 1, descShort, type, false, false));
         sessionStorage.setItem("count", start);
         sessionStorage.setItem("shortOrder", JSON.stringify(descShort));
 
@@ -39,6 +38,14 @@ function JobDefinitionApp(props) {
         sessionStorage.removeItem("preStateValue")
         sessionStorage.removeItem("preJobTypeValue")
     }, [dispatch]);
+
+    useEffect(()=>{
+        let start = 0
+        let type = 'creation_date';
+        let descShort = true;
+        dispatch(Actions.getJobDefinitionFiles(10, 1, descShort, type, false, false));
+        return () => dispatch(Actions.clearData());
+    })
 
     function showSearch() {
         setSearchbool(true);
@@ -77,11 +84,10 @@ function JobDefinitionApp(props) {
                 root: "bg-red",
                 header: "h-128 min-h-128",
                 sidebarHeader: "h-128 min-h-128",
-                rightSidebar: "w-320"
+                rightSidebar: "w-320",
+                contentWrapper: "jobBody"
             }}
             header={
-
-
                 <div className="flex flex-col flex-1 p-8 sm:p-12 relative">
                     {<div>
                         <MyJobFilter

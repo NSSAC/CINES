@@ -6,6 +6,8 @@ const myjobsReducer = function (state = {}, action) {
         case Actions.GET_FILES:
             //return _.keyBy(action.payload ,'id');
             return (action);
+        case Actions.CLEAR:
+            return {}
         default:
             return state;
     }

@@ -43,7 +43,7 @@ function JobDefinitionFileList(props) {
   var path = window.location.pathname;
   var pathArray = window.location.pathname.split("/");
   var pathArrayEnd = pathArray.slice(-1)[0];
-var onloadSpinner =false
+  var onloadSpinner =false
   var jobDefinitionList = Object.values(jobDefinitionData);
   var totalRecords = "";
   const [selectedId, setSelectedId] = useState();
@@ -51,8 +51,8 @@ var onloadSpinner =false
     onloadSpinner =true;
     if(jobDefinitionList[2]['content-range'] !== undefined){
       totalRecords = jobDefinitionList[2]["content-range"].split("/")[1];
-  }
-    
+    }
+
     jobDefinitionList = jobDefinitionList[1];
     var searchResult = jobDefinitionList.filter((data) => {
       if (
@@ -68,7 +68,7 @@ var onloadSpinner =false
           data.description.toLowerCase().includes(props.search.toLowerCase()))
       )
         return data;
-        
+
     });
 
     if (Object.keys(selectedItem).length === 0 && searchResult.length > 0 && (path.endsWith('job-definition/') === true)) {
@@ -95,6 +95,16 @@ var onloadSpinner =false
       setSelectedId(selectedId);
     }
   });
+
+  useEffect(() => {
+    if (document.getElementsByClassName('jobBody').length > 0) {
+      document.getElementsByClassName('jobBody')[0].scrollTo(0, 0)
+      setTimeout(() => {
+        document.getElementsByClassName('jobBody')[0].scrollTop = document.getElementsByClassName('jobBody')[0].scrollHeight; setSpinnerFlag(false)
+      }, 10);
+    }
+  },[page])
+
   const handleChangePage = (event, newPage) => {
     setSpinnerFlag(true);
     sessionStorage.setItem("resetPage", JSON.stringify(false));
@@ -150,16 +160,7 @@ var onloadSpinner =false
       );
     }
 
-    if (jobDefinitionList.length === 0)
-      return (
-        <div className="flex flex-1 flex-col items-center justify-center mt-40">
-          <Typography className="text-20 mt-16" color="textPrimary">
-            Loading Form
-        </Typography>
-          <LinearProgress className="w-xs" color="secondary" />
-        </div>
-      );
-    else {
+   
       return formExists ? (
         <StaticJobDefinitionForm></StaticJobDefinitionForm>
       ) : (
@@ -167,7 +168,7 @@ var onloadSpinner =false
             selectedJob={selectedJobDefinition}
           ></JobDefinitionForm>
         );
-    }
+        
   }
   if (spinnerFlag === true)
     return (
@@ -213,7 +214,7 @@ var onloadSpinner =false
                           <Typography>Name</Typography>
                           <Typography
                             style={{ fontWeight: "700" , wordBreak:"break-word"}}
-                          >
+                          >  
                             {row.id}
                           </Typography>
                         </Grid>
@@ -332,14 +333,14 @@ var onloadSpinner =false
       </div>
     );
   }
- 
+
   else if (Object.values(jobDefinitionData).length === 0)
-  return (
+    return (
       <div className="flex flex-1 flex-col items-center justify-center mt-40">
-          <Typography className="text-20 mt-16" color="textPrimary">Loading</Typography>
-          <LinearProgress className="w-xs" color="secondary" />
+        <Typography className="text-20 mt-16" color="textPrimary">Loading</Typography>
+        <LinearProgress className="w-xs" color="secondary" />
       </div>
-  )
+    )
 
 
 

@@ -2,6 +2,17 @@ export const GET_FILES = "[FILE MANAGER APP] GET FILES";
 var token = localStorage.getItem("id_token");
 let arr = [];
 
+export const CLEAR = 'CLEAR'
+
+export function clearData(){
+  return (dispatch) =>
+      dispatch({
+        type: CLEAR,
+        payload: [],
+      })
+    };
+
+
 export function getJobDefinitionFiles() {
 arr=[];
     var axios = require('axios');
