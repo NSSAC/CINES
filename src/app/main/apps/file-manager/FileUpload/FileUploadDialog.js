@@ -401,9 +401,9 @@ export const FileUpload = ({ allFilesType,fileTypes, setUploadFile, dialogTarget
                           >
                             {
 
-                              fileTypeArray.map((item) => {
+                              fileTypeArray.map((item ,index) => {
                                 return (
-                                  <MenuItem key={item} value={item}>{item}</MenuItem>
+                                  <MenuItem key={index} value={item}>{item}</MenuItem>
                                 )
 
                               })
