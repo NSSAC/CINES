@@ -160,7 +160,16 @@ function JobDefinitionFileList(props) {
       );
     }
 
-   
+    if (jobDefinitionList.length === 0)
+    return (
+      <div className="flex flex-1 flex-col items-center justify-center mt-40">
+        <Typography className="text-20 mt-16" color="textPrimary">
+          Loading Form
+      </Typography>
+        <LinearProgress className="w-xs" color="secondary" />
+      </div>
+    );
+  else {
       return formExists ? (
         <StaticJobDefinitionForm></StaticJobDefinitionForm>
       ) : (
@@ -168,7 +177,7 @@ function JobDefinitionFileList(props) {
             selectedJob={selectedJobDefinition}
           ></JobDefinitionForm>
         );
-        
+   }  
   }
   if (spinnerFlag === true)
     return (

@@ -33,19 +33,19 @@ function JobDefinitionApp(props) {
         sessionStorage.setItem("isFilterApplied", JSON.stringify(false));
         sessionStorage.setItem("count", start);
         sessionStorage.setItem("shortOrder", JSON.stringify(descShort));
-
+        dispatch(Actions.getJobDefinitionFiles(10, 1, descShort, type, false, false));
         sessionStorage.removeItem("selectedTypeArray")
         sessionStorage.removeItem("preStateValue")
         sessionStorage.removeItem("preJobTypeValue")
     }, [dispatch]);
 
-    useEffect(()=>{
-        let start = 0
-        let type = 'creation_date';
-        let descShort = true;
-        dispatch(Actions.getJobDefinitionFiles(10, 1, descShort, type, false, false));
-        return () => dispatch(Actions.clearData());
-    })
+    // useEffect(()=>{
+    //     let start = 0
+    //     let type = 'creation_date';
+    //     let descShort = true;
+    // dispatch(Actions.getJobDefinitionFiles(10, 1, descShort, type, false, false));
+    //     return () => dispatch(Actions.clearData());
+    // })
 
     function showSearch() {
         setSearchbool(true);
