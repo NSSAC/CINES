@@ -38,8 +38,8 @@ input[type=submit]:hover {
     width: 80%;
 }
 
-.folderPath {
-    word-break: break-word;
+.folderPath { 
+    line-break: anywhere;
     white-space: pre-wrap;
 }
 
@@ -80,7 +80,8 @@ input[type=submit]:hover {
   .toolTip {
       width:280px;
       white-space:pre-wrap;
-      word-break: break-all;
+      word-wrap:break-word;
+      word-break: keep-all;
   }
 
   @media only screen and (max-width: 600px) {

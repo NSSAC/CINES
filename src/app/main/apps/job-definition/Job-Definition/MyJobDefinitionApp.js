@@ -39,13 +39,12 @@ function JobDefinitionApp(props) {
         sessionStorage.removeItem("preJobTypeValue")
     }, [dispatch]);
 
-    // useEffect(()=>{
-    //     let start = 0
-    //     let type = 'creation_date';
-    //     let descShort = true;
-    // dispatch(Actions.getJobDefinitionFiles(10, 1, descShort, type, false, false));
-    //     return () => dispatch(Actions.clearData());
-    // })
+    useEffect(()=>{
+        let start = 0
+        let type = 'creation_date';
+        let descShort = true;
+        return () => dispatch(Actions.clearData());
+    },[props.history])
 
     function showSearch() {
         setSearchbool(true);

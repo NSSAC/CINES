@@ -54,11 +54,11 @@ function DetailSidebarContent(props) {
   const [headerTitle, setHeaderTitle] = useState("");
   const x = false;
   //const opendialog =Boolean;
-const classes = useStyles();
+  const classes = useStyles();
 
   const navigateStyle = {
     color: "deepskyblue",
-    overflowWrap: "anywhere",
+    lineBreak: 'anywhere',
     cursor: "pointer",
   };
   const openoutputDialog = () => {
@@ -81,21 +81,21 @@ const classes = useStyles();
   }
 
   function navigateFile(selectedItem) {
-    history.push("/apps/files" + selectedItem.output_container + "/");
+    history.push("/apps/files" + selectedItem + "/");
   }
 
   return (
     <FuseAnimate animation="transition.slideUpIn" delay={200}>
       <div className="file-details p-16 sm:p-24">
         {
-          
-            <MetadataInfoDialog
-              opendialog={showDialog}
-              closedialog={handleClose}
-              standardout={standardOut}
-              headertitle={headerTitle}
-            ></MetadataInfoDialog>
-          
+
+          <MetadataInfoDialog
+            opendialog={showDialog}
+            closedialog={handleClose}
+            standardout={standardOut}
+            headertitle={headerTitle}
+          ></MetadataInfoDialog>
+
         }
 
         <Tabs
@@ -130,8 +130,8 @@ const classes = useStyles();
                     {selectedItem.input && selectedItem.input.reconstitute ? (
                       <td> {selectedItem.input.reconstitute} </td>
                     ) : (
-                      <td> -</td>
-                    )}
+                        <td> -</td>
+                      )}
                   </tr>
                 ) : null}
                 {selectedItem.input && selectedItem.input.contactNetwork ? (
@@ -140,8 +140,8 @@ const classes = useStyles();
                     {selectedItem.input && selectedItem.input.contactNetwork ? (
                       <td> {selectedItem.input.contactNetwork} </td>
                     ) : (
-                      <td> -</td>
-                    )}
+                        <td> -</td>
+                      )}
                   </tr>
                 ) : null}
 
@@ -151,8 +151,8 @@ const classes = useStyles();
                     {selectedItem.output_name ? (
                       <td> {selectedItem.output_name} </td>
                     ) : (
-                      "-"
-                    )}
+                        "-"
+                      )}
                   </tr>
                 ) : null}
 
@@ -172,14 +172,14 @@ const classes = useStyles();
                       // >
                       <td
                         style={navigateStyle}
-                        onClick={() => navigateFile(selectedItem)}
+                        onClick={() => navigateFile(selectedItem.output_container)}
                       >
                         &nbsp;&nbsp;{selectedItem.output_container}{" "}
                       </td>
                     ) : (
-                      // </Link>
-                      "-"
-                    )}
+                        // </Link>
+                        "-"
+                      )}
                   </tr>
                 ) : null}
 
@@ -192,8 +192,8 @@ const classes = useStyles();
                         <a className="cursor-pointer">Click here</a>
                       </td>
                     ) : (
-                      <td>-</td>
-                    )}
+                        <td>-</td>
+                      )}
                   </tr>
                 ) : null}
 
@@ -206,8 +206,8 @@ const classes = useStyles();
                         <a className="cursor-pointer">Click here</a>
                       </td>
                     ) : (
-                      <td>-</td>
-                    )}
+                        <td>-</td>
+                      )}
                   </tr>
                 ) : null}
               </tbody>
@@ -215,17 +215,17 @@ const classes = useStyles();
           </React.Fragment>
         )}
 
-        {selectedTab === 1 && (
+        {selectedTab === 1 && selectedItem.input_files && selectedItem.input && (
           <React.Fragment>
-            <div>
-              <Typography variant="h5">Input File</Typography>
-            </div>
+            {selectedItem.input_files.length>0 && <div>
+              <Typography variant="h6">INPUT FILE</Typography>
+            </div>}
             {selectedItem.input_files.map((data, index) => {
               return (
                 <div key={index}>
-                  <Typography variant="h6" gutterBottom>
+                  <Typography variant="subtitle1" >
                     {" "}
-                    {data.name}{" "}
+                    <b>{data.name}</b>{" "}
                   </Typography>
                   <table
                     style={{ marginLeft: "15px", margin: "0px!important" }}
@@ -246,6 +246,25 @@ const classes = useStyles();
                 </div>
               );
             })}
+            <div>
+              <div>
+                <Typography variant="h6">INPUT PARAMETERS</Typography>
+              </div>
+              <table
+                style={{ marginLeft: "15px", margin: "0px!important" }}
+              >
+                <tbody>
+                  {selectedItem && Object.entries(selectedItem.input).filter(data=> {if(data[0] !== 'extraObj') return data}).map((data, index) => {
+                    return (
+                      <tr>
+                        <th style={{textAlign:'left'}}>{data[0]}:</th>
+                        {data[0].includes('inputFile') ? <td style={navigateStyle} onClick={() => navigateFile(data[1])}>{data[1]}</td> : <td style={{lineBreak: 'anywhere'}}>{String(data[1])}</td>}
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </table>
+            </div>
           </React.Fragment>
         )}
       </div>
