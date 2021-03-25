@@ -20,6 +20,7 @@ function MyJobsApp(props) {
   const [showDialog, setshowDialog] = useState(false);
   const pageLayout = useRef(null);
   const [flag, setFilterFlag] = useState(false);
+          /* eslint-disable-next-line */
   const [onload, setOnLoad] = useState(false);
   const [changeState, setChangeState] = useState(0);
   const history = useHistory();
@@ -41,7 +42,8 @@ function MyJobsApp(props) {
 
   useEffect(()=>{
     return () => dispatch(Actions.clearData());
-},[props.history])
+        /* eslint-disable-next-line */
+  },[props.history])
 
   function showFileUploadDialog() {
     setshowDialog(true);

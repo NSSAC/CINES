@@ -96,11 +96,15 @@ function FileList(props) {
         whiteSpace: 'nowrap'
     }
 
-    useEffect(() => {
+
+    useEffect(()=>{
         setTimeout(() => {
             setSpinnerFlag(false)
         }, 5000);
-    })
+
+        if(document.getElementsByClassName('FileWrapper').length > 0)
+            document.getElementsByClassName('FileWrapper')[0].scrollTo(0,0)
+    },[files])
 
     function onClickHandler(node, canLink) {
         return function (evt) {

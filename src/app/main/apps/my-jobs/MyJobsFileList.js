@@ -11,11 +11,19 @@ function MyJobsFileList(props) {
     const files1 = useSelector(({ myJobsApp }) => myJobsApp.myjobs);
     const selectedItem = useSelector(({ myJobsApp }) => myJobsApp.selectedjobid);
     const [selectedId, setSelectedId] = useState();
+    const [dataSpinner, setDataSpinner] = useState(true);
     var onloadSpinner = false;
     var files = Object.values(files1);
     var totalRecords;
 
-    if (files.length !== 0) {
+
+    if(dataSpinner === true){
+        setTimeout(() => {
+            setDataSpinner(false)
+        }, 3000);
+    }
+
+    else if (files.length !== 0) {
         if (files[2]['content-range'] !== undefined) {
             totalRecords = Number(files[2]['content-range'].split('/')[1])
         }
@@ -182,7 +190,7 @@ function MyJobsFileList(props) {
             </div>
         );
 
-    if (spinnerFlag === false && files.length > 0) {
+    if (spinnerFlag === false && dataSpinner === false && files.length > 0) {
         return (
             <div>
 
@@ -324,6 +332,16 @@ function MyJobsFileList(props) {
                 <LinearProgress className="w-xs" color="secondary" />
             </div>
         )
+
+        else
+         return (
+            <div className="flex flex-1 flex-col items-center justify-center mt-40">
+                <Typography className="text-20 mt-16" color="textPrimary">Loading</Typography>
+                <LinearProgress className="w-xs" color="secondary" />
+            </div>
+        )
 }
+
+
 
 export default MyJobsFileList;

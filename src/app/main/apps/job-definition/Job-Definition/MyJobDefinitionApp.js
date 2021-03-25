@@ -40,10 +40,8 @@ function JobDefinitionApp(props) {
     }, [dispatch]);
 
     useEffect(()=>{
-        let start = 0
-        let type = 'creation_date';
-        let descShort = true;
         return () => dispatch(Actions.clearData());
+       /* eslint-disable-next-line */
     },[props.history])
 
     function showSearch() {

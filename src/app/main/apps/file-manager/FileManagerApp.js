@@ -62,6 +62,7 @@ function FileManagerApp(props) {
   const style = {
     width: "100%",
     flexWrap: "wrap",
+    lineBreak: "anywhere"
   };
 
   function navigateHome() {
@@ -262,6 +263,7 @@ function FileManagerApp(props) {
         header: "h-auto min-h-128 sm:h-auto sm:min-h-140",
         sidebarHeader: "h-auto min-h-128 sm:h-auto sm:min-h-140",
         rightSidebar: "w-320",
+        contentWrapper: "FileWrapper"
       }}
       header={
         <div

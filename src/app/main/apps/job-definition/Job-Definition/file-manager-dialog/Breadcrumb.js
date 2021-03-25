@@ -12,33 +12,40 @@ function Breadcrumb(props) {
     }
 
     const breadcrumb_wrap = {
-        width: '100%',
-        flexWrap: 'wrap'
+        width: "100%",
+        flexWrap: "wrap",
+        lineBreak: "anywhere"
     }
 
     function onclickRoute(i) {
         props.setSearch("")
-        breadcrumb_Array.splice(i + 1 - breadcrumb_Array.length)
-        var targetPath = '/'
+        if (i !== breadcrumb_Array.length - 1) {
+            breadcrumb_Array.splice(i + 1 - breadcrumb_Array.length)
+            var targetPath = '/'
 
-        for (i = 1; i < breadcrumb_Array.length; i++) {
-            targetPath = targetPath + breadcrumb_Array[i] + '/'
+            for (i = 1; i < breadcrumb_Array.length; i++) {
+                targetPath = targetPath + breadcrumb_Array[i] + '/'
+            }
+            props.setTargetPath(targetPath)
         }
-        props.setTargetPath(targetPath)
-
     }
+
     const breadcrumb_Array = props.targetPath.split('/');
     if (props.fileManager)
         breadcrumb_Array[0] = "files"
     else
         breadcrumb_Array[0] = "home"
 
+    if (breadcrumb_Array[breadcrumb_Array.length - 1] === "") {
+        breadcrumb_Array.pop()
+    }
+
 
     return (
         <div className="flex text-16 pb-8 sm:text-16" style={breadcrumb_wrap} >
             {breadcrumb_Array.map((path, i) => (
                 <div key={i} className="flex items-center">
-                    <div onClick={() => onclickRoute(i)} className="cursor-pointer" style={ellipsis} title={path} >{path} </div>
+                    <div onClick={() => onclickRoute(i)} className="cursor-pointer" style={breadcrumb_Array.length - 1 !== i ? ellipsis : {color: '#61dafb'}} title={path} >{path} </div>
                     {breadcrumb_Array.length - 1 !== i && (
                         <Icon>chevron_right</Icon>
                     )}

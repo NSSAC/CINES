@@ -13,23 +13,28 @@ function Breadcrumb({props,className, styles, path})
     }
     
    function onclickRoute(i) {
+       if(i !== arr.length-1){
         arr.splice(i+1-arr.length)
         var targetPath=''
         for(i=0;i<arr.length;i++){
             targetPath = targetPath + arr[i] + '/'
         }
          props.history.push('/apps/' + targetPath)
+       }
 
     }
 
     const arr = path.split('/');
     arr[0]="files"
+    if(arr[arr.length-1] === ""){
+      arr.pop()
+    }
 
     return  (
         <div className={className} style={styles} >
             {arr.map((path, i) => (   
                 <div key={i}  className="flex items-center"> 
-                     <div  onClick={() => onclickRoute(i)} className="cursor-pointer" style={ellipsis} title={path} >{path} </div>
+                     <div  onClick={() => onclickRoute(i)} className="cursor-pointer" style={arr.length - 1 !== i?ellipsis:null} title={path} >{path} </div>
                       {arr.length - 1 !== i && (
                         <Icon>chevron_right</Icon>
                     )}

@@ -254,12 +254,14 @@ function DetailSidebarContent(props) {
                 style={{ marginLeft: "15px", margin: "0px!important" }}
               >
                 <tbody>
-                  {selectedItem && Object.entries(selectedItem.input).filter(data=> {if(data[0] !== 'extraObj') return data}).map((data, index) => {
+                  {selectedItem && Object.entries(selectedItem.input).filter(data=> {if(data[0] !== 'extraObj') return data; return null}).map((data, index) => {
                     return (
+                      <React.Fragment key={index}>
                       <tr>
                         <th style={{textAlign:'left'}}>{data[0]}:</th>
                         {data[0].includes('inputFile') ? <td style={navigateStyle} onClick={() => navigateFile(data[1])}>{data[1]}</td> : <td style={{lineBreak: 'anywhere'}}>{String(data[1])}</td>}
                       </tr>
+                      </React.Fragment>
                     )
                   })}
                 </tbody>

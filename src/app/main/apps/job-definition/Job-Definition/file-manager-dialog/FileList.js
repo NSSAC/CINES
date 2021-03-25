@@ -96,18 +96,24 @@ function Filelist(props) {
     useEffect(() => {
         var flag = 0;
         var i = 0;
-        // if (props.fileManager) {
         for (i = 0; i < props.fileTypes.length; i++) {
             if (document.getElementById('selectFile') && selectedItem && (selectedItem.type === props.fileTypes[i])) {
                 document.getElementById('selectFile').classList.remove('buttonDisabled');
                 flag = 1;
             }
         }
-        if (flag === 0)
+        if (flag === 0){
             document.getElementById('selectFile').classList.add('buttonDisabled');
-        // }
+            // if(document.getElementsByClassName('tableStyle').length > 0)
+            // document.getElementsByClassName('tableStyle')[0].scrollTo(0,0)
+        }
 
     });
+
+    useEffect(()=>{
+        if(document.getElementsByClassName('tableStyle').length > 0)
+            document.getElementsByClassName('tableStyle')[0].scrollTo(0,0)
+    },[files])
 
     function onClickHandler(node, canLink) {
         // props.setSearch("")
