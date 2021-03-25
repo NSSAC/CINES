@@ -39,9 +39,9 @@ function MyJobsApp(props) {
     sessionStorage.removeItem("preJobTypeValue");
   }, [dispatch, changeState]);
 
-  // useEffect(()=>{
-  //     return () => dispatch(Actions.clearData());
-  // })
+  useEffect(()=>{
+    return () => dispatch(Actions.clearData());
+},[props.history])
 
   function showFileUploadDialog() {
     setshowDialog(true);

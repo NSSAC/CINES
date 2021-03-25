@@ -21,6 +21,7 @@ function FolderPopup({ showModal, handleFMClose, folderPath, setFolderPath, file
     const [search, setSearch] = useState("");
     const [showCreateDialog, setShowCreateDialog] = useState(false);
     const breadcrumbArr = targetPath.split("/");
+    breadcrumbArr[0]="home"
 
     const onCancel = () => {
         setSearch("")
