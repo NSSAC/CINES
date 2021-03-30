@@ -3,6 +3,7 @@ import {Avatar, Button, Icon, ListItemIcon, ListItemText, Popover, MenuItem, Typ
 import {useSelector, useDispatch} from 'react-redux';
 import * as authActions from 'app/auth/store/actions';
 import {Link} from 'react-router-dom';
+import {Hidden} from '@material-ui/core';
 
 function UserMenu(props)
 {
@@ -23,6 +24,7 @@ function UserMenu(props)
         <React.Fragment>
 
             <Button className="h-64" onClick={userMenuClick}>
+            <Hidden only={['lg', 'md']}>
                 {user.data.photoURL ?
                     (
                         <Avatar className="" alt="user photo" src={user.data.photoURL}/>
@@ -35,14 +37,15 @@ function UserMenu(props)
                         </Avatar>
                     )
                 }
+                 </Hidden>
 
                 <div className="hidden md:flex flex-col ml-12 items-start">
                     <Typography component="span" className="normal-case font-600 flex">
                         {user.data.displayName}
                     </Typography>
-                    <Typography className="text-11 capitalize" color="textSecondary">
+                    {/* <Typography className="text-11 capitalize" color="textSecondary">
                         {user.role.toString()}
-                    </Typography>
+                    </Typography> */}
                 </div>
 
                 <Icon className="text-16 ml-12 hidden sm:flex" variant="action">keyboard_arrow_down</Icon>
