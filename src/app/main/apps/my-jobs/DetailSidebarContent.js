@@ -242,7 +242,7 @@ function DetailSidebarContent(props) {
                       </tr>
                     </tbody>
                   </table>
-                  <Divider />
+                  <Divider style={{margin:'8px 0px'}} />
                 </div>
               );
             })}
