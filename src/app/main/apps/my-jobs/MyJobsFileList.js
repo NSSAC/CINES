@@ -29,7 +29,7 @@ function MyJobsFileList(props) {
         }
         files = files[1]
         onloadSpinner = true;
-        if (selectedId === undefined) {
+        if (selectedId === undefined &&   files.length >0) {
             dispatch(Actions.setSelectedItem(files[0].id));
         }
 
