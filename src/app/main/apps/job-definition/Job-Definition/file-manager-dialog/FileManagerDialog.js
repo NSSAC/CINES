@@ -262,6 +262,32 @@ function FMPopup({
                   </Tooltip>
                 </FuseAnimate>
               )}
+
+{checkFlag && (
+                <FuseAnimate
+                  className="hidden md:flex flex-col"
+                  animation="transition.expandIn"
+                  delay={600}
+                >
+                  <Tooltip title="Create folder" aria-label="add">
+                    <Fab
+                      className="flex flex-col"
+                      color="secondary"
+                      aria-label="add"
+                      size="small"
+                      style ={{marginLeft:"3px"}}
+                    >
+                      <Icon
+                        className="flex flex-col"
+                        title="Create Folder"
+                        onClick={showCreateFolderDialog}
+                      >
+                        folder
+                      </Icon>
+                    </Fab>
+                  </Tooltip>
+                </FuseAnimate>
+              )}
             
             </div>
           </div>
@@ -270,26 +296,7 @@ function FMPopup({
             <div>
               <h5>Please select a file</h5>
             </div>
-            <div className="flex items-end items-center">
-            <div>
-                {checkFlag && (
-                  <FuseAnimate
-                    className="hidden md:flex flex-col"
-                    animation="transition.expandIn"
-                    delay={600}
-                  >
-                    <Tooltip title="Click to Upload" aria-label="add">
-                        <h5 style ={{color:"#61dafb" , cursor:"pointer"}} onClick={showCreateFolderDialog}>
-                            Create Folder
-                        </h5>
-                   
-                    </Tooltip>
-                  </FuseAnimate>
-                )}
-              </div>
-
-
-            </div>
+            
           </div>
         </DialogTitle>
         <DialogContent style={dialogcontentStyle}>
