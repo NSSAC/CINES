@@ -72,17 +72,25 @@ function MyJobsFileList(props) {
             setPage(currentPage)
         }
         if (files.length > 0 && selectedFlag) {
-            var selectedId = files[0].id
-            setSelectedId(selectedId)
+            var selectedId1 = files[0].id
+            setSelectedId(selectedId1)
         }
 
         if (files.length > 0) {
             var i, changeState = false;
             for (i = 0; i < files.length; i++) {
-                if (files[i].state !== 'Completed' && files[i].state !== 'Failed')
+                if (files[i].state !== 'Completed' && files[i].state !== 'Failed'){
                     changeState = true;
+                    localStorage.setItem('queuedId', files[i].id)
+                }
                 break;
             }
+        }
+
+        var queueId = localStorage.getItem('queuedId')
+        if(!changeState && files.length !== 0 && selectedId === queueId){
+            dispatch(Actions.setSelectedItem(files[0].id));
+            localStorage.setItem('queuedId', null)
         }
 
         const timer = setInterval(() => changeState && props.setChangeState(props.changeState + 1), 8000);

@@ -234,7 +234,7 @@ export const MyJobFilter = ({
                   {jobTypeArray.map((item) => {
                     return (
                       <MenuItem key={item} value={item}>
-                        {item}
+                        {item.replace("net.science/snap_","")}
                       </MenuItem>
                     );
                   })}
@@ -288,7 +288,9 @@ export const MyJobFilter = ({
                       icon={icon}
                       label={data
                         .replace("eq(job_definition,re:", "")
-                        .replace("%2F", "/")}
+                        .replace("%2F", "/")
+                        .replace("net.science/snap_","")
+                        .replace(")","")}
                       onDelete={() => handleDeleteJob(data)}
                       className={classes.chip}
                     />

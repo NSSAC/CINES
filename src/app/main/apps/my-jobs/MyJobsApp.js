@@ -112,7 +112,9 @@ function MyJobsApp(props) {
                           {" "}
                           {data
                             .replace("eq(job_definition,re:", "")
-                            .replace("%2F", "/")}
+                            .replace("%2F", "/")
+                            .replace("net.science/snap_","")
+                            .replace(")","")}
                         </span>
                       );
                     }
