@@ -21,6 +21,8 @@ function JobDefinitionForm(props) {
   const [success, setSuccess] = useState();
   const [isToasterFlag, setIsToasterFlag] = useState(false);
   const [spinnerFlag, setSpinnerFlag] = useState(true);
+  const [onSubmit ,setOnSubmit] =useState()
+
 
   var path = window.location.pathname;
   var pathEnd = path.replace("/apps/job-definition/", "");
@@ -217,6 +219,7 @@ function JobDefinitionForm(props) {
     onFormSubmit(requestJson);
   };
   function onFormSubmit(requestJson) {
+    setOnSubmit(true)
     const userToken = localStorage.getItem("id_token");
     axios({
       method: "post",
@@ -237,6 +240,7 @@ function JobDefinitionForm(props) {
       (error) => {
         setSuccess(false);
         setIsToasterFlag(true);
+       
         window.setTimeout(handlingError, 4000);
       }
     );
@@ -244,6 +248,7 @@ function JobDefinitionForm(props) {
   function handlingError() {
     setIsToasterFlag(false);
     setSuccess();
+     setOnSubmit(false)
   }
   function delayNavigation() {
     history.push("/apps/my-jobs/");
@@ -330,7 +335,7 @@ function JobDefinitionForm(props) {
                   className="w-30  mt-32 mb-80"
                   aria-label="LOG IN"
                   onClick={createSubmissionData}
-                  disabled={!isFormValid || success}
+                  disabled={!isFormValid || success ||onSubmit }
                 >
                   Submit
                 </Button>
