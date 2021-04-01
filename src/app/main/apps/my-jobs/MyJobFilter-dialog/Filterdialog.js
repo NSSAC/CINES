@@ -231,7 +231,7 @@ export const MyJobFilter = ({
                   variant="outlined"
                   onChange={(e) => onvalueChangeHandeler(e)}
                 >
-                  {jobTypeArray.map((item) => {
+                  {jobTypeArray.sort().map((item) => {
                     return (
                       <MenuItem key={item} value={item}>
                         {item.replace("net.science/snap_","")}
