@@ -62,7 +62,7 @@ function FileManagerApp(props) {
   const style = {
     width: "100%",
     flexWrap: "wrap",
-    lineBreak: "anywhere"
+    wordBreak: "break-all"
   };
 
   function navigateHome() {

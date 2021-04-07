@@ -14,7 +14,7 @@ function Breadcrumb(props) {
     const breadcrumb_wrap = {
         width: "100%",
         flexWrap: "wrap",
-        lineBreak: "anywhere"
+        wordBreak: "break-all"
     }
 
     function onclickRoute(i) {

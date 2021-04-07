@@ -39,7 +39,8 @@ input[type=submit]:hover {
 }
 
 .folderPath { 
-    line-break: anywhere;
+    /* line-break: anywhere; */
+    word-break: break-all;
     white-space: pre-wrap;
 }
 
