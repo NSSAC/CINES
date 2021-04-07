@@ -36,7 +36,7 @@ function MyJobsFileList(props) {
         if (files.length > 0) {
             var i;
             for (i = 0; i < files.length; i++) {
-                var t = new Date(files[i].creation_date.toLocaleString())
+                var t = new Date(files[i].creation_date)
                 var date = ('0' + t.getDate()).slice(-2);
                 var month = ('0' + (t.getMonth() + 1)).slice(-2);
                 var year = t.getFullYear();
