@@ -183,7 +183,7 @@ export const FileUpload = ({ allFilesType,fileTypes, setUploadFile, dialogTarget
     setUploadedfiles([...initialUploadFile]);
 
   })
-  const CreateFolderFile = (initialUploadFile, targetPath) => {
+  var CreateFolderFile = (initialUploadFile, targetPath) => {
 
     initialUploadFile.forEach(items => {
       if (fileTypeArray.includes(items.type)) {
@@ -216,11 +216,14 @@ export const FileUpload = ({ allFilesType,fileTypes, setUploadFile, dialogTarget
           "type": type
         },
       }).then(res => {
-        writeContent();
+        writeContent(element);
       },
 
         (error) => {
-          if (error.response.data.message === "File already exists") {
+          if(error.response.data.message === "Invalid File Type"){
+            progressStatus("Failed (Invalid File Type) 0", id);
+          }
+          else if (error.response.data.message === "File already exists") {
             progressStatus("Failed (file already exist) 0", id);
           }
 
@@ -235,11 +238,9 @@ export const FileUpload = ({ allFilesType,fileTypes, setUploadFile, dialogTarget
     });
   }
 
-  const writeContent = () => {
+  const writeContent = (element) => {
 
     const userToken = localStorage.getItem('id_token')
-
-    vaildTypeFileArray.forEach(element => {
 
       let fileName = element.fileName;
       let content = element.contents;
@@ -272,12 +273,13 @@ export const FileUpload = ({ allFilesType,fileTypes, setUploadFile, dialogTarget
       },
         (error) => { }
       )
-    });
+    
   }
 
   const handleStatus = (id) => (e) => {
     initialUploadFile[id].type = e.target.value;
     setUploadedfiles([...initialUploadFile]);
+    
 
   }
   const openFileDialog = () => {
