@@ -21,15 +21,14 @@ import MainSidebarContent from "./MainSidebarContent";
 import Breadcrumb from "./Breadcrumb";
 import { useState } from "react";
 import clsx from "clsx";
-import {CreateFolder} from "app/main/apps/file-manager/FileUpload/CreateFolderDialog";
+import { CreateFolder } from "app/main/apps/file-manager/FileUpload/CreateFolderDialog";
 import { FileUpload } from "app/main/apps/file-manager/FileUpload/FileUploadDialog";
 import sciductService from "app/services/sciductService/sciductService.js";
 import Preview from "./Preview";
 import { useHistory } from "react-router-dom";
-import axios from 'axios';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-
+import axios from "axios";
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
 
 function FileManagerApp(props) {
   const [searchbool, setSearchbool] = useState(false);
@@ -44,7 +43,7 @@ function FileManagerApp(props) {
   const [isFolder, setIsFolder] = useState(false);
   const [containerFlag, setContainerFlag] = useState("");
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const [fileTypeArray,setFileTypeArray] =useState([])
+  const [fileTypeArray, setFileTypeArray] = useState([]);
   const history = useHistory();
   const files = useSelector(({ fileManagerApp }) => fileManagerApp.files);
   var path = window.location.pathname;
@@ -62,7 +61,7 @@ function FileManagerApp(props) {
   const style = {
     width: "100%",
     flexWrap: "wrap",
-    wordBreak: "break-all"
+    wordBreak: "break-all",
   };
 
   function navigateHome() {
@@ -86,8 +85,8 @@ function FileManagerApp(props) {
       if (res.data) {
         var responseData = res.data;
         for (let i = 0; i < responseData.length; i++) {
-          if(responseData[i].id !== "folder")
-          fileTypeArray.push(responseData[i].id);
+          if (responseData[i].id !== "folder")
+            fileTypeArray.push(responseData[i].id);
         }
         setFileTypeArray(fileTypeArray);
       }
@@ -96,17 +95,18 @@ function FileManagerApp(props) {
     setshowDialog(true);
   }
 
-  function showCreateFolderDialog(){
+  function showCreateFolderDialog() {
     setAnchorEl(null);
-    setShowCreateDialog(true)
+    setShowCreateDialog(true);
   }
 
   function handleClose() {
+    setFileTypeArray([]);
     setshowDialog(false);
   }
 
-  function closeCreateFolderDialog(){
-    setShowCreateDialog(false)
+  function closeCreateFolderDialog() {
+    setShowCreateDialog(false);
   }
 
   function hideSearch() {
@@ -245,11 +245,9 @@ function FileManagerApp(props) {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleCloseMenu
-   = () => {
+  const handleCloseMenu = () => {
     setAnchorEl(null);
   };
-
 
   var type = localStorage.getItem("nodeType");
   var id = localStorage.getItem("nodeId");
@@ -263,7 +261,7 @@ function FileManagerApp(props) {
         header: "h-auto min-h-128 sm:h-auto sm:min-h-140",
         sidebarHeader: "h-auto min-h-128 sm:h-auto sm:min-h-140",
         rightSidebar: "w-320",
-        contentWrapper: "FileWrapper"
+        contentWrapper: "FileWrapper",
       }}
       header={
         <div
@@ -386,10 +384,7 @@ function FileManagerApp(props) {
                     size="medium"
                     className="flex flex-col absolute bottom-0 d-none d-sm-block  left-0 ml-16 -mb-12 z-999"
                   >
-                    <Icon
-                      className="flex flex-col"
-                      onClick={handleClick}
-                    >
+                    <Icon className="flex flex-col" onClick={handleClick}>
                       add
                     </Icon>
                   </Fab>
