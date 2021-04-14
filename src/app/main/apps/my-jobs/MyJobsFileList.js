@@ -5,6 +5,7 @@ import { FuseAnimate } from '@fuse';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Actions from './store/actions';
 import './FileList.css'
+import 'fix-date'
 
 function MyJobsFileList(props) {
     const dispatch = useDispatch();
