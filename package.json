@@ -23,6 +23,7 @@
         "file-exists": "^5.0.1",
         "filesize": "^6.1.0",
         "firebase": "7.6.0",
+        "fix-date": "^1.1.6",
         "formsy-react": "1.1.5",
         "google-map-react": "1.1.5",
         "jsoneditor": "^9.1.1",
