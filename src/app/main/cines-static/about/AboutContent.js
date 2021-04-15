@@ -1,16 +1,24 @@
+/* eslint-disable */
 import React from 'react';
 import {Icon, Typography} from '@material-ui/core';
 import {FusePageSimple} from '@fuse';
+import { useHistory } from "react-router-dom";
 
 function UpdatingFuseReactDoc()
 {
+    const history = useHistory();
+
+    function navigateHome() {
+        history.push('/home/')
+    }
+
     return (
         <FusePageSimple
             header={
                 <div className="flex flex-1 items-center justify-between p-24">
                     <div className="flex flex-col">
                         <div className="flex items-center mb-16">
-                            <Icon className="text-18" color="action">home</Icon>
+                        <Icon className="text-18 cursor-pointer" color="action" onClick={navigateHome}>home</Icon>
                             <Icon className="text-16" color="action">chevron_right</Icon>
                             <Typography color="textSecondary">About</Typography>
                             {/* <Icon className="text-16" color="action">chevron_right</Icon>

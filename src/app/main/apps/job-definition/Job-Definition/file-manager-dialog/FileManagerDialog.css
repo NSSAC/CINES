@@ -5,6 +5,26 @@
     background-color: rgba(255, 255, 255, 0.12);
 }
 
+.createFolder {
+    text-align: end;
+}
+
+.tableStyle {
+    overflow: auto;
+    max-height: 320px;
+    background-color: black;
+    border-radius: 10px;
+}
+
+@media only screen and (max-height: 450px) and (orientation:landscape) {
+    .tableStyle {
+        overflow: auto;
+        max-height: 100px;
+        background-color: black;
+        border-radius: 10px;
+    }
+}
+
 ::-webkit-scrollbar {
     width: 10px;
     height: 10px;

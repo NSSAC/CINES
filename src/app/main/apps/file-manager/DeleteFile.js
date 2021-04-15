@@ -17,13 +17,17 @@ function DeleteFile(props){
           method: 'delete',
           url: `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file/${props.fileId}?recursive=true`,
           headers: { 
-            'Accept': 'application/vsmetadata+json',
+            'Accept': '*/*',
             'Authorization': token
           },
        }
    useEffect(() => {
         DeleteData()
+                // eslint-disable-next-line
     },[]) 
+
+    if(success){}
+
 
   function DeleteData() {
       var request = axios(config)
@@ -33,6 +37,7 @@ function DeleteFile(props){
           props.setDeleteFile(false)
           dispatch(Actions.getFiles(currPath,'DELETE_FILE', props.fileId))
         }, 3000);
+        props.pageLayout.current.toggleRightSidebar()
       })
       .catch(err => {
         setError(true)
@@ -49,7 +54,7 @@ return (
  )
 else 
 return (
-     <div> {ToastsStore.success(`'${props.name}'` + " deleted successfully")}
+     <div> {ToastsStore.success(`'${props.name}'  deleted successfully`)}
      <ToastsContainer store={ToastsStore} position={ToastsContainerPosition.TOP_RIGHT}/></div>
  )
 }

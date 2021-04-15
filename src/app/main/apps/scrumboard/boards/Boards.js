@@ -1,49 +1,14 @@
 import React, {useEffect} from 'react';
-import {Typography, Icon} from '@material-ui/core';
-import {fade} from '@material-ui/core/styles/colorManipulator';
-import {FuseAnimateGroup, FuseAnimate} from '@fuse';
-import {Link} from 'react-router-dom';
-import {useDispatch, useSelector} from 'react-redux';
+import {FuseAnimateGroup} from '@fuse';
+import {useDispatch} from 'react-redux';
 import clsx from 'clsx';
 import withReducer from 'app/store/withReducer';
 import * as Actions from '../store/actions';
 import reducer from '../store/reducers';
-import {makeStyles} from '@material-ui/styles';
-
-const useStyles = makeStyles(theme => ({
-    root    : {
-        background: theme.palette.primary.main,
-        color     : theme.palette.getContrastText(theme.palette.primary.main)
-    },
-    board   : {
-        cursor                  : 'pointer',
-        boxShadow               : theme.shadows[0],
-        transitionProperty      : 'box-shadow border-color',
-        transitionDuration      : theme.transitions.duration.short,
-        transitionTimingFunction: theme.transitions.easing.easeInOut,
-        background              : theme.palette.primary.dark,
-        color                   : theme.palette.getContrastText(theme.palette.primary.dark),
-        '&:hover'               : {
-            boxShadow: theme.shadows[6]
-        }
-    },
-    newBoard: {
-        borderWidth: 2,
-        borderStyle: 'dashed',
-        borderColor: fade(theme.palette.getContrastText(theme.palette.primary.main), 0.6),
-        '&:hover'  : {
-            borderColor: fade(theme.palette.getContrastText(theme.palette.primary.main), 0.8)
-        }
-    }
-}));
 
 function Boards(props)
 {
     const dispatch = useDispatch();
-    const boards = useSelector(({scrumboardApp}) => scrumboardApp.boards);
-
-    const classes = useStyles(props);
-
     useEffect(() => {
         dispatch(Actions.getBoards());
         return () => {

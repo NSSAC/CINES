@@ -10,7 +10,6 @@ import ToolbarLayout3 from './components/ToolbarLayout3';
 import NavbarWrapperLayout3 from './components/NavbarWrapperLayout3';
 import FooterLayout3 from './components/FooterLayout3';
 import RightSideLayout3 from './components/RightSideLayout3';
-import SettingsPanel from 'app/fuse-layouts/shared-components/SettingsPanel';
 
 const useStyles = makeStyles(theme => ({
     root          : {

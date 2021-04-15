@@ -15,3 +15,8 @@
   font-size: 13px;
   margin-top: 5px;
 }
+
+.MuiGrid-spacing-xs-1{
+  width: 100% !important;
+  margin: auto !important;
+}

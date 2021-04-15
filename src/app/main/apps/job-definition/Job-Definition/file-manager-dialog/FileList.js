@@ -1,6 +1,5 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@material-ui/core"
-import React, { useState, useRef, useEffect } from 'react';
-import { Hidden, Typography, Icon, IconButton, Table, TableBody, TableCell, TableHead, TableRow, Link } from '@material-ui/core';
+import React, { useEffect } from 'react';
+import { Typography, Icon, Table, TableBody, TableCell, TableHead, TableRow, Link } from '@material-ui/core';
 import { FuseAnimate } from '@fuse';
 import { useDispatch, useSelector } from "react-redux";
 import moment from 'moment';
@@ -74,61 +73,53 @@ function Filelist(props) {
     const selectedItem = useSelector(({ fMApp }) => files[fMApp.selectedItemId]);
     const classes = useStyles();
     const dispatch = useDispatch()
-    const [click, setClick] = useState(false);
 
-    const tableStyle = {
-        overflow: 'auto',
-        maxHeight: '320px',
-        backgroundColor: 'black',
-        borderRadius: '10px'
-        // marginTop:'15px',
-
-    }
     const nameStyle = {
         overflow: 'hidden',
         maxWidth: '200px',
         textOverflow: 'ellipsis',
-        // display:'inline-block',
         whiteSpace: 'nowrap'
     }
 
     var searchResults = Object.values(files).filter((data) => {
         var reqType = false
         for (var f in props.fileTypes) {
-            if (data.type == props.fileTypes[f] || data.type === "folder" || data.type === "epihiperOutput" || data.type === "epihiper_multicell_analysis") {
+            if (data.type === props.fileTypes[f] || data.type === "folder" || data.type === "epihiperOutput" || data.type === "epihiper_multicell_analysis") {
                 reqType = true;
                 break;
             }
         }
-        if (data.name !== "" && reqType && (props.search === "" || (data.name.toLowerCase().includes(props.search.toLowerCase()) || data.type.toLowerCase().includes(props.search.toLowerCase()) || data.owner_id.toLowerCase().includes(props.search.toLowerCase())))) return data
+        if (data.name !== "" && reqType && (props.search === "" || (data.name.toLowerCase().includes(props.search.toLowerCase()) || data.type.toLowerCase().includes(props.search.toLowerCase()) || data.owner_id.toLowerCase().includes(props.search.toLowerCase())))) return data; return null
     })
 
 
     useEffect(() => {
         var flag = 0;
         var i = 0;
-        // if (props.fileManager) {
         for (i = 0; i < props.fileTypes.length; i++) {
-            if (document.getElementById('selectFile') && selectedItem && (selectedItem.type == props.fileTypes[i])) {
+            if (document.getElementById('selectFile') && selectedItem && (selectedItem.type === props.fileTypes[i])) {
                 document.getElementById('selectFile').classList.remove('buttonDisabled');
                 flag = 1;
             }
         }
-        if (flag == 0)
+        if (flag === 0){
             document.getElementById('selectFile').classList.add('buttonDisabled');
-        // }
+            // if(document.getElementsByClassName('tableStyle').length > 0)
+            // document.getElementsByClassName('tableStyle')[0].scrollTo(0,0)
+        }
 
     });
+
+    useEffect(()=>{
+        if(document.getElementsByClassName('tableStyle').length > 0)
+            document.getElementsByClassName('tableStyle')[0].scrollTo(0,0)
+    },[files])
 
     function onClickHandler(node, canLink) {
         // props.setSearch("")
         return function (evt) {
-            if (click === false)
+            if (evt.detail === 1)
                 if (evt.target && evt.target.getAttribute("to")) {
-                    setClick(true)
-                    setTimeout(() => {
-                        setClick(false)
-                    }, 1500);
                     if (node.type === "folder" || node.type === "epihiperOutput" || node.type === "epihiper_multicell_analysis") {
                         props.setTargetPath(props.targetPath + evt.target.getAttribute("to") + "/")
                         setTimeout(() => {
@@ -143,7 +134,7 @@ function Filelist(props) {
 
     if (Object.values(files).length > 0 && searchResults.length > 0) {
         return (
-            <div style={tableStyle}>
+            <div className='tableStyle'>
                 <FuseAnimate animation="transition.slideUpIn" delay={300}>
                     <Table >
                         <TableHead>
@@ -175,7 +166,7 @@ function Filelist(props) {
                                         <TableCell>{node.type}</TableCell>
                                         <TableCell>{node.owner_id}</TableCell>
                                         <TableCell className="text-center">{(!node.size && (node.size !== 0)) ? '-' : filesize(node.size)}</TableCell>
-                                        <TableCell>{moment(node.update_date).fromNow()}</TableCell>
+                                        <TableCell>{moment.utc(node.update_date).local().fromNow()}</TableCell>
                                     </TableRow>
                                 );
 
@@ -203,7 +194,7 @@ function Filelist(props) {
         )
     }
 
-    else if (props.fileTypes[0]=="folder") {
+    else if (props.fileTypes[0]==="folder") {
         return (
             <div className="flex flex-1 flex-col items-center justify-center mt-20">
                 <Typography className="text-13 mt-16" color="textPrimary">This folder does not contain any folders.</Typography>

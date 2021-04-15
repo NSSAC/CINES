@@ -1,14 +1,22 @@
-import axios from 'axios';
+export const GET_FILES = "[FILE MANAGER APP] GET FILES";
+var token = localStorage.getItem("id_token");
+let arr = [];
 
-export const GET_FILES = '[FILE MANAGER APP] GET FILES';
-var token = localStorage.getItem('id_token')
-let arr = []
-let url1 = ''
+export const CLEAR = 'CLEAR'
+
+export function clearData(){
+  return (dispatch) =>
+      dispatch({
+        type: CLEAR,
+        payload: [],
+      })
+    };
+
 
 export function getJobDefinitionFiles() {
 arr=[];
     var axios = require('axios');
-    let url = `${process.env.REACT_APP_SCIDUCT_JOB_SERVICE}/job_definition?limit(99999)`
+    let url = `${process.env.REACT_APP_SCIDUCT_JOB_SERVICE}/job_definition?&eq(namespace,net.science)&limit(9999)`
     var config = {
       method: 'get',
       url: url,
@@ -61,13 +69,16 @@ arr=[];
 
   const request = axios(config)
 
+
   return (dispatch) =>
     request.then((response) => {
-      arr.push(...response.data)
+      if(response !== undefined && response.data.length > 0){
+        arr.push(...response.data)
+      }
       dispatch({
         type: GET_FILES,
         payload: arr,
-        totalFiles: response.headers
-      })
+        totalFiles: response.headers,
+      });
     });
 }

@@ -14,3 +14,13 @@ export const FileManagerAppConfig = {
         }
     ]
 };
+
+const FILEUPLOAD_CONFIG = {
+
+    fileTypeToBeRemoved:['folder','symlink']
+
+}
+
+export default  FILEUPLOAD_CONFIG;
+
+

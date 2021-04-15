@@ -21,7 +21,7 @@ function MenuTableCell(props) {
         IconComponent={ArrowDropDownIcon}
         value={value}
         MenuProps={{
-          PopoverProps: {
+          popoverprops: {
             anchorOrigin: {
               horizontal: "center",
               vertical: "bottom"

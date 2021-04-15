@@ -5,7 +5,6 @@ const AUTH_CONFIG = {
   refresh_time: 15480000,
   // domain     : "YOUR_DOMAIN",
   // clientId   : "YOUR_CLIENT_ID",
-  callbackUrl: "YOUR_DOMAIN/callback",
   refresh_token: `${process.env.REACT_APP_SCIDUCT_USER_SERVICE}/refresh`,
   logout_local_dev: "http://localhost:3000",
   logout_production: "",

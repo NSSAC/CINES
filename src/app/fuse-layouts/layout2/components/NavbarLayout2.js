@@ -2,6 +2,7 @@ import React from 'react';
 import {FuseScrollbars} from '@fuse';
 import Logo from 'app/fuse-layouts/shared-components/Logo';
 import Navigation from 'app/fuse-layouts/shared-components/Navigation';
+import UserMenu from 'app/fuse-layouts/shared-components/UserMenu';
 
 function NavbarLayout2()
 {
@@ -14,7 +15,10 @@ function NavbarLayout2()
 
             <FuseScrollbars className="flex h-full items-center">
                 <Navigation className="w-full" layout="horizontal"/>
+                <UserMenu/>
             </FuseScrollbars>
+           
+        
         </div>
     );
 }

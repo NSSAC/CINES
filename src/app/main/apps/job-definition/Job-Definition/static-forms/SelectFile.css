@@ -39,9 +39,23 @@ input[type=submit]:hover {
 }
 
 .folderPath {
-    word-break: break-word;
+    /* line-break: anywhere; */
+    word-break: break-all;
     white-space: pre-wrap;
 }
+
+
+.infoIcon {
+    margin-top: 38px;
+}
+
+.toolTip {
+    width:280px;
+    white-space:pre-wrap;
+    word-wrap:break-word;
+    word-break: keep-all;
+}
+
 
 .root {
     white-space: nowrap;
@@ -71,10 +85,19 @@ input[type=submit]:hover {
         align-items: center;
         display: block
       }
+
+      .infoIcon {
+        margin-top: 15px;
+    }
     
   }
   
 .content {
     padding-left: 8px;
     width: 100%
+}
+
+.MuiGrid-spacing-xs-3 {
+    width: auto !important;
+    margin: auto !important;
 }

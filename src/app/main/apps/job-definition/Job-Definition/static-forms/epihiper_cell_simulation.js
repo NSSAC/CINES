@@ -4,7 +4,7 @@ import {
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Formsy from 'formsy-react';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
 import { FusePageSimple } from '@fuse';
@@ -12,20 +12,18 @@ import axios from 'axios';
 import { Input } from './SelectFile.js'
 import { Icon, LinearProgress, Tooltip } from '@material-ui/core';
 import Toaster from "../Toaster";
+import ReactTooltip from 'react-tooltip';
 
 const Epihiper_cell_simulation = () => {
     const [isFormValid, setIsFormValid] = useState(false);
     const [formElementsArray, setFormElementsArray] = useState({});
-    const [jobSubmissionArray, setJobSubmissionArray] = useState({})
-    const [flag, setFlag] = useState(false)
+    // const [jobSubmissionArray, setJobSubmissionArray] = useState({})
+    // const [flag, setFlag] = useState(false)
     const [response, setResponse] = useState('')
     const [success, setSuccess] = useState(false);
     const [isToasterFlag, setIsToasterFlag] = useState(false);
-    const [showDialog, setshowDialog] = useState(false);
     const [spinnerFlag, setSpinnerFlag] = useState(true);
     const history = useHistory();
-    var path = window.location.pathname;
-    var pathEnd = path.replace("/apps/job-definition/", "");
 
 
     const parentGrid = {
@@ -84,13 +82,14 @@ const Epihiper_cell_simulation = () => {
             }
 
         );
+                // eslint-disable-next-line
     }, [axios]);
 
     const creatForm = (createFromData, inputFileData, outputFiles, requiredFeildArray, responseData) => {
         setResponse(responseData)
         var count = 0;
         if (createFromData !== undefined) {
-            setFlag(false)
+            // setFlag(false)
             if (inputFileData !== undefined) {
                 for (let [index, obj] of inputFileData.entries()) {
                     obj['id'] = index;
@@ -116,7 +115,7 @@ const Epihiper_cell_simulation = () => {
                     createFromData[keyName] = obj;
                 }
             }
-            if (outputFiles != undefined) {
+            if (outputFiles !== undefined) {
 
                 let outputContainer = {
                     "id": 200,
@@ -143,12 +142,12 @@ const Epihiper_cell_simulation = () => {
         }
 
         else {
-            setFlag(true)
+            // setFlag(true)
         }
     };
 
     const description = (desc) => <Tooltip title={<h4>{desc}</h4>} placement="right">
-        <span style={{ marginTop: '38px' }}>
+        <span style={{ marginTop: '38px' }}  data-tip={desc}>
             <Icon fontSize="small">info</Icon>
         </span>
     </Tooltip>
@@ -166,6 +165,9 @@ const Epihiper_cell_simulation = () => {
             }
             else if (updatedFormElement.type === 'boolean') {
                 updatedFormElement.value = Boolean(event.target.value);
+            }
+            else if (updatedFormElement.type === "number") {
+                updatedFormElement.value = parseFloat(event.target.value);
             }
             else {
                 updatedFormElement.value = event.target.value;
@@ -190,10 +192,10 @@ const Epihiper_cell_simulation = () => {
         }
         for (let key in formElementsArray) {
 
-            if (formElementsArray[key].id >= 200 && formElementsArray[key].formLabel == "output_container") {
+            if (formElementsArray[key].id >= 200 && formElementsArray[key].formLabel === "output_container") {
                 requestJson['output_container'] = formElementsArray[key].value
             }
-            else if (formElementsArray[key].id >= 200 && formElementsArray[key].formLabel == "output_name") {
+            else if (formElementsArray[key].id >= 200 && formElementsArray[key].formLabel === "output_name") {
                 requestJson['output_name'] = formElementsArray[key].value
             }
             else {
@@ -205,13 +207,11 @@ const Epihiper_cell_simulation = () => {
         }
 
         requestJson.input = input
-        setJobSubmissionArray({ ...requestJson })
+        // setJobSubmissionArray({ ...requestJson })
         onFormSubmit(requestJson)
     }
     function onFormSubmit(requestJson) {
         //createSubmissionData() 
-        var path = window.location.pathname.replace("/apps/job-definition/", "")
-        var jobDefinition = path
         const userToken = localStorage.getItem('id_token')
         axios({
             method: 'post',
@@ -226,7 +226,7 @@ const Epihiper_cell_simulation = () => {
         }).then(res => {
             setIsToasterFlag(true)
             setSuccess(true)
-            var timeOutHandle = window.setTimeout(
+            window.setTimeout(
                 delayNavigation
                 , 3000);
 
@@ -234,10 +234,14 @@ const Epihiper_cell_simulation = () => {
             (error) => {
                 setSuccess(false)
                 setIsToasterFlag(true)
-
+                window.setTimeout(handlingError, 4000);
             }
         )
 
+    }
+
+    function handlingError() {
+        setIsToasterFlag(false);
     }
 
     function delayNavigation() {
@@ -318,15 +322,13 @@ const Epihiper_cell_simulation = () => {
                                                 />
                                                 {formElementsArray['endTick'].description && (description(formElementsArray['endTick'].description))}
                                             </Grid>
-                                            {Object.entries(formElementsArray).filter(data => { if (data[1].type == undefined) return data }).map((formElement) => (
+                                            {Object.entries(formElementsArray).filter(data => { if (data[1].type === undefined) return data; return null }).map((formElement) => (
                                                 <Grid style={childGrid} item container xs={12} sm={6}>
                                                     <Input
                                                         key={formElement.id}
                                                         formData={formElement}
-                                                        key={formElement.id}
                                                         elementType={formElement.type}
                                                         value={formElement.value}
-                                                        buttonClicked={showDialog}
                                                         changed={(event) => inputChangedHandler(event, formElement[0])}
                                                     />
                                                 </Grid>))}
@@ -378,6 +380,7 @@ const Epihiper_cell_simulation = () => {
                                 ) : null}
                             </div>
                         </div>
+                       <ReactTooltip clickable={true} className='toolTip' place='top' effect='solid' />
                     </div>
                 }
             />

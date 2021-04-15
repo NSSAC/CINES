@@ -1,23 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Fab, Icon, Tooltip, Typography, Grid } from '@material-ui/core';
+import { Button, Icon } from '@material-ui/core';
 import './Input.css';
 import FMPopup from './file-manager-dialog/FileManagerDialog.js';
-import * as Actions from './file-manager-dialog/store/actions';
 import FolderPopup from './file-manager-dialog/FolderManagerDialog.js';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Radio from '@material-ui/core/Radio';
 
 import {
-	CheckboxFormsy,
-	FuseChipSelectFormsy,
 	RadioGroupFormsy,
 	SelectFormsy,
 	TextFieldFormsy
 } from '@fuse/components/formsy';
 import { FusePageSimple } from '@fuse';
-import { useDispatch } from 'react-redux';
-import FolderManagerDialog from './file-manager-dialog/FolderManagerDialog.js';
+import ReactTooltip from 'react-tooltip';
 
 export const Input = (props) => {
 	let inputElement = null;
@@ -31,12 +27,12 @@ export const Input = (props) => {
 
 
 
-	const dispatch = useDispatch()
 	const [showFMDialog, setShowFMDialog] = useState(false);
 	const [showFolderDialog, setShowFolderDialog] = useState(false);
 	const [fileChosen, setFileChosen] = useState('');
 	const [folderChosenPath, setFolderChosenPath] = useState('');
 	const [fileChosenPath, setFileChosenPath] = useState('');
+	var typeFlag = 0;
 	if (props.formData[1].value !== undefined && fileChosenPath !== '') {
 		props.formData[1].value = fileChosenPath
 	}
@@ -67,7 +63,7 @@ export const Input = (props) => {
 				inputElement = (
 					<TextFieldFormsy
 						className="my-16 inputStyle"
-						type="number"
+						type="text"
 						name="SrcColId"
 						style={{ width: "18px" }}
 						value=""
@@ -75,10 +71,10 @@ export const Input = (props) => {
 						onChange={props.changed}
 						validations={{
 							isPositiveInt: function (values, value) {
-								if(props.formData[0]=="SampleEdges" || props.formData[0]=="SampleNodes")
-								 return (RegExp(/^(?:[+]?(?:0|[1-9]\d*))$/).test(value) || RegExp(/^(?:[-]?(?:1))$/).test(value));
+								if (props.formData[0] === "SampleEdges" || props.formData[0] === "SampleNodes")
+									return (RegExp(/^(?:[+]?(?:0|[1-9]\d*))$/).test(value) || RegExp(/^(?:[-]?(?:1))$/).test(value));
 								else
-								 return RegExp(/^(?:[+]?(?:0|[1-9]\d*))$/).test(value);	 
+									return RegExp(/^(?:[+]?(?:0|[1-9]\d*))$/).test(value);
 							},
 						}}
 						validationError="This is not a valid value"
@@ -90,7 +86,7 @@ export const Input = (props) => {
 				inputElement = (
 					<TextFieldFormsy
 						className="my-16 inputStyle"
-						type="number"
+						type="text"
 						name="SrcColId"
 						style={{ width: "18px" }}
 						value=""
@@ -98,10 +94,10 @@ export const Input = (props) => {
 						onChange={props.changed}
 						validations={{
 							isPositiveInt: function (values, value) {
-								if(props.formData[0]=="SampleEdges" || props.formData[0]=="SampleNodes")
-								 return (RegExp(/^(?:[+]?(?:0|[1-9]\d*))$/).test(value) || RegExp(/^(?:[-]?(?:1))$/).test(value));
+								if (props.formData[0] === "SampleEdges" || props.formData[0] === "SampleNodes")
+									return (RegExp(/^(?:[+]?(?:0|[1-9]\d*))$/).test(value) || RegExp(/^(?:[-]?(?:1))$/).test(value));
 								else
-								 return RegExp(/^(?:[+]?(?:0|[1-9]\d*))$/).test(value);	 
+									return RegExp(/^(?:[+]?(?:0|[1-9]\d*))$/).test(value);
 							},
 						}}
 						validationError="This is not a valid value"
@@ -109,17 +105,18 @@ export const Input = (props) => {
 					/>
 				);
 			}
+			typeFlag = 1;
 			break;
 
-        	case "float":
+		case "number":
 			if (props.formData[1].required) {
 				inputElement = (
 					<TextFieldFormsy
 						className="my-16 inputStyle"
-						type="number"
+						type="text"
 						name="SrcColId"
 						style={{ width: "18px" }}
-						value={props.formData[1].value}
+						value=''
 						label={props.formData[0]}
 						onChange={props.changed}
 						validations={{
@@ -136,10 +133,10 @@ export const Input = (props) => {
 				inputElement = (
 					<TextFieldFormsy
 						className="my-16 inputStyle"
-						type="number"
+						type="text"
 						name="SrcColId"
 						style={{ width: "18px" }}
-						value={props.formData[1].value}
+						value=''
 						label={props.formData[0]}
 						onChange={props.changed}
 						validations={{
@@ -152,17 +149,19 @@ export const Input = (props) => {
 					/>
 				);
 			}
+			typeFlag = 1;
 			break;
-			
+
 		case "string":
-			if (props.formData[1].required) {
+			if (props.formData[1].required || props.formData[0]=== 'output_name') {
 				if (props.formData[1].enum) {
 					inputElement = (
 						<SelectFormsy
 							className="my-16 inputStyle"
 							name="related"
+							// label={`${props.formData[0]}${<span style={{ color: 'red' }}>&nbsp;*</span>}`}
 							label={props.formData[0]}
-							value={props.formData[1].value}
+							value=""
 							onChange={props.changed}
 							required
 						>
@@ -185,6 +184,12 @@ export const Input = (props) => {
 							value={props.formData[1].value}
 							label={props.formData[0]}
 							onChange={props.changed}
+							validations={{
+								isPositiveInt: function (values, value) {
+									return RegExp(/^[^-\s]/).test(value);
+								},
+							}}
+							validationError="This is not a valid value"
 							autoComplete="off"
 							required
 						/>
@@ -219,11 +224,18 @@ export const Input = (props) => {
 							value={props.formData[1].value}
 							label={props.formData[0]}
 							onChange={props.changed}
+							validations={{
+								isPositiveInt: function (values, value) {
+									return RegExp(/^[^-\s]/).test(value);
+								},
+							}}
+							validationError="This is not a valid value"
 							autoComplete="off"
 						/>
 					);
 				}
 			}
+			typeFlag = 1;
 			break;
 
 		case "boolean":
@@ -271,13 +283,14 @@ export const Input = (props) => {
 					</RadioGroupFormsy>
 				);
 			}
+			typeFlag = 1;
 			break;
 
 		default:
 			inputElement = (
 				<div className="selectedFile">
 					<label className="my-32 ">
-						{props.formData[1].formLabel}<span style={{color:'red'}}>&nbsp;*</span>-
+						{props.formData[1].formLabel}<span style={{ color: 'red' }}>&nbsp;*</span>-
 						   {props.formData[1].outputFlag ?
 							<Button onClick={showFolderManagerDialog} style={selectButtonStyle}>
 								&nbsp;Select path
@@ -288,7 +301,7 @@ export const Input = (props) => {
 						<TextFieldFormsy
 							id={props.formData[1].formLabel}
 							className="my-16 hidden"
-							type="number"
+							type="text"
 							name="SrcColId"
 							style={{ width: '18px' }}
 							value={props.formData[1].value}
@@ -297,8 +310,8 @@ export const Input = (props) => {
 							required
 						/>
 					</label>
-					{props.formData[1].outputFlag ? <div className="folderPath">{folderChosenPath == '' ? 'No folder specified' : <b onChange={props.changed} >{folderChosenPath}</b>}</div>
-						: <div className="folderPath">{fileChosen == '' ? 'No file chosen' : <b onChange={props.changed} >{fileChosen}</b>}</div>}
+					{props.formData[1].outputFlag ? <div className="folderPath">{folderChosenPath === '' ? 'No folder specified' : <b onChange={props.changed} >{folderChosenPath}</b>}</div>
+						: <div className="folderPath">{fileChosen === '' ? 'No file chosen' : <b onChange={props.changed} >{fileChosen}</b>}</div>}
 				</div>
 			);
 	}
@@ -308,6 +321,10 @@ export const Input = (props) => {
 		}
 	})
 
+
+	if(props.formData[0]==='extraObj')
+	 return null;
+
 	return (
 		<FusePageSimple
 			classes={{
@@ -316,7 +333,7 @@ export const Input = (props) => {
 			}}
 			header={
 				<div>
-					{props.formData[1].type == undefined && <FMPopup
+					{props.formData[1].type === undefined && <FMPopup
 						showModal={showFMDialog}
 						setShowModal={(p) => setShowFMDialog(p)}
 						handleFMClose={handleFMClose}
@@ -339,14 +356,17 @@ export const Input = (props) => {
 			content={
 				<div className="flex content">
 					{inputElement}
-					{props.formData[1].description && (
-						<Tooltip title={<h4>{props.formData[1].description}</h4>} placement="right">
-							<span style={{ marginTop: '38px' }}>
-								<Icon onClick fontSize="small">info</Icon>
-							</span>
-						</Tooltip>
-					)}{' '}
+					{props.formData[1].description &&
+						(typeFlag === 0 ? <span className='infoIcon' data-tip={props.formData[1].description}>
+							<Icon  fontSize="small">info</Icon>
+						</span> :
+						<span style={{ marginTop: '38px' }}  data-tip={props.formData[1].description}>
+							<Icon  fontSize="small">info</Icon>
+						</span>
+						)}{' '}
+					<ReactTooltip clickable={true} className='toolTip' place='top' effect='solid' />
 				</div>
+
 			}
 		/>
 	);
