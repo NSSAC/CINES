@@ -29,6 +29,7 @@ import { useHistory } from "react-router-dom";
 import axios from "axios";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
+import FILEUPLOAD_CONFI from "./FileManagerAppConfig"
 
 function FileManagerApp(props) {
   const [searchbool, setSearchbool] = useState(false);
@@ -85,7 +86,7 @@ function FileManagerApp(props) {
       if (res.data) {
         var responseData = res.data;
         for (let i = 0; i < responseData.length; i++) {
-          if (responseData[i].id !== "folder")
+          if (!FILEUPLOAD_CONFI.fileTypeToBeRemoved.includes(responseData[i].id))
             fileTypeArray.push(responseData[i].id);
         }
         setFileTypeArray(fileTypeArray);
