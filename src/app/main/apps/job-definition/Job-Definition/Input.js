@@ -201,7 +201,7 @@ export const Input = (props) => {
 						<SelectFormsy
 							className="my-16 inputStyle"
 							name="related"
-							label={props.formData[0]}
+							label= {[props.formData[0], <span key={1} style={{color: 'red'}}>{'*'}</span>]}
 							value={props.formData[1].value}
 							onBlur={props.changed}
 						>
