@@ -159,10 +159,9 @@ export const Input = (props) => {
 						<SelectFormsy
 							className="my-16 inputStyle"
 							name="related"
-							// label={`${props.formData[0]}${<span style={{ color: 'red' }}>&nbsp;*</span>}`}
-							label={props.formData[0]}
+							label= {[props.formData[0], <span key={1} style={{color: 'red'}}>{'*'}</span>]}
 							value=""
-							onBlur={props.changed}
+							onChange={props.changed}
 							required
 						>
 							{props.formData[1].enum.map((item) => {
@@ -203,7 +202,7 @@ export const Input = (props) => {
 							name="related"
 							label= {[props.formData[0], <span key={1} style={{color: 'red'}}>{'*'}</span>]}
 							value={props.formData[1].value}
-							onBlur={props.changed}
+							onChange={props.changed}
 						>
 							{props.formData[1].enum.map((item) => {
 								return (
@@ -246,7 +245,7 @@ export const Input = (props) => {
 						name="gender"
 						label={props.formData[0]}
 						value={props.formData[1].value}
-						onBlur={props.changed}
+						onChange={props.changed}
 						required
 					>
 						<FormControlLabel
@@ -268,7 +267,7 @@ export const Input = (props) => {
 						name="gender"
 						label={props.formData[0]}
 						value={props.formData[1].value}
-						onBlur={props.changed}
+						onChange={props.changed}
 					>
 						<FormControlLabel
 							value="true"
