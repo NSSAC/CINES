@@ -104,11 +104,12 @@ export const CreateFolder = ({
         setFlag(true)
         setName("")
         progressStatus("Folder " + folderName  +  " created successfully",true );
+       
         if(isFolderManager === true)
          dispatch(ActionsHome.getHome(targetPath.replace('/home/','')));
         else 
          dispatch(Actions.getFiles(targetPath, "GET_FILES"));
-  
+         handleClose();
       },
 
       (error) => {
