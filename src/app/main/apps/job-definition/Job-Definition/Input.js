@@ -68,7 +68,7 @@ export const Input = (props) => {
 						style={{ width: "18px" }}
 						value=""
 						label={props.formData[0]}
-						onChange={props.changed}
+						onBlur={props.changed}
 						validations={{
 							isPositiveInt: function (values, value) {
 								if (props.formData[0] === "SampleEdges" || props.formData[0] === "SampleNodes")
@@ -91,7 +91,7 @@ export const Input = (props) => {
 						style={{ width: "18px" }}
 						value=""
 						label={props.formData[0]}
-						onChange={props.changed}
+						onBlur={props.changed}
 						validations={{
 							isPositiveInt: function (values, value) {
 								if (props.formData[0] === "SampleEdges" || props.formData[0] === "SampleNodes")
@@ -118,7 +118,7 @@ export const Input = (props) => {
 						style={{ width: "18px" }}
 						value=''
 						label={props.formData[0]}
-						onChange={props.changed}
+						onBlur={props.changed}
 						validations={{
 							isPositiveInt: function (values, value) {
 								return RegExp(/^(?:[1-9]\d*|0)?(?:\.\d+)?$/).test(value);
@@ -138,7 +138,7 @@ export const Input = (props) => {
 						style={{ width: "18px" }}
 						value=''
 						label={props.formData[0]}
-						onChange={props.changed}
+						onBlur={props.changed}
 						validations={{
 							isPositiveInt: function (values, value) {
 								return RegExp(/^(?:[1-9]\d*|0)?(?:\.\d+)?$/).test(value);
@@ -159,8 +159,7 @@ export const Input = (props) => {
 						<SelectFormsy
 							className="my-16 inputStyle"
 							name="related"
-							// label={`${props.formData[0]}${<span style={{ color: 'red' }}>&nbsp;*</span>}`}
-							label={props.formData[0]}
+							label= {[props.formData[0], <span key={1} style={{color: 'red'}}>{'*'}</span>]}
 							value=""
 							onChange={props.changed}
 							required
@@ -183,7 +182,7 @@ export const Input = (props) => {
 							style={{ width: "18px" }}
 							value={props.formData[1].value}
 							label={props.formData[0]}
-							onChange={props.changed}
+							onBlur={props.changed}
 							validations={{
 								isPositiveInt: function (values, value) {
 									return RegExp(/^[^-\s]/).test(value);
@@ -201,7 +200,7 @@ export const Input = (props) => {
 						<SelectFormsy
 							className="my-16 inputStyle"
 							name="related"
-							label={props.formData[0]}
+							label= {[props.formData[0], <span key={1} style={{color: 'red'}}>{'*'}</span>]}
 							value={props.formData[1].value}
 							onChange={props.changed}
 						>
@@ -223,7 +222,7 @@ export const Input = (props) => {
 							style={{ width: "18px" }}
 							value={props.formData[1].value}
 							label={props.formData[0]}
-							onChange={props.changed}
+							onBlur={props.changed}
 							validations={{
 								isPositiveInt: function (values, value) {
 									return RegExp(/^[^-\s]/).test(value);
@@ -306,12 +305,12 @@ export const Input = (props) => {
 							style={{ width: '18px' }}
 							value={props.formData[1].value}
 							label={props.formData[0]}
-							onChange={props.changed}
+							onBlur={props.changed}
 							required
 						/>
 					</label>
-					{props.formData[1].outputFlag ? <div className="folderPath">{folderChosenPath === '' ? 'No folder specified' : <b onChange={props.changed} >{folderChosenPath}</b>}</div>
-						: <div className="folderPath">{fileChosen === '' ? 'No file chosen' : <b onChange={props.changed} >{fileChosen}</b>}</div>}
+					{props.formData[1].outputFlag ? <div className="folderPath">{folderChosenPath === '' ? 'No folder specified' : <b onBlur={props.changed} >{folderChosenPath}</b>}</div>
+						: <div className="folderPath">{fileChosen === '' ? 'No file chosen' : <b onBlur={props.changed} >{fileChosen}</b>}</div>}
 				</div>
 			);
 	}

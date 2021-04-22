@@ -173,7 +173,13 @@ function JobDefinitionForm(props) {
       if (updatedFormElement.type === "integer") {
         updatedFormElement.value = parseInt(event.target.value);
       } else if (updatedFormElement.type === "boolean") {
-        updatedFormElement.value = Boolean(event.target.value);
+        if(event.target.value == "true"){
+          updatedFormElement.value = true;
+        }
+        else{
+          updatedFormElement.value = false;
+        }
+       // updatedFormElement["value"] = Boolean(event.target.value);
       } else if (updatedFormElement.type === "number") {
         updatedFormElement.value = parseFloat(event.target.value);
       } else {
