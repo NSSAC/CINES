@@ -154,7 +154,9 @@ export const FileUpload = ({ allFilesType,fileTypes, setUploadFile, dialogTarget
       }
     })
     if (count === initialUploadFile.length) {
-      dispatch(Actions.getFiles(targetPath, 'GET_FILES'));
+      setTimeout(() => {
+        dispatch(Actions.getFiles(targetPath, 'GET_FILES'));
+      }, 1000);
       count ++;
     }
   }
@@ -192,7 +194,7 @@ export const FileUpload = ({ allFilesType,fileTypes, setUploadFile, dialogTarget
 
     })
     const userToken = localStorage.getItem('id_token')
-    initialUploadFile.forEach(element => {
+    initialUploadFile.forEach((element ,index) => {
 
       let fileName = element.fileName;
       let type = element.type;
@@ -216,29 +218,29 @@ export const FileUpload = ({ allFilesType,fileTypes, setUploadFile, dialogTarget
           "type": type
         },
       }).then(res => {
-        writeContent(element);
+        writeContent(element,index);
       },
 
         (error) => {
           if(error.response.data.message === "Invalid File Type"){
-            progressStatus("Failed (Invalid File Type) 0", id);
+            progressStatus("Failed (Invalid File Type) 0", index);
           }
           else if (error.response.data.message === "File already exists") {
-            progressStatus("Failed (file already exist) 0", id);
+            progressStatus("Failed (file already exist) 0", index);
           }
 
           else if (error.response.data.message === "data.type should be equal to one of the allowed values") {
-            progressStatus("Failed (unsupported file type) 0", id);
+            progressStatus("Failed (unsupported file type) 0", index);
           }
           else {
-            progressStatus("Failed (unsupported file name only '-_.'are allowed) 0", id);
+            progressStatus("Failed (unsupported file name only '-_.'are allowed) 0", index);
           }
         }
       )
     });
   }
 
-  const writeContent = (element) => {
+  const writeContent = (element,index) => {
 
     const userToken = localStorage.getItem('id_token')
 
@@ -262,7 +264,7 @@ export const FileUpload = ({ allFilesType,fileTypes, setUploadFile, dialogTarget
         data: content,
         onUploadProgress: (progress) => {
           const percentage = Math.floor(progress.loaded * 100 / progress.total)
-          progressStatus(percentage, id);
+          progressStatus(percentage, index);
         }
       }).then(res => {
         if (dialogTargetPath) {
@@ -399,7 +401,7 @@ export const FileUpload = ({ allFilesType,fileTypes, setUploadFile, dialogTarget
                         {fileTypeArray.length > 1 ?
                           <MenuTableCell
                             value={node.type}
-                            onChange={handleStatus(node.id)}
+                            onChange={handleStatus(index)}
                           >
                             {
 
