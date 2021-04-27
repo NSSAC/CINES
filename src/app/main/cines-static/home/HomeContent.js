@@ -1,9 +1,9 @@
 import React from 'react';
-import {Icon, Typography} from '@material-ui/core';
-import {FusePageSimple, FuseHighlight} from '@fuse';
-import {FuseAnimate, FuseAnimateGroup} from '@fuse';
+import {Typography} from '@material-ui/core';
+import {FusePageSimple} from '@fuse';
+import {FuseAnimate} from '@fuse';
 import clsx from 'clsx';
-import {makeStyles, useTheme} from '@material-ui/styles';
+import {makeStyles} from '@material-ui/styles';
 
 const useStyles = makeStyles(theme => ({
     header    : {
@@ -24,10 +24,6 @@ const useStyles = makeStyles(theme => ({
 
 function HomeContent(props)
 {
-    const graphicContainerStyle ={
-        display: "flex",
-        justifyContent: "center"
-    }
     const graphicStyle ={
         width: "60%",
         maxWidth: "600px",
@@ -66,7 +62,7 @@ function HomeContent(props)
     laboratories, educators, college and university students (including undergraduates) across academic disciplines, and high school students.
                             </p>
                             <img style={graphicStyle} alt="net.sciece schematic" src="assets/images/home/homePageGraphics.svg" />
-                            <p className="mb-16">
+                            <div className="mb-16">
                                 The Net.Science backend services provide for file storage and execution of computational tasks.  The computational tasks are made up of serial and parallel computations backed by well-known libraries
                                 like SNAP and NetworkX to perform structural analyses on networks.  In addition to these tasks, Net.Science will have a wide variety of tasks for computations including:
                                     <ul className="m-16 ml-28 list-disc">
@@ -78,7 +74,7 @@ function HomeContent(props)
                                         <li>Anomaly detection</li>
                                         
                                     </ul>
-                            </p>
+                            </div>
                             <p className="mb-16">
                                 The backend services are available to the Net.Science WebApp as well as external applications including user scripts.
                             </p>

@@ -1,75 +1,48 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Fab, Icon, IconButton, Typography, Tooltip ,ClickAwayListener,Input} from '@material-ui/core';
+import { Icon, IconButton, Typography, Tooltip ,ClickAwayListener,Input} from '@material-ui/core';
 import { FuseAnimate, FusePageSimple } from '@fuse';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import withReducer from 'app/store/withReducer';
 import * as Actions from './store/actions';
 import reducer from './store/reducers';
 import JobDefinitionFileList from './JobDefinitionFileList';
-import Paper from '@material-ui/core/Paper';
-import DetailSidebarHeader from './DetailSidebarHeader';
-import DetailSidebarContent from './DetailSidebarContent';
+// import DetailSidebarHeader from './DetailSidebarHeader';
+// import DetailSidebarContent from './DetailSidebarContent';
 import MainSidebarHeader from './MainSidebarHeader';
 import MainSidebarContent from './MainSidebarContent';
-import Breadcrumb from './Breadcrumb';
 import { MyJobFilter } from 'app/main/apps/my-jobs/MyJobFilter-dialog/Filterdialog';
-import { makeStyles } from '@material-ui/core/styles';
-import Chip from '@material-ui/core/Chip';
 import clsx from 'clsx';
-//import "./JobDefinitionApp.css"
-const useStyles = makeStyles((theme) => ({
-    root: {
-        display: 'inline-block',
-        justifyContent: 'start',
-
-        listStyle: 'none',
-        padding: theme.spacing(0.5),
-        margin: 0,
-    },
-    chip: {
-        display: 'inline-block',
-        margin: theme.spacing(0.5),
-        paddingTop: "5px"
-
-    },
-    dialogwidth: {
-        minWidth: "100px !important"
-    }
-}));
+import { useHistory } from "react-router-dom";
 
 function JobDefinitionApp(props) {
 
     const dispatch = useDispatch();
-    const files = useSelector(({ JobDefinitionApp }) => JobDefinitionApp.jobdefinition);
     const [showDialog, setshowDialog] = useState(false);
     const pageLayout = useRef(null);
     const [flag, setFilterFlag] = useState(false);
     const [searchbool, setSearchbool] = useState(false);
     const [search, setSearch] = useState("");
-    const [editContent, setEditContent] = useState(true);
-    const [preview, setPreview] = useState(true);
-
+    const history = useHistory();
+    // const [preview, setPreview] = useState(true);
     var path = window.location.pathname
-    var pathEnd = path.charAt(path.length - 1);
 
     useEffect(() => {
         let start = 0
         let type = 'creation_date';
         let descShort = true;
         sessionStorage.setItem("isFilterApplied", JSON.stringify(false));
-        dispatch(Actions.getJobDefinitionFiles(10, 1, descShort, type, false, false));
         sessionStorage.setItem("count", start);
         sessionStorage.setItem("shortOrder", JSON.stringify(descShort));
-
+        dispatch(Actions.getJobDefinitionFiles(10, 1, descShort, type, false, false));
         sessionStorage.removeItem("selectedTypeArray")
         sessionStorage.removeItem("preStateValue")
         sessionStorage.removeItem("preJobTypeValue")
     }, [dispatch]);
 
-    function showFileUploadDialog() {
-        setshowDialog(true)
-    }
-
+    useEffect(()=>{
+        return () => dispatch(Actions.clearData());
+       /* eslint-disable-next-line */
+    },[props.history])
 
     function showSearch() {
         setSearchbool(true);
@@ -93,25 +66,25 @@ function JobDefinitionApp(props) {
         }
     }
 
-    const childRef = useRef();
     function handleClose() {
         setshowDialog(false)
         setFilterFlag(true)
-        //  childRef.current.getAlert()
     }
-    const classes = useStyles();
+
+    function navigateHome() {
+        history.push('/home/')
+    }
 
     return (
         <FusePageSimple
             classes={{
                 root: "bg-red",
-                header: "h-96 min-h-96 sm:h-160 sm:min-h-160",
-                sidebarHeader: "h-96 min-h-96 sm:h-160 sm:min-h-160",
-                rightSidebar: "w-320"
+                header: "h-128 min-h-128",
+                sidebarHeader: "h-128 min-h-128",
+                rightSidebar: "w-320",
+                contentWrapper: "jobBody"
             }}
             header={
-
-
                 <div className="flex flex-col flex-1 p-8 sm:p-12 relative">
                     {<div>
                         <MyJobFilter
@@ -123,7 +96,7 @@ function JobDefinitionApp(props) {
                     <div className="flex items-center justify-between">
                         <div className="flex flex-col" style={{ flexGrow: "1" }}>
                             <div className="flex items-center mb-16">
-                                <Icon className="text-18" color="action">home</Icon>
+                                <Icon className="text-18 cursor-pointer" color="action" onClick={navigateHome}>home</Icon>
                                 <Icon className="text-16" color="action">chevron_right</Icon>
                                 <Typography style={{ width: '100px' }} color="textSecondary">Job Definition</Typography>
                             </div>
@@ -165,12 +138,10 @@ function JobDefinitionApp(props) {
                             </Tooltip>
                         </FuseAnimate> */}
 
-
-
-{preview && (
+{(
                             <FuseAnimate animation="transition.expandIn" delay={200}>
                                 <span>
-                                {pathEnd == "/" && <div className={clsx("flex", props.className)}>
+                                {path.endsWith('job-definition/') && <div className={clsx("flex", props.className)}>
                                         <Tooltip title="Click to search" placement="bottom">
                                             <div onClick={showSearch}>
                                                 <IconButton className="w-64 h-64"><Icon>search</Icon></IconButton>    </div>
@@ -233,12 +204,7 @@ function JobDefinitionApp(props) {
             leftSidebarContent={
                 <MainSidebarContent />
             }
-            rightSidebarHeader={pathEnd == "/" &&
-                <DetailSidebarHeader />
-            }
-            rightSidebarContent={pathEnd == "/" &&
-                <DetailSidebarContent />
-            }
+            
             ref={pageLayout}
             innerScroll
         />

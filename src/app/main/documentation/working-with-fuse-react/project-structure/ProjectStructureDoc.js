@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react';
 import {Icon, Typography} from '@material-ui/core';
 import {FusePageSimple} from '@fuse';

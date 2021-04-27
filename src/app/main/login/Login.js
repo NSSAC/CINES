@@ -1,8 +1,6 @@
+/* eslint-disable */
 import React, {useState} from 'react'
-import {Card, CardContent, Typography, Tabs, Tab} from '@material-ui/core';
 import {darken} from '@material-ui/core/styles/colorManipulator';
-import {FuseAnimate} from '@fuse';
-import {Link} from 'react-router-dom';
 import clsx from 'clsx';
 import {makeStyles} from '@material-ui/styles';
 import SciDuctLoginTab from './tabs/SciDuctLoginTab';
@@ -18,11 +16,6 @@ function Login()
 {
     const classes = useStyles();
     const [selectedTab, setSelectedTab] = useState(0);
-
-    function handleTabChange(event, value)
-    {
-        setSelectedTab(value);
-    }
 
     return (
         <div className={clsx(classes.root, "flex flex-col flex-1 flex-shrink-0 p-24 md:flex-row md:p-0")}>

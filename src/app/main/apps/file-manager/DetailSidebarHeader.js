@@ -46,7 +46,7 @@ function DetailSidebarHeader(props)
         localStorage.setItem("delete_id",item.id)
         confirmAlert({
           title: 'Confirm',
-          message: 'Are you sure you want to delete ' + `'${item.name}'` + '?',
+          message: `Are you sure you want to delete ${item.name}?`,
           buttons: [
             { 
               label: 'No',
@@ -69,7 +69,7 @@ function DetailSidebarHeader(props)
                    break;
                 }
             }
-            for(var readRights in selectedItem.writeACL){
+            for(readRights in selectedItem.writeACL){
                 if(team === readRights){
                        canRead = true
                        break;
@@ -84,12 +84,12 @@ function DetailSidebarHeader(props)
     
     return (
         <div className="flex flex-col justify-between h-full p-4 sm:p-12">
-            <div className="toolbar flex align-center justify-end">
+            <div className="toolbar flex align-center justify-end h-48">
                {canDelete && <FuseAnimate animation="transition.expandIn" delay={200}>
                   <Tooltip title="Click to Delete" placement="bottom">
                     <IconButton onClick={()=>OnDelete(selectedItem)}>
                         <Icon >delete</Icon>
-                        {(delete_id === selectedItem.id ) && deleteFile?<DeleteFile setDeleteFile={(p)=>setDeleteFile(p)} name={selectedItem.name} size={selectedItem.size} fileId={selectedItem.id} type={selectedItem.type}></DeleteFile>:null}
+                        {(delete_id === selectedItem.id ) && deleteFile?<DeleteFile pageLayout={props.pageLayout}  setDeleteFile={(p)=>setDeleteFile(p)} name={selectedItem.name} size={selectedItem.size} fileId={selectedItem.id} type={selectedItem.type}></DeleteFile>:null}
                     </IconButton>
                   </Tooltip>
                 </FuseAnimate>}
@@ -103,7 +103,7 @@ function DetailSidebarHeader(props)
                 </FuseAnimate>}
             </div>
 
-            <div className="p-12">
+            <div>
                 <FuseAnimate delay={200}>
                     <Typography variant="subtitle1" className="mb-8">
                         <span style={tableStyle}>{selectedItem.name}</span></Typography>
@@ -111,7 +111,7 @@ function DetailSidebarHeader(props)
                 <FuseAnimate delay={300}>
                     <Typography variant="caption" className="">
                         <span>Updated</span>
-                        <span>: {moment(selectedItem.update_date).fromNow()}</span>
+                        <span>: {moment.utc(selectedItem.update_date).local().fromNow()}</span>
                     </Typography>
                 </FuseAnimate>
             </div>

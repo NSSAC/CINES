@@ -1,33 +1,4 @@
-/*!
- * jsoneditor.js
- *
- * @brief
- * JSONEditor is a web-based tool to view, edit, format, and validate JSON.
- * It has various modes such as a tree editor, a code editor, and a plain text
- * editor.
- *
- * Supported browsers: Chrome, Firefox, Safari, Opera, Internet Explorer 8+
- *
- * @license
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy
- * of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- *
- * Copyright (c) 2011-2020 Jos de Jong, http://jsoneditoronline.org
- *
- * @author  Jos de Jong, <wjosdejong@gmail.com>
- * @version 9.0.4
- * @date    2020-08-15
- */
-
+/* eslint-disable */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -88,11 +59,6 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 		Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 	};
 /******/
-/******/ 	// create a fake namespace object
-/******/ 	// mode & 1: value is a module id, require it
-/******/ 	// mode & 2: merge all properties of value into the ns
-/******/ 	// mode & 4: return value when already ns object
-/******/ 	// mode & 8|1: behave like require
 /******/ 	__webpack_require__.t = function(value, mode) {
 /******/ 		if(mode & 1) value = __webpack_require__(value);
 /******/ 		if(mode & 8) return value;
@@ -186,7 +152,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "contains", function() { return contains; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isValidationErrorChanged", function() { return isValidationErrorChanged; });
 /* harmony import */ var _polyfills__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(18);
-/* harmony import */ var _polyfills__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_polyfills__WEBPACK_IMPORTED_MODULE_0__);
+// /* harmony import */ var _polyfills__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_polyfills__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var javascript_natural_sort__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(10);
 /* harmony import */ var javascript_natural_sort__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(javascript_natural_sort__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _assets_jsonlint_jsonlint__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(17);

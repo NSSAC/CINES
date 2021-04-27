@@ -1,36 +1,25 @@
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Formsy from 'formsy-react';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
 import { FusePageSimple } from '@fuse';
 import axios from 'axios';
 import { Input } from './SelectFile.js'
-import { Icon, LinearProgress, Tooltip } from '@material-ui/core';
+import { LinearProgress } from '@material-ui/core';
 import Toaster from "../Toaster";
 
 const Snap_GetBfsFullDiam = () => {
     const [isFormValid, setIsFormValid] = useState(false);
     const [formElementsArray, setFormElementsArray] = useState({});
-    const [jobSubmissionArray, setJobSubmissionArray] = useState({})
-    const [flag, setFlag] = useState(false)
+    // const [jobSubmissionArray, setJobSubmissionArray] = useState({})
+    // const [flag, setFlag] = useState(false)
     const [response, setResponse] = useState('')
     const [success, setSuccess] = useState(false);
     const [isToasterFlag, setIsToasterFlag] = useState(false);
-    const [showDialog, setshowDialog] = useState(false);
     const [spinnerFlag, setSpinnerFlag] = useState(true);
     const history = useHistory();
-    var path = window.location.pathname;
-    var pathEnd = path.replace("/apps/job-definition/", "");
-
-    const selectButtonStyle = {
-        backgroundColor: '#61dafb',
-        fontSize: 'inherit',
-        margin: '5px',
-        padding: '6px',
-        color: 'black'
-    };
 
     const parentGrid = {
         borderTop: '2px solid black',
@@ -58,7 +47,7 @@ const Snap_GetBfsFullDiam = () => {
     useEffect(() => {
         setIsToasterFlag(false);
         var userToken = localStorage.getItem('id_token');
-       
+
         axios({
             method: 'get',
             url: `${process.env.REACT_APP_SCIDUCT_JOB_SERVICE}/job_definition/epihiper_db_service`,
@@ -89,13 +78,14 @@ const Snap_GetBfsFullDiam = () => {
             }
 
         );
+                // eslint-disable-next-line
     }, [axios]);
 
     const creatForm = (createFromData, inputFileData, outputFiles, requiredFeildArray, responseData) => {
         setResponse(responseData)
         var count = 0;
         if (1) {
-            setFlag(false)
+            // setFlag(false)
             if (inputFileData !== undefined) {
                 for (let [index, obj] of inputFileData.entries()) {
                     obj['id'] = index;
@@ -129,15 +119,9 @@ const Snap_GetBfsFullDiam = () => {
         }
 
         else {
-            setFlag(true)
+            // setFlag(true)
         }
     };
-
-    const description = (desc) => <Tooltip title={<h4>{desc}</h4>} placement="right">
-        <span style={{ marginTop: '38px' }}>
-            <Icon fontSize="small">info</Icon>
-        </span>
-    </Tooltip>
 
     const inputChangedHandler = (event, inputIdentifier) => {
         if (event.target.value !== "") {
@@ -149,11 +133,11 @@ const Snap_GetBfsFullDiam = () => {
             };
             if (updatedFormElement.type === 'integer') {
                 updatedFormElement.value = parseInt(event.target.value);
-            }
-            else if (updatedFormElement.type === 'boolean') {
+            } else if (updatedFormElement.type === "number") {
+                updatedFormElement.value = parseFloat(event.target.value);
+            } else if (updatedFormElement.type === 'boolean') {
                 updatedFormElement.value = Boolean(event.target.value);
-            }
-            else {
+            } else {
                 updatedFormElement.value = event.target.value;
             }
             updatedJobSubmissionForm[inputIdentifier] = updatedFormElement;
@@ -176,10 +160,10 @@ const Snap_GetBfsFullDiam = () => {
         }
         for (let key in formElementsArray) {
 
-            if (formElementsArray[key].id >= 200 && formElementsArray[key].formLabel == "output_container") {
+            if (formElementsArray[key].id >= 200 && formElementsArray[key].formLabel === "output_container") {
                 requestJson['output_container'] = formElementsArray[key].value
             }
-            else if (formElementsArray[key].id >= 200 && formElementsArray[key].formLabel == "output_name") {
+            else if (formElementsArray[key].id >= 200 && formElementsArray[key].formLabel === "output_name") {
                 requestJson['output_name'] = formElementsArray[key].value
             }
             else {
@@ -191,13 +175,10 @@ const Snap_GetBfsFullDiam = () => {
         }
 
         requestJson.input = input
-        setJobSubmissionArray({ ...requestJson })
+        // setJobSubmissionArray({ ...requestJson })
         onFormSubmit(requestJson)
-       }
+    }
     function onFormSubmit(requestJson) {
-        //createSubmissionData() 
-        var path = window.location.pathname.replace("/apps/job-definition/", "")
-        var jobDefinition = path
         const userToken = localStorage.getItem('id_token')
         axios({
             method: 'post',
@@ -212,7 +193,7 @@ const Snap_GetBfsFullDiam = () => {
         }).then(res => {
             setIsToasterFlag(true)
             setSuccess(true)
-            var timeOutHandle = window.setTimeout(
+            window.setTimeout(
                 delayNavigation
                 , 3000);
 
@@ -220,12 +201,14 @@ const Snap_GetBfsFullDiam = () => {
             (error) => {
                 setSuccess(false)
                 setIsToasterFlag(true)
-
+                window.setTimeout(handlingError, 4000);
             }
-
-
         )
 
+    }
+
+    function handlingError() {
+        setIsToasterFlag(false);
     }
 
     function delayNavigation() {
@@ -266,15 +249,13 @@ const Snap_GetBfsFullDiam = () => {
                                     >
                                         {console.log(formElementsArray)}
                                         <Grid style={parentGrid} container spacing={3}>
-                                            {Object.entries(formElementsArray).filter(data => { if (data[1].type == undefined) return data }).map((formElement) => (
+                                            {Object.entries(formElementsArray).filter(data => { if (data[1].type === undefined) return data; else return null }).map((formElement) => (
                                                 <Grid style={childGrid} item container xs={12} sm={6}>
                                                     <Input
                                                         key={formElement.id}
                                                         formData={formElement}
-                                                        key={formElement.id}
                                                         elementType={formElement.type}
                                                         value={formElement.value}
-                                                        buttonClicked={showDialog}
                                                         changed={(event) => inputChangedHandler(event, formElement[0])}
                                                     />
                                                 </Grid>))}

@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 // import JSONEditor from 'app/main/apps/file-manager/jsoneditor/dist/jsoneditor-minimalist.js';
@@ -251,10 +252,10 @@ function (_Component) {
     value: function componentDidMount() {
       var _this$props = this.props,
           allowedModes = _this$props.allowedModes,
-          innerRef = _this$props.innerRef,
-          htmlElementProps = _this$props.htmlElementProps,
-          tag = _this$props.tag,
-          onChange = _this$props.onChange,
+          // innerRef = _this$props.innerRef,
+          // htmlElementProps = _this$props.htmlElementProps,
+          // tag = _this$props.tag,
+          // onChange = _this$props.onChange,
           rest = _objectWithoutProperties(_this$props, ["allowedModes", "innerRef", "htmlElementProps", "tag", "onChange"]);
 
       this.createEditor(_objectSpread2({}, rest, {
@@ -270,10 +271,10 @@ function (_Component) {
           name = _ref.name,
           theme = _ref.theme,
           schemaRefs = _ref.schemaRefs,
-          innerRef = _ref.innerRef,
-          htmlElementProps = _ref.htmlElementProps,
-          tag = _ref.tag,
-          onChange = _ref.onChange,
+          // innerRef = _ref.innerRef,
+          // htmlElementProps = _ref.htmlElementProps,
+          // tag = _ref.tag,
+          // onChange = _ref.onChange,
           rest = _objectWithoutProperties(_ref, ["allowedModes", "schema", "name", "theme", "schemaRefs", "innerRef", "htmlElementProps", "tag", "onChange"]);
 
       if (this.jsonEditor) {

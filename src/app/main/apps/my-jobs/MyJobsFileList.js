@@ -1,58 +1,56 @@
+/* eslint-disable */
 import React, { useState, useEffect } from 'react';
-import { Typography, LinearProgress, Hidden, Button, Icon, TableFooter, Tooltip, IconButton, TablePagination, Table, TableBody, TableCell, TableHead, TableRow, Paper, TableContainer } from '@material-ui/core';
-import { makeStyles } from '@material-ui/styles';
+import { Typography, LinearProgress, Hidden, Button, Icon, TableFooter, Tooltip, IconButton, Table, TableBody, TableCell, TableHead, TableRow, Paper, TableContainer } from '@material-ui/core';
 import { FuseAnimate } from '@fuse';
 import { useDispatch, useSelector } from 'react-redux';
-import clsx from 'clsx';
 import * as Actions from './store/actions';
 import './FileList.css'
-const useStyles = makeStyles({
-    typeIcon: {
-        '&.folder:before': {
-            content: "'folder'",
-            color: '#FFB300'
-        },
-        '&.document:before': {
-            content: "'insert_drive_file'",
-            color: '#1565C0'
-        },
-        '&.spreadsheet:before': {
-            content: "'insert_chart'",
-            color: '#4CAF50'
-        }
-    }
-});
-const useStyles2 = makeStyles({
-    table: {
-        minWidth: 500,
-    },
-});
+import 'fix-date'
 
-function FileList(props) {
+function MyJobsFileList(props) {
     const dispatch = useDispatch();
     const files1 = useSelector(({ myJobsApp }) => myJobsApp.myjobs);
     const selectedItem = useSelector(({ myJobsApp }) => myJobsApp.selectedjobid);
-    var files = Object.values(files1);
-    var totalRecords = "";
-    var contentRange = "";
-    var lastResult = ""
     const [selectedId, setSelectedId] = useState();
-    if (files.length !== 0) {
-        contentRange = files[2]['content-range']
-        totalRecords = files[2]['content-range'].split('/')[1]
-        //setSelectedId(files[0].id)
-        lastResult = files[2]['content-range'].split('/')[0].split('-')[1]
-        files = files[1]
-        if (Object.keys(selectedItem).length === 0 && files.length > 0) {
-            dispatch(Actions.setSelectedItem(files[0].id));
+    const [dataSpinner, setDataSpinner] = useState(true);
+    var onloadSpinner = false;
+    var files = Object.values(files1);
+    var totalRecords;
 
-        }
+
+    if(dataSpinner === true){
+        setTimeout(() => {
+            setDataSpinner(false)
+        }, 3000);
     }
-    const classes = useStyles();
 
-    const tableClasses = useStyles2();
+    else if (files.length !== 0) {
+        if (files[2]['content-range'] !== undefined) {
+            totalRecords = Number(files[2]['content-range'].split('/')[1])
+        }
+        files = files[1]
+        onloadSpinner = true;
+        if (selectedId === undefined &&   files.length >0) {
+            dispatch(Actions.setSelectedItem(files[0].id));
+        }
+
+        if (files.length > 0) {
+            var i;
+            for (i = 0; i < files.length; i++) {
+                var t = new Date(files[i].creation_date)
+                var date = ('0' + t.getDate()).slice(-2);
+                var month = ('0' + (t.getMonth() + 1)).slice(-2);
+                var year = t.getFullYear();
+                var hours = ('0' + t.getHours()).slice(-2);
+                var minutes = ('0' + t.getMinutes()).slice(-2);
+                var seconds = ('0' + t.getSeconds()).slice(-2);
+                var tempDate = `${year}-${month}-${date} ${hours}:${minutes}:${seconds}`;
+                files[i].creation_date = tempDate
+            }
+        }
+
+    }
     const [page, setPage] = React.useState(0);
-    const [filterFlag, setFilterFlag] = useState(true);
     const [sortById, setsortById] = useState(false);
     const [sortByjobdef, setsortByjobdef] = useState(false);
     const [sortIdFlag, setSortIdFlag] = useState(false);
@@ -61,28 +59,44 @@ function FileList(props) {
     const [sortByCreationDdateFlag, setSortByCreationDdateFlag] = useState(true);
     const [sortByCreationDdate, setsortByCreationDdate] = useState(false)
     const [sortBystate, setsortBystate] = useState(false);
-    const [sortByCompletedDdate, setsortByCompletedDdate] = useState(false);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
     const [spinnerFlag, setSpinnerFlag] = useState(true);
     const [selectedFlag, setSelectedFlag] = useState(true)
     const [showRange, setShowRange] = useState(false)
     var type;
     var rowLength;
-    const emptyRows = rowsPerPage - Math.min(rowsPerPage, files.length - page * rowsPerPage);
+
     useEffect(() => {
         setSpinnerFlag(false)
-        if (files.length !== 0) {
-
-        }
-
         if (JSON.parse(sessionStorage.getItem("resetPage"))) {
             let currentPage = 0
             setPage(currentPage)
         }
         if (files.length > 0 && selectedFlag) {
-            var selectedId = files[0].id
-            setSelectedId(selectedId)
+            var selectedId1 = files[0].id
+            setSelectedId(selectedId1)
         }
+
+        if (files.length > 0) {
+            var i, changeState = false;
+            for (i = 0; i < files.length; i++) {
+                if (files[i].state !== 'Completed' && files[i].state !== 'Failed'){
+                    changeState = true;
+                    localStorage.setItem('queuedId', files[i].id)
+                }
+                break;
+            }
+        }
+
+        var queueId = localStorage.getItem('queuedId')
+        if(!changeState && files.length !== 0 && selectedId === queueId){
+            dispatch(Actions.setSelectedItem(files[0].id));
+            localStorage.setItem('queuedId', null)
+        }
+
+        const timer = setInterval(() => changeState && props.setChangeState(props.changeState + 1), 8000);
+        return () => clearInterval(timer)
+
     })
 
     const handleChangePage = (event, newPage) => {
@@ -93,12 +107,7 @@ function FileList(props) {
         setPage(currentPage);
         fetchNextSetData()
     };
-    const pageCount = (Math.round(files.length / 10) * 10) / 10;
-    const handleChangeRowsPerPage = (event) => {
 
-        setRowsPerPage(parseInt(event.target.value, 10));
-        setPage(0);
-    };
     const toggleSorting = (sortType, toggleArrow) => {
         let sortOrder = ""
         if (toggleArrow === 'sortByjobdef') {
@@ -190,7 +199,7 @@ function FileList(props) {
             </div>
         );
 
-    if (spinnerFlag === false) {
+    if (spinnerFlag === false && dataSpinner === false && files.length > 0) {
         return (
             <div>
 
@@ -201,7 +210,7 @@ function FileList(props) {
                             <TableHead>
                                 <TableRow>
 
-                                    <TableCell> {(sortById) ?
+                                    <TableCell>Job Id {(sortById) ?
 
                                         <Tooltip title="Sort by job id" placement="bottom">
                                             <IconButton aria-label="arrow_upward" onClick={() => toggleSorting('id', 'sortById')}>
@@ -214,8 +223,8 @@ function FileList(props) {
                                             <IconButton aria-label="arrow_downward" onClick={() => toggleSorting('id', 'sortById')}>
                                                 <Icon className={sortIdFlag ? "" : "sort-arrow"}>arrow_downward</Icon></IconButton>
                                         </Tooltip>
-                                    }Job Id</TableCell>
-                                    <TableCell >{(sortByjobdef) ?
+                                    }</TableCell>
+                                    <TableCell >Job Type{(sortByjobdef) ?
                                         <Tooltip title="Sort by job type" placement="bottom">
                                             <IconButton aria-label="arrow_upward" onClick={() => toggleSorting('job_definition', 'sortByjobdef')}> <Icon>arrow_upward</Icon></IconButton>
                                         </Tooltip>
@@ -223,8 +232,8 @@ function FileList(props) {
                                         <Tooltip title="Sort by job type" placement="bottom">
                                             <IconButton aria-label="arrow_downward" onClick={() => toggleSorting('job_definition', 'sortByjobdef')}> <Icon className={sortByjobdefFlag ? "" : "sort-arrow"}>arrow_downward</Icon></IconButton>
                                         </Tooltip>
-                                    }Job Type</TableCell>
-                                    <TableCell  >{(sortBystate) ?
+                                    }</TableCell>
+                                    <TableCell  >Status {(sortBystate) ?
                                         <Tooltip title="Sort by status" placement="bottom">
                                             <IconButton aria-label="arrow_upward" onClick={() => toggleSorting('state', 'sortBystate')}> <Icon>arrow_upward</Icon></IconButton>
                                         </Tooltip>
@@ -232,8 +241,8 @@ function FileList(props) {
                                         <Tooltip title="Sort by status" placement="bottom">
                                             <IconButton aria-label="arrow_downward" onClick={() => toggleSorting('state', 'sortBystate')}> <Icon className={sortBystateFlag ? "" : "sort-arrow"}>arrow_downward</Icon></IconButton>
                                         </Tooltip>
-                                    } Status</TableCell>
-                                    <TableCell > {(sortByCreationDdate) ?
+                                    }</TableCell>
+                                    <TableCell > Creation Date{(sortByCreationDdate) ?
                                         <Tooltip title="Sort by creation date" placement="bottom">
                                             <IconButton aria-label="arrow_upward" onClick={() => toggleSorting('creation_date', 'sortByCreationDdate')}> <Icon>arrow_upward</Icon></IconButton>
                                         </Tooltip>
@@ -241,17 +250,8 @@ function FileList(props) {
                                         <Tooltip title="Sort by creation date" placement="bottom">
                                             <IconButton aria-label="arrow_downward" onClick={() => toggleSorting('creation_date', 'sortByCreationDdate')}> <Icon className={sortByCreationDdateFlag ? "" : "sort-arrow"}>arrow_downward</Icon></IconButton>
                                         </Tooltip>
-                                    }Creation Date</TableCell>
-                                    {/* <TableCell > {(sortByCreationDdate) ?
-                                        <Tooltip title="Sort by creation date" placement="bottom">
-                                            <IconButton aria-label="arrow_upward" onClick={() => toggleSorting('creation_date', 'sortByCreationDdate')}> <Icon>arrow_upward</Icon></IconButton>
-                                        </Tooltip>
-                                        :
-                                        <Tooltip title="Sort by creation date" placement="bottom">
-                                            <IconButton aria-label="arrow_downward" onClick={() => toggleSorting('creation_date', 'sortByCreationDdate')}></IconButton>
-                                        </Tooltip>
-                                    }Updated date</TableCell> */}
-                                    {/* <TableCell className="hidden sm:table-cell">{(sortByCompletedDdate) ? <IconButton aria-label="arrow_upward" onClick={() => toggleSorting('creation_date', 'sortByCreationDdate')}> <Icon>arrow_upward</Icon></IconButton> : <IconButton aria-label="arrow_downward" onClick={() => toggleSorting('creation_date', 'sortByCreationDdate')}> <Icon>arrow_downward</Icon></IconButton>} Completed Date</TableCell> */}
+                                    }</TableCell>
+
                                 </TableRow>
                             </TableHead>
                             {files.length > 0 ?
@@ -316,32 +316,41 @@ function FileList(props) {
                             variant="contained" onClick={fetchPreviousSetData}>Previous</Button>
                         <span className={'count-info'}>Items  {page * rowsPerPage + 1}-{page * rowsPerPage + rowLength} /{totalRecords}</span>
                         <Button
-                            disabled={page * rowsPerPage + rowLength == totalRecords}
+                            disabled={page * rowsPerPage + rowLength === totalRecords}
                             color="primary" className={'next-button'} variant="contained"
                             onClick={handleChangePage}>Next</Button>
                         <span className={'count-info'}>Page - {page + 1}</span>
                     </div> : null
                 }
 
-                {/* { <div className="">
-            <IconButton disabled={page * rowsPerPage + 1 === 1} className={'next-button'} color="primary" variant="contained" onClick={fetchPreviousSetData}> <Icon >chevron_left</Icon></IconButton><span className={'count-info'}>{contentRange}</span>  <IconButton disabled={page * rowsPerPage + rowsPerPage === totalRecords} color="primary" className={'next-button'} variant="contained" onClick={handleChangePage}> <Icon >chevron_right</Icon></IconButton> 
-                <span className={'count-info'}>Page - {page + 1}</span>
-                    </div>} */}
-
-                {/* <Button disabled={page * rowsPerPage + 1 === 1} className={'next-button'} 
-                color="primary" variant="contained"
-                 onClick={fetchPreviousSetData}>Previous</Button>
-                <span className={'count-info'}> 
-
-              {contentRange}
-                
-              
-                 </span>
-                  <Button disabled={lastResult === totalRecords} color="primary" className={'next-button'} variant="contained" onClick={handleChangePage}>Next</Button>
-                <span className={'count-info'}>Page - {page + 1}</span> */}
             </div>
         );
     }
+
+    else if (files.length === 0 && onloadSpinner) {
+        return (
+            <div className="flex flex-1 flex-col items-center justify-center">
+                <Typography className="text-20 mt-16" color="textPrimary">No records exists.</Typography>
+            </div>
+        )
+    }
+    else if (Object.values(files1).length === 0)
+        return (
+            <div className="flex flex-1 flex-col items-center justify-center mt-40">
+                <Typography className="text-20 mt-16" color="textPrimary">Loading</Typography>
+                <LinearProgress className="w-xs" color="secondary" />
+            </div>
+        )
+
+        else
+         return (
+            <div className="flex flex-1 flex-col items-center justify-center mt-40">
+                <Typography className="text-20 mt-16" color="textPrimary">Loading</Typography>
+                <LinearProgress className="w-xs" color="secondary" />
+            </div>
+        )
 }
 
-export default FileList;
+
+
+export default MyJobsFileList;

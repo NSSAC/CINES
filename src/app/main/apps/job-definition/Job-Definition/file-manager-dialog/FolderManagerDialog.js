@@ -1,7 +1,7 @@
 import { FuseAnimate } from "@fuse";
-import { Button, ClickAwayListener, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Fab, Icon, IconButton, Input, Tooltip, Typography } from "@material-ui/core"
+import { Button, ClickAwayListener, Dialog, DialogActions, DialogContent, DialogTitle, Fab, Icon, IconButton, Input, Tooltip,} from "@material-ui/core"
 import withReducer from "app/store/withReducer";
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import Breadcrumb from "./Breadcrumb";
 import Filelist from "./FileList";
@@ -9,56 +9,23 @@ import * as Actions from './store/actions';
 import reducer from './store/reducers';
 import clsx from 'clsx';
 import './FileManagerDialog.css'
-import sciductService from "app/services/sciductService";
-import { makeStyles } from "@material-ui/styles";
+import { CreateFolder } from "app/main/apps/file-manager/FileUpload/CreateFolderDialog";
 
 function FolderPopup({ showModal, handleFMClose, folderPath, setFolderPath, fileTypes })  {
 
-    const useStyles = makeStyles({
-        table: {
-          minWidth: 450,
-        },
-        customeButton: {
-          alignSelf: 'baseline',
-          border: '2px solid ',
-          color: 'black',
-          backgroundColor: 'white',
-          width: '100px',
-          height: '31px',
-    
-        },
-        input: {
-          padding: 10,
-          display: "none",
-        },
-        typeIcon: {
-          '&.clear:before': {
-            content: "'clear'",
-            color: 'white'
-          },
-          '&:before': {
-            content: "'clear'",
-            color: '#1565C0'
-          }
-        }
-    })
-
     const dispatch = useDispatch()
     const files = useSelector(({fMApp}) => fMApp.home);
-    const selectedItemId = useSelector(({fMApp}) => fMApp.selectedItemId);
     const selectedItem = useSelector(({fMApp}) => files[fMApp.selectedItemId]);
     const [targetPath, setTargetPath] = useState('/')
     const [searchbool, setSearchbool] = useState(false);
     const [search, setSearch] = useState("");
-    const [checkFlag, setcheckFlag] = useState(false);
-    const [showDialog, setshowDialog] = useState(false);
-    const [uploadFile, setUploadFile] = useState("");
-    const classes = useStyles();
-    var token = localStorage.getItem('id_token')
+    const [showCreateDialog, setShowCreateDialog] = useState(false);
+    const breadcrumbArr = targetPath.split("/");
+    breadcrumbArr[0]="home"
 
     const onCancel = () => {
         setSearch("")
-        if(folderPath == '')
+        if(folderPath === '')
           setTargetPath("/")
         else 
           setTargetPath(localStorage.getItem('selectedFolder'))
@@ -72,6 +39,15 @@ function FolderPopup({ showModal, handleFMClose, folderPath, setFolderPath, file
         setFolderPath("/home" + targetPath + selectedItem.name)
         handleFMClose()
     }
+
+    
+  function showCreateFolderDialog() {
+    setShowCreateDialog(true);
+  }
+
+  function closeCreateFolderDialog() {
+    setShowCreateDialog(false);
+  }
 
     const dialogcontentStyle={
       overflowY:'hidden',
@@ -107,6 +83,7 @@ function FolderPopup({ showModal, handleFMClose, folderPath, setFolderPath, file
    
     useEffect(() => {
         dispatch(Actions.getHome(targetPath))
+                // eslint-disable-next-line
     },[targetPath]);
 
 
@@ -157,6 +134,31 @@ return (
                                     </div>
                                 </span>
                             </FuseAnimate>
+                            {targetPath !== '/' && (
+                <FuseAnimate
+                  className="hidden md:flex flex-col"
+                  animation="transition.expandIn"
+                  delay={600}
+                >
+                  <Tooltip title="Create folder" aria-label="add">
+                    <Fab
+                      className="flex flex-col"
+                      color="secondary"
+                      aria-label="add"
+                      size="small"
+                      style ={{marginLeft:"3px"}}
+                    >
+                      <Icon
+                        className="flex flex-col"
+                        title="Create Folder"
+                        onClick={showCreateFolderDialog}
+                      >
+                        folder
+                      </Icon>
+                    </Fab>
+                  </Tooltip>
+                </FuseAnimate>
+              )}
                 </div>
             </div>
             <div><h5>Please click on a row to select a folder path. Or else, click on folder name to navigate to the folder contents.</h5></div>
@@ -175,6 +177,13 @@ return (
           </Button>
         </DialogActions>
       </Dialog>
+      <CreateFolder
+          showModal={showCreateDialog}
+          dialogTargetPath={"/home"+targetPath}
+          handleClose={closeCreateFolderDialog}
+          breadcrumbArr={breadcrumbArr}
+          isFolderManager={true}
+        />
     </div>
   )
 

@@ -1,6 +1,4 @@
 import {
-    CheckboxFormsy,
-    FuseChipSelectFormsy,
     RadioGroupFormsy,
     SelectFormsy,
     TextFieldFormsy
@@ -11,41 +9,26 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Radio from '@material-ui/core/Radio';
 import Typography from '@material-ui/core/Typography';
 import Formsy from 'formsy-react';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
 import { FusePageSimple } from '@fuse';
 import axios from 'axios';
 import { Input } from './SelectFile.js'
 import Toaster from "../Toaster";
-import FMPopup from '../file-manager-dialog/FileManagerDialog.js';
-import { Icon, LinearProgress, Tooltip } from '@material-ui/core';
+import { Icon, LinearProgress } from '@material-ui/core';
+import ReactTooltip from 'react-tooltip';
 
 const Snap_GetBfsFullDiam = () => {
     const [isFormValid, setIsFormValid] = useState(false);
-    const [showFMDialog, setShowFMDialog] = useState(false);
-    const [fileChosen, setFileChosen] = useState('');
-    const [fileChosenPath, setFileChosenPath] = useState('');
-    const formRef = useRef(null);
     const [formElementsArray, setFormElementsArray] = useState({});
-    const [jobSubmissionArray, setJobSubmissionArray] = useState({})
-    const [flag, setFlag] = useState(false)
+    // const [jobSubmissionArray, setJobSubmissionArray] = useState({})
+    // const [flag, setFlag] = useState(true)
     const [response, setResponse] = useState('')
-    const [success, setSuccess] = useState(false);
+    const [success, setSuccess] = useState();
     const [isToasterFlag, setIsToasterFlag] = useState(false);
-    const [showDialog, setshowDialog] = useState(false);
     const [spinnerFlag, setSpinnerFlag] = useState(true);
     const history = useHistory();
-    var path = window.location.pathname;
-    var pathEnd = path.replace("/apps/job-definition/", "");
-
-    const selectButtonStyle = {
-        backgroundColor: '#61dafb',
-        fontSize: 'inherit',
-        margin: '5px',
-        padding: '6px',
-        color: 'black'
-    };
 
     const parentGrid = {
         borderTop: '2px solid black',
@@ -63,7 +46,6 @@ const Snap_GetBfsFullDiam = () => {
 
 
     const onFormCancel = () => {
-        // localStorage.removeItem('selectedJobDefinition')
     };
 
     function enableButton() {
@@ -77,9 +59,8 @@ const Snap_GetBfsFullDiam = () => {
 
         axios({
             method: 'get',
-            url: `${process.env.REACT_APP_SCIDUCT_JOB_SERVICE}/job_definition/snap_GetBfsFullDiam`,
+            url: `${process.env.REACT_APP_SCIDUCT_JOB_SERVICE}/job_definition/net.science/snap_GetBfsFullDiam`,
             headers: {
-                'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': '* ',
                 Authorization: userToken
             }
@@ -87,16 +68,14 @@ const Snap_GetBfsFullDiam = () => {
             (res) => {
                 setSpinnerFlag(false)
                 if (res.data) {
-                    var createFromData = JSON.parse(res.data.input_schema).properties;
+                    var createFromData = res.data.input_schema.properties;
                     var inputFileData = res.data.input_files;
                     var outputFiles = res.data.output_files;
-                    var requiredFeildArray = JSON.parse(res.data.input_schema).required;
+                    var requiredFeildArray = res.data.input_schema.required;
                     var responseData = res.data;
 
                     creatForm(createFromData, inputFileData, outputFiles, requiredFeildArray, responseData);
-                    return (
-                        setSuccess(true)
-                    )
+
                 }
             },
             (error) => {
@@ -104,13 +83,14 @@ const Snap_GetBfsFullDiam = () => {
             }
 
         );
+        // eslint-disable-next-line
     }, [axios]);
 
     const creatForm = (createFromData, inputFileData, outputFiles, requiredFeildArray, responseData) => {
         setResponse(responseData)
         var count = 0;
         if (createFromData !== undefined) {
-            setFlag(false)
+            // setFlag(true)
             if (inputFileData !== undefined) {
                 for (let [index, obj] of inputFileData.entries()) {
                     obj['id'] = index;
@@ -144,15 +124,14 @@ const Snap_GetBfsFullDiam = () => {
         }
 
         else {
-            setFlag(true)
+            // setFlag(false)
         }
     };
 
-    const description = (desc) => <Tooltip title={<h4>{desc}</h4>} placement="right">
-        <span style={{ marginTop: '38px' }}>
+    const description = (desc) =>
+        <span style={{ marginTop: '38px' }} data-tip={desc}>
             <Icon fontSize="small">info</Icon>
         </span>
-    </Tooltip>
 
     const inputChangedHandler = (event, inputIdentifier) => {
         if (event.target.value !== "") {
@@ -167,8 +146,9 @@ const Snap_GetBfsFullDiam = () => {
             }
             else if (updatedFormElement.type === 'boolean') {
                 updatedFormElement.value = Boolean(event.target.value);
-            }
-            else {
+            } else if (updatedFormElement.type === "number") {
+                updatedFormElement.value = parseFloat(event.target.value);
+            } else {
                 updatedFormElement.value = event.target.value;
             }
             //updatedFormElement.value = event.target.value;
@@ -192,10 +172,10 @@ const Snap_GetBfsFullDiam = () => {
         }
         for (let key in formElementsArray) {
 
-            if (formElementsArray[key].id >= 200 && formElementsArray[key].formLabel == "output_container") {
+            if (formElementsArray[key].id >= 200 && formElementsArray[key].formLabel === "output_container") {
                 requestJson['output_container'] = formElementsArray[key].value
             }
-            else if (formElementsArray[key].id >= 200 && formElementsArray[key].formLabel == "output_name") {
+            else if (formElementsArray[key].id >= 200 && formElementsArray[key].formLabel === "output_name") {
                 requestJson['output_name'] = formElementsArray[key].value
             }
             else {
@@ -204,13 +184,11 @@ const Snap_GetBfsFullDiam = () => {
         }
 
         requestJson.input = input
-        setJobSubmissionArray({ ...requestJson })
+        // setJobSubmissionArray({ ...requestJson })
         onFormSubmit(requestJson)
     }
 
     function onFormSubmit(requestJson) {
-        var path = window.location.pathname.replace("/apps/job-definition/", "")
-        var jobDefinition = path
         const userToken = localStorage.getItem('id_token')
         axios({
             method: 'post',
@@ -225,18 +203,22 @@ const Snap_GetBfsFullDiam = () => {
         }).then(res => {
             setIsToasterFlag(true)
             setSuccess(true)
-            var timeOutHandle = window.setTimeout(
+            window.setTimeout(
                 delayNavigation
-                , 3000);
+                , 4000);
 
         },
             (error) => {
                 setSuccess(false)
                 setIsToasterFlag(true)
-
+                window.setTimeout(handlingError, 4000);
             }
         )
 
+    }
+
+    function handlingError() {
+        setIsToasterFlag(false);
     }
 
     function delayNavigation() {
@@ -296,7 +278,7 @@ const Snap_GetBfsFullDiam = () => {
                                             <Grid style={childGrid} item container xs={12} sm={6}>
                                                 <TextFieldFormsy
                                                     className="my-16 inputStyle"
-                                                    type="number"
+                                                    type="text"
                                                     name={formElementsArray['NTestNodes'].formLabel}
                                                     style={{ width: '18px' }}
                                                     value=""
@@ -316,7 +298,7 @@ const Snap_GetBfsFullDiam = () => {
                                             <Grid style={childGrid} item container xs={12} sm={6}>
                                                 <TextFieldFormsy
                                                     className="my-16 inputStyle"
-                                                    type="number"
+                                                    type="text"
                                                     name={formElementsArray['desCol'].formLabel}
                                                     style={{ width: '18px' }}
                                                     value=""
@@ -336,7 +318,7 @@ const Snap_GetBfsFullDiam = () => {
                                             <Grid style={childGrid} item container xs={12} sm={6}>
                                                 <TextFieldFormsy
                                                     className="my-16 inputStyle"
-                                                    type="number"
+                                                    type="text"
                                                     name={formElementsArray['srcCol'].formLabel}
                                                     style={{ width: '18px' }}
                                                     value=""
@@ -372,15 +354,13 @@ const Snap_GetBfsFullDiam = () => {
                                                 </SelectFormsy>
                                                 {formElementsArray['graphType'].description && (description(formElementsArray['graphType'].description))}
                                             </Grid>
-                                            {Object.entries(formElementsArray).filter(data => { if (data[1].type == undefined) return data }).map((formElement) => (
-                                                <Grid style={childGrid} item container xs={12} sm={6}>
+                                            {Object.entries(formElementsArray).filter(data => { if (data[1].type === undefined) return data; return null }).map((formElement) => (
+                                                <Grid key={formElement.id} style={childGrid} item container xs={12} sm={6}>
                                                     <Input
                                                         key={formElement.id}
                                                         formData={formElement}
-                                                        key={formElement.id}
                                                         elementType={formElement.type}
                                                         value={formElement.value}
-                                                        buttonClicked={showDialog}
                                                         changed={(event) => inputChangedHandler(event, formElement[0])}
                                                     />
                                                 </Grid>))}
@@ -412,6 +392,7 @@ const Snap_GetBfsFullDiam = () => {
                                 ) : null}
                             </div>
                         </div>
+                        <ReactTooltip clickable={true} className='toolTip' place='top' effect='solid' />
                     </div>
                 }
             />

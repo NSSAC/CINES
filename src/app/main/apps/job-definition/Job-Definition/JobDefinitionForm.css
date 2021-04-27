@@ -37,8 +37,14 @@ input[type=submit]:hover {
 .inputStyle {
     width:80%;
 }
+
 .MuiFormGroup-root {
     display: flex;
     flex-wrap: wrap;
     flex-direction: row;
+}
+
+.MuiGrid-spacing-xs-3 {
+    width: 100% !important;
+    margin: auto !important;
 }

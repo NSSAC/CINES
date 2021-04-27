@@ -1,31 +1,17 @@
+/* eslint-disable */
 import React, { useState, useEffect } from "react";
 import {
   Typography,
   LinearProgress,
-  Hidden,
   Button,
-  Icon,
-  TableFooter,
-  Fragment,
-  Tooltip,
-  IconButton,
-  TablePagination,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-  Paper,
-  TableContainer,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 import { FuseAnimate } from "@fuse";
 import { useDispatch, useSelector } from "react-redux";
-import clsx from "clsx";
 import Grid from "@material-ui/core/Grid";
 import * as Actions from "./store/actions";
 import "./JobDefinitionFileList.css";
-import { Link, withRouter } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import JobDefinitionForm from "./JobDefinitionForm";
 
 const useStyles = makeStyles((theme) => ({
@@ -38,12 +24,6 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.text.secondary,
   },
 }));
-const useStyles2 = makeStyles({
-  table: {
-    minWidth: 500,
-  },
-});
-
 function JobDefinitionFileList(props) {
   const [page, setPage] = React.useState(0);
   const [searchPage, setSearchPage] = React.useState(0);
@@ -52,9 +32,6 @@ function JobDefinitionFileList(props) {
   const [spinnerFlag, setSpinnerFlag] = useState(true);
   const [selectedFlag, setSelectedFlag] = useState(true);
   const [searchString, setPreviousString] = useState("");
-  const [rowLength, setrowLength] = useState();
-  
-  var type;
   var lengthOfRow;
   const dispatch = useDispatch();
   const jobDefinitionData = useSelector(
@@ -64,25 +41,19 @@ function JobDefinitionFileList(props) {
     ({ JobDefinitionApp }) => JobDefinitionApp.selectedjobid
   );
   var path = window.location.pathname;
-  var pathEnd = path.charAt(path.length - 1);
   var pathArray = window.location.pathname.split("/");
   var pathArrayEnd = pathArray.slice(-1)[0];
-
+  var onloadSpinner =false
   var jobDefinitionList = Object.values(jobDefinitionData);
   var totalRecords = "";
-  var contentRange = "";
-  var lastResult = "";
   const [selectedId, setSelectedId] = useState();
   if (jobDefinitionList.length !== 0) {
+    onloadSpinner =true;
+    if(jobDefinitionList[2]['content-range'] !== undefined){
+      totalRecords = jobDefinitionList[2]["content-range"].split("/")[1];
+    }
 
-    contentRange = jobDefinitionList[2]["content-range"];
-    totalRecords = jobDefinitionList[2]["content-range"].split("/")[1];
-    //setSelectedId(jobDefinitionList[0].id)
-    lastResult = jobDefinitionList[2]["content-range"]
-      .split("/")[0]
-      .split("-")[1];
     jobDefinitionList = jobDefinitionList[1];
-
     var searchResult = jobDefinitionList.filter((data) => {
       if (
         data.id !== "" &&
@@ -90,21 +61,25 @@ function JobDefinitionFileList(props) {
           data.id.toLowerCase().includes(props.search.toLowerCase()))
       )
         return data;
+
+      if (
+        (data.description !== "" && data.description !== undefined) &&
+        (props.search === "" ||
+          data.description.toLowerCase().includes(props.search.toLowerCase()))
+      )
+        return data;
+
     });
-    if (Object.keys(selectedItem).length === 0) {
+
+    if (Object.keys(selectedItem).length === 0 && searchResult.length > 0 && (path.endsWith('job-definition/') === true)) {
       dispatch(Actions.setSelectedItem(searchResult[0].id));
     }
   }
   const classes = useStyles();
-
-  const tableClasses = useStyles2();
-  const emptyRows =
-    rowsPerPage -
-    Math.min(rowsPerPage, jobDefinitionList.length - page * rowsPerPage);
   useEffect(() => {
-      setSpinnerFlag(false)
+    setSpinnerFlag(false)
     setPreviousString(props.search);
-    if (props.search != searchString) {
+    if (props.search !== searchString) {
       setSearchPage(0);
       setSearchRowperPage(10);
     }
@@ -120,6 +95,16 @@ function JobDefinitionFileList(props) {
       setSelectedId(selectedId);
     }
   });
+
+  useEffect(() => {
+    if (document.getElementsByClassName('jobBody').length > 0) {
+      document.getElementsByClassName('jobBody')[0].scrollTo(0, 0)
+      setTimeout(() => {
+        document.getElementsByClassName('jobBody')[0].scrollTop = document.getElementsByClassName('jobBody')[0].scrollHeight; setSpinnerFlag(false)
+      }, 10);
+    }
+  },[page])
+
   const handleChangePage = (event, newPage) => {
     setSpinnerFlag(true);
     sessionStorage.setItem("resetPage", JSON.stringify(false));
@@ -132,13 +117,9 @@ function JobDefinitionFileList(props) {
     setSearchPage(currentPage);
   };
 
-  const arrLength = (rowLength) => {
-    setrowLength(rowLength);
-  };
 
   const onSelectClick = (row) => {
     localStorage.setItem("selectedJobDefinition", JSON.stringify(row));
-    console.log(row);
     var target = window.location.pathname + row.id;
     props.history.push(target);
   };
@@ -151,7 +132,6 @@ function JobDefinitionFileList(props) {
     let currentPage = page - 1;
     setPage(currentPage);
   };
-  const pageCount = (Math.round(jobDefinitionList.length / 10) * 10) / 10;
   function onRowClick(selectedId) {
     setSelectedFlag(false);
     setSelectedId(selectedId);
@@ -168,7 +148,7 @@ function JobDefinitionFileList(props) {
     }
   }
 
-  if (pathEnd !== "/") {
+  if (path.endsWith('job-definition/') === false) {
     var selectedJobDefinition = JSON.parse(
       localStorage.getItem("selectedJobDefinition")
     );
@@ -179,23 +159,35 @@ function JobDefinitionFileList(props) {
         import(`./static-forms/${pathArrayEnd}`)
       );
     }
-    return formExists ? (
-      <StaticJobDefinitionForm></StaticJobDefinitionForm>
-    ) : (
-      <JobDefinitionForm
-        selectedJob={selectedJobDefinition}
-      ></JobDefinitionForm>
+
+    if (jobDefinitionList.length === 0)
+    return (
+      <div className="flex flex-1 flex-col items-center justify-center mt-40">
+        <Typography className="text-20 mt-16" color="textPrimary">
+          Loading Form
+      </Typography>
+        <LinearProgress className="w-xs" color="secondary" />
+      </div>
     );
+  else {
+      return formExists ? (
+        <StaticJobDefinitionForm></StaticJobDefinitionForm>
+      ) : (
+          <JobDefinitionForm
+            selectedJob={selectedJobDefinition}
+          ></JobDefinitionForm>
+        );
+   }  
   }
   if (spinnerFlag === true)
-  return (
-    <div className="flex flex-1 flex-col items-center justify-center mt-40">
-      <Typography className="text-20 mt-16" color="textPrimary">
-        Loading 
+    return (
+      <div className="flex flex-1 flex-col items-center justify-center mt-40">
+        <Typography className="text-20 mt-16" color="textPrimary">
+          Loading
       </Typography>
-      <LinearProgress className="w-xs" color="secondary" />
-    </div>
-  );
+        <LinearProgress className="w-xs" color="secondary" />
+      </div>
+    );
   if (
     Object.values(jobDefinitionData).length > 0 &&
     Object.values(jobDefinitionData) !== undefined &&
@@ -206,23 +198,19 @@ function JobDefinitionFileList(props) {
         <FuseAnimate animation="transition.slideUpIn" delay={300}>
           {jobDefinitionList.length > 0 ? (
             <React.Fragment>
-              {(rowsPerPage > 0 && props.search == ""
+              {(rowsPerPage > 0 && props.search === ""
                 ? searchResult.slice(
-                    page * rowsPerPage,
-                    page * rowsPerPage + rowsPerPage
-                  )
+                  page * rowsPerPage,
+                  page * rowsPerPage + rowsPerPage
+                )
                 : searchResult.slice(
-                    searchPage * searchRowperPage,
-                    searchPage * searchRowperPage + searchRowperPage
-                  )
+                  searchPage * searchRowperPage,
+                  searchPage * searchRowperPage + searchRowperPage
+                )
               ).map((row, ind, arr) => {
                 lengthOfRow = arr.length;
-                {
-                  if (true) {
-                  }
-                }
                 return (
-                  <React.Fragment>
+                  <React.Fragment key={row.id}>
                     <div className={classes.root}>
                       <Grid
                         className={row.id === selectedId ? "selceted-row" : ""}
@@ -234,9 +222,8 @@ function JobDefinitionFileList(props) {
                         <Grid item xs={3} style={{ paddingLeft: "15px" }}>
                           <Typography>Name</Typography>
                           <Typography
-                            variant="h7"
                             style={{ fontWeight: "700" , wordBreak:"break-word"}}
-                          >
+                          >  
                             {row.id}
                           </Typography>
                         </Grid>
@@ -273,7 +260,7 @@ function JobDefinitionFileList(props) {
                             {row.description}
                           </Typography>
                         </Grid>
-                      
+
                       </Grid>
                     </div>
                   </React.Fragment>
@@ -281,11 +268,11 @@ function JobDefinitionFileList(props) {
               })}
             </React.Fragment>
           ) : (
-            <LinearProgress className="w-xs" color="secondary" />
-          )}
+              <LinearProgress className="w-xs" color="secondary" />
+            )}
         </FuseAnimate>
 
-        {props.search == "" ? (
+        {props.search === "" ? (
           <div>
             <Button
               disabled={page * rowsPerPage + 1 === 1}
@@ -314,39 +301,39 @@ function JobDefinitionFileList(props) {
             <span className={"count-info"}>Page - {page + 1}</span>
           </div>
         ) : (
-          <div>
-            <Button
-              disabled={searchPage * searchRowperPage + 1 === 1}
-              className={"next-button"}
-              color="primary"
-              variant="contained"
-              onClick={searchFetchPreviousSetData}
-            >
-              Previous
+            <div>
+              <Button
+                disabled={searchPage * searchRowperPage + 1 === 1}
+                className={"next-button"}
+                color="primary"
+                variant="contained"
+                onClick={searchFetchPreviousSetData}
+              >
+                Previous
             </Button>
-            <span className={"count-info"}>
-              Items {searchPage * searchRowperPage + 1}-
+              <span className={"count-info"}>
+                Items {searchPage * searchRowperPage + 1}-
               {searchPage * searchRowperPage + lengthOfRow} /
               {searchResult.length}
-            </span>
-            <Button
-              disabled={
-                searchPage * searchRowperPage + lengthOfRow ===
-                searchResult.length
-              }
-              color="primary"
-              className={"next-button"}
-              variant="contained"
-              onClick={searchHandleChangePage}
-            >
-              Next
+              </span>
+              <Button
+                disabled={
+                  searchPage * searchRowperPage + lengthOfRow ===
+                  searchResult.length
+                }
+                color="primary"
+                className={"next-button"}
+                variant="contained"
+                onClick={searchHandleChangePage}
+              >
+                Next
             </Button>
-            <span className={"count-info"}>Page - {searchPage + 1}</span>
-          </div>
-        )}
+              <span className={"count-info"}>Page - {searchPage + 1}</span>
+            </div>
+          )}
       </div>
     );
-  else if (Object.values(jobDefinitionData).length === 0 && spinnerFlag === false) {
+  else if ( jobDefinitionList.length === 0  && onloadSpinner) {
     return (
       <div className="flex flex-1 flex-col items-center justify-center mt-20">
         <Typography className="text-18 mt-16" color="textPrimary">
@@ -354,7 +341,19 @@ function JobDefinitionFileList(props) {
         </Typography>
       </div>
     );
-  } 
+  }
+
+  else if (Object.values(jobDefinitionData).length === 0)
+    return (
+      <div className="flex flex-1 flex-col items-center justify-center mt-40">
+        <Typography className="text-20 mt-16" color="textPrimary">Loading</Typography>
+        <LinearProgress className="w-xs" color="secondary" />
+      </div>
+    )
+
+
+
+
   else if (searchResult.length === 0)
     return (
       <div className="flex flex-1 flex-col items-center justify-center mt-20">

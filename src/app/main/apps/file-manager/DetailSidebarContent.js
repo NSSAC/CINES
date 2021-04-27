@@ -1,18 +1,16 @@
 import React, {useState, useEffect} from 'react';
-import {Hidden, Typography,Tabs,Tab, Icon, IconButton, Modal} from '@material-ui/core';
-import { Edit, InsertDriveFile as FileIcon, ListAlt as MetadataIcon, History as ProvenanceIcon, Share as ShareIcon, Computer  } from "@material-ui/icons";
+import { Typography,Tabs,Tab, Icon, IconButton} from '@material-ui/core';
+import {  InsertDriveFile as FileIcon, ListAlt as MetadataIcon, History as ProvenanceIcon, Share as ShareIcon  } from "@material-ui/icons";
 import {makeStyles} from '@material-ui/styles';
 import {FuseAnimate} from '@fuse';
 import {useSelector, useDispatch} from 'react-redux';
 import clsx from 'clsx';
-import moment from 'moment';
 import filesize from 'filesize';
 import * as Actions from './store/actions';
 import JSONTree from 'react-json-tree'
 import Tooltip from "@material-ui/core/Tooltip";
 import instance from  'app/services/sciductService/sciductService.js'
 import { JsonEditor as Editor } from './jsoneditor-react/es';
-// import 'jsoneditor-react/es/editor.min.css';
 import { isEqual } from 'lodash';
 import { ToastsStore, ToastsContainer, ToastsContainerPosition } from 'react-toasts';
 import NavigationPrompt from 'react-router-navigation-prompt';
@@ -77,23 +75,24 @@ function DetailSidebarContent(props)
         }
     }
     
-    if(editItem && selectedItem && !props.editContent && path == lastPath ){
+    if(editItem && selectedItem && !props.editContent && path === lastPath ){
          if(editItem !== selectedItem.id){
-            (confirmAlert({
-                title: 'Confirm',
-                message: 'Are you sure you want to leave without saving the changes?',
-                buttons: [
-                    { 
-                    label: 'No',
-                    onClick: ()=>OnConfirm()
-                    },
-                    {
-                    label: 'Yes',
-                    onClick: ()=>OnCancelClick()
-                    }
-                ],
-                closeOnClickOutside: false
-            }))     
+                (confirmAlert({
+                    title: 'Confirm',
+                    message: 'Are you sure you want to leave without saving the changes?',
+                    buttons: [
+                        { 
+                        label: 'No',
+                        onClick: ()=>OnConfirm()
+                        },
+                        {
+                        label: 'Yes',
+                        onClick: ()=>OnCancelClick()
+                        }
+                    ],
+                    closeOnClickOutside: false
+                }))   
+                props.pageLayout.current.toggleRightSidebar()
         } 
     }
 
@@ -158,7 +157,7 @@ function DetailSidebarContent(props)
     }
 
     const diffInMeta =(obj1, obj2) => {
-        if(metaBool && currName == selectedItem.name){
+        if(metaBool && currName === selectedItem.name){
             var updatedMeta = JSON.parse(localStorage.getItem("tempMeta"))
             obj2 = updatedMeta
         }
@@ -229,6 +228,7 @@ function DetailSidebarContent(props)
         if(data.length > 0){
         var config = {
             method: 'patch',
+            /* eslint-disable-next-line */
             url: `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file${path}` + `${selectedItem.name}` ,
             headers: { 
               'Content-Type': 'application/json-patch+json', 
@@ -398,8 +398,8 @@ function DetailSidebarContent(props)
                 }))}
           </NavigationPrompt> 
 
-                {UsermetaSuccess && currName == selectedItem.name && props.editContent && 
-                   <div> {ToastsStore.success(`'${selectedItem.name}'` + " Usermeta modified successfully")}
+                {UsermetaSuccess && currName === selectedItem.name && props.editContent && 
+                   <div> {ToastsStore.success(`'${selectedItem.name}' Usermeta modified successfully`)}
                         <ToastsContainer store={ToastsStore} position={ToastsContainerPosition.TOP_RIGHT}/></div>
                 }
 
@@ -411,7 +411,7 @@ function DetailSidebarContent(props)
                 {selectedTab === 2 && (
                     <React.Fragment>
                         <div><Typography variant="h6">PROVENANCE</Typography></div>
-                        <JSONTree data={selectedItem.provenance} hideRoot={true} theme={{
+                        {selectedItem.provenance?<JSONTree data={selectedItem.provenance} hideRoot={true} theme={{
                                                                         tree: {
                                                                           backgroundColor: '#F7F7F7'
                                                                          },
@@ -420,7 +420,7 @@ function DetailSidebarContent(props)
                                                                             fontSize:'14px',
                                                                             fontWeight: 'bold'
                                                                         },
-                                                                     }}/>
+                                                                     }}/>:null}
                     </React.Fragment>
                 )}
 

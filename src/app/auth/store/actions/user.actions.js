@@ -1,8 +1,8 @@
 import history from '@history';
 import {setDefaultSettings, setInitialSettings} from 'app/store/actions/fuse';
 import _ from '@lodash';
-import store from 'app/store';
-import * as Actions from 'app/store/actions';
+// import store from 'app/store';
+// import * as Actions from 'app/store/actions';
 import sciductService from 'app/services/sciductService';
 
 export const SET_USER_DATA = '[USER] SET DATA';

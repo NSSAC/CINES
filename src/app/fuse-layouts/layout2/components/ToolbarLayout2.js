@@ -1,10 +1,10 @@
 import React from 'react';
 import {AppBar, Hidden, Toolbar} from '@material-ui/core';
 import {makeStyles, ThemeProvider} from '@material-ui/styles';
-import {FuseSearch, FuseShortcuts} from '@fuse';
+// import {FuseSearch, FuseShortcuts} from '@fuse';
 import NavbarMobileToggleButton from 'app/fuse-layouts/shared-components/NavbarMobileToggleButton';
-import QuickPanelToggleButton from 'app/fuse-layouts/shared-components/quickPanel/QuickPanelToggleButton';
-import ChatPanelToggleButton from 'app/fuse-layouts/shared-components/chatPanel/ChatPanelToggleButton';
+// import QuickPanelToggleButton from 'app/fuse-layouts/shared-components/quickPanel/QuickPanelToggleButton';
+// import ChatPanelToggleButton from 'app/fuse-layouts/shared-components/chatPanel/ChatPanelToggleButton';
 import UserMenu from 'app/fuse-layouts/shared-components/UserMenu';
 import {useSelector} from 'react-redux';
 
@@ -26,7 +26,8 @@ function ToolbarLayout2(props)
     return (
         <ThemeProvider theme={toolbarTheme}>
             <AppBar id="fuse-toolbar" className="flex relative z-10" color="default" style={{backgroundColor: toolbarTheme.palette.background.default}}>
-                <Toolbar className="container p-0 lg:px-24">
+            <Hidden lgUp>
+                <Toolbar className="  container  p-0 ">
 
                     {config.navbar.display && (
                         <Hidden lgUp>
@@ -42,8 +43,9 @@ function ToolbarLayout2(props)
                     </div>
 
                     <div className="flex">
-
+                   
                         <UserMenu/>
+                        
 
                         {/* <div className={classes.separator}/>
 
@@ -62,6 +64,7 @@ function ToolbarLayout2(props)
                     </div>
 
                 </Toolbar>
+                </Hidden>
             </AppBar>
         </ThemeProvider>
     );

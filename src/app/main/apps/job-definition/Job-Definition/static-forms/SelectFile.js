@@ -1,15 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Fab, Icon, Tooltip, Typography, Grid } from '@material-ui/core';
+import { Button, Icon} from '@material-ui/core';
 import './SelectFile.css';
 import FMPopup from '../file-manager-dialog/FileManagerDialog.js';
 import FolderPopup from '../file-manager-dialog/FolderManagerDialog.js';
 import {
-	SelectFormsy,
 	TextFieldFormsy
 } from '@fuse/components/formsy';
 import { FusePageSimple } from '@fuse';
-import { useDispatch } from 'react-redux';
-import FolderManagerDialog from '../file-manager-dialog/FolderManagerDialog.js';
+import ReactTooltip from 'react-tooltip';
 
 export const Input = (props) => {
 
@@ -22,7 +20,6 @@ export const Input = (props) => {
 	};
 
 
-	const dispatch = useDispatch()
 	const [showFMDialog, setShowFMDialog] = useState(false);
 	const [showFolderDialog, setShowFolderDialog] = useState(false);
 	const [fileChosen, setFileChosen] = useState('');
@@ -60,8 +57,8 @@ export const Input = (props) => {
 					required
 				/>
 			</label>
-			{props.formData[1].outputFlag ? <div className="folderPath">{folderChosenPath == '' ? 'No folder specified' : <b onChange={props.changed} >{folderChosenPath}</b>}</div>
-				: <div className="folderPath">{fileChosen == '' ? 'No file chosen' : <b onChange={props.changed} >{fileChosen}</b>}</div>}
+			{props.formData[1].outputFlag ? <div className="folderPath">{folderChosenPath === '' ? 'No folder specified' : <b onChange={props.changed} >{folderChosenPath}</b>}</div>
+				: <div className="folderPath">{fileChosen === '' ? 'No file chosen' : <b onChange={props.changed} >{fileChosen}</b>}</div>}
 		</div>
 	);
 
@@ -96,7 +93,7 @@ export const Input = (props) => {
 			}}
 			header={
 				<div>
-					{props.formData[1].type==undefined && <FMPopup
+					{props.formData[1].type===undefined && <FMPopup
 						showModal={showFMDialog}
 						setShowModal={(p) => setShowFMDialog(p)}
 						handleFMClose={handleFMClose}
@@ -121,12 +118,11 @@ export const Input = (props) => {
 				<div className="flex content">
 					{inputElement}
 					{props.formData[1].description && (
-						<Tooltip title={<h4>{props.formData[1].description}</h4>} placement="right">
-							<span style={{ marginTop: '38px' }}>
+							<span className='infoIcon' data-tip={props.formData[1].description}>
 								<Icon fontSize="small">info</Icon>
 							</span>
-						</Tooltip>
 					)}{' '}
+					<ReactTooltip clickable={true} className='toolTip' place='top' effect='solid' />
 				</div>
 			}
 		/>
