@@ -291,9 +291,9 @@ function JobDefinitionForm(props) {
           <Toaster success={success} id={response.id}></Toaster>
         ) : null}
         <Typography className="h2">
-          &nbsp;{response !== "" ? response.id : null}
+          &nbsp;{response !== "" ? <b>{response.id}</b> : null}
         </Typography>
-        <Typography className="h4 mb-12">
+        <Typography className="h4">
           &nbsp;{response !== "" ? response.description : null}
         </Typography>
         <div>
@@ -371,9 +371,9 @@ function JobDefinitionForm(props) {
             <Toaster success={success} id={response.id}></Toaster>
           ) : null}
           <Typography className="h2">
-            &nbsp;{response !== "" ? response.id : null}
+            &nbsp;{response !== "" ? <b>{response.id}</b> : null}
           </Typography>
-          <Typography className="h4 mb-12">
+          <Typography className="h4">
             &nbsp;{response !== "" ? response.description : null}
           </Typography>
         </div>
