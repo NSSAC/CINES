@@ -62,7 +62,7 @@ const SEIR2 = (props) => {
                                                     label="Exposed Duration"
                                                     validations={{
                                                         isPositiveInt: function (values, value) {
-                                                            return RegExp(/^(?:[+]?(?:0|[1-9]\d*))$/).test(value)
+                                                            return RegExp(/^(?:[+]?(?:[0-9]\d*))$/).test(value) && !RegExp(/^0+$/).test(value)
                                                         }
                                                     }}
                                                     validationError="This is not a valid value"
@@ -79,10 +79,10 @@ const SEIR2 = (props) => {
                                                     style={{ width: '18px' }}
                                                     value={props.dynamicProps.Infectious_probability_transition.value}
                                                     onBlur={(event) => props.changed(event, "Infectious_probability_transition")}
-                                                    label="Infectious probability transition"
+                                                    label="Infectious Probability Transition"
                                                     validations={{
                                                         isPositiveInt: function (values, value) {
-                                                            return RegExp(/^(0(\.\d+)?|1(\.0+)?)$/).test(value) ||  RegExp(/^((\.\d+)?|1(\.0+)?)$/).test(value)
+                                                            return RegExp(/^(0+\.?|0*\.\d+|0*1(\.0*)?)$/).test(value) 
                                                         }
                                                     }}
                                                     validationError="This is not a valid value"

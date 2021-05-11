@@ -93,7 +93,7 @@ const Snap_GetBfsFullDiam = () => {
                         Output_name: { value: '' },
                         outputPath: ['outputPath', {
                             description: "Select the path from File manager where the output file is to be stored.",
-                            formLabel: "output_container",
+                            formLabel: "Output Container",
                             id: 200,
                             outputFlag: true,
                             types: ["folder", "epihiper_multicell_analysis", "epihiperOutput"],
@@ -126,7 +126,8 @@ const Snap_GetBfsFullDiam = () => {
             "iterations": parseInt(staticProps.Iterations.value), 
             "time_steps": parseInt(staticProps.TimeSteps.value), 
             'initial_states_method': staticProps.InitialConditions,
-            "default_state": staticProps.default_state.value
+            "default_state": staticProps.default_state.value,
+            "random_number_seed": parseInt(staticProps.Seed.value)
         }
         let tempRules = {}
 
@@ -141,7 +142,6 @@ const Snap_GetBfsFullDiam = () => {
                 break;
 
             case 'SEIR Model':
-                submitJSON.random_number_seed = parseInt(staticProps.Seed.value);
                 submitJSON.states = modelJSON['models']['SEIR']['submodels']['fixed exposed fixed infectious']['states'];
                 // submitJSON.default_state = modelJSON['models']['SEIR']['submodels']['fixed exposed fixed infectious']['default_state'];
                 submitJSON.rules = []
@@ -205,7 +205,6 @@ const Snap_GetBfsFullDiam = () => {
                 break;
 
             case 'SIR Model':
-                submitJSON.random_number_seed = parseInt(staticProps.Seed.value)
                 submitJSON.states = modelJSON['models']['SIR']['submodels']['fixed infectious']['states'];
                 // submitJSON.default_state = modelJSON['models']['SIR']['submodels']['fixed infectious']['default_state'];
                 submitJSON.rules = []
@@ -309,9 +308,6 @@ const Snap_GetBfsFullDiam = () => {
             }
             )
 
-            if(event.target.value === 'Threshold Model')
-              staticProps.default_state.value = '0'
-            else
               staticProps.default_state.value ='S'
         }
 
@@ -408,7 +404,7 @@ const Snap_GetBfsFullDiam = () => {
                                             >
 
                                                 <MenuItem key='Threshold Model' value='Threshold Model'>Threshold Model</MenuItem>
-                                                <MenuItem key='SEIR model' value='SEIR Model'>SEIR model</MenuItem>
+                                                <MenuItem key='SEIR model' value='SEIR Model'>SEIR Model</MenuItem>
                                                 <MenuItem key='SIR Model' value='SIR Model'>SIR Model</MenuItem>
                                                 {/* <MenuItem key='SIS Model' value='SIS Model'>SIS Model</MenuItem>
                                                 <MenuItem key='Independent cascade model' value='Independent Cascade Model'>Independent Cascade Model</MenuItem>
@@ -434,7 +430,7 @@ const Snap_GetBfsFullDiam = () => {
                                     </div>
                                 </div>
                                 {<div className='columnStyle divideProps'>
-                                    {dynamicProps.Behaviour.value !== 'Threshold Model' && dynamicProps.Behaviour.value !== '' && <div className="borderStyle">
+                                    {<div className="borderStyle">
                                         <h3><b>Stochasticity</b></h3>
                                         {<Grid style={childGrid} item container xs={12} >
                                             <TextFieldFormsy
@@ -447,7 +443,7 @@ const Snap_GetBfsFullDiam = () => {
                                                 onBlur={(event) => staticChangedHandler(event, 'Seed')}
                                                 validations={{
                                                     isPositiveInt: function (values, value) {
-                                                        return RegExp(/^(?:[+]?(?:0|[1-9]\d*))$/).test(value)
+                                                        return RegExp(/^(?:[+]?(?:[0-9]\d*))$/).test(value) && !RegExp(/^0+$/).test(value)
                                                     }
                                                 }}
                                                 validationError="This is not a valid value"
@@ -458,7 +454,7 @@ const Snap_GetBfsFullDiam = () => {
                                         </Grid>}
                                     </div>}
                                     <div className='borderStyle'>
-                                        <h3><b>Composition of Simulation</b></h3>
+                                        <h3><b>Composition Of Simulation</b></h3>
                                         <div style={{ marginLeft: '26px' }}>
                                             <h4 className='mt-16'><b>Simulation Timing</b></h4>
                                             <Grid style={childGrid} item container xs={12} >
@@ -472,7 +468,7 @@ const Snap_GetBfsFullDiam = () => {
                                                     onBlur={(event) => staticChangedHandler(event, 'Iterations')}
                                                     validations={{
                                                         isPositiveInt: function (values, value) {
-                                                            return RegExp(/^(?:[+]?(?:[1-9]\d*))$/).test(value)
+                                                            return RegExp(/^(?:[+]?(?:[0-9]\d*))$/).test(value) && !RegExp(/^0+$/).test(value)
                                                         }
                                                     }}
                                                     validationError="This is not a valid value"
@@ -492,7 +488,7 @@ const Snap_GetBfsFullDiam = () => {
                                                     label="Time Steps"
                                                     validations={{
                                                         isPositiveInt: function (values, value) {
-                                                            return RegExp(/^(?:[+]?(?:[1-9]\d*))$/).test(value)
+                                                            return RegExp(/^(?:[+]?(?:[0-9]\d*))$/).test(value) && !RegExp(/^0+$/).test(value)
                                                         }
                                                     }}
                                                     validationError="This is not a valid value"
@@ -512,10 +508,10 @@ const Snap_GetBfsFullDiam = () => {
                                                     style={{ width: '18px' }}
                                                     value=""
                                                     onBlur={(event) => ICChangedHandler(event, 'number_nodes')}
-                                                    label="Number nodes"
+                                                    label="Number Nodes"
                                                     validations={{
                                                         isPositiveInt: function (values, value) {
-                                                            return RegExp(/^(?:[+]?(?:[1-9]\d*))$/).test(value)
+                                                            return RegExp(/^(?:[+]?(?:[0-9]\d*))$/).test(value) && !RegExp(/^0+$/).test(value)
                                                         }
                                                     }}
                                                     validationError="This is not a valid value"
@@ -584,7 +580,7 @@ const Snap_GetBfsFullDiam = () => {
                                                 {dynamicProps.Behaviour.value === 'Threshold Model' && <SelectFormsy
                                                     className="my-12 inputStyle1 model"
                                                     name="state"
-                                                    label={["Default state", <span key={1} style={{color: 'red'}}>{'*'}</span>]}
+                                                    label={["Default State", <span key={1} style={{color: 'red'}}>{'*'}</span>]}
                                                     value={modelJSON.models.threshold_model.default_state}
                                                     onChange={(event) => staticChangedHandler(event, 'default_state')}
                                                     required
@@ -600,7 +596,7 @@ const Snap_GetBfsFullDiam = () => {
                                                 {dynamicProps.Behaviour.value === 'SEIR Model' && <SelectFormsy
                                                     className="my-12 inputStyle1 model"
                                                     name="state"
-                                                    label={["Default state", <span key={1} style={{color: 'red'}}>{'*'}</span>]}
+                                                    label={["Default State", <span key={1} style={{color: 'red'}}>{'*'}</span>]}
                                                     value={modelJSON.models.SEIR.submodels['fixed exposed fixed infectious'].default_state}
                                                     onChange={(event) => staticChangedHandler(event, 'default_state')}
                                                     required
@@ -616,7 +612,7 @@ const Snap_GetBfsFullDiam = () => {
                                                 {dynamicProps.Behaviour.value === 'SIR Model' && <SelectFormsy
                                                     className="my-12 inputStyle1 model"
                                                     name="state"
-                                                    label={["Default state", <span key={1} style={{color: 'red'}}>{'*'}</span>]}
+                                                    label={["Default State", <span key={1} style={{color: 'red'}}>{'*'}</span>]}
                                                     value={modelJSON.models.SIR.submodels['fixed infectious'].default_state}
                                                     onChange={(event) => staticChangedHandler(event, 'default_state')}
                                                     required

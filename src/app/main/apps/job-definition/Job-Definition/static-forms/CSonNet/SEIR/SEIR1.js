@@ -62,7 +62,7 @@ const SEIR1 = (props) => {
                                                     label="Exposed Duration"
                                                     validations={{
                                                         isPositiveInt: function (values, value) {
-                                                            return RegExp(/^(?:[+]?(?:0|[1-9]\d*))$/).test(value)
+                                                            return RegExp(/^(?:[+]?(?:[0-9]\d*))$/).test(value) && !RegExp(/^0+$/).test(value)
                                                         }
                                                     }}
                                                     validationError="This is not a valid value"
@@ -75,14 +75,14 @@ const SEIR1 = (props) => {
                                                 <TextFieldFormsy
                                                     className="my-12 inputStyle1"
                                                     type="text"
-                                                    name="Infectious duration"
+                                                    name="Infectious Duration"
                                                     style={{ width: '18px' }}
                                                     value={props.dynamicProps.Infectious_duration.value}
                                                     onBlur={(event) => props.changed(event, "Infectious_duration")}
-                                                    label="Infectious duration"
+                                                    label="Infectious Duration"
                                                     validations={{
                                                         isPositiveInt: function (values, value) {
-                                                            return RegExp(/^(?:[+]?(?:0|[1-9]\d*))$/).test(value)
+                                                            return RegExp(/^(?:[+]?(?:[0-9]\d*))$/).test(value) && !RegExp(/^0+$/).test(value)
                                                         }
                                                     }}
                                                     validationError="This is not a valid value"

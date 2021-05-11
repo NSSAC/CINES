@@ -37,11 +37,11 @@ const SEIR = (props) => {
                                                     required
 
                                                 >
-
-                                                    <MenuItem key='SEIR1' value='SEIR1'>Fixed exposed duration and fixed infectious duration</MenuItem>
-                                                    <MenuItem key='SEIR2' value='SEIR2'>Fixed exposed duration and stochastic infectious duration</MenuItem>
-                                                    <MenuItem key='SEIR3' value='SEIR3'>Stochastic exposed duration and fixed infectious duration</MenuItem>
-                                                    <MenuItem key='SEIR4' value='SEIR4'>Stochastic exposed duration and stochastic infectious duration</MenuItem>
+                                                    
+                                                    <MenuItem className="ModelMenu" key='SEIR1' value='SEIR1'>Fixed exposed duration and fixed infectious duration</MenuItem>
+                                                    <MenuItem className="ModelMenu" key='SEIR2' value='SEIR2'>Fixed exposed duration and stochastic infectious duration</MenuItem>
+                                                    <MenuItem className="ModelMenu" key='SEIR3' value='SEIR3'>Stochastic exposed duration and fixed infectious duration</MenuItem>
+                                                    <MenuItem className="ModelMenu" key='SEIR4' value='SEIR4'>Stochastic exposed duration and stochastic infectious duration</MenuItem>
                                                 </SelectFormsy>
                                             </Grid>
                                             {props.dynamicProps.SEIR_Submodel.value === 'SEIR1' && <SEIR1 changed={props.changed}

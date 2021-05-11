@@ -30,6 +30,10 @@ input[type=submit]:hover {
     background-color: #d5d5d5;
 }
 
+.ModelMenu {
+    white-space: pre-wrap;
+}
+
 .headerDisplay {
     display: none;
 }

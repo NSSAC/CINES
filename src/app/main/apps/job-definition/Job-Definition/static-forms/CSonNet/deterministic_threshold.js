@@ -39,10 +39,10 @@ const Deterministic_threshold = (props) => {
                                                     style={{ width: '18px' }}
                                                     value={props.dynamicProps.threshold.value}
                                                     onBlur={(event) => props.changed(event, 'threshold')}
-                                                    label="Threshold value"
+                                                    label="Threshold Value"
                                                     validations={{
                                                         isPositiveInt: function (values, value) {
-                                                            return RegExp(/^(?:[+]?(?:0|[1-9]\d*[.])?\d*)$/).test(value)
+                                                            return RegExp(/^(?:[+]?(?:[0-9]*\d*[.])?\d*)$/).test(value)
                                                         }
                                                     }}
                                                     validationError="This is not a valid value"
