@@ -319,14 +319,14 @@ export const Input = (props) => {
 			document.getElementById(props.formData[1].formLabel).value = 1;
 		}
 
-		if(props.formData[1].value !== "" && props.formData[1].outputFlag === false && typeFlag == 0){
+		if(props.formData[1].value !== "" && props.formData[1].outputFlag === false && typeFlag === 0){
 			setFileChosen(props.formData[1].value)
 		  }
 
-		  if(props.formData[1].value !== "" && props.formData[1].outputFlag === true && typeFlag == 0){
+		  if(props.formData[1].value !== "" && props.formData[1].outputFlag === true && typeFlag === 0){
 			setFolderChosenPath(props.formData[1].value)
 		  }
-	})
+	}, [setFileChosen,setFolderChosenPath,fileChosen,folderChosenPath,props.formData,typeFlag])
 
 
 	if(props.formData[0]==='extraObj')
