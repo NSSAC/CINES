@@ -75,6 +75,12 @@ input[type=submit]:hover {
     border-left: 1px solid black;
 }
 
+.dataSource {
+    width: 39%;
+    margin: 12px 5px;
+
+}
+
 .borderStyle {
     /* border: 1px solid black; */
     /* border-right: 1px solid black;

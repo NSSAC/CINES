@@ -49,7 +49,7 @@ export const Input = (props) => {
 					id={props.formData[1].formLabel}
 					className="my-16 hidden"
 					type="number"
-					name="SrcColId"
+					name={props.formData[0]}
 					style={{ width: '18px' }}
 					value={props.formData[1].value}
 					label={props.formData[0]}

@@ -64,17 +64,17 @@ export const Input = (props) => {
 					<TextFieldFormsy
 						className="my-16 inputStyle"
 						type="text"
-						name="SrcColId"
+						name={props.formData[0]}
 						style={{ width: "18px" }}
-						value=""
+						value= {String(props.formData[1].value) }
 						label={props.formData[0]}
 						onBlur={props.changed}
 						validations={{
 							isPositiveInt: function (values, value) {
 								if (props.formData[0] === "SampleEdges" || props.formData[0] === "SampleNodes")
-									return (RegExp(/^(?:[+]?(?:0|[1-9]\d*))$/).test(value) || RegExp(/^(?:[-]?(?:1))$/).test(value));
+									return (RegExp(/^(?:[+]?(?:[0-9]\d*))$/).test(value) || RegExp(/^(?:[-]?(?:1))$/).test(value));
 								else
-									return RegExp(/^(?:[+]?(?:0|[1-9]\d*))$/).test(value);
+									return RegExp(/^(?:[+]?(?:[0-9]\d*))$/).test(value);
 							},
 						}}
 						validationError="This is not a valid value"
@@ -87,17 +87,17 @@ export const Input = (props) => {
 					<TextFieldFormsy
 						className="my-16 inputStyle"
 						type="text"
-						name="SrcColId"
+						name={props.formData[0]}
 						style={{ width: "18px" }}
-						value=""
+						value= {String(props.formData[1].value) }
 						label={props.formData[0]}
 						onBlur={props.changed}
 						validations={{
 							isPositiveInt: function (values, value) {
 								if (props.formData[0] === "SampleEdges" || props.formData[0] === "SampleNodes")
-									return (RegExp(/^(?:[+]?(?:0|[1-9]\d*))$/).test(value) || RegExp(/^(?:[-]?(?:1))$/).test(value));
+									return (RegExp(/^(?:[+]?(?:[0-9]\d*))$/).test(value) || RegExp(/^(?:[-]?(?:1))$/).test(value));
 								else
-									return RegExp(/^(?:[+]?(?:0|[1-9]\d*))$/).test(value);
+									return RegExp(/^(?:[+]?(?:[0-9]\d*))$/).test(value);
 							},
 						}}
 						validationError="This is not a valid value"
@@ -114,14 +114,14 @@ export const Input = (props) => {
 					<TextFieldFormsy
 						className="my-16 inputStyle"
 						type="text"
-						name="SrcColId"
+						name={props.formData[0]}
 						style={{ width: "18px" }}
-						value=''
+						value= {String(props.formData[1].value) }
 						label={props.formData[0]}
 						onBlur={props.changed}
 						validations={{
 							isPositiveInt: function (values, value) {
-								return RegExp(/^(?:[1-9]\d*|0)?(?:\.\d+)?$/).test(value);
+								return RegExp(/^(?:[0-9]\d*)?(?:\.\d+)?$/).test(value);
 							},
 						}}
 						validationError="This is not a valid value"
@@ -134,14 +134,14 @@ export const Input = (props) => {
 					<TextFieldFormsy
 						className="my-16 inputStyle"
 						type="text"
-						name="SrcColId"
+						name={props.formData[0]}
 						style={{ width: "18px" }}
-						value=''
+						value= {String(props.formData[1].value)}
 						label={props.formData[0]}
 						onBlur={props.changed}
 						validations={{
 							isPositiveInt: function (values, value) {
-								return RegExp(/^(?:[1-9]\d*|0)?(?:\.\d+)?$/).test(value);
+								return RegExp(/^(?:[0-9]\d*)?(?:\.\d+)?$/).test(value);
 							},
 						}}
 						validationError="This is not a valid value"
@@ -158,9 +158,9 @@ export const Input = (props) => {
 					inputElement = (
 						<SelectFormsy
 							className="my-16 inputStyle"
-							name="related"
+							name={props.formData[0]}
 							label= {[props.formData[0], <span key={1} style={{color: 'red'}}>{'*'}</span>]}
-							value=""
+							value= {props.formData[1].value}
 							onChange={props.changed}
 							required
 						>
@@ -178,14 +178,14 @@ export const Input = (props) => {
 						<TextFieldFormsy
 							className="my-16 inputStyle"
 							type="text"
-							name="SrcColId"
+							name={props.formData[0]}
 							style={{ width: "18px" }}
 							value={props.formData[1].value}
 							label={props.formData[0]}
 							onBlur={props.changed}
 							validations={{
 								isPositiveInt: function (values, value) {
-									return RegExp(/^[^-\s]/).test(value);
+									return RegExp(/^([0-9]|[a-zA-Z]|[\\.\\-_\\s])+$/).test(value);
 								},
 							}}
 							validationError="This is not a valid value"
@@ -199,7 +199,7 @@ export const Input = (props) => {
 					inputElement = (
 						<SelectFormsy
 							className="my-16 inputStyle"
-							name="related"
+							name={props.formData[0]}
 							label= {[props.formData[0], <span key={1} style={{color: 'red'}}>{'*'}</span>]}
 							value={props.formData[1].value}
 							onChange={props.changed}
@@ -218,7 +218,7 @@ export const Input = (props) => {
 						<TextFieldFormsy
 							className="my-16 inputStyle"
 							type="text"
-							name="SrcColId"
+							name={props.formData[0]}
 							style={{ width: "18px" }}
 							value={props.formData[1].value}
 							label={props.formData[0]}
@@ -242,9 +242,9 @@ export const Input = (props) => {
 				inputElement = (
 					<RadioGroupFormsy
 						className="my-16 inputStyle"
-						name="gender"
+						name={props.formData[0]}
 						label={props.formData[0]}
-						value={props.formData[1].value}
+						value={String(props.formData[1].value)}
 						onChange={props.changed}
 						required
 					>
@@ -264,9 +264,9 @@ export const Input = (props) => {
 				inputElement = (
 					<RadioGroupFormsy
 						className="my-16 inputStyle"
-						name="gender"
+						name={props.formData[0]}
 						label={props.formData[0]}
-						value={props.formData[1].value}
+						value={String(props.formData[1].value)}
 						onChange={props.changed}
 					>
 						<FormControlLabel
@@ -301,7 +301,7 @@ export const Input = (props) => {
 							id={props.formData[1].formLabel}
 							className="my-16 hidden"
 							type="text"
-							name="SrcColId"
+							name={props.formData[0]}
 							style={{ width: '18px' }}
 							value={props.formData[1].value}
 							label={props.formData[0]}
@@ -318,6 +318,14 @@ export const Input = (props) => {
 		if (fileChosen || folderChosenPath) {
 			document.getElementById(props.formData[1].formLabel).value = 1;
 		}
+
+		if(props.formData[1].value !== "" && props.formData[1].outputFlag === false && typeFlag == 0){
+			setFileChosen(props.formData[1].value)
+		  }
+
+		  if(props.formData[1].value !== "" && props.formData[1].outputFlag === true && typeFlag == 0){
+			setFolderChosenPath(props.formData[1].value)
+		  }
 	})
 
 

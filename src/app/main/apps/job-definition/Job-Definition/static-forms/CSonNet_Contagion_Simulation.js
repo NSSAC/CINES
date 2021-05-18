@@ -20,7 +20,7 @@ import SEIR from './CSonNet/SEIR/SEIR.js';
 import { modelJSON } from './Schemas/CSonNet_modelDefinition'
 import ReactTooltip from 'react-tooltip';
 
-const Snap_GetBfsFullDiam = () => {
+const CSonNet_Contagion_Simulation = (props) => {
     const [isFormValid, setIsFormValid] = useState(false);
     const [isToasterFlag, setIsToasterFlag] = useState(false);
     const [inputSchema, setInputSchema] = useState({});
@@ -56,24 +56,16 @@ const Snap_GetBfsFullDiam = () => {
                 setSpinnerFlag(false)
                 if (res.data) {
                     setDynamicProps({
-                        Behaviour: { id: 101, value: '' },
-                        SIR_Submodel: { id: 201, value: '' },
-                        SIS_Submodel: { id: 202, value: '' },
-                        SEIR_Submodel: { id: 203, value: '' },
-                        threshold: { id: 301, value: '' },
-                        weight_probability_column_name: { id: 302, value: '' },
-                        Infectious_probability_transition: { id: 303, value: '' },
-                        Infectious_duration: { id: 304, value: '' },
-                        Exposed_duration: { id: 305, value: '' },
-                        Exposed_probability_transition: { id: 306, value: '' },
-                        Recovery_probability: { id: 307, value: '' },
-                        IS_probability: { id: 308, value: '' },
-                        Edge_Weight: { id: 309, value: '' },
-                        // Threshold: { value: '' },
-                        SE_probability: { id: 310, value: '' },
-                        EI_probability: { id: 311, value: '' },
-                        IR_probability: { id: 312, value: '' },
-                        Transmission_probability: { id: 313, value: '' },
+                        Behaviour: { id: 101, value: props.resubmit ? props.resubmit.inputData.input.dynamic_inputs['Behaviour_model'] : ""},
+                        SIR_Submodel: { id: 201,  value: props.resubmit ? props.resubmit.inputData.input.dynamic_inputs['SIR_Submodel'] : "" },
+                        SIS_Submodel: { id: 202,  value: props.resubmit ? props.resubmit.inputData.input.dynamic_inputs['SIS_Submodel'] : ""  },
+                        SEIR_Submodel: { id: 203, value: props.resubmit ? props.resubmit.inputData.input.dynamic_inputs['SEIR_Submodel'] : ""   },
+                        threshold: { id: 301, value: props.resubmit ? props.resubmit.inputData.input.dynamic_inputs['threshold_value'] : ""},
+                        Edge_probability: { id: 302, value: props.resubmit ? props.resubmit.inputData.input.dynamic_inputs['Edge_probability'] : ""},
+                        Infectious_probability_transition: { id: 303,value: props.resubmit ? props.resubmit.inputData.input.dynamic_inputs['Infectious_probability_transition'] : ""},
+                        Infectious_duration: { id: 304, value: props.resubmit ? props.resubmit.inputData.input.dynamic_inputs['Infectious_duration'] : ""},
+                        Exposed_duration: { id: 305, value: props.resubmit ? props.resubmit.inputData.input.dynamic_inputs['Exposed_duration'] : ""},
+                        Exposed_probability_transition: { id: 306, value: props.resubmit ? props.resubmit.inputData.input.dynamic_inputs['Exposed_probability_transition'] : ""},
                         inputFile_Graph: [res.data.input_files[0].name, {
                             formLabel: res.data.input_files[0].name,
                             id: 0,
@@ -81,23 +73,23 @@ const Snap_GetBfsFullDiam = () => {
                             outputFlag: false,
                             required: true,
                             types: res.data.input_files[0].types,
-                            value: ""
+                            value: props.resubmit ? props.resubmit.inputData.input["Graph"] : ""
                         }]
                     })
                     setStaticProps({
-                        Seed: { value: '' },
-                        Iterations: { value: '' },
-                        TimeSteps: { value: '' },
-                        InitialConditions: [{ type: 'random', number_nodes: "", state: "" }],
-                        default_state: { value: '' },
-                        Output_name: { value: '' },
+                        Seed: {  value: props.resubmit ? props.resubmit.inputData.input['random_number_seed'] : ""},
+                        Iterations: { value: props.resubmit ? props.resubmit.inputData.input['iterations'] : ""},
+                        TimeSteps: { value: props.resubmit ? props.resubmit.inputData.input['time_steps'] : "" },
+                        InitialConditions: props.resubmit ? props.resubmit.inputData.input['initial_states_method'] : [{ type: 'random', number_nodes: "", state: "" }],
+                        default_state: { value: props.resubmit ? props.resubmit.inputData.input['default_state'] : "" },
+                        Output_name: { value: props.resubmit ? props.resubmit.inputData.output_name : "" },
                         outputPath: ['outputPath', {
                             description: "Select the path from File manager where the output file is to be stored.",
                             formLabel: "Output Container",
                             id: 200,
                             outputFlag: true,
                             types: ["folder", "epihiper_multicell_analysis", "epihiperOutput"],
-                            value: ""
+                            value: props.resubmit ? props.resubmit.inputData.output_container: "",
                         }]
                     })
                     setInputSchema(res.data.input_schema)
@@ -127,101 +119,136 @@ const Snap_GetBfsFullDiam = () => {
             "time_steps": parseInt(staticProps.TimeSteps.value), 
             'initial_states_method': staticProps.InitialConditions,
             "default_state": staticProps.default_state.value,
-            "random_number_seed": parseInt(staticProps.Seed.value)
+            "random_number_seed": parseInt(staticProps.Seed.value),
+            'decorations': [],
+            "dynamic_inputs": {}
         }
         let tempRules = {}
 
         switch (dynamicProps.Behaviour.value) {
             case 'Threshold Model':
+                submitJSON.dynamic_inputs.Behaviour_model = dynamicProps.Behaviour.value
                 submitJSON.states = modelJSON['models']['threshold_model']['states'];
                 // submitJSON.default_state = modelJSON['models']['threshold_model']['default_state'];
                 tempRules = modelJSON['models']['threshold_model']['rules'][0]['rule'];
-                tempRules['threshold_value'] = parseFloat(dynamicProps.threshold.value);
+                tempRules['threshold_value'] = parseInt(dynamicProps.threshold.value);
+                submitJSON.dynamic_inputs.threshold = parseInt(dynamicProps.threshold.value);
                 submitJSON.rules = []
                 submitJSON.rules[0] = tempRules;
                 break;
 
             case 'SEIR Model':
+                submitJSON.dynamic_inputs.Behaviour_model = dynamicProps.Behaviour.value
                 submitJSON.states = modelJSON['models']['SEIR']['submodels']['fixed exposed fixed infectious']['states'];
                 // submitJSON.default_state = modelJSON['models']['SEIR']['submodels']['fixed exposed fixed infectious']['default_state'];
                 submitJSON.rules = []
                 switch (dynamicProps.SEIR_Submodel.value) {
                     case 'SEIR1':
+                        submitJSON.dynamic_inputs.SEIR_Submodel = dynamicProps.SEIR_Submodel.value
                         tempRules = modelJSON['models']['SEIR']['submodels']['fixed exposed fixed infectious']['rules'][0]['rule'];
-                        tempRules["weight_probability_column_name"] = dynamicProps.weight_probability_column_name.value;
+                        tempRules["edge_probability_value"] = parseFloat(dynamicProps.Edge_probability.value);
                         submitJSON.rules[0] = tempRules;
 
                         tempRules = modelJSON['models']['SEIR']['submodels']['fixed exposed fixed infectious']['rules'][1]['rule'];
-                        tempRules["time_duration"] = parseInt(dynamicProps.Exposed_duration.value);
+                        tempRules["time_duration_value"] = parseInt(dynamicProps.Exposed_duration.value);
                         submitJSON.rules[1] = tempRules;
 
                         tempRules = modelJSON['models']['SEIR']['submodels']['fixed exposed fixed infectious']['rules'][2]['rule'];
-                        tempRules["time_duration"] = parseInt(dynamicProps.Infectious_duration.value);
+                        tempRules["time_duration_value"] = parseInt(dynamicProps.Infectious_duration.value);
                         submitJSON.rules[2] = tempRules;
+
+                        submitJSON.dynamic_inputs.Edge_probability = parseFloat(dynamicProps.Edge_probability.value);
+                        submitJSON.dynamic_inputs.Exposed_duration = parseInt(dynamicProps.Exposed_duration.value);
+                        submitJSON.dynamic_inputs.Infectious_duration = parseInt(dynamicProps.Infectious_duration.value);
+                      
                         break;
 
                     case 'SEIR2':
+                        submitJSON.dynamic_inputs.SEIR_Submodel = dynamicProps.SEIR_Submodel.value
                         tempRules = modelJSON['models']['SEIR']['submodels']['fixed exposed stochastic infectious']['rules'][0]['rule'];
-                        tempRules["weight_probability_column_name"] = dynamicProps.weight_probability_column_name.value;
+                        tempRules["edge_probability_value"] = parseFloat(dynamicProps.Edge_probability.value);
                         submitJSON.rules[0] = tempRules;
 
                         tempRules = modelJSON['models']['SEIR']['submodels']['fixed exposed stochastic infectious']['rules'][1]['rule'];
-                        tempRules["time_duration"] = parseInt(dynamicProps.Exposed_duration.value);
+                        tempRules["time_duration_value"] = parseInt(dynamicProps.Exposed_duration.value);
                         submitJSON.rules[1] = tempRules;
 
                         tempRules = modelJSON['models']['SEIR']['submodels']['fixed exposed stochastic infectious']['rules'][2]['rule'];
-                        tempRules["probability"] = parseFloat(dynamicProps.Infectious_probability_transition.value);
+                        tempRules["node_probability_value"] = parseFloat(dynamicProps.Infectious_probability_transition.value);
                         submitJSON.rules[2] = tempRules;
+
+                        submitJSON.dynamic_inputs.Edge_probability = parseFloat(dynamicProps.Edge_probability.value);
+                        submitJSON.dynamic_inputs.Exposed_duration = parseInt(dynamicProps.Exposed_duration.value);
+                        submitJSON.dynamic_inputs.Infectious_probability_transition = parseFloat(dynamicProps.Infectious_probability_transition.value);
+
                         break;
 
                     case 'SEIR3':
+                        submitJSON.dynamic_inputs.SEIR_Submodel = dynamicProps.SEIR_Submodel.value
                         tempRules = modelJSON['models']['SEIR']['submodels']['stochastic exposed fixed infectious']['rules'][0]['rule'];
-                        tempRules["weight_probability_column_name"] = dynamicProps.weight_probability_column_name.value;
+                        tempRules["edge_probability_value"] = parseFloat(dynamicProps.Edge_probability.value);
                         submitJSON.rules[0] = tempRules;
 
                         tempRules = modelJSON['models']['SEIR']['submodels']['stochastic exposed fixed infectious']['rules'][1]['rule'];
-                        tempRules["probability"] = parseFloat(dynamicProps.Exposed_probability_transition.value);
+                        tempRules["node_probability_value"] = parseFloat(dynamicProps.Exposed_probability_transition.value);
                         submitJSON.rules[1] = tempRules;
 
                         tempRules = modelJSON['models']['SEIR']['submodels']['stochastic exposed fixed infectious']['rules'][2]['rule'];
-                        tempRules["time_duration"] = parseInt(dynamicProps.Infectious_duration.value);
+                        tempRules["time_duration_value"] = parseInt(dynamicProps.Infectious_duration.value);
                         submitJSON.rules[2] = tempRules;
+
+                        submitJSON.dynamic_inputs.Edge_probability = parseFloat(dynamicProps.Edge_probability.value);
+                        submitJSON.dynamic_inputs.Exposed_probability_transition = parseFloat(dynamicProps.Exposed_probability_transition.value);
+                        submitJSON.dynamic_inputs.Infectious_duration = parseInt(dynamicProps.Infectious_duration.value);
+
                         break;
 
                     case 'SEIR4':
+                        submitJSON.dynamic_inputs.SEIR_Submodel = dynamicProps.SEIR_Submodel.value
                         tempRules = modelJSON['models']['SEIR']['submodels']['stochastic exposed stochastic infectious']['rules'][0]['rule'];
-                        tempRules["weight_probability_column_name"] = dynamicProps.weight_probability_column_name.value;
+                        tempRules["edge_probability_value"] = parseFloat(dynamicProps.Edge_probability.value);
                         submitJSON.rules[0] = tempRules;
 
                         tempRules = modelJSON['models']['SEIR']['submodels']['stochastic exposed stochastic infectious']['rules'][1]['rule'];
-                        tempRules["probability"] = parseFloat(dynamicProps.Exposed_probability_transition.value);
+                        tempRules["node_probability_value"] = parseFloat(dynamicProps.Exposed_probability_transition.value);
                         submitJSON.rules[1] = tempRules;
 
                         tempRules = modelJSON['models']['SEIR']['submodels']['stochastic exposed stochastic infectious']['rules'][2]['rule'];
-                        tempRules["probability"] = parseFloat(dynamicProps.Infectious_probability_transition.value);
+                        tempRules["node_probability_value"] = parseFloat(dynamicProps.Infectious_probability_transition.value);
                         submitJSON.rules[2] = tempRules;
+
+                        submitJSON.dynamic_inputs.Edge_probability = parseFloat(dynamicProps.Edge_probability.value);
+                        submitJSON.dynamic_inputs.Exposed_probability_transition = parseFloat(dynamicProps.Exposed_probability_transition.value);
+                        submitJSON.dynamic_inputs.Infectious_probability_transition = parseFloat(dynamicProps.Infectious_probability_transition.value);
                         break;
                 }
                 break;
 
             case 'SIR Model':
+                submitJSON.dynamic_inputs.Behaviour_model = dynamicProps.Behaviour.value
                 submitJSON.states = modelJSON['models']['SIR']['submodels']['fixed infectious']['states'];
                 // submitJSON.default_state = modelJSON['models']['SIR']['submodels']['fixed infectious']['default_state'];
                 submitJSON.rules = []
                 switch (dynamicProps.SIR_Submodel.value) {
                     case 'fixed infectious':
+                        submitJSON.dynamic_inputs.SIR_Submodel = dynamicProps.SIR_Submodel.value
                         tempRules = modelJSON['models']['SIR']['submodels']['fixed infectious']['rules'][0]['rule'];
-                        tempRules["weight_probability_column_name"] = dynamicProps.weight_probability_column_name.value;
+                        tempRules["edge_probability_value"] = parseFloat(dynamicProps.Edge_probability.value);
                         submitJSON.rules[0] = tempRules;
 
                         tempRules = modelJSON['models']['SIR']['submodels']['fixed infectious']['rules'][1]['rule'];
-                        tempRules["time_duration"] = parseInt(dynamicProps.Infectious_duration.value);
+                        tempRules["time_duration_value"] = parseInt(dynamicProps.Infectious_duration.value);
                         submitJSON.rules[1] = tempRules;
+
+                        submitJSON.dynamic_inputs.Edge_probability = parseFloat(dynamicProps.Edge_probability.value);
+                        submitJSON.dynamic_inputs.Infectious_duration = parseInt(dynamicProps.Infectious_duration.value);
+                        
                         break;
                 }
                 break;
 
         }
+        console.log(submitJSON)
         populateBody(submitJSON)
     }
 
@@ -308,7 +335,11 @@ const Snap_GetBfsFullDiam = () => {
             }
             )
 
-              staticProps.default_state.value ='S'
+            if(event.target.value === 'Threshold Model')
+            staticProps.default_state.value = '0'
+          else
+            staticProps.default_state.value ='S'
+      
         }
 
         updatedFormElement.value = event.target.value;
@@ -506,7 +537,7 @@ const Snap_GetBfsFullDiam = () => {
                                                     type="text"
                                                     name='Number nodes'
                                                     style={{ width: '18px' }}
-                                                    value=""
+                                                    value={staticProps.InitialConditions[0].number_nodes}
                                                     onBlur={(event) => ICChangedHandler(event, 'number_nodes')}
                                                     label="Number Nodes"
                                                     validations={{
@@ -524,7 +555,7 @@ const Snap_GetBfsFullDiam = () => {
                                                     className="my-12 inputStyle1 model"
                                                     name="state"
                                                     label={["State", <span key={1} style={{color: 'red'}}>{'*'}</span>]}
-                                                    value=""
+                                                    value={staticProps.InitialConditions[0].state}
                                                     onChange={(event) => ICChangedHandler(event, 'state')}
                                                     required
                                                 >
@@ -541,7 +572,7 @@ const Snap_GetBfsFullDiam = () => {
                                                     className="my-12 inputStyle1 model"
                                                     name="state"
                                                     label={["State", <span key={1} style={{color: 'red'}}>{'*'}</span>]}
-                                                    value=""
+                                                    value={staticProps.InitialConditions[0].state}
                                                     onChange={(event) => ICChangedHandler(event, 'state')}
                                                     required
                                                 >
@@ -558,7 +589,7 @@ const Snap_GetBfsFullDiam = () => {
                                                     className="my-12 inputStyle1 model"
                                                     name="state"
                                                     label={["State", <span key={1} style={{color: 'red'}}>{'*'}</span>]}
-                                                    value=""
+                                                    value={staticProps.InitialConditions[0].state}
                                                     onChange={(event) => ICChangedHandler(event, 'state')}
                                                     required
                                                 >
@@ -645,7 +676,7 @@ const Snap_GetBfsFullDiam = () => {
                                                 autoComplete="off"
                                                 validations={{
                                                     isPositiveInt: function (values, value) {
-                                                        return RegExp(/^[^-\s]/).test(value);
+                                                        return RegExp(/^([0-9]|[a-zA-Z]|[\\.\\-_\\s])+$/).test(value);
                                                     },
                                                 }}
                                                 validationError="This is not a valid value"
@@ -675,7 +706,7 @@ const Snap_GetBfsFullDiam = () => {
                                     className="w-30 ml-8 mt-32 mb-80"
                                     aria-label="LOG IN"
                                     onClick={populatesubmitJSON}
-                                    disabled={!isFormValid || success ||onSubmit }
+                                    disabled={!isFormValid }
                                 >
                                     Submit
 							</Button>
@@ -699,4 +730,4 @@ const Snap_GetBfsFullDiam = () => {
     );
     else return null
 }
-export default Snap_GetBfsFullDiam;
+export default CSonNet_Contagion_Simulation;

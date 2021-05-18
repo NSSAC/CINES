@@ -1,348 +1,412 @@
 export const modelJSON = {
-	"description": "Simulator of contagion dynamics on networks",
-	"models": {
-		"threshold_model": {
-			"states": [
-				"S",
-				"I"
-			],
-			"default_state": "S",
-			"collect_random_seed": false,
-			"rules": [
-				{
-					"input": {
-						"threshold_value": {
-							"type": "number",
-							"label": "Threshold Value",
-							"description": "Node threshold",
-							"minimum": 0
-						}
-					},
-					"rule": {
-						"node": "all",
-						"from_state": "S",
-						"to_state": "I",
-						"cause": [
-							"I"
-						],
-						"rule": "threshold"
-					}
-				}
-			]
-		},
-		"SEIR": {
-			"submodels": {
-				"fixed exposed fixed infectious": {
-					"states": [
-						"S",
-						"E",
-						"I",
-						"R"
-					],
-					"default_state": "S",
-					"collect_random_seed": true,
-					"rules": [
-						{
-							"input": {
-								"weight_probability_column_name": {
-									"type": "string",
-									"label": "Weight Column Name",
-									"description": "Name of the column containing edge weight"
-								}
-							},
-							"rule": {
-								"node": "all",
-								"from_state": "S",
-								"to_state": "E",
-								"cause": [
-									"I"
-								],
-								"rule": "edge_probability"
-							}
-						},
-						{
-							"input": {
-								"time_duration": {
-									"type": "integer",
-									"label": "Exposed Duration",
-									"description": "Time spent in exposed state (E)",
-									"exclusiveMinimum": 0
-								}
-							},
-							"rule": {
-								"node": "all",
-								"from_state": "E",
-								"to_state": "I",
-								"cause": "auto",
-								"rule": "discrete"
-							}
-						},
-						{
-							"input": {
-								"time_duration": {
-									"type": "integer",
-									"label": "Infectious Duration",
-									"description": "Time spent in infectious (I) state",
-									"exclusiveMinimum": 0
-								}
-							},
-							"rule": {
-								"node": "all",
-								"from_state": "I",
-								"to_state": "R",
-								"cause": "auto",
-								"rule": "discrete"
-							}
-						}
-					]
-				},
-				"fixed exposed stochastic infectious": {
-					"states": [
-						"S",
-						"E",
-						"I",
-						"R"
-					],
-					"default_state": "S",
-					"collect_random_seed": true,
-					"rules": [
-						{
-							"input": {
-								"weight_probability_column_name": {
-									"type": "string",
-									"label": "Weight Column Name",
-									"description": "Name of the column containing edge weight"
-								}
-							},
-							"rule": {
-								"node": "all",
-								"from_state": "S",
-								"to_state": "E",
-								"cause": [
-									"I"
-								],
-								"rule": "edge_probability"
-							}
-						},
-						{
-							"input": {
-								"time_duration": {
-									"type": "integer",
-									"label": "Exposed Duration",
-									"description": "Time spent in exposed state (E)",
-									"exclusiveMinimum": 0
-								}
-							},
-							"rule": {
-								"node": "all",
-								"from_state": "E",
-								"to_state": "I",
-								"cause": "auto",
-								"rule": "discrete"
-							}
-						},
-						{
-							"input": {
-								"probability": {
-									"type": "number",
-									"label": "Infectious probability transition",
-									"description": "Probability to transition out of infectious (I) state per timestep",
-									"minimum": 0,
-									"maximum": 1
-								}
-							},
-							"rule": {
-								"node": "all",
-								"from_state": "I",
-								"to_state": "R",
-								"cause": "auto",
-								"rule": "node_probability"
-							}
-						}
-					]
-				},
-				"stochastic exposed fixed infectious": {
-					"states": [
-						"S",
-						"E",
-						"I",
-						"R"
-					],
-					"default_state": "S",
-					"collect_random_seed": true,
-					"rules": [
-						{
-							"input": {
-								"weight_probability_column_name": {
-									"type": "string",
-									"label": "Weight Column Name",
-									"description": "Name of the column containing edge weight"
-								}
-							},
-							"rule": {
-								"node": "all",
-								"from_state": "S",
-								"to_state": "E",
-								"cause": [
-									"I"
-								],
-								"rule": "edge_probability"
-							}
-						},
-						{
-							"input": {
-								"probability": {
-									"type": "number",
-									"label": "Exposed probability transition",
-									"description": "Probability to transition out of exposed (E) state per timestep",
-									"minimum": 0,
-									"maximum": 1
-								}
-							},
-							"rule": {
-								"node": "all",
-								"from_state": "E",
-								"to_state": "I",
-								"cause": "auto",
-								"rule": "node_probability"
-							}
-						},
-						{
-							"input": {
-								"time_duration": {
-									"type": "integer",
-									"label": "Infectious Duration",
-									"description": "Time spent in infectious state (I)",
-									"exclusiveMinimum": 0
-								}
-							},
-							"rule": {
-								"node": "all",
-								"from_state": "I",
-								"to_state": "R",
-								"cause": "auto",
-								"rule": "discrete"
-							}
-						}
-					]
-				},
-				"stochastic exposed stochastic infectious": {
-					"states": [
-						"S",
-						"E",
-						"I",
-						"R"
-					],
-					"default_state": "S",
-					"collect_random_seed": true,
-					"rules": [
-						{
-							"input": {
-								"weight_probability_column_name": {
-									"type": "string",
-									"label": "Weight Column Name",
-									"description": "Name of the column containing edge weight"
-								}
-							},
-							"rule": {
-								"node": "all",
-								"from_state": "S",
-								"to_state": "E",
-								"cause": [
-									"I"
-								],
-								"rule": "edge_probability"
-							}
-						},
-						{
-							"input": {
-								"probability": {
-									"type": "number",
-									"label": "Exposed probability transition",
-									"description": "Probability to transition out of exposed (E) state per timestep",
-									"minimum": 0,
-									"maximum": 1
-								}
-							},
-							"rule": {
-								"node": "all",
-								"from_state": "E",
-								"to_state": "I",
-								"cause": "auto",
-								"rule": "node_probability"
-							}
-						},
-						{
-							"input": {
-								"probability": {
-									"type": "number",
-									"label": "Infectious probability transition",
-									"description": "Probability to transition out of infectious (I) state per timestep",
-									"minimum": 0,
-									"maximum": 1
-								}
-							},
-							"rule": {
-								"node": "all",
-								"from_state": "I",
-								"to_state": "R",
-								"cause": "auto",
-								"rule": "node_probability"
-							}
-						}
-					]
-				}
-			}
-		},
-		"SIR": {
-			"submodels": {
-				"fixed infectious": {
-					"states": [
-						"S",
-						"I",
-						"R"
-					],
-					"default_state": "S",
-					"collect_random_seed": true,
-					"rules": [
-						{
-							"input": {
-								"weight_probability_column_name": {
-									"type": "string",
-									"label": "Weight Column Name",
-									"description": "Name of the column containing edge weight"
-								}
-							},
-							"rule": {
-								"node": "all",
-								"from_state": "S",
-								"to_state": "I",
-								"cause": [
-									"I"
-								],
-								"rule": "edge_probability"
-							}
-						},
-						{
-							"input": {
-								"time_duration": {
-									"type": "integer",
-									"label": "Infectious Duration",
-									"description": "Time spent in infectious state (I)",
-									"exclusiveMinimum": 0
-								}
-							},
-							"rule": {
-								"node": "all",
-								"from_state": "I",
-								"to_state": "R",
-								"cause": "auto",
-								"rule": "discrete"
-							}
-						}
-					]
-				}
-			}
-		}
-	}
+    "description": "Simulator of contagion dynamics on networks",
+    "models": {
+        "threshold_model": {
+            "states": [
+                "0",
+                "1"
+            ],
+            "default_state": "0",
+            "rules": [
+                {
+                    "input": {
+                        "threshold_value": {
+                            "type": "integer",
+                            "data_sources": [
+                                "fixed"
+                            ],
+                            "network_element": "node",
+                            "label": "Threshold Value",
+                            "description": "Node threshold",
+                            "minimum": 0
+                        }
+                    },
+                    "rule": {
+                        "node": "all",
+                        "from_state": "0",
+                        "to_state": "1",
+                        "cause": [
+                            "1"
+                        ],
+                        "rule": "deterministic_progressive_node_threshold"
+                    }
+                }
+            ]
+        },
+        "SEIR": {
+            "submodels": {
+                "fixed exposed fixed infectious": {
+                    "states": [
+                        "S",
+                        "E",
+                        "I",
+                        "R"
+                    ],
+                    "default_state": "S",
+                    "rules": [
+                        {
+                            "input": {
+                                "edge_probability_value": {
+                                    "type": "number",
+                                    "description": "Edge probability value",
+                                    "data_sources": [
+                                        "fixed"
+                                    ],
+                                    "network_element": "edge",
+                                    "label": "Edge probability",
+                                    "minimum": 0,
+                                    "maximum": 1
+                                }
+                            },
+                            "rule": {
+                                "node": "all",
+                                "from_state": "S",
+                                "to_state": "E",
+                                "cause": [
+                                    "I"
+                                ],
+                                "rule": "edge_probability"
+                            }
+                        },
+                        {
+                            "input": {
+                                "time_duration_value": {
+                                    "type": "integer",
+                                    "label": "Exposed duration",
+                                    "description": "Time spent in exposed state (E)",
+                                    "data_sources": [
+                                        "fixed"
+                                    ],
+                                    "network_element": "node",
+                                    "exclusiveMinimum": 0
+                                }
+                            },
+                            "rule": {
+                                "node": "all",
+                                "from_state": "E",
+                                "to_state": "I",
+                                "cause": "auto",
+                                "rule": "discrete_time_auto"
+                            }
+                        },
+                        {
+                            "input": {
+                                "time_duration_value": {
+                                    "type": "integer",
+                                    "label": "Infectious duration",
+                                    "description": "Time spent in infectious state (I)",
+                                    "data_sources": [
+                                        "fixed"
+                                    ],
+                                    "network_element": "node",
+                                    "exclusiveMinimum": 0
+                                }
+                            },
+                            "rule": {
+                                "node": "all",
+                                "from_state": "I",
+                                "to_state": "R",
+                                "cause": "auto",
+                                "rule": "discrete_time_auto"
+                            }
+                        }
+                    ]
+                },
+                "fixed exposed stochastic infectious": {
+                    "states": [
+                        "S",
+                        "E",
+                        "I",
+                        "R"
+                    ],
+                    "default_state": "S",
+                    "rules": [
+                        {
+                            "input": {
+                                "edge_probability_value": {
+                                    "type": "number",
+                                    "description": "Edge probability value",
+                                    "data_sources": [
+                                        "fixed"
+                                    ],
+                                    "network_element": "edge",
+                                    "label": "Edge probability",
+                                    "minimum": 0,
+                                    "maximum": 1
+                                }
+                            },
+                            "rule": {
+                                "node": "all",
+                                "from_state": "S",
+                                "to_state": "E",
+                                "cause": [
+                                    "I"
+                                ],
+                                "rule": "edge_probability"
+                            }
+                        },
+                        {
+                            "input": {
+                                "time_duration_value": {
+                                    "type": "integer",
+                                    "label": "Exposed duration",
+                                    "description": "Time spent in exposed state (E)",
+                                    "exclusiveMinimum": 0,
+                                    "data_sources": [
+                                        "fixed"
+                                    ],
+                                    "network_element": "node"
+                                }
+                            },
+                            "rule": {
+                                "node": "all",
+                                "from_state": "E",
+                                "to_state": "I",
+                                "cause": "auto",
+                                "rule": "discrete_time_auto"
+                            }
+                        },
+                        {
+                            "input": {
+                                "node_probability_value": {
+                                    "type": "number",
+                                    "label": "Infectious probability transition",
+                                    "description": "Probability to transition out of infectious state (I) per timestep",
+                                    "data_sources": [
+                                        "fixed"
+                                    ],
+                                    "network_element": "node",
+                                    "minimum": 0,
+                                    "maximum": 1
+                                }
+                            },
+                            "rule": {
+                                "node": "all",
+                                "from_state": "I",
+                                "to_state": "R",
+                                "cause": "auto",
+                                "rule": "node_probability_auto"
+                            }
+                        }
+                    ]
+                },
+                "stochastic exposed fixed infectious": {
+                    "states": [
+                        "S",
+                        "E",
+                        "I",
+                        "R"
+                    ],
+                    "default_state": "S",
+                    "rules": [
+                        {
+                            "input": {
+                                "edge_probability_value": {
+                                    "type": "number",
+                                    "description": "Edge probability value",
+                                    "data_sources": [
+                                        "fixed"
+                                    ],
+                                    "network_element": "edge",
+                                    "label": "Edge probability",
+                                    "minimum": 0,
+                                    "maximum": 1
+                                }
+                            },
+                            "rule": {
+                                "node": "all",
+                                "from_state": "S",
+                                "to_state": "E",
+                                "cause": [
+                                    "I"
+                                ],
+                                "rule": "edge_probability"
+                            }
+                        },
+                        {
+                            "input": {
+                                "node_probability_value": {
+                                    "type": "number",
+                                    "label": "Exposed probability transition",
+                                    "description": "Probability to transition out of exposed state (E) per timestep",
+                                    "data_sources": [
+                                        "fixed"
+                                    ],
+                                    "network_element": "node",
+                                    "minimum": 0,
+                                    "maximum": 1
+                                }
+                            },
+                            "rule": {
+                                "node": "all",
+                                "from_state": "E",
+                                "to_state": "I",
+                                "cause": "auto",
+                                "rule": "node_probability_auto"
+                            }
+                        },
+                        {
+                            "input": {
+                                "time_duration_value": {
+                                    "type": "integer",
+                                    "label": "Infectious duration",
+                                    "description": "Time spent in infectious state (I)",
+                                    "data_sources": [
+                                        "fixed"
+                                    ],
+                                    "network_element": "node",
+                                    "exclusiveMinimum": 0
+                                }
+                            },
+                            "rule": {
+                                "node": "all",
+                                "from_state": "I",
+                                "to_state": "R",
+                                "cause": "auto",
+                                "rule": "discrete_time_auto"
+                            }
+                        }
+                    ]
+                },
+                "stochastic exposed stochastic infectious": {
+                    "states": [
+                        "S",
+                        "E",
+                        "I",
+                        "R"
+                    ],
+                    "default_state": "S",
+                    "rules": [
+                        {
+                            "input": {
+                                "edge_probability_value": {
+                                    "type": "number",
+                                    "description": "Edge probability value",
+                                    "data_sources": [
+                                        "fixed"
+                                    ],
+                                    "network_element": "edge",
+                                    "label": "Edge probability",
+                                    "minimum": 0,
+                                    "maximum": 1
+                                }
+                            },
+                            "rule": {
+                                "node": "all",
+                                "from_state": "S",
+                                "to_state": "E",
+                                "cause": [
+                                    "I"
+                                ],
+                                "rule": "edge_probability"
+                            }
+                        },
+                        {
+                            "input": {
+                                "node_probability_value": {
+                                    "type": "number",
+                                    "label": "Exposed probability transition",
+                                    "description": "Probability to transition out of exposed state (E) per timestep",
+                                    "data_sources": [
+                                        "fixed"
+                                    ],
+                                    "network_element": "node",
+                                    "minimum": 0,
+                                    "maximum": 1
+                                }
+                            },
+                            "rule": {
+                                "node": "all",
+                                "from_state": "E",
+                                "to_state": "I",
+                                "cause": "auto",
+                                "rule": "node_probability_auto"
+                            }
+                        },
+                        {
+                            "input": {
+                                "node_probability_value": {
+                                    "type": "number",
+                                    "label": "Infectious probability transition",
+                                    "description": "Probability to transition out of infectious state (I) per timestep",
+                                    "data_sources": [
+                                        "fixed"
+                                    ],
+                                    "network_element": "node",
+                                    "minimum": 0,
+                                    "maximum": 1
+                                }
+                            },
+                            "rule": {
+                                "node": "all",
+                                "from_state": "I",
+                                "to_state": "R",
+                                "cause": "auto",
+                                "rule": "node_probability_auto"
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        "SIR": {
+            "submodels": {
+                "fixed infectious": {
+                    "states": [
+                        "S",
+                        "I",
+                        "R"
+                    ],
+                    "default_state": "S",
+                    "rules": [
+                        {
+                            "input": {
+                                "edge_probability_value": {
+                                    "type": "number",
+                                    "description": "Edge probability value",
+                                    "data_sources": [
+                                        "fixed"
+                                    ],
+                                    "network_element": "edge",
+                                    "label": "Edge probability",
+                                    "minimum": 0,
+                                    "maximum": 1
+                                }
+                            },
+                            "rule": {
+                                "node": "all",
+                                "from_state": "S",
+                                "to_state": "I",
+                                "cause": [
+                                    "I"
+                                ],
+                                "rule": "edge_probability"
+                            }
+                        },
+                        {
+                            "input": {
+                                "time_duration_value": {
+                                    "type": "integer",
+                                    "label": "Infectious duration",
+                                    "description": "Time spent in infectious state (I)",
+                                    "data_sources": [
+                                        "fixed"
+                                    ],
+                                    "network_element": "node",
+                                    "exclusiveMinimum": 0
+                                }
+                            },
+                            "rule": {
+                                "node": "all",
+                                "from_state": "I",
+                                "to_state": "R",
+                                "cause": "auto",
+                                "rule": "discrete_time_auto"
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    }
 }

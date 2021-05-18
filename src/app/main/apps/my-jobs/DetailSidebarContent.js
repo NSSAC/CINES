@@ -267,13 +267,13 @@ function DetailSidebarContent(props) {
                 style={{ marginLeft: "15px", margin: "0px!important" }}
               >
                 <tbody>
-                  {selectedItem && Object.entries(selectedItem.input).filter(data => { if (data[0] !== 'extraObj') return data; return null }).map((data, index) => {
+                  {selectedItem && Object.entries(selectedItem.input).filter(data => { if (data[0] !== 'extraObj' && data[0] !== 'dynamic_inputs') return data; return null }).map((data, index) => {
                     return (
                       <React.Fragment key={index}>
                         <tr>
                           <th title={data[0]} style={labelEllipsis}>{data[0]}:</th>
                           {(() => {
-                            if ((data[0].includes('inputFile') || data[0].includes('Graph'))) {
+                            if ((data[0].includes('inputFile') || data[0].includes('Graph')) && data[0] !== 'output_GraphType') {
                               return (
                                 <td style={navigateStyle} onClick={() => navigateFile(data[1])}>{data[1]}</td>
                               )
