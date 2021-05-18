@@ -371,7 +371,7 @@ const CSonNet_Contagion_Simulation = (props) => {
         };
 
         if (obj === 'number_nodes')
-            updatedFormElement[0][obj] = parseInt(event.target.value);
+            updatedFormElement[0][obj] = parseInt(event.target.value) || "";
         else
             updatedFormElement[0][obj] = event.target.value;
 
