@@ -6,6 +6,7 @@ export const MyJobDefinitionAppConfig = {
             config: {}
         }
     },
+    auth: ['user'],
     routes  : [
         {
             path     : '/apps/job-definition/*',

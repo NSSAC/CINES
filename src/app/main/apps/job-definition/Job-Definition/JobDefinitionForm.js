@@ -12,6 +12,7 @@ import { Input } from "app/main/apps/job-definition/Job-Definition/Input";
 import Toaster from "./Toaster";
 import Formsy from "formsy-react";
 import { useHistory } from "react-router-dom";
+
 function JobDefinitionForm(props) {
   const [formElementsArray, setFormElementsArray] = useState({});
   // const [jobSubmissionArray, setJobSubmissionArray] = useState({});
@@ -26,6 +27,7 @@ function JobDefinitionForm(props) {
 
   var path = window.location.pathname;
   var pathEnd = path.replace("/apps/job-definition/", "");
+
   if(pathEnd.endsWith('/'))
     pathEnd = pathEnd.slice(0, -1)
   const parentGrid = {
@@ -98,8 +100,11 @@ function JobDefinitionForm(props) {
         for (let [index, obj] of inputFileData.entries()) {
           obj["id"] = index;
           obj["formLabel"] = obj.name;
-          obj["value"] = "";
           obj["outputFlag"] = false;
+          if(props.resubmit)
+          obj["value"] = props.resubmit.inputData.input.inputFile_Graph;
+         else
+         obj["value"] = "";
         }
       }
 
@@ -107,7 +112,11 @@ function JobDefinitionForm(props) {
         count++;
         createFromData[key]["id"] = count + 100;
         createFromData[key]["formLabel"] = key;
-        // createFromData[key]["value"] = "";
+        if(props.resubmit)
+         createFromData[key]["value"] = props.resubmit.inputData.input[key];
+        else
+         createFromData[key]["value"] = ""
+
 
         if (requiredFeildArray !== undefined && requiredFeildArray.includes(key)) {
           createFromData[key]["required"] = true;
@@ -138,7 +147,7 @@ function JobDefinitionForm(props) {
         let outputContainer = {
           id: 200,
           formLabel: "output_container",
-          value: "",
+          value: props.resubmit ? props.resubmit.inputData.output_container: "",
           description:
             "Select the path from File manager where the output file is to be stored.",
           types: ["folder", "epihiper_multicell_analysis", "epihiperOutput"],
@@ -147,7 +156,7 @@ function JobDefinitionForm(props) {
         let outputName = {
           id: 201,
           formLabel: "output_name",
-          value: "",
+          value: props.resubmit ? props.resubmit.inputData.output_name: "",
           type: "string",
           fileType: outputFiles.type,
           required: true,
@@ -155,7 +164,7 @@ function JobDefinitionForm(props) {
         createFromData["output_container"] = outputContainer;
         createFromData["output_name"] = outputName;
       }
-
+      
       setFormElementsArray({ ...createFromData });
     } else {
       setFlag(false);
@@ -291,9 +300,9 @@ function JobDefinitionForm(props) {
           <Toaster success={success} id={response.id}></Toaster>
         ) : null}
         <Typography className="h2">
-          &nbsp;{response !== "" ? response.id : null}
+          &nbsp;{response !== "" ? <b>{response.id}</b> : null}
         </Typography>
-        <Typography className="h4 mb-12">
+        <Typography className="h4">
           &nbsp;{response !== "" ? response.description : null}
         </Typography>
         <div>
@@ -371,9 +380,9 @@ function JobDefinitionForm(props) {
             <Toaster success={success} id={response.id}></Toaster>
           ) : null}
           <Typography className="h2">
-            &nbsp;{response !== "" ? response.id : null}
+            &nbsp;{response !== "" ? <b>{response.id}</b> : null}
           </Typography>
-          <Typography className="h4 mb-12">
+          <Typography className="h4">
             &nbsp;{response !== "" ? response.description : null}
           </Typography>
         </div>

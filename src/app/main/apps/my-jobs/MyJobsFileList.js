@@ -80,7 +80,7 @@ function MyJobsFileList(props) {
         if (files.length > 0) {
             var i, changeState = false;
             for (i = 0; i < files.length; i++) {
-                if (files[i].state !== 'Completed' && files[i].state !== 'Failed'){
+                if (files[i].state !== 'Completed' && files[i].state !== 'Failed' && files[i].state !== 'Cancelled'){
                     changeState = true;
                     localStorage.setItem('queuedId', files[i].id)
                 }
@@ -208,7 +208,7 @@ function MyJobsFileList(props) {
                         <Table aria-label="a dense table">
 
                             <TableHead>
-                                <TableRow>
+                                <TableRow style={{whiteSpace:'nowrap'}}>
 
                                     <TableCell>Job Id {(sortById) ?
 

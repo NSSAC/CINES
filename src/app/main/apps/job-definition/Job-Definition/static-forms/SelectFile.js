@@ -49,7 +49,7 @@ export const Input = (props) => {
 					id={props.formData[1].formLabel}
 					className="my-16 hidden"
 					type="number"
-					name="SrcColId"
+					name={props.formData[0]}
 					style={{ width: '18px' }}
 					value={props.formData[1].value}
 					label={props.formData[0]}
@@ -57,8 +57,8 @@ export const Input = (props) => {
 					required
 				/>
 			</label>
-			{props.formData[1].outputFlag ? <div className="folderPath">{folderChosenPath === '' ? 'No folder specified' : <b onChange={props.changed} >{folderChosenPath}</b>}</div>
-				: <div className="folderPath">{fileChosen === '' ? 'No file chosen' : <b onChange={props.changed} >{fileChosen}</b>}</div>}
+			{props.formData[1].outputFlag ? <div className="folderPath">{props.formData[1].value === '' ? 'No folder specified' : <b onChange={props.changed} >{props.formData[1].value}</b>}</div>
+				: <div className="folderPath">{props.formData[1].value === '' ? 'No file chosen' : <b onChange={props.changed} >{props.formData[1].value}</b>}</div>}
 		</div>
 	);
 

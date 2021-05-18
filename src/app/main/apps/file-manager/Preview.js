@@ -172,7 +172,7 @@ function Preview(props) {
       </div>
     );
 
-  else if ((extentionType === 'text' || extentionType === 'txt') || (extentionType.includes('snap')) || (extentionType === 'PNGraph')  || (extentionType === 'PUNGraph')  || (extentionType === 'PNEANet')  ) {
+  else if ((extentionType === 'text' || extentionType === 'txt') || (extentionType.includes('snap')) || (extentionType === 'PNGraph')  || (extentionType === 'PUNGraph')  || (extentionType === 'PNEANet') || (extentionType === 'csonnet_simulation')  ) {
     if (typeof (data) === 'object')
       return (<div style={textStyle}>{JSON.stringify(data, null, 2)}</div>);
     else

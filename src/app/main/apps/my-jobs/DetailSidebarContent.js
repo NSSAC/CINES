@@ -61,6 +61,13 @@ function DetailSidebarContent(props) {
     lineBreak: 'anywhere',
     cursor: "pointer",
   };
+
+  const labelEllipsis = {
+    textAlign: 'left',
+    maxWidth: '100px',
+    textOverflow: 'ellipsis',
+    overflow: 'hidden'
+  }
   const openoutputDialog = () => {
     setshowDialog(true);
     setStandardOut(selectedItem.stdout);
@@ -71,6 +78,12 @@ function DetailSidebarContent(props) {
     setStandardOut(selectedItem.stderr);
     setHeaderTitle("Error");
   };
+
+  const openDialog = (data) => {
+    setshowDialog(true);
+    setStandardOut(data[1]);
+    setHeaderTitle(data[0]);
+  }
 
   const handleClose = () => {
     setshowDialog(false);
@@ -130,8 +143,8 @@ function DetailSidebarContent(props) {
                     {selectedItem.input && selectedItem.input.reconstitute ? (
                       <td> {selectedItem.input.reconstitute} </td>
                     ) : (
-                        <td> -</td>
-                      )}
+                      <td> -</td>
+                    )}
                   </tr>
                 ) : null}
                 {selectedItem.input && selectedItem.input.contactNetwork ? (
@@ -140,8 +153,8 @@ function DetailSidebarContent(props) {
                     {selectedItem.input && selectedItem.input.contactNetwork ? (
                       <td> {selectedItem.input.contactNetwork} </td>
                     ) : (
-                        <td> -</td>
-                      )}
+                      <td> -</td>
+                    )}
                   </tr>
                 ) : null}
 
@@ -151,8 +164,8 @@ function DetailSidebarContent(props) {
                     {selectedItem.output_name ? (
                       <td> {selectedItem.output_name} </td>
                     ) : (
-                        "-"
-                      )}
+                      "-"
+                    )}
                   </tr>
                 ) : null}
 
@@ -177,9 +190,9 @@ function DetailSidebarContent(props) {
                         &nbsp;&nbsp;{selectedItem.output_container}{" "}
                       </td>
                     ) : (
-                        // </Link>
-                        "-"
-                      )}
+                      // </Link>
+                      "-"
+                    )}
                   </tr>
                 ) : null}
 
@@ -192,8 +205,8 @@ function DetailSidebarContent(props) {
                         <a className="cursor-pointer">Click here</a>
                       </td>
                     ) : (
-                        <td>-</td>
-                      )}
+                      <td>-</td>
+                    )}
                   </tr>
                 ) : null}
 
@@ -206,8 +219,8 @@ function DetailSidebarContent(props) {
                         <a className="cursor-pointer">Click here</a>
                       </td>
                     ) : (
-                        <td>-</td>
-                      )}
+                      <td>-</td>
+                    )}
                   </tr>
                 ) : null}
               </tbody>
@@ -217,7 +230,7 @@ function DetailSidebarContent(props) {
 
         {selectedTab === 1 && selectedItem.input_files && selectedItem.input && (
           <React.Fragment>
-            {selectedItem.input_files.length>0 && <div>
+            {selectedItem.input_files.length > 0 && <div>
               <Typography variant="h6">INPUT FILE</Typography>
             </div>}
             {selectedItem.input_files.map((data, index) => {
@@ -242,7 +255,7 @@ function DetailSidebarContent(props) {
                       </tr>
                     </tbody>
                   </table>
-                  <Divider style={{margin:'8px 0px'}} />
+                  <Divider style={{ margin: '8px 0px' }} />
                 </div>
               );
             })}
@@ -254,13 +267,30 @@ function DetailSidebarContent(props) {
                 style={{ marginLeft: "15px", margin: "0px!important" }}
               >
                 <tbody>
-                  {selectedItem && Object.entries(selectedItem.input).filter(data=> {if(data[0] !== 'extraObj') return data; return null}).map((data, index) => {
+                  {selectedItem && Object.entries(selectedItem.input).filter(data => { if (data[0] !== 'extraObj' && data[0] !== 'dynamic_inputs') return data; return null }).map((data, index) => {
                     return (
                       <React.Fragment key={index}>
-                      <tr>
-                        <th style={{textAlign:'left'}}>{data[0]}:</th>
-                        {data[0].includes('inputFile') ? <td style={navigateStyle} onClick={() => navigateFile(data[1])}>{data[1]}</td> : <td style={{lineBreak: 'anywhere'}}>{String(data[1])}</td>}
-                      </tr>
+                        <tr>
+                          <th title={data[0]} style={labelEllipsis}>{data[0]}:</th>
+                          {(() => {
+                            if ((data[0].includes('inputFile') || data[0].includes('Graph')) && data[0] !== 'output_GraphType') {
+                              return (
+                                <td style={navigateStyle} onClick={() => navigateFile(data[1])}>{data[1]}</td>
+                              )
+                            } else if (data[0] === 'rules' || data[0] === 'initial_states_method') {
+                              return (
+                                <td onClick={() => openDialog(data)}>
+                                  {/* eslint-disable-next-line */}
+                                  <a className="cursor-pointer">Click here</a>
+                                </td>
+                              )
+                            } else {
+                              return (
+                                <td style={{ lineBreak: 'anywhere' }}>{JSON.stringify(data[1])}</td>
+                              )
+                            }
+                          })()}
+                        </tr>
                       </React.Fragment>
                     )
                   })}
