@@ -110,7 +110,8 @@
         "build-docs": "find ./src/app/main/documentation/material-ui-components \\( -name '*.ts' -o -name '*.tsx' \\) -type f -delete && babel-node src/app/main/documentation/material-ui-components/build.js",
         "build-stats": "yarn run build --stats",
         "bundle-report": "yarn run build-stats && webpack-bundle-analyzer build/bundle-stats.json -m static -r build/bundle-stats.html -O",
-        "tarball": "rm cines-build.tar; npm run build && tar -cvf cines-build.tar build/"
+        "tarball-prod": "cp .env.cines_prod .env.production; yarn run build && rm cines-build-prod.tar; npm run build && tar -cvf cines-build-prod.tar build/ ; rm .env.production",
+        "tarball-alpha": "cp .env.alpha .env.production && cat .env && yarn run build && rm cines-build-alpha.tar; npm run build && tar -cvf cines-build-alpha.tar build/ ; rm .env.production"
     },
     "eslintConfig": {
         "extends": "react-app"

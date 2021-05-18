@@ -84,7 +84,9 @@ class SciDuctService {
     localStorage.clear();
     sessionStorage.clear();
     window.clearTimeout (timeOutHandle)
-    window.open(`${AUTH_CONFIG.userServiceURL}/logout?redirect=${encodeURIComponent(`${AUTH_CONFIG.logout_local_dev}`)}`,"_self")
+    const logout_url=encodeURIComponent(AUTH_CONFIG.logout_url)
+    console.log("Logout redirect url: ", logout_url)
+    window.open(`${AUTH_CONFIG.userServiceURL}/logout?redirect=${logout_url}`,"_self")
 };
 
     isAuthenticated = () => {
