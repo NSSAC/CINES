@@ -17,7 +17,7 @@
         "axios": "0.21.0",
         "axios-mock-adapter": "1.17.0",
         "brace": "^0.11.1",
-        "chart.js": "2.9.3",
+        "chart.js": "2.9.4",
         "date-fns": "2.8.1",
         "downshift": "3.4.8",
         "file-exists": "^5.0.1",
@@ -33,7 +33,7 @@
         "jss-extend": "6.2.0",
         "jwt-decode": "2.2.0",
         "keycode": "2.2.0",
-        "lodash": "4.17.15",
+        "lodash": "4.17.21",
         "material-table": "1.54.2",
         "material-ui-popup-state": "1.5.1",
         "mobile-detect": "1.4.4",
@@ -110,7 +110,8 @@
         "build-docs": "find ./src/app/main/documentation/material-ui-components \\( -name '*.ts' -o -name '*.tsx' \\) -type f -delete && babel-node src/app/main/documentation/material-ui-components/build.js",
         "build-stats": "yarn run build --stats",
         "bundle-report": "yarn run build-stats && webpack-bundle-analyzer build/bundle-stats.json -m static -r build/bundle-stats.html -O",
-        "tarball": "rm cines-build.tar; npm run build && tar -cvf cines-build.tar build/"
+        "tarball-prod": "cp .env.cines_prod .env.production; yarn run build && rm cines-build-prod.tar; npm run build && tar -cvf cines-build-prod.tar build/ ; rm .env.production",
+        "tarball-alpha": "cp .env.alpha .env.production && cat .env && yarn run build && rm cines-build-alpha.tar; npm run build && tar -cvf cines-build-alpha.tar build/ ; rm .env.production"
     },
     "eslintConfig": {
         "extends": "react-app"

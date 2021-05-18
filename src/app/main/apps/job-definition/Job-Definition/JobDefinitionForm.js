@@ -182,7 +182,7 @@ function JobDefinitionForm(props) {
       if (updatedFormElement.type === "integer") {
         updatedFormElement.value = parseInt(event.target.value);
       } else if (updatedFormElement.type === "boolean") {
-        if(event.target.value == "true"){
+        if(event.target.value === "true"){
           updatedFormElement.value = true;
         }
         else{

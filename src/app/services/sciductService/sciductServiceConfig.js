@@ -1,13 +1,10 @@
 const AUTH_CONFIG = {
-  callbackUrl: "http://localhost:3000/callback",
+  callbackUrl: `${process.env.REACT_APP_CALLBACK_URL}`,
   userServiceURL: `${process.env.REACT_APP_SCIDUCT_USER_SERVICE}`,
-  app_id: "net.science_dev",
+  app_id: `${process.env.REACT_APP_SCIDUCT_APP_ID}`,
   refresh_time: 15480000,
-  // domain     : "YOUR_DOMAIN",
-  // clientId   : "YOUR_CLIENT_ID",
   refresh_token: `${process.env.REACT_APP_SCIDUCT_USER_SERVICE}/refresh`,
-  logout_local_dev: "http://localhost:3000",
-  logout_production: "",
+  logout_url: `${process.env.REACT_APP_LOGOUT_URL}`
 };
 
 export default AUTH_CONFIG;
