@@ -6,7 +6,7 @@ import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import { FusePageSimple } from '@fuse';
 import { MenuItem } from '@material-ui/core';
-import Submodel_SID from './Submodel_SID';
+// import Submodel_SID from './Submodel_SID';
 import Submodel_FIP from './Submodel_FIP';
 
 const SIR = (props) => {

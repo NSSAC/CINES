@@ -241,9 +241,7 @@ const Snap_GetBfsFullDiam = () => {
                     root: 'root',
                     header: 'headerDisplay'
                 }}
-                header={
-                    <div></div>
-                }
+     
                 content={
                     <div className="flex content">
                         <div className="content">

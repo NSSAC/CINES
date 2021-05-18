@@ -1,5 +1,6 @@
 /* eslint-disable */
 import {
+    SelectFormsy,
     TextFieldFormsy
 } from '@fuse/components/formsy';
 import React from 'react';

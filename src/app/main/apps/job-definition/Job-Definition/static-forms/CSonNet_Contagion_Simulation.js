@@ -12,10 +12,10 @@ import { Icon, LinearProgress, MenuItem } from '@material-ui/core';
 import Toaster from "../Toaster";
 import Deterministic_threshold from './CSonNet/deterministic_threshold.js';
 import SIR from './CSonNet/SIR/SIR.js';
-import SIS from './CSonNet/SIS/SIS.js';
-import ICM from './CSonNet/ICM.js';
-import LTM from './CSonNet/LTM.js';
-import PTM from './CSonNet/PTM.js';
+// import SIS from './CSonNet/SIS/SIS.js';
+// import ICM from './CSonNet/ICM.js';
+// import LTM from './CSonNet/LTM.js';
+// import PTM from './CSonNet/PTM.js';
 import SEIR from './CSonNet/SEIR/SEIR.js';
 import { modelJSON } from './Schemas/CSonNet_modelDefinition'
 import ReactTooltip from 'react-tooltip';
