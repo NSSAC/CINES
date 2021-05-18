@@ -200,7 +200,6 @@ export const FileUpload = ({ allFilesType,fileTypes, setUploadFile, dialogTarget
       let type = element.type;
 
       let target = window.location.pathname;
-      let id = element.id;
       let targetPath = target.replace("/apps/files", "")
       if (dialogTargetPath)
         targetPath = dialogTargetPath;
@@ -247,7 +246,6 @@ export const FileUpload = ({ allFilesType,fileTypes, setUploadFile, dialogTarget
       let fileName = element.fileName;
       let content = element.contents;
       let target = window.location.pathname;
-      let id = element.id;
       let targetPath = target.replace("/apps/files", "")
       if (dialogTargetPath)
         targetPath = dialogTargetPath;
