@@ -40,7 +40,7 @@ function WebSci21Content(props) {
 
             content={
                 <div>
-                    <div style={{'background-image': 'url(assets/images/cines/city_networks.jpg)'}}
+                    <div style={{'backgroundImage': 'url(assets/images/cines/city_networks.jpg)'}}
                         className={clsx(classes.header, "relative overflow-hidden flex flex-col flex-shrink-0 items-center justify-center text-center p-0 sm:p-24 h-200 sm:h-200 bg-cover")}>
                     </div>
                     <div className="p-16 w-3/4 text-center items-center ml-auto mr-auto">
@@ -101,7 +101,7 @@ function WebSci21Content(props) {
                                 <p><span className="font-bold">Dustin Machi</span> is a Senior Software Architect at University of Virginia (UVA), led the design and development of the PATRIC BVBRC genomics tool (<a href="https://www.patricbrc.org/">https://www.patricbrc.org/</a>) that currently has over 10,000 users and has received continuous NIH funding for 20 years.  He is also the architectural lead for the net.science CI.  He has been closely involved with developing workshops and learning materials for PATRIC BVBRC.</p>
                             </Typography>
                             <Typography className="my-8" variant="body2" component="div">
-                                <p><span className="font-bold">S. S. Ravi</span> is a Distinguished Teaching Professor Emeritus, University at Albany, where he taught computer science for 32 years.  He is now a Research Professor at UVA.  He has taught network science courses for over ten years, and has developed learning materials for network science software tools.  He has developed several computational tools for net.science while mentoring students.</p>
+                                <p><span className="font-bold">S. S. Ravi</span> is a Distinguished Teaching Professor Emeritus, University at Albany -- State University of New York, where he taught computer science for 32 years.  He is now a Research Professor at UVA.  He has taught network science courses for over ten years, and has developed learning materials for network science software tools.  He has developed several computational tools for net.science while mentoring students.</p>
                             </Typography>
                             <Typography className="my-8" variant="body2" component="div">
                                 <p><span className="font-bold">Golda Barrow</span> is a Program Advisor on several projects at UVA, including this net.science project.  She performs a range of functions, such as leading Internal Review Board (IRB) submissions, specifying web page content, and guiding workshop development.</p>
