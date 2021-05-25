@@ -185,7 +185,7 @@ export const Input = (props) => {
 							onBlur={props.changed}
 							validations={{
 								isPositiveInt: function (values, value) {
-									return RegExp(/^([0-9]|[a-zA-Z]|[\\.\\-_\\s])+$/).test(value);
+									return RegExp(/^([0-9]|[a-zA-Z]|[._\-\s])+$/).test(value);
 								},
 							}}
 							validationError="This is not a valid value"

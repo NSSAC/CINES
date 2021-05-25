@@ -58,7 +58,7 @@ const Deterministic_threshold = (props) => {
                             label="Threshold Value"
                             validations={{
                                 isPositiveInt: function (values, value) {
-                                    return RegExp(/^(?:[+]?(?:[0-9]\d*))$/).test(value) && !RegExp(/^0+$/).test(value)
+                                    return RegExp(/^(?:[+]?(?:[0-9]\d*))$/).test(value) 
                                 }
                             }}
                             validationError="This is not a valid value"

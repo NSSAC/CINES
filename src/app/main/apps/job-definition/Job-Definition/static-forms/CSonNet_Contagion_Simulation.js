@@ -27,6 +27,7 @@ const CSonNet_Contagion_Simulation = (props) => {
     const [dynamicProps, setDynamicProps] = useState({})
     const [staticProps, setStaticProps] = useState({})
     const [success, setSuccess] = useState();
+    const [errorMsg, setErrorMsg] = useState();
     const [spinnerFlag, setSpinnerFlag] = useState(true);
     const [onSubmit ,setOnSubmit] =useState()
     const history = useHistory();
@@ -253,6 +254,7 @@ const CSonNet_Contagion_Simulation = (props) => {
     }
 
     function populateBody(submitJSON){
+        setIsToasterFlag(true);
         var path = window.location.pathname.replace("/apps/job-definition/", "");
         var jobDefinition = path;
         var requestJson = {
@@ -293,6 +295,10 @@ const CSonNet_Contagion_Simulation = (props) => {
         },
             (error) => {
                 setSuccess(false)
+                if(error.response)
+                setErrorMsg(`${error.response.status}-${error.response.statusText} error occured. Please try again`)
+              else
+                setErrorMsg("An internal error occured. Please try again")
                 setIsToasterFlag(true)
                 window.setTimeout(handlingError, 4000);
             }
@@ -307,6 +313,7 @@ const CSonNet_Contagion_Simulation = (props) => {
 
     function handlingError() {
         setIsToasterFlag(false);
+        setSuccess();
         setOnSubmit(true)
     }
 
@@ -399,7 +406,7 @@ const CSonNet_Contagion_Simulation = (props) => {
                     <div className="content">
                         <div className='flex flex-col' >
                         {isToasterFlag ? (
-                                <Toaster success={success} id="CSonNet Contagion Simulation"></Toaster>
+                                <Toaster errorMsg={errorMsg} success={success} id="CSonNet Contagion Simulation"></Toaster>
                             ) : null}
                             <Typography className="h2"><b>CSonNet Contagion Simulation</b></Typography>
                             <Typography className="h4" style={descStyle}>&nbsp;{modelJSON['description']}</Typography>
@@ -676,7 +683,7 @@ const CSonNet_Contagion_Simulation = (props) => {
                                                 autoComplete="off"
                                                 validations={{
                                                     isPositiveInt: function (values, value) {
-                                                        return RegExp(/^([0-9]|[a-zA-Z]|[\\.\\-_\\s])+$/).test(value);
+                                                        return RegExp(/^([0-9]|[a-zA-Z]|[._\-\s])+$/).test(value);
                                                     },
                                                 }}
                                                 validationError="This is not a valid value"

@@ -18,7 +18,7 @@ function MyJobsFileList(props) {
     var totalRecords;
 
 
-    if(dataSpinner === true){
+    if (dataSpinner === true) {
         setTimeout(() => {
             setDataSpinner(false)
         }, 3000);
@@ -30,7 +30,7 @@ function MyJobsFileList(props) {
         }
         files = files[1]
         onloadSpinner = true;
-        if (selectedId === undefined &&   files.length >0) {
+        if (selectedId === undefined && files.length > 0) {
             dispatch(Actions.setSelectedItem(files[0].id));
         }
 
@@ -78,23 +78,32 @@ function MyJobsFileList(props) {
         }
 
         if (files.length > 0) {
-            var i, changeState = false;
+            var i, changeState = false, cancelledState = false;
+            var cancelledJob = localStorage.getItem("cancelledJob")
             for (i = 0; i < files.length; i++) {
-                if (files[i].state !== 'Completed' && files[i].state !== 'Failed' && files[i].state !== 'Cancelled'){
+                if (files[i].state !== 'Completed' && files[i].state !== 'Failed' && files[i].state !== 'Cancelled') {
                     changeState = true;
                     localStorage.setItem('queuedId', files[i].id)
+                }
+                break;
+            }
+
+            for (i = 0; i < files.length; i++) {
+                if (files[i].id === cancelledJob) {
+                    cancelledState = true;
+                    break;
                 }
                 break;
             }
         }
 
         var queueId = localStorage.getItem('queuedId')
-        if(!changeState && files.length !== 0 && selectedId === queueId){
+        if (!changeState && files.length !== 0 && selectedId === queueId) {
             dispatch(Actions.setSelectedItem(files[0].id));
             localStorage.setItem('queuedId', null)
         }
 
-        const timer = setInterval(() => changeState && props.setChangeState(props.changeState + 1), 8000);
+        const timer = setInterval(() => (changeState || !cancelledState) && props.setChangeState(props.changeState + 1), 8000);
         return () => clearInterval(timer)
 
     })
@@ -208,7 +217,7 @@ function MyJobsFileList(props) {
                         <Table aria-label="a dense table">
 
                             <TableHead>
-                                <TableRow style={{whiteSpace:'nowrap'}}>
+                                <TableRow style={{ whiteSpace: 'nowrap' }}>
 
                                     <TableCell>Job Id {(sortById) ?
 
@@ -342,8 +351,8 @@ function MyJobsFileList(props) {
             </div>
         )
 
-        else
-         return (
+    else
+        return (
             <div className="flex flex-1 flex-col items-center justify-center mt-40">
                 <Typography className="text-20 mt-16" color="textPrimary">Loading</Typography>
                 <LinearProgress className="w-xs" color="secondary" />

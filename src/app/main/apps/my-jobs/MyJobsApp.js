@@ -177,7 +177,7 @@ function MyJobsApp(props) {
       leftSidebarVariant="temporary"
       leftSidebarHeader={<MainSidebarHeader />}
       leftSidebarContent={<MainSidebarContent />}
-      rightSidebarHeader={<DetailSidebarHeader />}
+      rightSidebarHeader={<DetailSidebarHeader history={history}/>}
       rightSidebarContent={<DetailSidebarContent />}
       ref={pageLayout}
       innerScroll
