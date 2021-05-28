@@ -46,9 +46,9 @@ const SEIR3 = (props) => {
             content={
                 <div>
                     <Grid style={childGrid} item container xs={12} >
-                        {data_source}
+                        {/* {data_source} */}
                         <TextFieldFormsy
-                            className="dataSource"
+                            className="my-12 inputStyle1"
                             type="text"
                             name="Edge probability"
                             style={{ width: '18px' }}
@@ -67,9 +67,9 @@ const SEIR3 = (props) => {
                         {description(modelJSON.models.SEIR.submodels['stochastic exposed fixed infectious'].rules[0].input.edge_probability_value.description)}
                     </Grid>
                     <Grid style={childGrid} item container xs={12} >
-                        {data_source}
+                        {/* {data_source} */}
                         <TextFieldFormsy
-                            className="dataSource"
+                            className="my-12 inputStyle1"
                             type="text"
                             name="Exposed probability transition"
                             style={{ width: '18px' }}
@@ -88,9 +88,9 @@ const SEIR3 = (props) => {
                         {description(modelJSON.models.SEIR.submodels['stochastic exposed fixed infectious'].rules[1].input.node_probability_value.description)}
                     </Grid>
                     <Grid style={childGrid} item container xs={12} >
-                        {data_source}
+                        {/* {data_source} */}
                         <TextFieldFormsy
-                            className="dataSource"
+                            className="my-12 inputStyle1"
                             type="text"
                             name="Infectious duration"
                             style={{ width: '18px' }}

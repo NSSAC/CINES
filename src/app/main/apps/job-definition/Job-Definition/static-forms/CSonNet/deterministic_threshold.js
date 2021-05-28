@@ -47,9 +47,9 @@ const Deterministic_threshold = (props) => {
             content={
                 <div className="flex content">
                     <Grid style={childGrid} item container xs={12} >
-                        {data_source}
+                        {/* {data_source} */}
                         <TextFieldFormsy
-                            className="dataSource"
+                            className="my-12 inputStyle1"
                             type="text"
                             name='Threshold'
                             style={{ width: '18px' }}

@@ -53,6 +53,7 @@ function DetailSidebarContent(props) {
   const [standardOut, setStandardOut] = useState("");
   const [headerTitle, setHeaderTitle] = useState("");
   const x = false;
+
   //const opendialog =Boolean;
   const classes = useStyles();
 
@@ -95,6 +96,11 @@ function DetailSidebarContent(props) {
 
   function navigateFile(selectedItem) {
     history.push("/apps/files" + selectedItem + "/");
+  }
+
+  if ( !selectedItem || (Object.keys(selectedItem).length === 0 && selectedItem.constructor === Object))
+  {
+      return null;
   }
 
   return (

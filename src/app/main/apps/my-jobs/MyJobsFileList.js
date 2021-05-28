@@ -73,8 +73,7 @@ function MyJobsFileList(props) {
             setPage(currentPage)
         }
         if (files.length > 0 && selectedFlag) {
-            var selectedId1 = files[0].id
-            setSelectedId(selectedId1)
+            setSelectedId(files[0].id)
         }
 
         if (files.length > 0) {
@@ -83,29 +82,33 @@ function MyJobsFileList(props) {
             for (i = 0; i < files.length; i++) {
                 if (files[i].state !== 'Completed' && files[i].state !== 'Failed' && files[i].state !== 'Cancelled') {
                     changeState = true;
-                    localStorage.setItem('queuedId', files[i].id)
                 }
-                break;
             }
-
-            for (i = 0; i < files.length; i++) {
-                if (files[i].id === cancelledJob) {
-                    cancelledState = true;
-                    break;
+            if (cancelledJob === null)
+                cancelledState = true;
+            else {
+                for (i = 0; i < files.length; i++) {
+                    if (files[i].id === cancelledJob) {
+                        cancelledState = true;
+                        break;
+                    }
                 }
-                break;
             }
         }
 
-        var queueId = localStorage.getItem('queuedId')
-        if (!changeState && files.length !== 0 && selectedId === queueId) {
-            dispatch(Actions.setSelectedItem(files[0].id));
-            localStorage.setItem('queuedId', null)
+
+        const timer_selectedItem = setInterval(() => {
+           selectedItem && selectedItem.state !== 'Completed' && selectedItem.state !== 'Failed' && selectedItem.state !== 'Cancelled' && dispatch(Actions.setSelectedItem(selectedId));
+        }, 8000);
+
+        const timer_jobList = setInterval(() => {
+            (changeState || !cancelledState) && props.setChangeState(props.changeState + 1);
+        }, 8000);
+
+        return () => {
+            clearInterval(timer_jobList);
+            clearInterval(timer_selectedItem);
         }
-
-        const timer = setInterval(() => (changeState || !cancelledState) && props.setChangeState(props.changeState + 1), 8000);
-        return () => clearInterval(timer)
-
     })
 
     const handleChangePage = (event, newPage) => {
@@ -186,12 +189,16 @@ function MyJobsFileList(props) {
         dispatch(Actions.getFiles(10, start, sortOrder, sortType, clearAarry));
         // Store
         sessionStorage.setItem("count", start);
+        props.setInitialPage(false)
     }
 
     const fetchPreviousSetData = () => {
         setShowRange(true)
         let currentPage = page - 1
         setPage(currentPage)
+        if (currentPage === 0)
+            props.setInitialPage(true)
+
     }
     function onRowClick(selectedId) {
         setSelectedFlag(false)
@@ -362,4 +369,4 @@ function MyJobsFileList(props) {
 
 
 
-export default MyJobsFileList;
+export default React.memo(MyJobsFileList);

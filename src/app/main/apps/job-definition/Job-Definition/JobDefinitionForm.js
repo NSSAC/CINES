@@ -157,7 +157,7 @@ function JobDefinitionForm(props) {
         let outputName = {
           id: 201,
           formLabel: "output_name",
-          value: props.resubmit ? props.resubmit.inputData.output_name: "",
+          value: (props.resubmit && props.resubmit.inputData.state !== "Completed") ? props.resubmit.inputData.output_name: "",
           type: "string",
           fileType: outputFiles.type,
           required: true,
@@ -358,8 +358,8 @@ function JobDefinitionForm(props) {
                 >
                   Submit
                 </Button>
-                <Link
-                  to="/apps/job-definition/"
+                {props.resubmit ? <Link
+                  to="/apps/my-jobs/"
                   style={{ color: "transparent" }}
                 >
                   <Button
@@ -369,7 +369,19 @@ function JobDefinitionForm(props) {
                     className="w-30 mx-8 mt-32 mb-80">
                     Cancel
                   </Button>
-                </Link>
+                </Link> :
+                <Link
+                to="/apps/job-definition/"
+                style={{ color: "transparent" }}
+              >
+                <Button
+                  variant="contained"
+                  onClick={onFormCancel}
+                  color="primary"
+                  className="w-30 mx-8 mt-32 mb-80">
+                  Cancel
+                </Button>
+              </Link>}
               </div>
             </Formsy>
           ) : null}

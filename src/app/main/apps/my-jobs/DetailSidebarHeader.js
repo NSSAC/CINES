@@ -13,13 +13,12 @@ function DetailSidebarHeader(props)
     const [cancelJob, setCancelJob] = useState(false);
     var stateFlag = false;
 
-    if ( !selectedItem )
+    if ( !selectedItem || (Object.keys(selectedItem).length === 0 && selectedItem.constructor === Object))
     {
         return null;
     }
 
     function onCancel(item) {
-        localStorage.setItem("cancel_id",item.id)
         confirmAlert({
           title: 'Confirm',
           message: `Are you sure you want to cancel job ${item.id}?`,
