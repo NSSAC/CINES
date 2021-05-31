@@ -15,6 +15,9 @@ import Formsy from "formsy-react";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import DialogContentText from '@material-ui/core/DialogContentText';
+import { toast, ToastContainer } from "material-react-toastify";
+import ReactDOM from 'react-dom';
+
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -33,7 +36,6 @@ export const CreateFolder = ({
     inputsize: {
       width: 250,
     },
-
   });
 
   const breadcrumb_wrap = {
@@ -52,22 +54,21 @@ export const CreateFolder = ({
 
   const [isFormValid, setIsFormValid] = useState(false);
   const [status, setStatus] = useState("");
+  const [error, setError] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [errorMsg, setErrorMsg] = useState();
   const dispatch = useDispatch();
   const [name, setName] = useState("");
-  const [ message,setMessage] = useState("");
-// eslint-disable-next-line 
-  const [flag ,setFlag] =useState(true);
+  // eslint-disable-next-line 
   const classes = useStyles();
   const onCancle = () => {
-    setMessage("");
     setName("");
     handleClose();
-   
+
   };
 
   function inputChangedHandler(event) {
     setStatus("")
-    setMessage("")
     setName(event.target.value);
   }
   function disableButton() {
@@ -79,14 +80,14 @@ export const CreateFolder = ({
   }
 
   function onSubmit() {
-   
+
     const userToken = localStorage.getItem("id_token");
     let target = window.location.pathname;
     if (dialogTargetPath) {
       target = dialogTargetPath;
     }
     let targetPath = target.replace("/apps/files", "");
-    
+
     return axios({
       method: "post",
       url: `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file${targetPath}`,
@@ -100,43 +101,48 @@ export const CreateFolder = ({
       },
     }).then(
       (res) => {
-        let folderName =name
-        setFlag(true)
+        setSuccess(true)
+        setSuccess(false)
         setName("")
-        progressStatus("Folder " + folderName  +  " created successfully",true );
-       
-        if(isFolderManager === true)
-         dispatch(ActionsHome.getHome(targetPath.replace('/home/','')));
-        else 
-         dispatch(Actions.getFiles(targetPath, "GET_FILES"));
-         handleClose();
+        if (isFolderManager === true)
+          dispatch(ActionsHome.getHome(targetPath.replace('/home/', '')));
+        else
+          dispatch(Actions.getFiles(targetPath, "GET_FILES"));
+        handleClose()
       },
 
       (error) => {
-        setFlag(false)
+        setTimeout(() => {
+          setError(true)
+          setError(false)
+        }, 1000);
+       
         if (error.response.data.message === "File already exists") {
-          progressStatus("Folder already exists " ,false);
+          setErrorMsg("Folder already exists");
         } else if (
           error.response.data.message ===
           "data.type should be equal to one of the allowed values"
         ) {
-          progressStatus("Failed (unsupported folder type) ",false);
+          setErrorMsg("Failed (unsupported folder type) ");
         } else {
-          progressStatus(
-            "Unsupported folder name. Special characters '-_.'are allowed" ,false
+          setErrorMsg(
+            "Unsupported folder name. Special characters '-_.'are allowed"
           );
         }
-     
+
       }
     );
   }
 
-  function progressStatus(message ,status) {
-    setMessage(message);
-    setStatus(status)
-  }
+
   return (
     <React.Fragment>
+      {ReactDOM.createPortal(<div>
+        {error === true && <div> {toast.error(errorMsg)}</div>}
+
+        {success === true && <div> {toast.success(`Folder '${name}' created successfully`)}</div>}
+        <ToastContainer limit={1} bodyStyle={{ fontSize: "14px" }} position="top-right" />
+      </div>, document.getElementById("portal"))}
       <Dialog
         className="w-500"
         open={showModal}
@@ -145,19 +151,19 @@ export const CreateFolder = ({
         aria-describedby="alert-dialog-slide-description"
       >
         <DialogTitle id="alert-dialog-slide-title" divider="true">
-          {"Create Folder"}
+          {"Create folder"}
         </DialogTitle>
         <DialogContent divider="true">
-        <DialogContentText className='mb-0' id="alert-dialog-slide-description">
-            {breadcrumbArr?<span className="flex text-16 sm:text-16" style={breadcrumb_wrap}>
+          <DialogContentText className='mb-0' id="alert-dialog-slide-description">
+            {breadcrumbArr ? <span className="flex text-16 sm:text-16" style={breadcrumb_wrap}>
               {breadcrumbArr.map((path, i) => (
                 <span key={i} className="flex items-center" >
-                  <span  title={path} style={ellipsis} >{path} </span>
+                  <span title={path} style={ellipsis} >{path} </span>
                   {breadcrumbArr.length - 1 !== i && (
                     <Icon>chevron_right</Icon>
                   )}
                 </span>))}
-            </span>:null}
+            </span> : null}
           </DialogContentText>
           <Formsy
             onValid={enableButton}
@@ -173,32 +179,18 @@ export const CreateFolder = ({
               autoComplete='off'
               onChange={(event) => inputChangedHandler(event)}
               validations={{
-								isPositiveInt: function (values, value) {
-									return RegExp(/^[^-\s]/).test(value);
-								},
-							}}
-							validationError="This is not a valid value"
+                isPositiveInt: function (values, value) {
+                  return RegExp(/^[^-\s]/).test(value);
+                },
+              }}
+              validationError="This is not a valid value"
               required
             />
           </Formsy>
-
-          <div>
-            { status ?
-              <p style={{marginTop:12}}>
-              {message}
-             {message?
-              <Icon>check_circle</Icon>:null
-             } 
-            </p>:<p style={{marginTop:12}}>
-              {message}
-            
-            </p>
-            }
-          </div>
         </DialogContent>
 
         <DialogActions>
-          <Button disabled={!isFormValid } onClick={onSubmit}>
+          <Button disabled={!isFormValid} onClick={onSubmit}>
             Create
           </Button>
 

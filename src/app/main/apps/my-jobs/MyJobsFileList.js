@@ -10,7 +10,7 @@ import 'fix-date'
 function MyJobsFileList(props) {
     const dispatch = useDispatch();
     const files1 = useSelector(({ myJobsApp }) => myJobsApp.myjobs);
-    const selectedItem = useSelector(({ myJobsApp }) => myJobsApp.selectedjobid);
+    var selectedItem = useSelector(({ myJobsApp }) => myJobsApp.selectedjobid);
     const [selectedId, setSelectedId] = useState();
     const [dataSpinner, setDataSpinner] = useState(true);
     var onloadSpinner = false;
@@ -72,6 +72,7 @@ function MyJobsFileList(props) {
             let currentPage = 0
             setPage(currentPage)
         }
+        
         if (files.length > 0 && selectedFlag) {
             setSelectedId(files[0].id)
         }
@@ -90,25 +91,26 @@ function MyJobsFileList(props) {
                 for (i = 0; i < files.length; i++) {
                     if (files[i].id === cancelledJob) {
                         cancelledState = true;
+                        if (files[i].state === 'Completed' || files[i].state === 'Failed' || files[i].state === 'Cancelled') 
+                          localStorage.removeItem("cancelledJob")
                         break;
                     }
                 }
             }
+            const timer_selectedItem = setInterval(() => {
+                selectedItem && selectedItem.state !== 'Completed' && selectedItem.state !== 'Failed' && selectedItem.state !== 'Cancelled' && dispatch(Actions.setSelectedItem(selectedId));
+             }, 8000);
+     
+             const timer_jobList = setInterval(() => {
+                 (changeState || !cancelledState) && props.setChangeState(props.changeState + 1);
+             }, 8000);
+     
+             return () => {
+                 clearInterval(timer_jobList);
+                 clearInterval(timer_selectedItem);
+             }
         }
 
-
-        const timer_selectedItem = setInterval(() => {
-           selectedItem && selectedItem.state !== 'Completed' && selectedItem.state !== 'Failed' && selectedItem.state !== 'Cancelled' && dispatch(Actions.setSelectedItem(selectedId));
-        }, 8000);
-
-        const timer_jobList = setInterval(() => {
-            (changeState || !cancelledState) && props.setChangeState(props.changeState + 1);
-        }, 8000);
-
-        return () => {
-            clearInterval(timer_jobList);
-            clearInterval(timer_selectedItem);
-        }
     })
 
     const handleChangePage = (event, newPage) => {

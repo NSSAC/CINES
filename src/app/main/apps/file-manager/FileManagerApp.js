@@ -378,7 +378,7 @@ function FileManagerApp(props) {
                 animation="transition.expandIn"
                 delay={600}
               >
-                <Tooltip title="Click to Upload" aria-label="add">
+                <Tooltip title="Create folder OR Upload file" aria-label="add">
                   <Fab
                     color="secondary"
                     aria-label="add"

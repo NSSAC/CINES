@@ -48,6 +48,7 @@ const useStyles = makeStyles({
 function DetailSidebarContent(props) {
   const history = useHistory();
   const selectedItem = useSelector(({ myJobsApp }) => myJobsApp.selectedjobid);
+  const files = useSelector(({ myJobsApp }) => myJobsApp.myjobs);
   const [selectedTab, setSelectedTab] = useState(0);
   const [showDialog, setshowDialog] = useState(false);
   const [standardOut, setStandardOut] = useState("");
@@ -98,7 +99,7 @@ function DetailSidebarContent(props) {
     history.push("/apps/files" + selectedItem + "/");
   }
 
-  if ( !selectedItem || (Object.keys(selectedItem).length === 0 && selectedItem.constructor === Object))
+  if ((files.payload && files.payload.length === 0) || !selectedItem || (Object.keys(selectedItem).length === 0 && selectedItem.constructor === Object))
   {
       return null;
   }

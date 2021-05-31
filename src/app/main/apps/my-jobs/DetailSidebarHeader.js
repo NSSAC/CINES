@@ -8,12 +8,12 @@ import CancelJob from './CancelJob';
 
 function DetailSidebarHeader(props)
 {
-
+    const files = useSelector(({ myJobsApp }) => myJobsApp.myjobs);
     const selectedItem = useSelector(({myJobsApp}) => myJobsApp.selectedjobid);
     const [cancelJob, setCancelJob] = useState(false);
     var stateFlag = false;
 
-    if ( !selectedItem || (Object.keys(selectedItem).length === 0 && selectedItem.constructor === Object))
+    if ((files.payload && files.payload.length === 0) || !selectedItem || (Object.keys(selectedItem).length === 0 && selectedItem.constructor === Object))
     {
         return null;
     }
