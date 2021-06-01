@@ -44,7 +44,7 @@ function MyJobsApp(props) {
   useEffect(()=>{
     var sortOrder = JSON.parse(sessionStorage.getItem("sortOrder"))
     var sortType = JSON.parse(sessionStorage.getItem("type"))
-    if(initialPage === true)
+    if(initialPage === true && changeState > 0)
      dispatch(Actions.getFiles(10, 0, sortOrder, sortType, true));
           /* eslint-disable-next-line */
   }, [changeState])

@@ -2,14 +2,14 @@
 import React, { useState, useEffect } from 'react';
 import { Typography, LinearProgress, Hidden, Button, Icon, TableFooter, Tooltip, IconButton, Table, TableBody, TableCell, TableHead, TableRow, Paper, TableContainer } from '@material-ui/core';
 import { FuseAnimate } from '@fuse';
-import { useDispatch, useSelector } from 'react-redux';
+import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import * as Actions from './store/actions';
 import './FileList.css'
 import 'fix-date'
 
 function MyJobsFileList(props) {
     const dispatch = useDispatch();
-    const files1 = useSelector(({ myJobsApp }) => myJobsApp.myjobs);
+    const files1 = useSelector(({ myJobsApp }) => myJobsApp.myjobs,shallowEqual);
     var selectedItem = useSelector(({ myJobsApp }) => myJobsApp.selectedjobid);
     const [selectedId, setSelectedId] = useState();
     const [dataSpinner, setDataSpinner] = useState(true);
@@ -62,9 +62,17 @@ function MyJobsFileList(props) {
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
     const [spinnerFlag, setSpinnerFlag] = useState(true);
     const [selectedFlag, setSelectedFlag] = useState(true)
+    const [sortCount, setSortCount] = useState(false)
     const [showRange, setShowRange] = useState(false)
     var type;
     var rowLength;
+
+    useEffect(()=>{
+        if (files.length > 0 && sortCount === false) {           
+                if(document.getElementsByClassName("jobRows").length > 0)
+                document.getElementsByClassName("jobRows")[0].click()
+        }
+    }, [files1])
 
     useEffect(() => {
         setSpinnerFlag(false)
@@ -102,7 +110,12 @@ function MyJobsFileList(props) {
              }, 8000);
      
              const timer_jobList = setInterval(() => {
-                 (changeState || !cancelledState) && props.setChangeState(props.changeState + 1);
+                 if (changeState || !cancelledState) {
+                 props.setChangeState(props.changeState + 1);
+                  setSortCount(true)}
+                  setTimeout(() => {
+                    setSortCount(false);
+                  }, 2000);
              }, 8000);
      
              return () => {
@@ -281,7 +294,7 @@ function MyJobsFileList(props) {
                                         rowLength = arr.length;
                                         return ((
                                             <TableRow key={row.id}
-                                                className="cursor-pointer"
+                                                className="cursor-pointer jobRows"
                                                 selected={row.id === selectedId}
                                                 onClick={() => onRowClick(row.id)}
                                             >
@@ -371,4 +384,4 @@ function MyJobsFileList(props) {
 
 
 
-export default React.memo(MyJobsFileList);
+export default MyJobsFileList;

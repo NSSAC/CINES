@@ -140,8 +140,10 @@ export const MyJobFilter = ({
     sessionStorage.setItem("preStateValue", JSON.stringify(preStateValue));
     sessionStorage.setItem("preJobTypeValue", JSON.stringify(preJobTypeValue));
     sessionStorage.setItem("isFilterApplied", JSON.stringify(true));
+    var sortOrder = JSON.parse(sessionStorage.getItem("sortOrder"))
+    var sortType = JSON.parse(sessionStorage.getItem("type"))
     handleClose();
-    dispatch(Actions.getFiles(10, 0, true, "creation_date", true, true));
+    dispatch(Actions.getFiles(10, 0, sortOrder, sortType, true, true));
   };
   const reset = () => {
     sessionStorage.setItem("resetPage", JSON.stringify(true));
@@ -149,12 +151,11 @@ export const MyJobFilter = ({
     setSelectedTypeArray([]);
     setPreJobTypeValue([]);
     let start = 0;
-    let type = "creation_date";
-    let descShort = true;
+    var sortOrder = JSON.parse(sessionStorage.getItem("sortOrder"))
+    var sortType = JSON.parse(sessionStorage.getItem("type"))
     sessionStorage.setItem("isFilterApplied", JSON.stringify(false));
-    dispatch(Actions.getFiles(10, 0, descShort, type, true));
+    dispatch(Actions.getFiles(10, 0, sortOrder, sortType, true));
     sessionStorage.setItem("count", start);
-    sessionStorage.setItem("shortOrder", JSON.stringify(descShort));
   };
 
   const onCancle = () => {
@@ -234,7 +235,7 @@ export const MyJobFilter = ({
                   {jobTypeArray.sort().map((item) => {
                     return (
                       <MenuItem key={item} value={item}>
-                        {item.replace("net.science/snap_","")}
+                        {item.replace("net.science/snap_","").replace("net.science/","")}
                       </MenuItem>
                     );
                   })}
