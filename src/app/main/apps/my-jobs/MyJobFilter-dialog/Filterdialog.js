@@ -144,6 +144,7 @@ export const MyJobFilter = ({
     var sortType = JSON.parse(sessionStorage.getItem("type"))
     handleClose();
     dispatch(Actions.getFiles(10, 0, sortOrder, sortType, true, true));
+    sessionStorage.setItem("count", 0);
   };
   const reset = () => {
     sessionStorage.setItem("resetPage", JSON.stringify(true));
