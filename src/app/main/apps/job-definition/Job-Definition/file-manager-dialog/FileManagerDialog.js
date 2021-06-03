@@ -244,7 +244,7 @@ function FMPopup({
                   animation="transition.expandIn"
                   delay={600}
                 >
-                  <Tooltip title="Click to Upload" aria-label="add">
+                  <Tooltip title="Upload file" aria-label="add">
                     <Fab
                       className="flex flex-col"
                       color="secondary"
@@ -253,7 +253,7 @@ function FMPopup({
                     >
                       <Icon
                         className="flex flex-col"
-                        title="Click to Upload"
+                        title="Upload file"
                         onClick={showFileUploadDialog}
                       >
                         add
@@ -279,7 +279,7 @@ function FMPopup({
                     >
                       <Icon
                         className="flex flex-col"
-                        title="Create Folder"
+                        title="Create folder"
                         onClick={showCreateFolderDialog}
                       >
                         folder

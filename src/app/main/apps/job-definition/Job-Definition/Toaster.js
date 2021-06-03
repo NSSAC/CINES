@@ -1,23 +1,19 @@
 import React from 'react';
 import 'react-responsive-modal/styles.css';
-import {ToastsContainer, ToastsStore, ToastsContainerPosition} from 'react-toasts';
-function Toaster(props){
- 
-if(props.success === false){
-  return (
-    <div> {ToastsStore.error("An error occurred. Please try again.")}
-    <ToastsContainer store={ToastsStore} position={ToastsContainerPosition.TOP_RIGHT}/></div>
-   )
-}
+import { ToastContainer, toast } from 'material-react-toastify';
+import 'material-react-toastify/dist/ReactToastify.css';
+import ReactDOM from 'react-dom';
 
-else {
- 
+function Toaster(props) {
+
   return (
-    <div> {ToastsStore.success(`'${props.id}' job submitted successfully`)}
-    <ToastsContainer store={ToastsStore} position={ToastsContainerPosition.TOP_RIGHT}/></div>
-    
-)
-}
+    ReactDOM.createPortal(<div>
+       {props.success === false && toast.error(props.errorMsg)}
+       {props.success === true && toast.success(`'${props.id}' job submitted successfully`)}
+      <ToastContainer limit={1} bodyStyle={{fontSize:"14px"}} position="top-right" />
+    </div>, document.getElementById("portal"))
+
+  )
 
 }
 export default Toaster;

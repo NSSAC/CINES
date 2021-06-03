@@ -26,7 +26,7 @@ import TickSection from './CSonNet_plot/tickSection.js';
 import { Input } from './SelectFile.js'
 import './SelectFile.css'
 
-const CSonNet_plot = () => {
+const CSonNet_plot = (props) => {
     const [modelJSON, setModelJSON] = useState({});
     const [isFormValid, setIsFormValid] = useState(false);
     const [success, setSuccess] = useState();
@@ -47,7 +47,7 @@ const CSonNet_plot = () => {
         line_width: { id: 202, value: 4 },
         output_filetype: { id: 203, value: "" },
         legend_fontsize: { id: 301, value: 25 },
-        triples: { id: 302, value: []},
+        triples: { id: 302, value: [] },
         add_legend_items: { id: 303, value: "" },
         title_fontsize: { id: 401, value: 15 },
         title_text: { id: 402, value: "" },
@@ -97,10 +97,10 @@ const CSonNet_plot = () => {
     };
 
     function enableButton() {
-           if(existsFlag)
-        setIsFormValid(true);
-           else
-         setIsFormValid(false);
+        if (existsFlag)
+            setIsFormValid(true);
+        else
+            setIsFormValid(false);
 
     }
 
@@ -162,75 +162,75 @@ const CSonNet_plot = () => {
 
         for (var i = 0; i < inputFields.length; i++) {
             if (inputFields[i].data_color !== '' && inputFields[i].alpha_values !== '') {
-              if(inputFields[i].legend_name !== "")
-                tempTriple.value[count] = {legend_name: inputFields[i].legend_name, data_color: inputFields[i].data_color, alpha_values: inputFields[i].alpha_values }
-              else            
-                tempTriple.value[count] = {data_color: inputFields[i].data_color, alpha_values: inputFields[i].alpha_values }
+                if (inputFields[i].legend_name !== "")
+                    tempTriple.value[count] = { legend_name: inputFields[i].legend_name, data_color: inputFields[i].data_color, alpha_values: inputFields[i].alpha_values }
+                else
+                    tempTriple.value[count] = { data_color: inputFields[i].data_color, alpha_values: inputFields[i].alpha_values }
                 count++;
             }
 
             tempTriples.triples = tempTriple
             setDynamicProps({ ...tempTriples });
             console.log(tempTriples)
- 
+
         }
 
 
-            const requestJson = {
-                "plot_types": {
-                    "errorbar_plot": {
-                        "exists": dynamicProps.errorbar_plot.value === 'true'? true : false,
-                        "capwidth": parseInt(dynamicProps.capwidth.value),
-                        "capsize": parseInt(dynamicProps.errorbar_capsize.value),
-                        "show_error_every": parseInt(dynamicProps.show_error_every.value)
-                    },
-                    "line_plot": dynamicProps.line_plot.value === 'true'? true : false,
-                    "scatter_plot":dynamicProps.scatter_plot.value === 'true'? true : false,
-                    "bar_plot": {
-                        "exists": dynamicProps.bar_plot.value === 'true'? true : false,
-                        "bar_width": parseFloat(dynamicProps.bar_width.value),
-                        "bar_annotation_fontsize": parseInt(dynamicProps.bar_annotation_fontsize.value)
-                    }
+        const requestJson = {
+            "plot_types": {
+                "errorbar_plot": {
+                    "exists": dynamicProps.errorbar_plot.value === 'true' ? true : false,
+                    "capwidth": parseInt(dynamicProps.capwidth.value),
+                    "capsize": parseInt(dynamicProps.errorbar_capsize.value),
+                    "show_error_every": parseInt(dynamicProps.show_error_every.value)
                 },
-                "show_points": dynamicProps.show_points.value === 'true'? true : false,
-                "line_width": parseInt(dynamicProps.line_width.value),
-                "output_filetype": dynamicProps.output_filetype.value,
-                "text_sections": {
-                    "legend_section": {
-                        "legend_fontsize": parseInt(dynamicProps.legend_fontsize.value),
-                        "legend_items": dynamicProps.triples.value,
-                    },
-                    "title_section": {
-                        "title_fontsize": parseInt(dynamicProps.title_fontsize.value),
-                        "title_text": dynamicProps.title_text.value
-                    },
-                    "x_axis_section": {
-                        "x_axis_fontsize": parseInt(dynamicProps.x_axis_fontsize.value),
-                        "x_axis_text": dynamicProps.x_axis_text.value,
-                        "x_scale": dynamicProps.x_scale.value,
-                        "set_x_limits": (dynamicProps.set_x_limits.value === 'true'? true : false),
-                        ...(dynamicProps.set_x_limits.value === 'true' && {"x_limit_lower": parseFloat(dynamicProps.x_limit_lower.value), "x_limit_higher": parseFloat(dynamicProps.x_limit_higher.value)}),
-                        "set_x_increment": (dynamicProps.set_x_increment.value === 'true'? true : false),
-                         ...(dynamicProps.set_x_increment.value === 'true' && {"x_increment": parseFloat(dynamicProps.x_increment.value)})
-                        
-                    },
-                    "y_axis_section": {
-                        "y_axis_fontsize": parseInt(dynamicProps.y_axis_fontsize.value),
-                        "y_axis_text": dynamicProps.y_axis_text.value,
-                        "y_scale": dynamicProps.y_scale.value,
-                        "set_y_limits": (dynamicProps.set_y_limits.value === 'true'? true : false),
-                        ...(dynamicProps.set_y_limits.value === 'true' && {"x_limit_lower": parseFloat(dynamicProps.y_limit_lower.value), "x_limit_higher": parseFloat(dynamicProps.y_limit_higher.value)}),
-                        "set_y_increment": (dynamicProps.set_y_increment.value === 'true'? true : false),
-                         ...(dynamicProps.set_y_increment.value === 'true' && {"y_increment": parseFloat(dynamicProps.x_increment.value)})
-                    },
-                    "tick_section": {
-                        "tick_fontsize": parseInt(dynamicProps.tick_fontsize.value),
-                        "axes_in_scientific": dynamicProps.axes_in_scientfic.value,
-                    }
+                "line_plot": dynamicProps.line_plot.value === 'true' ? true : false,
+                "scatter_plot": dynamicProps.scatter_plot.value === 'true' ? true : false,
+                "bar_plot": {
+                    "exists": dynamicProps.bar_plot.value === 'true' ? true : false,
+                    "bar_width": parseFloat(dynamicProps.bar_width.value),
+                    "bar_annotation_fontsize": parseInt(dynamicProps.bar_annotation_fontsize.value)
+                }
+            },
+            "show_points": dynamicProps.show_points.value === 'true' ? true : false,
+            "line_width": parseInt(dynamicProps.line_width.value),
+            "output_filetype": dynamicProps.output_filetype.value,
+            "text_sections": {
+                "legend_section": {
+                    "legend_fontsize": parseInt(dynamicProps.legend_fontsize.value),
+                    "legend_items": dynamicProps.triples.value,
                 },
-                "dpi": parseInt(dynamicProps.dpi.value)
-            }
-        
+                "title_section": {
+                    "title_fontsize": parseInt(dynamicProps.title_fontsize.value),
+                    "title_text": dynamicProps.title_text.value
+                },
+                "x_axis_section": {
+                    "x_axis_fontsize": parseInt(dynamicProps.x_axis_fontsize.value),
+                    "x_axis_text": dynamicProps.x_axis_text.value,
+                    "x_scale": dynamicProps.x_scale.value,
+                    "set_x_limits": (dynamicProps.set_x_limits.value === 'true' ? true : false),
+                    ...(dynamicProps.set_x_limits.value === 'true' && { "x_limit_lower": parseFloat(dynamicProps.x_limit_lower.value), "x_limit_higher": parseFloat(dynamicProps.x_limit_higher.value) }),
+                    "set_x_increment": (dynamicProps.set_x_increment.value === 'true' ? true : false),
+                    ...(dynamicProps.set_x_increment.value === 'true' && { "x_increment": parseFloat(dynamicProps.x_increment.value) })
+
+                },
+                "y_axis_section": {
+                    "y_axis_fontsize": parseInt(dynamicProps.y_axis_fontsize.value),
+                    "y_axis_text": dynamicProps.y_axis_text.value,
+                    "y_scale": dynamicProps.y_scale.value,
+                    "set_y_limits": (dynamicProps.set_y_limits.value === 'true' ? true : false),
+                    ...(dynamicProps.set_y_limits.value === 'true' && { "x_limit_lower": parseFloat(dynamicProps.y_limit_lower.value), "x_limit_higher": parseFloat(dynamicProps.y_limit_higher.value) }),
+                    "set_y_increment": (dynamicProps.set_y_increment.value === 'true' ? true : false),
+                    ...(dynamicProps.set_y_increment.value === 'true' && { "y_increment": parseFloat(dynamicProps.x_increment.value) })
+                },
+                "tick_section": {
+                    "tick_fontsize": parseInt(dynamicProps.tick_fontsize.value),
+                    "axes_in_scientific": dynamicProps.axes_in_scientfic.value,
+                }
+            },
+            "dpi": parseInt(dynamicProps.dpi.value)
+        }
+
         console.log(requestJson)
         // onFormSubmit(requestJson)
     }
@@ -289,86 +289,86 @@ const CSonNet_plot = () => {
         ReactTooltip.rebuild();
     })
 
-    if(!(Object.keys(modelJSON).length === 0 && modelJSON.constructor === Object))
-    return (
-        <FusePageSimple
-            classes={{
-                root: 'root',
-                header: 'headerDisplay'
-            }}
-            header={
-                <div></div>
-            }
-            content={
-                <div className="flex content">
-                    <div >
-                        <Typography className="h2"><b>CSonNet plot</b></Typography>
-                        <Typography className="h4" style={{ whiteSpace: "break-spaces" }}>&nbsp;{modelJSON.description}</Typography>
-                        <div>
-                            <Formsy
-                                onValid={enableButton}
-                                onInvalid={disableButton}
-                                className="content1"
+    if (!(Object.keys(modelJSON).length === 0 && modelJSON.constructor === Object))
+        return (
+            <FusePageSimple
+                classes={{
+                    root: 'root',
+                    header: 'headerDisplay'
+                }}
+                header={
+                    <div></div>
+                }
+                content={
+                    <div className="flex content">
+                        <div >
+                            <Typography className="h2"><b>CSonNet plot</b></Typography>
+                            <Typography className="h4" style={{ whiteSpace: "break-spaces" }}>&nbsp;{modelJSON.description}</Typography>
+                            <div>
+                                <Formsy
+                                    onValid={enableButton}
+                                    onInvalid={disableButton}
+                                    className="content1"
 
-                            >
-                                <div className='columnStyle'>
-                                    <Grid style={childGrid} item container xs={12}>
-                                        <PlotTypes modelJSON={modelJSON} description={description} dynamicProps={dynamicProps} inputChangedHandler={inputChangedHandler}></PlotTypes>
-                                        {existsFlag && <div className="h3 mt-12" style={{ width: '100%' }}><b>Plot properties</b></div>}
-                                        {existsFlag && <div style={{width:'100%'}} className='descPlot'>
-                                            <RadioGroupFormsy
-                                                className="my-12 mt-16 inputStyle-plot"
-                                                name="show_points"
-                                                label='show_points'
-                                                value=''
-                                                onChange={(event) => inputChangedHandler(event, 'show_points')}
-                                                required
-                                            >
-                                                <FormControlLabel value="true" control={<Radio color="primary" />} label="True" />
-                                                <FormControlLabel value="false" control={<Radio color="primary" />} label="False" />
+                                >
+                                    <div className='columnStyle'>
+                                        <Grid style={childGrid} item container xs={12}>
+                                            <PlotTypes modelJSON={modelJSON} description={description} dynamicProps={dynamicProps} inputChangedHandler={inputChangedHandler}></PlotTypes>
+                                            {existsFlag && <div className="h3 mt-12" style={{ width: '100%' }}><b>Plot properties</b></div>}
+                                            {existsFlag && <div style={{ width: '100%' }} className='descPlot'>
+                                                <RadioGroupFormsy
+                                                    className="my-12 mt-16 inputStyle-plot"
+                                                    name="show_points"
+                                                    label='show_points'
+                                                    value=''
+                                                    onChange={(event) => inputChangedHandler(event, 'show_points')}
+                                                    required
+                                                >
+                                                    <FormControlLabel value="true" control={<Radio color="primary" />} label="True" />
+                                                    <FormControlLabel value="false" control={<Radio color="primary" />} label="False" />
 
-                                            </RadioGroupFormsy>
-                                            {description(modelJSON.properties.show_points.description)}
+                                                </RadioGroupFormsy>
+                                                {description(modelJSON.properties.show_points.description)}
 
+                                                <TextFieldFormsy
+                                                    className="my-12 mt-16 inputStyle-plot"
+                                                    type="text"
+                                                    name='line_width'
+                                                    style={{ width: '18px' }}
+                                                    label="line_width"
+                                                    value='4'
+                                                    onBlur={(event) => inputChangedHandler(event, 'line_width')}
+                                                    validations={{
+                                                        isPositiveInt: function (_values, value) {
+                                                            return RegExp(/^(?:[+]?(?:[0-9]\d*))$/).test(value) && !RegExp(/^0+$/).test(value)
+                                                        }
+                                                    }}
+                                                    validationError="This is not a valid value"
+                                                    autoComplete="off"
+                                                    required
+                                                />
+                                                {description(modelJSON.properties.line_width.description)}
+
+                                                <SelectFormsy
+                                                    className="my-12 mt-16 inputStyle-plot"
+                                                    name="output_filetype"
+                                                    label={["output_filetype", <span key={1} style={{ color: 'red' }}>{'*'}</span>]}
+                                                    value=''
+                                                    onChange={(event) => inputChangedHandler(event, 'output_filetype')}
+                                                >
+                                                    {modelJSON.properties.output_filetype.enum.map((item) => {
+                                                        return (
+                                                            <MenuItem key={item} value={item}>
+                                                                {item}
+                                                            </MenuItem>
+                                                        );
+                                                    })}
+                                                </SelectFormsy>
+                                                {description(modelJSON.properties.output_filetype.description)}
+                                            </div>}
+                                            <div className="h3 mt-12" style={{ width: '100%' }}><b>Output</b></div>
                                             <TextFieldFormsy
                                                 className="my-12 mt-16 inputStyle-plot"
-                                                type="text"
-                                                name='line_width'
-                                                style={{ width: '18px' }}
-                                                label="line_width"
-                                                value='4'
-                                                onBlur={(event) => inputChangedHandler(event, 'line_width')}
-                                                validations={{
-                                                    isPositiveInt: function (_values, value) {
-                                                        return RegExp(/^(?:[+]?(?:[0-9]\d*))$/).test(value) && !RegExp(/^0+$/).test(value)
-                                                    }
-                                                }}
-                                                validationError="This is not a valid value"
-                                                autoComplete="off"
-                                                required
-                                            />
-                                            {description(modelJSON.properties.line_width.description)}
-
-                                            <SelectFormsy
-                                                className="my-12 mt-16 inputStyle-plot"
-                                                name="output_filetype"
-                                                label= {["output_filetype", <span key={1} style={{color: 'red'}}>{'*'}</span>]}
-                                                value=''
-                                                onChange={(event) => inputChangedHandler(event, 'output_filetype')}
-                                            >
-                                                {modelJSON.properties.output_filetype.enum.map((item) => {
-                                                    return (
-                                                        <MenuItem key={item} value={item}>
-                                                            {item}
-                                                        </MenuItem>
-                                                    );
-                                                })}
-                                            </SelectFormsy>
-                                            {description(modelJSON.properties.output_filetype.description)}
-                                        </div>}
-                                        <div className="h3 mt-12" style={{ width: '100%' }}><b>Output</b></div>
-                                            <TextFieldFormsy
-                                                 className="my-12 mt-16 inputStyle-plot"
                                                 type="text"
                                                 name='Output Name'
                                                 style={{ width: '18px' }}
@@ -378,84 +378,94 @@ const CSonNet_plot = () => {
                                                 autoComplete="off"
                                                 validations={{
                                                     isPositiveInt: function (values, value) {
-                                                        return RegExp(/^([0-9]|[a-zA-Z]|[\\.\\-_\\s])+$/).test(value);
+                                                        return RegExp(/^([0-9]|[a-zA-Z]|[._\-\s])+$/).test(value);
                                                     },
                                                 }}
                                                 validationError="This is not a valid value"
                                                 required
                                             />
                                             <div className="my-20 pl-20">
-                                            <Input
-                                                key='output_path'
-                                                formData={dynamicProps.outputPath}
-                                                elementType={dynamicProps.outputPath.types}
-                                                value={dynamicProps.outputPath.value}
-                                                changed={(event) => inputChangedHandler(event, 'OutputPath')}
-                                            />
+                                                <Input
+                                                    key='output_path'
+                                                    formData={dynamicProps.outputPath}
+                                                    elementType={dynamicProps.outputPath.types}
+                                                    value={dynamicProps.outputPath.value}
+                                                    changed={(event) => inputChangedHandler(event, 'OutputPath')}
+                                                />
                                             </div>
-                                    </Grid>
-                                </div>
-                                <div className='columnStyle divideProps'>
-                                    <Grid style={childGrid} item container xs={12}>
-                                        <div className="h3" style={{ width: '100%' }}><b>Text section</b></div>
-                                        <LegendSection modelJSON={modelJSON} inputFields={inputFields} setInputFields={(p) => { setInputFields(p) }} description={description} dynamicProps={dynamicProps} inputChangedHandler={inputChangedHandler}></LegendSection>
-                                        <TitleSection modelJSON={modelJSON} description={description} dynamicProps={dynamicProps} inputChangedHandler={inputChangedHandler}></TitleSection>
-                                        <XAxisSection modelJSON={modelJSON} description={description} dynamicProps={dynamicProps} inputChangedHandler={inputChangedHandler}></XAxisSection>
-                                        <YAxisSection modelJSON={modelJSON} description={description} dynamicProps={dynamicProps} inputChangedHandler={inputChangedHandler}></YAxisSection>
-                                        <TickSection modelJSON={modelJSON} description={description} dynamicProps={dynamicProps} inputChangedHandler={inputChangedHandler}></TickSection>
-                                        <TextFieldFormsy
-                                            className="mt-12 mx-0 inputStyle dpi"
-                                            type="text"
-                                            name='dpi'
-                                            style={{ width: '18px' }}
-                                            label="dpi"
-                                            value='600'
-                                            onBlur={(event) => inputChangedHandler(event, 'dpi')}
-                                            validations={{
-                                                isPositiveInt: function (values, value) {
-                                                    return RegExp(/^(?:[+]?(?:[0-9]\d*))$/).test(value) && !RegExp(/^0+$/).test(value)
-                                                }
-                                            }}
-                                            validationError="This is not a valid value"
-                                            autoComplete="off"
-                                            required
-                                        />
-                                        {description(modelJSON.properties.dpi.description)}
+                                        </Grid>
+                                    </div>
+                                    <div className='columnStyle divideProps'>
+                                        <Grid style={childGrid} item container xs={12}>
+                                            <div className="h3" style={{ width: '100%' }}><b>Text section</b></div>
+                                            <LegendSection modelJSON={modelJSON} inputFields={inputFields} setInputFields={(p) => { setInputFields(p) }} description={description} dynamicProps={dynamicProps} inputChangedHandler={inputChangedHandler}></LegendSection>
+                                            <TitleSection modelJSON={modelJSON} description={description} dynamicProps={dynamicProps} inputChangedHandler={inputChangedHandler}></TitleSection>
+                                            <XAxisSection modelJSON={modelJSON} description={description} dynamicProps={dynamicProps} inputChangedHandler={inputChangedHandler}></XAxisSection>
+                                            <YAxisSection modelJSON={modelJSON} description={description} dynamicProps={dynamicProps} inputChangedHandler={inputChangedHandler}></YAxisSection>
+                                            <TickSection modelJSON={modelJSON} description={description} dynamicProps={dynamicProps} inputChangedHandler={inputChangedHandler}></TickSection>
+                                            <TextFieldFormsy
+                                                className="mt-12 mx-0 inputStyle dpi"
+                                                type="text"
+                                                name='dpi'
+                                                style={{ width: '18px' }}
+                                                label="dpi"
+                                                value='600'
+                                                onBlur={(event) => inputChangedHandler(event, 'dpi')}
+                                                validations={{
+                                                    isPositiveInt: function (values, value) {
+                                                        return RegExp(/^(?:[+]?(?:[0-9]\d*))$/).test(value) && !RegExp(/^0+$/).test(value)
+                                                    }
+                                                }}
+                                                validationError="This is not a valid value"
+                                                autoComplete="off"
+                                                required
+                                            />
+                                            {description(modelJSON.properties.dpi.description)}
 
-                                    </Grid>
-                                </div>
-                            </Formsy>
-                            <div style={{ textAlign: 'end' }}>
-                                <Button
-                                    // type="submit"
-                                    variant="contained"
-                                    color="primary"
-                                    className="w-30  mt-32 mb-80"
-                                    aria-label="LOG IN"
-                                    onClick={createSubmissionData}
-                                    disabled={!isFormValid}
-                                >
-                                    Submit
-							</Button>
-                                <Link to="/apps/job-definition/" style={{ color: 'transparent' }}>
+                                        </Grid>
+                                    </div>
+                                </Formsy>
+                                <div style={{ textAlign: 'end' }}>
                                     <Button
+                                        // type="submit"
                                         variant="contained"
-                                        onClick={onFormCancel}
                                         color="primary"
-                                        className="w-30 mx-8 mt-32 mb-80"
+                                        className="w-30  mt-32 mb-80"
+                                        aria-label="LOG IN"
+                                        onClick={createSubmissionData}
+                                        disabled={!isFormValid}
                                     >
-                                        Cancel
+                                        Submit
+							</Button>
+                                    {props.resubmit ? <Link to="/apps/job-definition/" style={{ color: 'transparent' }}>
+                                        <Button
+                                            variant="contained"
+                                            onClick={onFormCancel}
+                                            color="primary"
+                                            className="w-30 mx-8 mt-32 mb-80"
+                                        >
+                                            Cancel
 								</Button>
-                                </Link>
+                                    </Link> :
+                                        <Link to="/apps/job-definition/" style={{ color: 'transparent' }}>
+                                            <Button
+                                                variant="contained"
+                                                onClick={onFormCancel}
+                                                color="primary"
+                                                className="w-30 mx-8 mt-32 mb-80"
+                                            >
+                                                Cancel
+                            </Button>
+                                        </Link>}
+                                </div>
                             </div>
                         </div>
+                        <ReactTooltip clickable={true} className='toolTip' place='top' effect='solid' />
                     </div>
-                    <ReactTooltip clickable={true} className='toolTip' place='top' effect='solid' />
-                </div>
-            }
-        />
+                }
+            />
 
-    );
+        );
 
     else return null;
 }

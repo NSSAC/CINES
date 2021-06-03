@@ -23,7 +23,7 @@ function MetadataInfoDialog(props) {
     >
       <DialogTitle > {props.headertitle}</DialogTitle>
       <DialogContent dividers>
-        {typeof(props.standardout) === 'object' ? Object.values(props.standardout).map(a=>JSON.stringify(a)) : <pre>{props.standardout}</pre>}
+        {typeof(props.standardout) === 'object' ? Object.values(props.standardout).map(a=><pre>{JSON.stringify(a)}</pre>) : <pre>{props.standardout}</pre>}
       </DialogContent>
 
       <DialogActions>

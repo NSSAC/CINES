@@ -185,7 +185,7 @@ export const Input = (props) => {
 							onBlur={props.changed}
 							validations={{
 								isPositiveInt: function (values, value) {
-									return RegExp(/^([0-9]|[a-zA-Z]|[\\.\\-_\\s])+$/).test(value);
+									return RegExp(/^([0-9]|[a-zA-Z]|[._\-\s])+$/).test(value);
 								},
 							}}
 							validationError="This is not a valid value"
@@ -326,7 +326,9 @@ export const Input = (props) => {
 		  if(props.formData[1].value !== "" && props.formData[1].outputFlag === true && typeFlag === 0){
 			setFolderChosenPath(props.formData[1].value)
 		  }
-	}, [setFileChosen,setFolderChosenPath,fileChosen,folderChosenPath,props.formData,typeFlag])
+
+ },[fileChosen, folderChosenPath, props.formData, typeFlag])
+
 
 
 	if(props.formData[0]==='extraObj')

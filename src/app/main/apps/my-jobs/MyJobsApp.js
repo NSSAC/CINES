@@ -20,6 +20,7 @@ function MyJobsApp(props) {
   const [showDialog, setshowDialog] = useState(false);
   const pageLayout = useRef(null);
   const [flag, setFilterFlag] = useState(false);
+  const [initialPage, setInitialPage] = useState(true);
           /* eslint-disable-next-line */
   const [onload, setOnLoad] = useState(false);
   const [changeState, setChangeState] = useState(0);
@@ -38,10 +39,19 @@ function MyJobsApp(props) {
     sessionStorage.removeItem("selectedTypeArray");
     sessionStorage.removeItem("preStateValue");
     sessionStorage.removeItem("preJobTypeValue");
-  }, [dispatch, changeState]);
+  }, [dispatch]);
 
   useEffect(()=>{
-    return () => dispatch(Actions.clearData());
+    var sortOrder = JSON.parse(sessionStorage.getItem("sortOrder"))
+    var sortType = JSON.parse(sessionStorage.getItem("type"))
+    if(initialPage === true && changeState > 0)
+     dispatch(Actions.getFiles(10, 0, sortOrder, sortType, true));
+          /* eslint-disable-next-line */
+  }, [changeState])
+
+  useEffect(()=>{
+    return () => {dispatch(Actions.clearData());}
+                //  dispatch(Actions.clearSelectedItem());}
         /* eslint-disable-next-line */
   },[props.history])
 
@@ -65,6 +75,7 @@ function MyJobsApp(props) {
         header: "h-128 min-h-128",
         sidebarHeader: "h-128 min-h-128",
         rightSidebar: "w-320",
+        contentWrapper: "jobBody"
       }}
       header={
         <div className="flex flex-col flex-1 p-8 sm:p-12 relative">
@@ -169,6 +180,7 @@ function MyJobsApp(props) {
       content={
         <MyJobsFileList
           changeState={changeState}
+          setInitialPage={(p)=>{setInitialPage(p)}}
           setChangeState={(p) => setChangeState(p)}
           flag={flag}
           pageLayout={pageLayout}
@@ -177,7 +189,7 @@ function MyJobsApp(props) {
       leftSidebarVariant="temporary"
       leftSidebarHeader={<MainSidebarHeader />}
       leftSidebarContent={<MainSidebarContent />}
-      rightSidebarHeader={<DetailSidebarHeader />}
+      rightSidebarHeader={<DetailSidebarHeader history={history}/>}
       rightSidebarContent={<DetailSidebarContent />}
       ref={pageLayout}
       innerScroll

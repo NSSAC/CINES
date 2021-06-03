@@ -150,7 +150,7 @@ return (
                     >
                       <Icon
                         className="flex flex-col"
-                        title="Create Folder"
+                        title="Create folder"
                         onClick={showCreateFolderDialog}
                       >
                         folder

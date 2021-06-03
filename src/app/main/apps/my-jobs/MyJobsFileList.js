@@ -2,15 +2,15 @@
 import React, { useState, useEffect } from 'react';
 import { Typography, LinearProgress, Hidden, Button, Icon, TableFooter, Tooltip, IconButton, Table, TableBody, TableCell, TableHead, TableRow, Paper, TableContainer } from '@material-ui/core';
 import { FuseAnimate } from '@fuse';
-import { useDispatch, useSelector } from 'react-redux';
+import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import * as Actions from './store/actions';
 import './FileList.css'
 import 'fix-date'
 
 function MyJobsFileList(props) {
     const dispatch = useDispatch();
-    const files1 = useSelector(({ myJobsApp }) => myJobsApp.myjobs);
-    const selectedItem = useSelector(({ myJobsApp }) => myJobsApp.selectedjobid);
+    const files1 = useSelector(({ myJobsApp }) => myJobsApp.myjobs, shallowEqual);
+    var selectedItem = useSelector(({ myJobsApp }) => myJobsApp.selectedjobid);
     const [selectedId, setSelectedId] = useState();
     const [dataSpinner, setDataSpinner] = useState(true);
     var onloadSpinner = false;
@@ -18,7 +18,7 @@ function MyJobsFileList(props) {
     var totalRecords;
 
 
-    if(dataSpinner === true){
+    if (dataSpinner === true) {
         setTimeout(() => {
             setDataSpinner(false)
         }, 3000);
@@ -30,7 +30,7 @@ function MyJobsFileList(props) {
         }
         files = files[1]
         onloadSpinner = true;
-        if (selectedId === undefined &&   files.length >0) {
+        if (selectedId === undefined && files.length > 0) {
             dispatch(Actions.setSelectedItem(files[0].id));
         }
 
@@ -62,9 +62,19 @@ function MyJobsFileList(props) {
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
     const [spinnerFlag, setSpinnerFlag] = useState(true);
     const [selectedFlag, setSelectedFlag] = useState(true)
+    const [sortCount, setSortCount] = useState(false)
     const [showRange, setShowRange] = useState(false)
     var type;
-    var rowLength;
+    var rowLength = 10;
+
+    useEffect(() => {
+        if (files.length > 0 && sortCount === false) {
+            if (document.getElementsByClassName("jobRows").length > 0)
+                document.getElementsByClassName("jobRows")[0].click()
+            if (page === 1)
+                document.getElementsByClassName('jobBody')[0].scrollTop = document.getElementsByClassName('jobBody')[0].scrollHeight;
+        }
+    }, [files1])
 
     useEffect(() => {
         setSpinnerFlag(false)
@@ -72,30 +82,50 @@ function MyJobsFileList(props) {
             let currentPage = 0
             setPage(currentPage)
         }
+
         if (files.length > 0 && selectedFlag) {
-            var selectedId1 = files[0].id
-            setSelectedId(selectedId1)
+            setSelectedId(files[0].id)
         }
 
         if (files.length > 0) {
-            var i, changeState = false;
+            var i, changeState = false, cancelledState = false;
+            var cancelledJob = localStorage.getItem("cancelledJob")
             for (i = 0; i < files.length; i++) {
-                if (files[i].state !== 'Completed' && files[i].state !== 'Failed' && files[i].state !== 'Cancelled'){
+                if (files[i].state !== 'Completed' && files[i].state !== 'Failed' && files[i].state !== 'Cancelled') {
                     changeState = true;
-                    localStorage.setItem('queuedId', files[i].id)
                 }
-                break;
+            }
+            if (cancelledJob === null)
+                cancelledState = true;
+            else {
+                for (i = 0; i < files.length; i++) {
+                    if (files[i].id === cancelledJob) {
+                        cancelledState = true;
+                        if (files[i].state === 'Completed' || files[i].state === 'Failed' || files[i].state === 'Cancelled')
+                            localStorage.removeItem("cancelledJob")
+                        break;
+                    }
+                }
+            }
+            const timer_selectedItem = setInterval(() => {
+                selectedItem && selectedItem.state !== 'Completed' && selectedItem.state !== 'Failed' && selectedItem.state !== 'Cancelled' && dispatch(Actions.setSelectedItem(selectedId));
+            }, 8000);
+
+            const timer_jobList = setInterval(() => {
+                if (changeState || !cancelledState) {
+                    props.setChangeState(props.changeState + 1);
+                    setSortCount(true)
+                }
+                setTimeout(() => {
+                    setSortCount(false);
+                }, 2000);
+            }, 8000);
+
+            return () => {
+                clearInterval(timer_jobList);
+                clearInterval(timer_selectedItem);
             }
         }
-
-        var queueId = localStorage.getItem('queuedId')
-        if(!changeState && files.length !== 0 && selectedId === queueId){
-            dispatch(Actions.setSelectedItem(files[0].id));
-            localStorage.setItem('queuedId', null)
-        }
-
-        const timer = setInterval(() => changeState && props.setChangeState(props.changeState + 1), 8000);
-        return () => clearInterval(timer)
 
     })
 
@@ -177,12 +207,16 @@ function MyJobsFileList(props) {
         dispatch(Actions.getFiles(10, start, sortOrder, sortType, clearAarry));
         // Store
         sessionStorage.setItem("count", start);
+        props.setInitialPage(false)
     }
 
     const fetchPreviousSetData = () => {
         setShowRange(true)
         let currentPage = page - 1
         setPage(currentPage)
+        if (currentPage === 0)
+            props.setInitialPage(true)
+
     }
     function onRowClick(selectedId) {
         setSelectedFlag(false)
@@ -208,7 +242,7 @@ function MyJobsFileList(props) {
                         <Table aria-label="a dense table">
 
                             <TableHead>
-                                <TableRow style={{whiteSpace:'nowrap'}}>
+                                <TableRow style={{ whiteSpace: 'nowrap' }}>
 
                                     <TableCell>Job Id {(sortById) ?
 
@@ -263,7 +297,7 @@ function MyJobsFileList(props) {
                                         rowLength = arr.length;
                                         return ((
                                             <TableRow key={row.id}
-                                                className="cursor-pointer"
+                                                className="cursor-pointer jobRows"
                                                 selected={row.id === selectedId}
                                                 onClick={() => onRowClick(row.id)}
                                             >
@@ -342,8 +376,8 @@ function MyJobsFileList(props) {
             </div>
         )
 
-        else
-         return (
+    else
+        return (
             <div className="flex flex-1 flex-col items-center justify-center mt-40">
                 <Typography className="text-20 mt-16" color="textPrimary">Loading</Typography>
                 <LinearProgress className="w-xs" color="secondary" />

@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import 'react-responsive-modal/styles.css';
 import { Modal } from 'react-responsive-modal';
-// import { ToastsStore, ToastsContainerPosition, ToastsContainer } from 'react-toasts';
 
 function Download(props){
   const [error, setError] = useState(false);
@@ -118,20 +117,14 @@ function Download(props){
       <p>{errormsg}</p>
     </Modal>
     )
-  //   return (
-  //     <div> {ToastsStore.error(errormsg)}
-  //     <ToastsContainer store={ToastsStore} position={ToastsContainerPosition.TOP_RIGHT}/></div>
-  // )
+
   else if(isLarge)
     return(
       <Modal center={true} open={true} showCloseIcon={false} closeOnOverlayClick={false} classNames styles >
         <p>Please wait... Downloading will start in few minutes.</p>
       </Modal>
     )
-  //   return (
-  //     <div> {ToastsStore.success("Please wait... The downloading will start in few minutes.")}
-  //     <ToastsContainer store={ToastsStore} position={ToastsContainerPosition.TOP_RIGHT}/></div>
-  // )
+
   else 
     return (null)
 }
