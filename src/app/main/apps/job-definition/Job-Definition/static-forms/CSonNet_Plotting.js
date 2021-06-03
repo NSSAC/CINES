@@ -26,7 +26,7 @@ import TickSection from './CSonNet_plot/tickSection.js';
 import { Input } from './SelectFile.js'
 import './SelectFile.css'
 
-const CSonNet_plot = () => {
+const CSonNet_plot = (props) => {
     const [modelJSON, setModelJSON] = useState({});
     const [isFormValid, setIsFormValid] = useState(false);
     const [success, setSuccess] = useState();

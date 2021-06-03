@@ -75,6 +75,7 @@ function MyJobsApp(props) {
         header: "h-128 min-h-128",
         sidebarHeader: "h-128 min-h-128",
         rightSidebar: "w-320",
+        contentWrapper: "jobBody"
       }}
       header={
         <div className="flex flex-col flex-1 p-8 sm:p-12 relative">

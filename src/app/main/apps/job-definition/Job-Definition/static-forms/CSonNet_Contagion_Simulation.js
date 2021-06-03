@@ -56,17 +56,17 @@ const CSonNet_Contagion_Simulation = (props) => {
             (res) => {
                 setSpinnerFlag(false)
                 if (res.data) {
-                    setDynamicProps({
-                        Behaviour: { id: 101, value: props.resubmit ? props.resubmit.inputData.input.dynamic_inputs['Behaviour_model'] : "" },
-                        SIR_Submodel: { id: 201, value: props.resubmit ? props.resubmit.inputData.input.dynamic_inputs['SIR_Submodel'] : "" },
-                        SIS_Submodel: { id: 202, value: props.resubmit ? props.resubmit.inputData.input.dynamic_inputs['SIS_Submodel'] : "" },
-                        SEIR_Submodel: { id: 203, value: props.resubmit ? props.resubmit.inputData.input.dynamic_inputs['SEIR_Submodel'] : "" },
-                        threshold: { id: 301, value: props.resubmit ? props.resubmit.inputData.input.dynamic_inputs['threshold_value'] : "" },
-                        Edge_probability: { id: 302, value: props.resubmit ? props.resubmit.inputData.input.dynamic_inputs['Edge_probability'] : "" },
-                        Infectious_probability_transition: { id: 303, value: props.resubmit ? props.resubmit.inputData.input.dynamic_inputs['Infectious_probability_transition'] : "" },
-                        Infectious_duration: { id: 304, value: props.resubmit ? props.resubmit.inputData.input.dynamic_inputs['Infectious_duration'] : "" },
-                        Exposed_duration: { id: 305, value: props.resubmit ? props.resubmit.inputData.input.dynamic_inputs['Exposed_duration'] : "" },
-                        Exposed_probability_transition: { id: 306, value: props.resubmit ? props.resubmit.inputData.input.dynamic_inputs['Exposed_probability_transition'] : "" },
+                     setDynamicProps({
+                        Behaviour: { id: 101, value: props.resubmit && props.resubmit.inputData.input.dynamic_inputs ? props.resubmit.inputData.input.dynamic_inputs['Behaviour_model'] : "" },
+                        SIR_Submodel: { id: 201, value: props.resubmit && props.resubmit.inputData.input.dynamic_inputs ? props.resubmit.inputData.input.dynamic_inputs['SIR_Submodel'] : "" },
+                        SIS_Submodel: { id: 202, value: props.resubmit && props.resubmit.inputData.input.dynamic_inputs ? props.resubmit.inputData.input.dynamic_inputs['SIS_Submodel'] : "" },
+                        SEIR_Submodel: { id: 203, value: props.resubmit && props.resubmit.inputData.input.dynamic_inputs ? props.resubmit.inputData.input.dynamic_inputs['SEIR_Submodel'] : "" },
+                        threshold: { id: 301, value: props.resubmit && props.resubmit.inputData.input.dynamic_inputs ? props.resubmit.inputData.input.dynamic_inputs['threshold_value'] : "" },
+                        Edge_probability: { id: 302, value: props.resubmit && props.resubmit.inputData.input.dynamic_inputs ? props.resubmit.inputData.input.dynamic_inputs['Edge_probability'] : "" },
+                        Infectious_probability_transition: { id: 303, value: props.resubmit && props.resubmit.inputData.input.dynamic_inputs ? props.resubmit.inputData.input.dynamic_inputs['Infectious_probability_transition'] : "" },
+                        Infectious_duration: { id: 304, value: props.resubmit && props.resubmit.inputData.input.dynamic_inputs ? props.resubmit.inputData.input.dynamic_inputs['Infectious_duration'] : "" },
+                        Exposed_duration: { id: 305, value: props.resubmit && props.resubmit.inputData.input.dynamic_inputs ? props.resubmit.inputData.input.dynamic_inputs['Exposed_duration'] : "" },
+                        Exposed_probability_transition: { id: 306, value: props.resubmit && props.resubmit.inputData.input.dynamic_inputs ? props.resubmit.inputData.input.dynamic_inputs['Exposed_probability_transition'] : "" },
                         inputFile_Graph: [res.data.input_files[0].name, {
                             formLabel: res.data.input_files[0].name,
                             id: 0,

@@ -9,7 +9,7 @@ import 'fix-date'
 
 function MyJobsFileList(props) {
     const dispatch = useDispatch();
-    const files1 = useSelector(({ myJobsApp }) => myJobsApp.myjobs,shallowEqual);
+    const files1 = useSelector(({ myJobsApp }) => myJobsApp.myjobs, shallowEqual);
     var selectedItem = useSelector(({ myJobsApp }) => myJobsApp.selectedjobid);
     const [selectedId, setSelectedId] = useState();
     const [dataSpinner, setDataSpinner] = useState(true);
@@ -65,12 +65,14 @@ function MyJobsFileList(props) {
     const [sortCount, setSortCount] = useState(false)
     const [showRange, setShowRange] = useState(false)
     var type;
-    var rowLength;
+    var rowLength = 10;
 
-    useEffect(()=>{
-        if (files.length > 0 && sortCount === false) {           
-                if(document.getElementsByClassName("jobRows").length > 0)
+    useEffect(() => {
+        if (files.length > 0 && sortCount === false) {
+            if (document.getElementsByClassName("jobRows").length > 0)
                 document.getElementsByClassName("jobRows")[0].click()
+            if (page === 1)
+                document.getElementsByClassName('jobBody')[0].scrollTop = document.getElementsByClassName('jobBody')[0].scrollHeight;
         }
     }, [files1])
 
@@ -80,7 +82,7 @@ function MyJobsFileList(props) {
             let currentPage = 0
             setPage(currentPage)
         }
-        
+
         if (files.length > 0 && selectedFlag) {
             setSelectedId(files[0].id)
         }
@@ -99,29 +101,30 @@ function MyJobsFileList(props) {
                 for (i = 0; i < files.length; i++) {
                     if (files[i].id === cancelledJob) {
                         cancelledState = true;
-                        if (files[i].state === 'Completed' || files[i].state === 'Failed' || files[i].state === 'Cancelled') 
-                          localStorage.removeItem("cancelledJob")
+                        if (files[i].state === 'Completed' || files[i].state === 'Failed' || files[i].state === 'Cancelled')
+                            localStorage.removeItem("cancelledJob")
                         break;
                     }
                 }
             }
             const timer_selectedItem = setInterval(() => {
                 selectedItem && selectedItem.state !== 'Completed' && selectedItem.state !== 'Failed' && selectedItem.state !== 'Cancelled' && dispatch(Actions.setSelectedItem(selectedId));
-             }, 8000);
-     
-             const timer_jobList = setInterval(() => {
-                 if (changeState || !cancelledState) {
-                 props.setChangeState(props.changeState + 1);
-                  setSortCount(true)}
-                  setTimeout(() => {
+            }, 8000);
+
+            const timer_jobList = setInterval(() => {
+                if (changeState || !cancelledState) {
+                    props.setChangeState(props.changeState + 1);
+                    setSortCount(true)
+                }
+                setTimeout(() => {
                     setSortCount(false);
-                  }, 2000);
-             }, 8000);
-     
-             return () => {
-                 clearInterval(timer_jobList);
-                 clearInterval(timer_selectedItem);
-             }
+                }, 2000);
+            }, 8000);
+
+            return () => {
+                clearInterval(timer_jobList);
+                clearInterval(timer_selectedItem);
+            }
         }
 
     })

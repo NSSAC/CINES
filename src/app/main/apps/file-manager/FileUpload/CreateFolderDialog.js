@@ -53,7 +53,6 @@ export const CreateFolder = ({
 
 
   const [isFormValid, setIsFormValid] = useState(false);
-  const [status, setStatus] = useState("");
   const [error, setError] = useState(false);
   const [success, setSuccess] = useState(false);
   const [errorMsg, setErrorMsg] = useState();
@@ -68,7 +67,6 @@ export const CreateFolder = ({
   };
 
   function inputChangedHandler(event) {
-    setStatus("")
     setName(event.target.value);
   }
   function disableButton() {
