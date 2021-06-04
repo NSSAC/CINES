@@ -305,7 +305,7 @@ function MyJobsFileList(props) {
                                                     {row.id}
                                                 </TableCell >
                                                 <TableCell >
-                                                    {row.job_definition}
+                                                    {row.job_definition.replace('net.science/',"")}
                                                 </TableCell>
                                                 <TableCell  >
                                                     {row.state}
