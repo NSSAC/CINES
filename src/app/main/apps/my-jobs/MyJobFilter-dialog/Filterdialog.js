@@ -117,9 +117,9 @@ export const MyJobFilter = ({
         setPreStateValue((preStateValue) => [...preStateValue, selectedValue]);
       }
     } else {
-      if (!preJobTypeValue.includes(selectedValue)) {
+      if (!preJobTypeValue.includes("eq(job_definition,re:" + selectedValue.replace("/", "%2F").replace("@", "%40") + ")")) {
         var modifiedValue =
-          "eq(job_definition,re:" + selectedValue.replace("/", "%2F") + ")";
+          "eq(job_definition,re:" + selectedValue.replace("/", "%2F").replace("@", "%40") + ")";
         setPreJobTypeValue((preJobTypeValue) => [
           ...preJobTypeValue,
           modifiedValue,
@@ -291,6 +291,7 @@ export const MyJobFilter = ({
                       label={data
                         .replace("eq(job_definition,re:", "")
                         .replace("%2F", "/")
+                        .replace("%40", "@")
                         .replace("net.science/snap_","")
                         .replace(")","")}
                       onDelete={() => handleDeleteJob(data)}

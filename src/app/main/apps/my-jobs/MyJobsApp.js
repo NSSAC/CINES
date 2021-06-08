@@ -124,6 +124,7 @@ function MyJobsApp(props) {
                           {data
                             .replace("eq(job_definition,re:", "")
                             .replace("%2F", "/")
+                            .replace("%40", "@")
                             .replace("net.science/snap_","")
                             .replace(")","")}
                         </span>
