@@ -33,7 +33,7 @@ const CSonNet_Contagion_Simulation = (props) => {
     const history = useHistory();
 
     const childGrid = {
-        paddingLeft: '25px',
+        paddingLeft: '8px',
         alignSelf: 'center'
     };
 
@@ -132,7 +132,7 @@ const CSonNet_Contagion_Simulation = (props) => {
                 submitJSON.states = modelJSON['models']['threshold_model']['states'];
                 // submitJSON.default_state = modelJSON['models']['threshold_model']['default_state'];
                 tempRules = modelJSON['models']['threshold_model']['rules'][0]['rule'];
-                tempRules['threshold_value'] = parseInt(dynamicProps.threshold.value);
+                tempRules['deterministic_progressive_node_threshold_value'] = parseInt(dynamicProps.threshold.value);
                 submitJSON.dynamic_inputs.threshold = parseInt(dynamicProps.threshold.value);
                 submitJSON.rules = []
                 submitJSON.rules[0] = tempRules;
@@ -402,7 +402,7 @@ const CSonNet_Contagion_Simulation = (props) => {
                 }
                 content={
                     <div className="flex">
-                        <ReactTooltip clickable={true} className='toolTip' place='top' effect='solid' />
+                        <ReactTooltip clickable={true} isCapture = {true} scrollHide = {true} className='toolTip' place='top' effect='solid' />
                         <div className="content">
                             <div className='flex flex-col' >
                                 {isToasterFlag ? (

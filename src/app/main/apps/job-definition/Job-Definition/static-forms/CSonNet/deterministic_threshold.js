@@ -55,7 +55,7 @@ const Deterministic_threshold = (props) => {
                             style={{ width: '18px' }}
                             value={props.dynamicProps.threshold.value}
                             onBlur={(event) => props.changed(event, 'threshold')}
-                            label="Threshold Value"
+                            label="Node threshold value"
                             validations={{
                                 isPositiveInt: function (values, value) {
                                     return RegExp(/^(?:[+]?(?:[0-9]\d*))$/).test(value) 
@@ -65,9 +65,9 @@ const Deterministic_threshold = (props) => {
                             autoComplete="off"
                             required
                         />
-                        {description(modelJSON.models.threshold_model.rules[0].input.threshold_value.description)}
+                        {description(modelJSON.models.threshold_model.rules[0].input.deterministic_progressive_node_threshold_value.description)}
                     </Grid>
-                    <ReactTooltip clickable={true} className='toolTip' place='top' effect='solid' />
+                    <ReactTooltip clickable={true} isCapture = {true} scrollHide = {true} className='toolTip' place='top' effect='solid' />
                 </div>
             }
         />
