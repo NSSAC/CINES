@@ -10,14 +10,14 @@ export const modelJSON = {
             "rules": [
                 {
                     "input": {
-                        "threshold_value": {
+                        "deterministic_progressive_node_threshold_value": {
                             "type": "integer",
                             "data_sources": [
                                 "fixed"
                             ],
                             "network_element": "node",
-                            "label": "Threshold Value",
-                            "description": "Node threshold",
+                            "label": "Node threshold value",
+                            "description": "Deterministic progressive node threshold value",
                             "minimum": 0
                         }
                     },
