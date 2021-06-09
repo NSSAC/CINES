@@ -117,9 +117,9 @@ export const MyJobFilter = ({
         setPreStateValue((preStateValue) => [...preStateValue, selectedValue]);
       }
     } else {
-      if (!preJobTypeValue.includes("eq(job_definition,re:" + selectedValue.replace("/", "%2F").replace("@", "%40") + ")")) {
+      if (!preJobTypeValue.includes("eq(job_definition,re:" + encodeURIComponent(selectedValue) + ")")) {
         var modifiedValue =
-          "eq(job_definition,re:" + selectedValue.replace("/", "%2F").replace("@", "%40") + ")";
+          "eq(job_definition,re:" + encodeURIComponent(selectedValue) + ")";
         setPreJobTypeValue((preJobTypeValue) => [
           ...preJobTypeValue,
           modifiedValue,
@@ -288,12 +288,9 @@ export const MyJobFilter = ({
                   <li key={index}>
                     <Chip
                       icon={icon}
-                      label={data
+                      label={decodeURIComponent(data
                         .replace("eq(job_definition,re:", "")
-                        .replace("%2F", "/")
-                        .replace("%40", "@")
-                        .replace("net.science/snap_","")
-                        .replace(")","")}
+                        .replace(")","")).replace("net.science/","")}
                       onDelete={() => handleDeleteJob(data)}
                       className={classes.chip}
                     />
