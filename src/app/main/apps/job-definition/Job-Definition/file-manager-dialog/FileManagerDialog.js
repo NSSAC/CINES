@@ -34,7 +34,7 @@ function FMPopup({
   fileTypes,
 }) {
   const dispatch = useDispatch();
-  const files = useSelector(({ fMApp }) => fMApp.files);
+  const files = useSelector(({ fMApp }) => fMApp.home);
   const selectedItem = useSelector(({ fMApp }) => files[fMApp.selectedItemId]);
   const [targetPath, setTargetPath] = useState("/");
   const [searchbool, setSearchbool] = useState(false);
@@ -45,14 +45,14 @@ function FMPopup({
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   var token = localStorage.getItem("id_token");
   const breadcrumbArr = targetPath.split("/");
-  breadcrumbArr[0] = "files";
+  breadcrumbArr[0]="home"
 
   if (uploadFile !== "") {
     files !== {} &&
       Object.values(files).map((node) => {
         if (node.name === uploadFile) {
-            setFileChosen(targetPath + node.name);
-            setFileChosenPath(targetPath + node.name);
+            setFileChosen("/home" + targetPath + node.name);
+            setFileChosenPath("/home" + targetPath + node.name);
             setUploadFile("");
             setTargetPath("/");
             setSearch("");
@@ -60,6 +60,7 @@ function FMPopup({
         }
         return null;
       });
+
   }
 
   const onCancel = () => {
@@ -69,8 +70,8 @@ function FMPopup({
   };
 
   const onSelect = () => {
-    setFileChosen(targetPath + selectedItem.name);
-    setFileChosenPath(targetPath + selectedItem.name);
+    setFileChosen("/home" + targetPath + selectedItem.name);
+    setFileChosenPath("/home" + targetPath + selectedItem.name);
     setSearch("");
     setTargetPath("/");
     handleFMClose();
@@ -113,6 +114,23 @@ function FMPopup({
     }
   }
 
+  function onEntered() {
+    var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    if (isIOS) {
+      document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+    }
+
+  }
+
+  function onExiting() {
+    var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    if (isIOS) {
+      document.body.style.overflow = 'auto';
+      document.body.style.position = 'relative';
+    }
+  }
+
   function handleClickAway() {
     setSearchbool(false);
     document.removeEventListener("keydown", escFunction, false);
@@ -129,7 +147,7 @@ function FMPopup({
     if (typeof token === "string") {
       var config = {
         method: "get",
-        url: `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file${targetMeta}`,
+        url: `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file/home/${targetMeta}`,
         headers: {
           Accept: "*/*",
           Authorization: token,
@@ -166,7 +184,7 @@ function FMPopup({
   };
 
   useEffect(() => {
-    dispatch(Actions.getFiles(targetPath, "GET_FILES"));
+    dispatch(Actions.getHome(targetPath));
     var targetMeta = "";
     if (token === null || !showModal || targetPath === "/") {
       setcheckFlag(false);
@@ -184,6 +202,8 @@ function FMPopup({
         onClose={handleFMClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
+        onEntered={onEntered}
+        onExiting={onExiting}
         maxWidth="lg"
         disableBackdropClick
       >
@@ -246,7 +266,7 @@ function FMPopup({
                 >
                   <Tooltip title="Upload file" aria-label="add">
                     <Fab
-                      className="flex flex-col"
+                      className="flex flex-col flexShrink"
                       color="secondary"
                       aria-label="add"
                       size="small"
@@ -271,7 +291,7 @@ function FMPopup({
                 >
                   <Tooltip title="Create folder" aria-label="add">
                     <Fab
-                      className="flex flex-col"
+                      className="flex flex-col flexShrink"
                       color="secondary"
                       aria-label="add"
                       size="small"
@@ -333,19 +353,21 @@ function FMPopup({
       <FileUpload
         fileTypes={fileTypes}
         setUploadFile={(p) => setUploadFile(p)}
-        dialogTargetPath={targetPath}
+        dialogTargetPath={"/home" + targetPath}
         showModal={showDialog}
         setShowModal={(p) => setShowModal(p)}
         handleClose={handleClose}
         breadcrumbArr={breadcrumbArr}
+        isDialog = {true}
       />
 
       <div>
         <CreateFolder
           showModal={showCreateDialog}
-          dialogTargetPath={targetPath}
+          dialogTargetPath={"/home" + targetPath}
           handleClose={closeCreateFolderDialog}
           breadcrumbArr={breadcrumbArr}
+          isFolderManager = {true}
         />
       </div>
     </div>

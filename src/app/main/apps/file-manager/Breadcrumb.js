@@ -19,13 +19,14 @@ function Breadcrumb({props,className, styles, path})
         for(i=0;i<arr.length;i++){
             targetPath = targetPath + arr[i] + '/'
         }
-         props.history.push('/apps/' + targetPath)
+         props.history.push('/apps/files/' + targetPath)
        }
 
     }
 
     const arr = path.split('/');
     arr[0]="files"
+    arr.shift()
     if(arr[arr.length-1] === ""){
       arr.pop()
     }
