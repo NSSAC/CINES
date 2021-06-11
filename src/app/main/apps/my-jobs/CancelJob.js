@@ -34,6 +34,7 @@ function CancelJob(props) {
             setTimeout(() => {
                 props.setCancelJob(false)
             }, 3000)
+            props.pageLayout.current.toggleRightSidebar()
         })
             .catch(error => {
                 setError(true)

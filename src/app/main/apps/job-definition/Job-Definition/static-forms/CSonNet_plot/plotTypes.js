@@ -17,7 +17,7 @@ const PlotTypes = (props) => {
                     className="my-16 inputStyle-plot"
                     name="errorbar_plot"
                     label='errorbar_plot'
-                    value=''
+                    value={props.dynamicProps.errorbar_plot.value}
                     onChange={(event) => props.inputChangedHandler(event, 'errorbar_plot')}
                     required
                 >
@@ -33,7 +33,7 @@ const PlotTypes = (props) => {
                         name='errorbar_capsize'
                         style={{ width: '18px' }}
                         label="errorbar_capsize"
-                        value='3'
+                        value={props.dynamicProps.errorbar_capsize.value}
                         onBlur={(event) => props.inputChangedHandler(event, 'errorbar_capsize')}
                         validations={{
                             isPositiveInt: function (values, value) {
@@ -53,7 +53,7 @@ const PlotTypes = (props) => {
                         name='capwidth'
                         style={{ width: '18px' }}
                         label="capwidth"
-                        value='1'
+                        value={props.dynamicProps.capwidth.value}
                         onBlur={(event) => props.inputChangedHandler(event, 'capwidth')}
                         validations={{
                             isPositiveInt: function (values, value) {
@@ -71,7 +71,7 @@ const PlotTypes = (props) => {
                         name='show_error_every'
                         style={{ width: '18px' }}
                         label="show_error_every"
-                        value='1'
+                        value={props.dynamicProps.show_error_every.value}
                         onBlur={(event) => props.inputChangedHandler(event, 'show_error_every')}
                         validations={{
                             isPositiveInt: function (values, value) {
@@ -89,7 +89,7 @@ const PlotTypes = (props) => {
                     name="line_plot"
                     label='line_plot'
                     onChange={(event) => props.inputChangedHandler(event, 'line_plot')}
-                    value=''
+                    value={props.dynamicProps.line_plot.value}
                     required
                 >
                     <FormControlLabel value="true" control={<Radio color="primary" />} label="True" />
@@ -101,7 +101,7 @@ const PlotTypes = (props) => {
                     className="my-16 inputStyle-plot"
                     name="scatter_plot"
                     label='scatter_plot'
-                    value=''
+                    value={props.dynamicProps.scatter_plot.value}
                     onChange={(event) => props.inputChangedHandler(event, 'scatter_plot')}
                     required
                 >
@@ -114,7 +114,7 @@ const PlotTypes = (props) => {
                     className="mt-16 inputStyle-plot"
                     name="bar_plot"
                     label='bar_plot'
-                    value=''
+                    value={props.dynamicProps.bar_plot.value}
                     onChange={(event) => props.inputChangedHandler(event, 'bar_plot')}
                     required
                 >
@@ -130,7 +130,7 @@ const PlotTypes = (props) => {
                         name='bar_width'
                         style={{ width: '18px' }}
                         label="bar_width"
-                        value='0.25'
+                        value={props.dynamicProps.bar_width.value}
                         onBlur={(event) => props.inputChangedHandler(event, 'bar_width')}
                         validations={{
                             isPositiveInt: function (values, value) {
@@ -149,7 +149,7 @@ const PlotTypes = (props) => {
                         name='bar_annotation_fontsize'
                         style={{ width: '18px' }}
                         label="bar_annotation_fontsize"
-                        value='10'
+                        value={props.dynamicProps.bar_annotation_fontsize.value}
                         onBlur={(event) => props.inputChangedHandler(event, 'bar_annotation_fontsize')}
                         validations={{
                             isPositiveInt: function (values, value) {

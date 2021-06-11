@@ -85,9 +85,9 @@ const Submodel_SID = (props) => {
                             autoComplete="off"
                             required
                         />
-                        {description(modelJSON.models.SIR.submodels['fixed infectious'].rules[1].input.time_duration_value.description)}
+                        {description(modelJSON.models.SIR.submodels['fixed infectious'].rules[1].input.discrete_time_auto_value.description)}
                     </Grid>
-                    <ReactTooltip clickable={true} className='toolTip' place='top' effect='solid' />
+                    <ReactTooltip clickable={true} isCapture = {true} scrollHide = {true} className='toolTip' place='top' effect='solid' />
                 </div>
             }
         />

@@ -78,6 +78,23 @@ export const MyJobFilter = ({
     // eslint-disable-next-line
   }, [axios]);
 
+  function onEntered() {
+    var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    if (isIOS) {
+      document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+    }
+
+  }
+
+  function onExiting() {
+    var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    if (isIOS) {
+      document.body.style.overflow = 'auto';
+      document.body.style.position = 'relative';
+    }
+  }
+
   const createjobTypeArray = (responseData) => {
     for (let i = 0; i < responseData.length; i++) {
       jobArray.push(responseData[i].id);
@@ -117,9 +134,9 @@ export const MyJobFilter = ({
         setPreStateValue((preStateValue) => [...preStateValue, selectedValue]);
       }
     } else {
-      if (!preJobTypeValue.includes("eq(job_definition,re:" + selectedValue.replace("/", "%2F").replace("@", "%40") + ")")) {
+      if (!preJobTypeValue.includes("eq(job_definition,re:" + encodeURIComponent(selectedValue) + ")")) {
         var modifiedValue =
-          "eq(job_definition,re:" + selectedValue.replace("/", "%2F").replace("@", "%40") + ")";
+          "eq(job_definition,re:" + encodeURIComponent(selectedValue) + ")";
         setPreJobTypeValue((preJobTypeValue) => [
           ...preJobTypeValue,
           modifiedValue,
@@ -208,6 +225,8 @@ export const MyJobFilter = ({
         TransitionComponent={Transition}
         aria-labelledby="alert-dialog-slide-title"
         aria-describedby="alert-dialog-slide-description"
+        onEntered={onEntered}
+        onExiting={onExiting}
       >
         <DialogTitle id="alert-dialog-slide-title">{"Filter By"}</DialogTitle>
         <DialogContent>
@@ -288,12 +307,9 @@ export const MyJobFilter = ({
                   <li key={index}>
                     <Chip
                       icon={icon}
-                      label={data
+                      label={decodeURIComponent(data
                         .replace("eq(job_definition,re:", "")
-                        .replace("%2F", "/")
-                        .replace("%40", "@")
-                        .replace("net.science/snap_","")
-                        .replace(")","")}
+                        .replace(")","")).replace("net.science/","")}
                       onDelete={() => handleDeleteJob(data)}
                       className={classes.chip}
                     />

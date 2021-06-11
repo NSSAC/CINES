@@ -70,7 +70,7 @@ export const modelJSON = {
                         },
                         {
                             "input": {
-                                "time_duration_value": {
+                                "discrete_time_auto_value": {
                                     "type": "integer",
                                     "label": "Exposed duration",
                                     "description": "Time spent in exposed state (E)",
@@ -91,7 +91,7 @@ export const modelJSON = {
                         },
                         {
                             "input": {
-                                "time_duration_value": {
+                                "discrete_time_auto_value": {
                                     "type": "integer",
                                     "label": "Infectious duration",
                                     "description": "Time spent in infectious state (I)",
@@ -147,7 +147,7 @@ export const modelJSON = {
                         },
                         {
                             "input": {
-                                "time_duration_value": {
+                                "discrete_time_auto_value": {
                                     "type": "integer",
                                     "label": "Exposed duration",
                                     "description": "Time spent in exposed state (E)",
@@ -168,7 +168,7 @@ export const modelJSON = {
                         },
                         {
                             "input": {
-                                "node_probability_value": {
+                                "node_probability_auto_value": {
                                     "type": "number",
                                     "label": "Infectious probability transition",
                                     "description": "Probability to transition out of infectious state (I) per timestep",
@@ -225,7 +225,7 @@ export const modelJSON = {
                         },
                         {
                             "input": {
-                                "node_probability_value": {
+                                "node_probability_auto_value": {
                                     "type": "number",
                                     "label": "Exposed probability transition",
                                     "description": "Probability to transition out of exposed state (E) per timestep",
@@ -247,7 +247,7 @@ export const modelJSON = {
                         },
                         {
                             "input": {
-                                "time_duration_value": {
+                                "discrete_time_auto_value": {
                                     "type": "integer",
                                     "label": "Infectious duration",
                                     "description": "Time spent in infectious state (I)",
@@ -303,7 +303,7 @@ export const modelJSON = {
                         },
                         {
                             "input": {
-                                "node_probability_value": {
+                                "node_probability_auto_value": {
                                     "type": "number",
                                     "label": "Exposed probability transition",
                                     "description": "Probability to transition out of exposed state (E) per timestep",
@@ -325,7 +325,7 @@ export const modelJSON = {
                         },
                         {
                             "input": {
-                                "node_probability_value": {
+                                "node_probability_auto_value": {
                                     "type": "number",
                                     "label": "Infectious probability transition",
                                     "description": "Probability to transition out of infectious state (I) per timestep",
@@ -385,7 +385,7 @@ export const modelJSON = {
                         },
                         {
                             "input": {
-                                "time_duration_value": {
+                                "discrete_time_auto_value": {
                                     "type": "integer",
                                     "label": "Infectious duration",
                                     "description": "Time spent in infectious state (I)",

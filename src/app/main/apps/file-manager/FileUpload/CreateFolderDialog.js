@@ -132,6 +132,23 @@ export const CreateFolder = ({
     );
   }
 
+  function onEntered() {
+    var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    if (isIOS) {
+      document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+    }
+
+  }
+
+  function onExiting() {
+    var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    if (isIOS) {
+      document.body.style.overflow = 'auto';
+      document.body.style.position = 'relative';
+    }
+  }
+
 
   return (
     <React.Fragment>
@@ -145,6 +162,8 @@ export const CreateFolder = ({
         className="w-500"
         open={showModal}
         TransitionComponent={Transition}
+        onEntered={onEntered}
+        onExiting={onExiting}
         aria-labelledby="alert-dialog-slide-title"
         aria-describedby="alert-dialog-slide-description"
       >

@@ -18,7 +18,7 @@ const TickSection = (props) => {
                         name='tick_fontsize'
                         style={{ width: '18px' }}
                         label="tick_fontsize"
-                        value='35'
+                        value={props.dynamicProps.tick_fontsize.value}
                         onBlur={(event) => props.inputChangedHandler(event, 'tick_fontsize')}
                         validations={{
                             isPositiveInt: function (values, value) {
@@ -34,7 +34,7 @@ const TickSection = (props) => {
                     className="my-12 inputStyle-plot"
                     name="axes_in_scientfic"
                     label={["axes_in_scientfic", <span key={1} style={{color: 'red'}}>{'*'}</span>]}
-                    value=''
+                    value={props.dynamicProps.axes_in_scientfic.value}
                     onChange={(event) => props.inputChangedHandler(event, 'axes_in_scientfic')}
                     required
                 >

@@ -157,7 +157,7 @@ const navigationConfig = [
                 'title': 'File Manager',
                 'type' : 'item',
                 'icon' : 'folder',
-                'url'  : '/apps/files/'
+                'url'  : '/apps/files/home'
             },
             // {
             //     'id'   : 'contacts',

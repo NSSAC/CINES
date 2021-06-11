@@ -12,18 +12,39 @@ function MetadataInfoDialog(props) {
     props.closedialog()
   };
 
+  function onEntered() {
+    var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    if (isIOS) {
+      document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+    }
+
+  }
+
+  function onExiting() {
+    var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    if (isIOS) {
+      document.body.style.overflow = 'auto';
+      document.body.style.position = 'relative';
+    }
+  }
+
   return (
     <Dialog
+      style={{ pointerEvents: 'auto' }}
       disableBackdropClick
       disableEscapeKeyDown
       maxWidth="xs"
       aria-labelledby="confirmation-dialog-title"
       open={props.opendialog}
+      scroll='paper'
+      onEntered={onEntered}
+      onExiting={onExiting}
       {...other}
     >
       <DialogTitle > {props.headertitle}</DialogTitle>
       <DialogContent dividers>
-        {typeof(props.standardout) === 'object' ? Object.values(props.standardout).map(a=><pre>{JSON.stringify(a)}</pre>) : <pre>{props.standardout}</pre>}
+        {typeof (props.standardout) === 'object' ?  <pre>{JSON.stringify(props.standardout, null, 2)}</pre> : <pre>{props.standardout}</pre>}
       </DialogContent>
 
       <DialogActions>

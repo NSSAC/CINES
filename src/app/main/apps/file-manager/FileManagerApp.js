@@ -30,6 +30,7 @@ import axios from "axios";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import FILEUPLOAD_CONFI from "./FileManagerAppConfig"
+import './FileManager.css'
 
 function FileManagerApp(props) {
   const [searchbool, setSearchbool] = useState(false);
@@ -260,7 +261,8 @@ function FileManagerApp(props) {
       classes={{
         root: "bg-red",
         header: "h-auto min-h-128 sm:h-auto sm:min-h-140",
-        sidebarHeader: "h-auto min-h-128 sm:h-auto sm:min-h-140",
+        sidebarHeader: "h-auto min-h-128 sm:h-auto sm:min-h-140 sidebarHeader1",
+        sidebarContent: "sidebarWrapper",
         rightSidebar: "w-320",
         contentWrapper: "FileWrapper",
       }}

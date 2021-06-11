@@ -39,6 +39,23 @@ function MetadataInfoDialog(props) {
     props.closeDialog()
   };
 
+  function onEntered() {
+    var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    if (isIOS) {
+      document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+    }
+
+  }
+
+  function onExiting() {
+    var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    if (isIOS) {
+      document.body.style.overflow = 'auto';
+      document.body.style.position = 'relative';
+    }
+  }
+
   return (
     <Dialog
       disableBackdropClick
@@ -46,6 +63,8 @@ function MetadataInfoDialog(props) {
       maxWidth="xs"
       aria-labelledby="confirmation-dialog-title"
       open={props.openDialog}
+      onEntered={onEntered}
+      onExiting={onExiting}
       {...other}
     >
       <DialogTitle > {props.headerTitle}</DialogTitle>

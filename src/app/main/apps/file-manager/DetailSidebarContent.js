@@ -248,7 +248,7 @@ function DetailSidebarContent(props) {
                     setUsermetaSuccess(true)
                     setTimeout(() => {
                         setUsermetaSuccess(false)
-                    }, 3500);
+                    }, 0);
                 })
                 .catch(function (error) {
                     setUsermetaError(true)
@@ -258,7 +258,7 @@ function DetailSidebarContent(props) {
                     setErrorMsg("An internal error occured. Please try again")
                     setTimeout(() => {
                         setUsermetaError(false)
-                    }, 3500);
+                    }, 0);
                 });
         }
     }
@@ -317,6 +317,10 @@ function DetailSidebarContent(props) {
                         <table className={clsx(classes.table, "w-full, text-left")}>
 
                             <tbody>
+                            <tr className="id">
+                                    <th>Id</th>
+                                    <td title={selectedItem.id}>{selectedItem.id}</td>
+                                </tr>
                                 <tr className="state">
                                     <th>State</th>
                                     <td title={selectedItem.state}>{selectedItem.state}</td>

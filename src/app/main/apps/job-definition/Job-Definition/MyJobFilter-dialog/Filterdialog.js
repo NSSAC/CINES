@@ -162,6 +162,23 @@ export const MyJobFilter = ({ showModal, handleClose, handleLogout, remainingTim
 
     //setPreJobTypeValue((preJobTypeValue) => preJobTypeValue.filter((preJobTypeValue) => preJobTypeValue !== chipToDelete));
   };
+
+  function onEntered() {
+    var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    if (isIOS) {
+      document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+    }
+
+  }
+
+  function onExiting() {
+    var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    if (isIOS) {
+      document.body.style.overflow = 'auto';
+      document.body.style.position = 'relative';
+    }
+  }
   const classes = useStyles();
 
   return (
@@ -172,6 +189,8 @@ export const MyJobFilter = ({ showModal, handleClose, handleLogout, remainingTim
         TransitionComponent={Transition}
         aria-labelledby="alert-dialog-slide-title"
         aria-describedby="alert-dialog-slide-description"
+        onEntered={onEntered}
+        onExiting={onExiting}
       >
         <DialogTitle id="alert-dialog-slide-title">{"Filter By"}
         </DialogTitle>

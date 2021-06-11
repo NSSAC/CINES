@@ -72,8 +72,8 @@ function MyJobsApp(props) {
     <FusePageSimple
       classes={{
         root: "bg-red",
-        header: "h-128 min-h-128",
-        sidebarHeader: "h-128 min-h-128",
+        header: "header",
+        sidebarHeader: "header",
         rightSidebar: "w-320",
         contentWrapper: "jobBody"
       }}
@@ -121,12 +121,9 @@ function MyJobsApp(props) {
                       return (
                         <span key={index} className="chips">
                           {" "}
-                          {data
+                          {decodeURIComponent(data
                             .replace("eq(job_definition,re:", "")
-                            .replace("%2F", "/")
-                            .replace("%40", "@")
-                            .replace("net.science/snap_","")
-                            .replace(")","")}
+                            .replace(")","")).replace("net.science/","")}
                         </span>
                       );
                     }
@@ -190,8 +187,8 @@ function MyJobsApp(props) {
       leftSidebarVariant="temporary"
       leftSidebarHeader={<MainSidebarHeader />}
       leftSidebarContent={<MainSidebarContent />}
-      rightSidebarHeader={<DetailSidebarHeader history={history}/>}
-      rightSidebarContent={<DetailSidebarContent />}
+      rightSidebarHeader={<DetailSidebarHeader pageLayout={pageLayout} history={history}/>}
+      rightSidebarContent={<DetailSidebarContent/>}
       ref={pageLayout}
       innerScroll
     />

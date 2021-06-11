@@ -42,7 +42,7 @@ const LegendSection = (props) => {
                         name='legend_fontsize'
                         style={{ width: '18px' }}
                         label="legend_fontsize"
-                        value='25'
+                        value={props.dynamicProps.legend_fontsize.value}
                         onBlur={(event) => props.inputChangedHandler(event, 'legend_fontsize')}
                         validations={{
                             isPositiveInt: function (values, value) {

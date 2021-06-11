@@ -65,7 +65,7 @@ function DetailSidebarHeader(props)
     return (
         <div className="flex flex-col justify-between h-full p-4 sm:p-12">
              <div className="toolbar flex align-center justify-end h-48">
-             { cancelJob?<CancelJob id={selectedItem.id} setCancelJob={(p)=> setCancelJob(p)} ></CancelJob>:null}
+             { cancelJob?<CancelJob  pageLayout={props.pageLayout} id={selectedItem.id} setCancelJob={(p)=> setCancelJob(p)} ></CancelJob>:null}
                {!stateFlag && <FuseAnimate animation="transition.expandIn" delay={200}>
                   <Tooltip title="Cancel job" placement="bottom">
                     <IconButton onClick={()=>onCancel(selectedItem)} >

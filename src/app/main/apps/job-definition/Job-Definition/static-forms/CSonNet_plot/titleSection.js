@@ -16,7 +16,7 @@ const TitleSection = (props) => {
                         name='title_fontsize'
                         style={{ width: '18px' }}
                         label="title_fontsize"
-                        value='15'
+                        value={props.dynamicProps.title_fontsize.value}
                         onBlur={(event) => props.inputChangedHandler(event, 'title_fontsize')}
                         validations={{
                             isPositiveInt: function (values, value) {
@@ -34,7 +34,7 @@ const TitleSection = (props) => {
                         name='title_text'
                         style={{ width: '18px' }}
                         label="title_text"
-                        value=''
+                        value={props.dynamicProps.title_text.value}
                         onBlur={(event) => props.inputChangedHandler(event, 'title_text')}
                         validations={{
                             isPositiveInt: function (values, value) {

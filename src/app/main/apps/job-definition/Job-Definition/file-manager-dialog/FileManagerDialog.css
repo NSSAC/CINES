@@ -9,6 +9,10 @@
     text-align: end;
 }
 
+.flexShrink {
+    flex-shrink:0
+}
+
 .tableStyle {
     overflow: auto;
     max-height: 320px;

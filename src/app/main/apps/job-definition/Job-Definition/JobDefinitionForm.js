@@ -102,8 +102,10 @@ function JobDefinitionForm(props) {
           obj["id"] = index;
           obj["formLabel"] = obj.name;
           obj["outputFlag"] = false;
-          if(props.resubmit)
-          obj["value"] = props.resubmit.inputData.input.inputFile_Graph;
+          if(props.resubmit && props.resubmit.inputData.input.inputFile_Graph)
+            obj["value"] = props.resubmit.inputData.input.inputFile_Graph;
+          else if(props.resubmit && props.resubmit.inputData.input.csonnet_simulation)
+            obj["value"] = props.resubmit.inputData.input.csonnet_simulation;
          else
          obj["value"] = "";
         }
