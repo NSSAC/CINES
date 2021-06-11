@@ -21,7 +21,7 @@ const XAxisSection = (props) => {
                     name='x_axis_fontsize'
                     style={{ width: '18px' }}
                     label="x_axis_fontsize"
-                    value='35'
+                    value={props.dynamicProps.x_axis_fontsize.value}
                     onBlur={(event) => props.inputChangedHandler(event, 'x_axis_fontsize')}
                     validations={{
                         isPositiveInt: function (values, value) {
@@ -39,6 +39,7 @@ const XAxisSection = (props) => {
                     style={{ width: '18px' }}
                     name="x_axis_text"
                     label="x_axis_text"
+                    value={props.dynamicProps.x_axis_text.value}
                     onBlur={(event) => props.inputChangedHandler(event, 'x_axis_text')}
                     validations={{
                         isPositiveInt: function (values, value) {
@@ -54,7 +55,7 @@ const XAxisSection = (props) => {
                     name="x_scale"
                     label={["x_scale", <span key={1} style={{color: 'red'}}>{'*'}</span>]}
                     style={{marginBottom:'12px'}}
-                    value=''
+                    value={props.dynamicProps.x_scale.value}
                     onChange={(event) => props.inputChangedHandler(event, 'x_scale')}
                 >
                     {props.modelJSON.properties.text_sections.properties.x_axis_section.properties.x_scale.enum.map((item) => {
@@ -70,7 +71,7 @@ const XAxisSection = (props) => {
                     className="mt-16 inputStyle-plot"
                     name="set_x_limits"
                     label='set_x_limits'
-                    value=''
+                    value={props.dynamicProps.set_x_limits.value}
                     onChange={(event) => props.inputChangedHandler(event, 'set_x_limits')}
                     required
                 >
@@ -85,7 +86,7 @@ const XAxisSection = (props) => {
                     type="text"
                     name='x_limit_lower'
                     style={{ width: '18px' }}
-                    value=''
+                    value={props.dynamicProps.x_limit_lower.value}
                     label="x_limit_lower"
                     onBlur={(event) => props.inputChangedHandler(event, 'x_limit_lower')}
                     validations={{
@@ -105,7 +106,7 @@ const XAxisSection = (props) => {
                     name='x_limit_higher'
                     style={{ width: '18px',marginBottom:'12px' }}
                     label="x_limit_higher"
-                    value=''
+                    value={props.dynamicProps.x_limit_higher.value}
                     onBlur={(event) => props.inputChangedHandler(event, 'x_limit_higher')}
                     validations={{
                         isPositiveInt: function (values, value) {
@@ -122,7 +123,7 @@ const XAxisSection = (props) => {
                     className="mt-16 inputStyle-plot"
                     name="set_x_increment"
                     label='set_x_increment'
-                    value=''
+                    value={props.dynamicProps.set_x_increment.value}
                     onChange={(event) => props.inputChangedHandler(event, 'set_x_increment')}
                     required
                 >
@@ -138,7 +139,7 @@ const XAxisSection = (props) => {
                     name='x_increment'
                     style={{ width: '18px' }}
                     label="x_increment"
-                    value=''
+                    value={props.dynamicProps.x_increment.value}
                     onBlur={(event) => props.inputChangedHandler(event, 'x_increment')}
                     validations={{
                         isPositiveInt: function (values, value) {

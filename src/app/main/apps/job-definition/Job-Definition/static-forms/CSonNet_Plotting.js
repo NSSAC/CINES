@@ -25,6 +25,7 @@ import YAxisSection from './CSonNet_plot/yAxisSection.js';
 import TickSection from './CSonNet_plot/tickSection.js';
 import { Input } from './SelectFile.js'
 import './SelectFile.css'
+import Toaster from '../Toaster.js';
 
 const CSonNet_plot = (props) => {
     const [modelJSON, setModelJSON] = useState({});
@@ -33,53 +34,8 @@ const CSonNet_plot = (props) => {
     const [isToasterFlag, setIsToasterFlag] = useState(false);
     const [existsFlag, setExistsFlag] = useState(false);
     const [inputFields, setInputFields] = useState([]);
-    const [dynamicProps, setDynamicProps] = useState({
-        errorbar_plot: { id: 101, value: '' },
-        line_plot: { id: 102, value: '' },
-        scatter_plot: { id: 103, value: '' },
-        bar_plot: { id: 104, value: '' },
-        errorbar_capsize: { id: 1011, value: 3 },
-        capwidth: { id: 1012, value: 1 },
-        show_error_every: { id: 1013, value: 1 },
-        bar_width: { id: 1041, value: 0.25 },
-        bar_annotation_fontsize: { id: 1042, value: 10 },
-        show_points: { id: 201, value: "" },
-        line_width: { id: 202, value: 4 },
-        output_filetype: { id: 203, value: "" },
-        legend_fontsize: { id: 301, value: 25 },
-        triples: { id: 302, value: [] },
-        add_legend_items: { id: 303, value: "" },
-        title_fontsize: { id: 401, value: 15 },
-        title_text: { id: 402, value: "" },
-        x_axis_fontsize: { id: 501, value: 35 },
-        x_axis_text: { id: 502, value: "" },
-        x_scale: { id: 503, value: "" },
-        set_x_limits: { id: 504, value: "" },
-        x_limit_lower: { id: 505, value: "" },
-        x_limit_higher: { id: 506, value: "" },
-        set_x_increment: { id: 507, value: "" },
-        x_increment: { id: 508, value: "" },
-        y_axis_fontsize: { id: 601, value: 35 },
-        y_axis_text: { id: 602, value: "" },
-        y_scale: { id: 603, value: "" },
-        set_y_limits: { id: 604, value: "" },
-        y_limit_lower: { id: 605, value: "" },
-        y_limit_higher: { id: 606, value: "" },
-        set_y_increment: { id: 607, value: "" },
-        y_increment: { id: 608, value: "" },
-        tick_fontsize: { id: 701, value: 35 },
-        axes_in_scientfic: { id: 702, value: "" },
-        dpi: { id: 801, value: 600 },
-        Output_name: { value: '' },
-        outputPath: ['outputPath', {
-            description: "Select the path from File manager where the output file is to be stored.",
-            formLabel: "output_container",
-            id: 200,
-            outputFlag: true,
-            types: ["folder", "epihiper_multicell_analysis", "epihiperOutput"],
-            value: ""
-        }]
-    })
+    const [errorMsg, setErrorMsg] = useState();
+    const [dynamicProps, setDynamicProps] = useState({})
     const history = useHistory();
 
     const childGrid = {
@@ -119,7 +75,62 @@ const CSonNet_plot = (props) => {
             (res) => {
                 // setSpinnerFlag(false)
                 if (res.data) {
-                    setModelJSON(res.data.input_schema)
+                    setDynamicProps({errorbar_plot: { id: 101, value: props.resubmit && Boolean(props.resubmit.inputData.input.plot_types.errorbar_plot.toString())? props.resubmit.inputData.input.plot_types.errorbar_plot.exists.toString(): '' },
+                    line_plot: { id: 102, value: props.resubmit && Boolean(props.resubmit.inputData.input.plot_types.line_plot.toString())? props.resubmit.inputData.input.plot_types.line_plot.toString(): '' },
+                    scatter_plot: { id: 103, value: props.resubmit && Boolean(props.resubmit.inputData.input.plot_types.scatter_plot.toString())? props.resubmit.inputData.input.plot_types.scatter_plot.toString():'' },
+                    bar_plot: { id: 104, value: props.resubmit && Boolean(props.resubmit.inputData.input.plot_types.bar_plot.toString())? props.resubmit.inputData.input.plot_types.bar_plot.exists.toString():'' },
+                    errorbar_capsize: { id: 1011, value: props.resubmit && props.resubmit.inputData.input.plot_types.errorbar_plot.capsize ? props.resubmit.inputData.input.plot_types.errorbar_plot.capsize:3 },
+                    capwidth: { id: 1012, value: props.resubmit && props.resubmit.inputData.input.plot_types.errorbar_plot.capwidth ? props.resubmit.inputData.input.plot_types.errorbar_plot.capwidth:1 },
+                    show_error_every: { id: 1013, value: props.resubmit && props.resubmit.inputData.input.plot_types.errorbar_plot.show_error_every ? props.resubmit.inputData.input.plot_types.errorbar_plot.show_error_every:1 },
+                    bar_width: { id: 1041, value: props.resubmit && props.resubmit.inputData.input.plot_types.bar_plot.bar_width ? props.resubmit.inputData.input.plot_types.bar_plot.bar_width:0.25 },
+                    bar_annotation_fontsize: { id: 1042, value: props.resubmit && props.resubmit.inputData.input.plot_types.bar_plot.bar_annotation_fontsize ? props.resubmit.inputData.input.plot_types.bar_plot.bar_annotation_fontsize:10 },
+                    show_points: { id: 201, value: props.resubmit && Boolean(props.resubmit.inputData.input.show_points.toString()) ? props.resubmit.inputData.input.show_points.toString():"" },
+                    line_width: { id: 202, value: props.resubmit && props.resubmit.inputData.input.line_width ? props.resubmit.inputData.input.line_width:4 },
+                    output_filetype: { id: 203, value: props.resubmit && props.resubmit.inputData.input.output_filetype ? props.resubmit.inputData.input.output_filetype:"" },
+                    legend_fontsize: { id: 301, value: props.resubmit && props.resubmit.inputData.input.text_sections.legend_section.legend_fontsize ? props.resubmit.inputData.input.text_sections.legend_section.legend_fontsize:25 },
+                    triples: { id: 302, value:[] },
+                    add_legend_items: { id: 303, value: "" },
+                    title_fontsize: { id: 401, value: props.resubmit && props.resubmit.inputData.input.text_sections.title_section.title_fontsize ? props.resubmit.inputData.input.text_sections.title_section.title_fontsize:15 },
+                    title_text: { id: 402, value: props.resubmit && props.resubmit.inputData.input.text_sections.title_section.title_text ? props.resubmit.inputData.input.text_sections.title_section.title_text:"" },
+                    x_axis_fontsize: { id: 501, value: props.resubmit && props.resubmit.inputData.input.text_sections.x_axis_section.x_axis_fontsize ? props.resubmit.inputData.input.text_sections.x_axis_section.x_axis_fontsize:35 },
+                    x_axis_text: { id: 502, value: props.resubmit && props.resubmit.inputData.input.text_sections.x_axis_section.x_axis_text ? props.resubmit.inputData.input.text_sections.x_axis_section.x_axis_text:"" },
+                    x_scale: { id: 503, value: props.resubmit && props.resubmit.inputData.input.text_sections.x_axis_section.x_scale ? props.resubmit.inputData.input.text_sections.x_axis_section.x_scale:"" },
+                    set_x_limits: { id: 504, value: props.resubmit && Boolean(props.resubmit.inputData.input.text_sections.x_axis_section.set_x_limits.toString()) ? props.resubmit.inputData.input.text_sections.x_axis_section.set_x_limits.toString():"" },
+                    x_limit_lower: { id: 505, value: props.resubmit && props.resubmit.inputData.input.text_sections.x_axis_section.x_limit_lower ? props.resubmit.inputData.input.text_sections.x_axis_section.x_limit_lower:"" },
+                    x_limit_higher: { id: 506, value: props.resubmit && props.resubmit.inputData.input.text_sections.x_axis_section.x_limit_higher ? props.resubmit.inputData.input.text_sections.x_axis_section.x_limit_higher:"" },
+                    set_x_increment: { id: 507, value: props.resubmit && Boolean(props.resubmit.inputData.input.text_sections.x_axis_section.set_x_increment.toString()) ? props.resubmit.inputData.input.text_sections.x_axis_section.set_x_increment.toString():"" },
+                    x_increment: { id: 508, value: props.resubmit && props.resubmit.inputData.input.text_sections.x_axis_section.x_increment ? props.resubmit.inputData.input.text_sections.x_axis_section.x_increment:"" },
+                    y_axis_fontsize: { id: 601, value: props.resubmit && props.resubmit.inputData.input.text_sections.y_axis_section.y_axis_fontsize ? props.resubmit.inputData.input.text_sections.y_axis_section.y_axis_fontsize:35 },
+                    y_axis_text: { id: 602, value: props.resubmit && props.resubmit.inputData.input.text_sections.y_axis_section.y_axis_text ? props.resubmit.inputData.input.text_sections.y_axis_section.y_axis_text:"" },
+                    y_scale: { id: 603, value: props.resubmit && props.resubmit.inputData.input.text_sections.y_axis_section.y_scale ? props.resubmit.inputData.input.text_sections.y_axis_section.y_scale:"" },
+                    set_y_limits: { id: 604, value: props.resubmit && Boolean(props.resubmit.inputData.input.text_sections.y_axis_section.set_y_limits.toString()) ? props.resubmit.inputData.input.text_sections.y_axis_section.set_y_limits.toString():"" },
+                    y_limit_lower: { id: 605, value:  props.resubmit && props.resubmit.inputData.input.text_sections.y_axis_section.y_limit_lower ? props.resubmit.inputData.input.text_sections.y_axis_section.y_limit_lower:"" },
+                    y_limit_higher: { id: 606, value: props.resubmit && props.resubmit.inputData.input.text_sections.y_axis_section.y_limit_higher ? props.resubmit.inputData.input.text_sections.y_axis_section.y_limit_higher:"" },
+                    set_y_increment: { id: 607, value: props.resubmit && Boolean(props.resubmit.inputData.input.text_sections.y_axis_section.set_y_increment.toString()) ? props.resubmit.inputData.input.text_sections.y_axis_section.set_y_increment.toString():"" },
+                    y_increment: { id: 608, value:  props.resubmit && props.resubmit.inputData.input.text_sections.y_axis_section.y_increment ? props.resubmit.inputData.input.text_sections.y_axis_section.y_increment:"" },
+                    tick_fontsize: { id: 701, value: props.resubmit && props.resubmit.inputData.input.text_sections.tick_section.tick_fontsize ? props.resubmit.inputData.input.text_sections.tick_section.tick_fontsize:35 },
+                    axes_in_scientfic: { id: 702, value: props.resubmit && props.resubmit.inputData.input.text_sections.tick_section.axes_in_scientific ? props.resubmit.inputData.input.text_sections.tick_section.axes_in_scientific:"" },
+                    dpi: { id: 801, value:  props.resubmit && props.resubmit.inputData.input.dpi ? props.resubmit.inputData.input.dpi:600 },
+                    Output_name: { value: (props.resubmit && props.resubmit.inputData.state !== "Completed") ? props.resubmit.inputData.output_name :'' },
+                    inputFile_Graph: [res.data.input_files[0].name, {
+                        formLabel: res.data.input_files[0].name,
+                        id: 0,
+                        name: res.data.input_files[0].name,
+                        outputFlag: false,
+                        required: true,
+                        types: res.data.input_files[0].types,
+                        value: props.resubmit ? props.resubmit.inputData.input["csonnet_data_analysis"] : ""
+                    }],
+                    outputPath: ['outputPath', {
+                        description: "Select the path from File manager where the output file is to be stored.",
+                        formLabel: "output_container",
+                        id: 200,
+                        outputFlag: true,
+                        types: ["folder", "epihiper_multicell_analysis", "epihiperOutput"],
+                        value: props.resubmit ? props.resubmit.inputData.output_container :""
+                    }]
+                 })
+                 setModelJSON(res.data.input_schema)
                 }
             },
             (error) => {
@@ -129,6 +140,11 @@ const CSonNet_plot = (props) => {
         );
         // eslint-disable-next-line
     }, []);
+
+    useEffect(()=>{
+        inputFields.length == 0 && props.resubmit && props.resubmit.inputData.input.text_sections.legend_section.legend_items && setInputFields(props.resubmit.inputData.input.text_sections.legend_section.legend_items)
+        // dynamicProps.triples && inputFields.length && setInputFields(dynamicProps.triples.value)
+    },[dynamicProps])
 
 
     const description = (desc) =>
@@ -177,6 +193,7 @@ const CSonNet_plot = (props) => {
 
 
         const requestJson = {
+            "csonnet_data_analysis": dynamicProps.inputFile_Graph[1].value,
             "plot_types": {
                 "errorbar_plot": {
                     "exists": dynamicProps.errorbar_plot.value === 'true' ? true : false,
@@ -219,7 +236,7 @@ const CSonNet_plot = (props) => {
                     "y_axis_text": dynamicProps.y_axis_text.value,
                     "y_scale": dynamicProps.y_scale.value,
                     "set_y_limits": (dynamicProps.set_y_limits.value === 'true' ? true : false),
-                    ...(dynamicProps.set_y_limits.value === 'true' && { "x_limit_lower": parseFloat(dynamicProps.y_limit_lower.value), "x_limit_higher": parseFloat(dynamicProps.y_limit_higher.value) }),
+                    ...(dynamicProps.set_y_limits.value === 'true' && { "y_limit_lower": parseFloat(dynamicProps.y_limit_lower.value), "y_limit_higher": parseFloat(dynamicProps.y_limit_higher.value) }),
                     "set_y_increment": (dynamicProps.set_y_increment.value === 'true' ? true : false),
                     ...(dynamicProps.set_y_increment.value === 'true' && { "y_increment": parseFloat(dynamicProps.x_increment.value) })
                 },
@@ -231,8 +248,25 @@ const CSonNet_plot = (props) => {
             "dpi": parseInt(dynamicProps.dpi.value)
         }
 
-        console.log(requestJson)
-        // onFormSubmit(requestJson)
+        populateBody(requestJson)
+    }
+
+    function populateBody(submitJSON) {
+        setIsToasterFlag(true);
+        var path = window.location.pathname.replace("/apps/job-definition/", "");
+        var jobDefinition = path;
+        var requestJson = {
+            input: submitJSON,
+            job_definition: jobDefinition,
+            pragmas: {
+                account: "ARCS:bii_nssac",
+            },
+            output_container: dynamicProps.outputPath[1].value,
+            output_name: dynamicProps.Output_name.value
+        };
+
+        onFormSubmit(requestJson)
+
     }
 
     function onFormSubmit(requestJson) {
@@ -256,7 +290,12 @@ const CSonNet_plot = (props) => {
 
         },
             (error) => {
+                window.setTimeout(handlingError, 4000);
                 setSuccess(false)
+                if (error.response)
+                    setErrorMsg(`${error.response.status}-${error.response.statusText} error occured. Please try again`)
+                else
+                    setErrorMsg("An internal error occured. Please try again")
                 setIsToasterFlag(true)
                 window.setTimeout(handlingError, 4000);
             }
@@ -302,6 +341,9 @@ const CSonNet_plot = (props) => {
                 content={
                     <div className="flex content">
                         <div >
+                        {isToasterFlag ? (
+                                    <Toaster errorMsg={errorMsg} success={success} id="CSonNet Plotting"></Toaster>
+                                ) : null}
                             <Typography className="h2"><b>CSonNet plot</b></Typography>
                             <Typography className="h4" style={{ whiteSpace: "break-spaces" }}>&nbsp;{modelJSON.description}</Typography>
                             <div>
@@ -313,6 +355,18 @@ const CSonNet_plot = (props) => {
                                 >
                                     <div className='columnStyle'>
                                         <Grid style={childGrid} item container xs={12}>
+                                        <div className='borderStyle '>
+                                            <h3><b>Network</b></h3>
+                                            <Grid style={childGrid} item container xs={12}>
+                                                <Input
+                                                    key='Graph'
+                                                    formData={dynamicProps.inputFile_Graph}
+                                                    elementType={dynamicProps.inputFile_Graph.types}
+                                                    value={dynamicProps.inputFile_Graph.value}
+                                                    changed={(event) => inputChangedHandler(event, 'inputFile_Graph')}
+                                                />
+                                            </Grid>
+                                        </div>
                                             <PlotTypes modelJSON={modelJSON} description={description} dynamicProps={dynamicProps} inputChangedHandler={inputChangedHandler}></PlotTypes>
                                             {existsFlag && <div className="h3 mt-12" style={{ width: '100%' }}><b>Plot properties</b></div>}
                                             {existsFlag && <div style={{ width: '100%' }} className='descPlot'>
@@ -320,7 +374,7 @@ const CSonNet_plot = (props) => {
                                                     className="my-12 mt-16 inputStyle-plot"
                                                     name="show_points"
                                                     label='show_points'
-                                                    value=''
+                                                    value={dynamicProps.show_points.value}
                                                     onChange={(event) => inputChangedHandler(event, 'show_points')}
                                                     required
                                                 >
@@ -336,7 +390,7 @@ const CSonNet_plot = (props) => {
                                                     name='line_width'
                                                     style={{ width: '18px' }}
                                                     label="line_width"
-                                                    value='4'
+                                                    value={dynamicProps.line_width.value}
                                                     onBlur={(event) => inputChangedHandler(event, 'line_width')}
                                                     validations={{
                                                         isPositiveInt: function (_values, value) {
@@ -353,7 +407,7 @@ const CSonNet_plot = (props) => {
                                                     className="my-12 mt-16 inputStyle-plot"
                                                     name="output_filetype"
                                                     label={["output_filetype", <span key={1} style={{ color: 'red' }}>{'*'}</span>]}
-                                                    value=''
+                                                    value={dynamicProps.output_filetype.value}
                                                     onChange={(event) => inputChangedHandler(event, 'output_filetype')}
                                                 >
                                                     {modelJSON.properties.output_filetype.enum.map((item) => {
@@ -409,7 +463,7 @@ const CSonNet_plot = (props) => {
                                                 name='dpi'
                                                 style={{ width: '18px' }}
                                                 label="dpi"
-                                                value='600'
+                                                value={dynamicProps.dpi.value}
                                                 onBlur={(event) => inputChangedHandler(event, 'dpi')}
                                                 validations={{
                                                     isPositiveInt: function (values, value) {
@@ -433,11 +487,10 @@ const CSonNet_plot = (props) => {
                                         className="w-30  mt-32 mb-80"
                                         aria-label="LOG IN"
                                         onClick={createSubmissionData}
-                                        disabled={!isFormValid}
-                                    >
+                                        disabled={!isFormValid || success}                                    >
                                         Submit
 							</Button>
-                                    {props.resubmit ? <Link to="/apps/job-definition/" style={{ color: 'transparent' }}>
+                                    {props.resubmit ? <Link to="/apps/my-jobs/" style={{ color: 'transparent' }}>
                                         <Button
                                             variant="contained"
                                             onClick={onFormCancel}
@@ -460,7 +513,7 @@ const CSonNet_plot = (props) => {
                                 </div>
                             </div>
                         </div>
-                        <ReactTooltip clickable={true} className='toolTip' place='top' effect='solid' />
+                        <ReactTooltip clickable={true} isCapture = {true} scrollHide = {true} className='toolTip' place='top' effect='solid' />
                     </div>
                 }
             />

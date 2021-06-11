@@ -713,8 +713,7 @@ const CSonNet_Contagion_Simulation = (props) => {
                                         className="w-30 ml-8 mt-32 mb-80"
                                         aria-label="LOG IN"
                                         onClick={populatesubmitJSON}
-                                        disabled={!isFormValid}
-                                    >
+                                        disabled={!isFormValid || success }                                    >
                                         Submit
 							</Button>
                                     {props.resubmit ? <Link to="/apps/my-jobs/" style={{ color: 'transparent' }}>
