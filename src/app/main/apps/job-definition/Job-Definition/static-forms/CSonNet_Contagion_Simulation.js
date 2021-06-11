@@ -238,7 +238,7 @@ const CSonNet_Contagion_Simulation = (props) => {
                         submitJSON.rules[0] = tempRules;
 
                         tempRules = modelJSON['models']['SIR']['submodels']['fixed infectious']['rules'][1]['rule'];
-                        tempRules["time_duration_value"] = parseInt(dynamicProps.Infectious_duration.value);
+                        tempRules["discrete_time_auto_value"] = parseInt(dynamicProps.Infectious_duration.value);
                         submitJSON.rules[1] = tempRules;
 
                         submitJSON.dynamic_inputs.Edge_probability = parseFloat(dynamicProps.Edge_probability.value);
