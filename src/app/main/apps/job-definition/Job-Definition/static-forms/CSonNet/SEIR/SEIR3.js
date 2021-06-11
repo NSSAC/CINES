@@ -85,7 +85,7 @@ const SEIR3 = (props) => {
                             autoComplete="off"
                             required
                         />
-                        {description(modelJSON.models.SEIR.submodels['stochastic exposed fixed infectious'].rules[1].input.node_probability_value.description)}
+                        {description(modelJSON.models.SEIR.submodels['stochastic exposed fixed infectious'].rules[1].input.node_probability_auto_value.description)}
                     </Grid>
                     <Grid style={childGrid} item container xs={12} >
                         {/* {data_source} */}
@@ -106,9 +106,9 @@ const SEIR3 = (props) => {
                             autoComplete="off"
                             required
                         />
-                        {description(modelJSON.models.SEIR.submodels['stochastic exposed fixed infectious'].rules[2].input.time_duration_value.description)}
+                        {description(modelJSON.models.SEIR.submodels['stochastic exposed fixed infectious'].rules[2].input.discrete_time_auto_value.description)}
                     </Grid>
-                    <ReactTooltip clickable={true} className='toolTip' place='top' effect='solid' />
+                    <ReactTooltip clickable={true} isCapture = {true} scrollHide = {true} className='toolTip' place='top' effect='solid' />
                 </div>
             }
         />

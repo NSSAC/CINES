@@ -85,7 +85,7 @@ const Legend_triple = (props) => {
               className="mb-12 mt-16 col-sm-6 inputStyle-plot"
               name="data_color"
               label={["data_color", <span key={1} style={{color: 'red'}}>{'*'}</span>]}
-              value=''
+              value={inputField.data_color}
               onChange={event => handleInputChange("data_color", index, event)}
               required
             >
