@@ -72,8 +72,8 @@ function MyJobsApp(props) {
     <FusePageSimple
       classes={{
         root: "bg-red",
-        header: "h-auto  min-h-auto",
-        sidebarHeader: "h-auto min-h-72",
+        header: "header",
+        sidebarHeader: "header",
         rightSidebar: "w-320",
         contentWrapper: "jobBody"
       }}
@@ -187,8 +187,8 @@ function MyJobsApp(props) {
       leftSidebarVariant="temporary"
       leftSidebarHeader={<MainSidebarHeader />}
       leftSidebarContent={<MainSidebarContent />}
-      rightSidebarHeader={<DetailSidebarHeader history={history}/>}
-      rightSidebarContent={<DetailSidebarContent />}
+      rightSidebarHeader={<DetailSidebarHeader pageLayout={pageLayout} history={history}/>}
+      rightSidebarContent={<DetailSidebarContent/>}
       ref={pageLayout}
       innerScroll
     />

@@ -86,7 +86,12 @@ function FileList(props) {
         }
     }
 
-
+    const infoIcon ={
+        right: '0',
+        backgroundColor: '#eeeeee',
+        position: 'sticky',
+        width: '15px',
+      }
 
     const tableStyle = {
         overflow: 'hidden',
@@ -200,7 +205,7 @@ function FileList(props) {
                                         <TableCell className="text-center hidden sm:table-cell">{(!node.size && (node.size !== 0)) ? '-' : filesize(node.size)}</TableCell>
                                         <TableCell className="hidden sm:table-cell">{moment.utc(node.update_date).local().fromNow()}</TableCell>
                                         <Hidden lgUp>
-                                            <TableCell style={{ textAlignLast: 'right' }}>
+                                            <TableCell style={infoIcon}>
                                                 <IconButton
                                                     onClick={(ev) => props.pageLayout.current.toggleRightSidebar()}
                                                     aria-label="open right sidebar"

@@ -1,0 +1,11 @@
+.FileWrapper {
+    overflow: auto;
+}
+
+.sidebarHeader1 {
+    overflow: hidden;
+}
+
+.sidebarWrapper {
+    overflow: auto;
+}

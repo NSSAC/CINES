@@ -45,13 +45,12 @@ input[type=submit]:hover {
 .inputStyle-plot {
     width: 75%;
     margin-left: 26px;
-    margin-top:12px;
+    margin-top: 12px;
 }
-
 
 .inputStyle1 {
     width: 80%;
-    margin-top:12px;
+    margin-top: 12px;
 }
 
 .folderPath {
@@ -65,9 +64,9 @@ input[type=submit]:hover {
 }
 
 .toolTip {
-    width:280px;
-    white-space:pre-wrap;
-    word-wrap:break-word;
+    width: 280px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
     word-break: keep-all;
 }
 
@@ -78,7 +77,6 @@ input[type=submit]:hover {
 .dataSource {
     width: 39%;
     margin: 12px 5px;
-
 }
 
 .borderStyle {
@@ -88,18 +86,18 @@ input[type=submit]:hover {
     width: 100%;
     /* align-self: center; */
     padding: 10px;
-
 }
 
 .root {
     white-space: nowrap;
-    width:100%;
+    width: 100%;
 }
 
-.mui-focused{
+.mui-focused {
     font-weight: 300;
     font-size: large;
 }
+
 .MuiInputLabel-shrink {
     transform: translate(0, 1.5px) scale(0.75);
     transform-origin: top left;
@@ -111,8 +109,8 @@ input[type=submit]:hover {
     display: none;
 }
 
-.mt-0  {
-    margin-top : 0 !important;
+.mt-0 {
+    margin-top: 0 !important;
 }
 
 .descPlot {
@@ -125,14 +123,12 @@ input[type=submit]:hover {
     display: flex;
     justify-content: space-between;
     align-items: center;
-  }
-
-  .columnStyle {
-    width: 50%;
-    margin-right: 5px;
-    margin-left: 5px;
 }
-  
+
+.columnStyle {
+    width: 50%;
+}
+
 .content {
     padding-left: 3px;
     padding-right: 3px;
@@ -140,72 +136,64 @@ input[type=submit]:hover {
     overflow-x: hidden;
 }
 
-  @media only screen and (max-width: 600px) {
-    .selectedFile {
-        justify-content: space-between;
-        align-items: center;
-        display: block
-      }
-
-      .infoIcon {
-        margin-top: 15px;
-    }
-
+@media only screen and (max-width: 600px) {
     .divideProps {
         /* border-top: 1px solid black; */
         border-left: 0;
     }
-
     .borderStyle {
         width: 100%;
         margin: 5px;
         padding: 10px;
     }
-
-
     .content1 {
         border-top: 2px solid black;
         border-bottom: 2px solid black;
         width: 100%;
     }
-
     .columnStyle {
         width: 100%;
         margin: 0px;
-      }
-    
-  }
-
- .overlay {
-     opacity: .5;
-     pointer-events: none;
- }
-
- @media only screen and (max-width: 991px) {
-   .legendWrap {
-       flex-wrap: wrap;
-   }
-
-   .descPlot {
-       width: 89%;
     }
+}
 
+@media only screen and (max-width: 500px) {
+    .selectedFile {
+        justify-content: space-between;
+        align-items: center;
+        display: block
+    }
+    .infoIcon {
+        margin-top: 15px;
+    }
+}
+
+.overlay {
+    opacity: .5;
+    pointer-events: none;
+}
+
+@media only screen and (max-width: 991px) {
+    .legendWrap {
+        flex-wrap: wrap;
+    }
+    .descPlot {
+        width: 89%;
+    }
     .dpi {
         width: 83% !important;
     }
-
-
- }
+}
 
 @media only screen and (min-width: 601px) {
-.content1 {
-    border-top: 2px solid black;
-    border-bottom: 2px solid black;
-    padding-left: 8px;
-    padding-right: 8px;
-    width: 100%;
-    display: flex
-}
+    .content1 {
+        border-top: 2px solid black;
+        border-bottom: 2px solid black;
+        padding-left: 8px;
+        padding-right: 8px;
+        width: 100%;
+        display: flex
+    }
 }
 
 .MuiGrid-spacing-xs-3 {

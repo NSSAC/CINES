@@ -11,6 +11,7 @@
     flex-direction: column;
     padding: 20px;
     margin:0px,2px;
+    min-width: 100%;
     width: fit-content;
   }
   

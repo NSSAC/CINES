@@ -373,7 +373,7 @@ export const Input = (props) => {
 							<Icon  fontSize="small">info</Icon>
 						</span>
 						)}{' '}
-					<ReactTooltip clickable={true} className='toolTip' place='top' effect='solid' />
+					<ReactTooltip eventOff="scroll" isCapture = {true} scrollHide = {true} clickable={true} className='toolTip' place='top' effect='solid'/>
 				</div>
 
 			}

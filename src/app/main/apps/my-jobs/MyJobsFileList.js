@@ -67,6 +67,13 @@ function MyJobsFileList(props) {
     var type;
     var rowLength = 10;
 
+    const infoIcon ={
+        right: '0',
+        backgroundColor: 'whitesmoke',
+        position: 'sticky',
+        width: '100px'
+      }
+
     useEffect(() => {
         if (files.length > 0 && sortCount === false) {
             if (document.getElementsByClassName("jobRows").length > 0)
@@ -318,7 +325,7 @@ function MyJobsFileList(props) {
                                                     {row.update_date}
                                                 </TableCell> */}
                                                 <Hidden lgUp>
-                                                    <TableCell>
+                                                    <TableCell style={infoIcon}>
                                                         <IconButton
                                                             onClick={(ev) => props.pageLayout.current.toggleRightSidebar()}
                                                             aria-label="open right sidebar"
