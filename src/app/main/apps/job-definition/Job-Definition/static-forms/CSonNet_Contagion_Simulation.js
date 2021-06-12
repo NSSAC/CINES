@@ -151,11 +151,11 @@ const CSonNet_Contagion_Simulation = (props) => {
                         submitJSON.rules[0] = tempRules;
 
                         tempRules = modelJSON['models']['SEIR']['submodels']['fixed exposed fixed infectious']['rules'][1]['rule'];
-                        tempRules["time_duration_value"] = parseInt(dynamicProps.Exposed_duration.value);
+                        tempRules["discrete_time_auto_value"] = parseInt(dynamicProps.Exposed_duration.value);
                         submitJSON.rules[1] = tempRules;
 
                         tempRules = modelJSON['models']['SEIR']['submodels']['fixed exposed fixed infectious']['rules'][2]['rule'];
-                        tempRules["time_duration_value"] = parseInt(dynamicProps.Infectious_duration.value);
+                        tempRules["discrete_time_auto_value"] = parseInt(dynamicProps.Infectious_duration.value);
                         submitJSON.rules[2] = tempRules;
 
                         submitJSON.dynamic_inputs.Edge_probability = parseFloat(dynamicProps.Edge_probability.value);
@@ -171,11 +171,11 @@ const CSonNet_Contagion_Simulation = (props) => {
                         submitJSON.rules[0] = tempRules;
 
                         tempRules = modelJSON['models']['SEIR']['submodels']['fixed exposed stochastic infectious']['rules'][1]['rule'];
-                        tempRules["time_duration_value"] = parseInt(dynamicProps.Exposed_duration.value);
+                        tempRules["discrete_time_auto_value"] = parseInt(dynamicProps.Exposed_duration.value);
                         submitJSON.rules[1] = tempRules;
 
                         tempRules = modelJSON['models']['SEIR']['submodels']['fixed exposed stochastic infectious']['rules'][2]['rule'];
-                        tempRules["node_probability_value"] = parseFloat(dynamicProps.Infectious_probability_transition.value);
+                        tempRules["node_probability_auto_value"] = parseFloat(dynamicProps.Infectious_probability_transition.value);
                         submitJSON.rules[2] = tempRules;
 
                         submitJSON.dynamic_inputs.Edge_probability = parseFloat(dynamicProps.Edge_probability.value);
@@ -191,11 +191,11 @@ const CSonNet_Contagion_Simulation = (props) => {
                         submitJSON.rules[0] = tempRules;
 
                         tempRules = modelJSON['models']['SEIR']['submodels']['stochastic exposed fixed infectious']['rules'][1]['rule'];
-                        tempRules["node_probability_value"] = parseFloat(dynamicProps.Exposed_probability_transition.value);
+                        tempRules["node_probability_auto_value"] = parseFloat(dynamicProps.Exposed_probability_transition.value);
                         submitJSON.rules[1] = tempRules;
 
                         tempRules = modelJSON['models']['SEIR']['submodels']['stochastic exposed fixed infectious']['rules'][2]['rule'];
-                        tempRules["time_duration_value"] = parseInt(dynamicProps.Infectious_duration.value);
+                        tempRules["discrete_time_auto_value"] = parseInt(dynamicProps.Infectious_duration.value);
                         submitJSON.rules[2] = tempRules;
 
                         submitJSON.dynamic_inputs.Edge_probability = parseFloat(dynamicProps.Edge_probability.value);
@@ -211,11 +211,11 @@ const CSonNet_Contagion_Simulation = (props) => {
                         submitJSON.rules[0] = tempRules;
 
                         tempRules = modelJSON['models']['SEIR']['submodels']['stochastic exposed stochastic infectious']['rules'][1]['rule'];
-                        tempRules["node_probability_value"] = parseFloat(dynamicProps.Exposed_probability_transition.value);
+                        tempRules["node_probability_auto_value"] = parseFloat(dynamicProps.Exposed_probability_transition.value);
                         submitJSON.rules[1] = tempRules;
 
                         tempRules = modelJSON['models']['SEIR']['submodels']['stochastic exposed stochastic infectious']['rules'][2]['rule'];
-                        tempRules["node_probability_value"] = parseFloat(dynamicProps.Infectious_probability_transition.value);
+                        tempRules["node_probability_auto_value"] = parseFloat(dynamicProps.Infectious_probability_transition.value);
                         submitJSON.rules[2] = tempRules;
 
                         submitJSON.dynamic_inputs.Edge_probability = parseFloat(dynamicProps.Edge_probability.value);
