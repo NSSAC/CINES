@@ -61,12 +61,12 @@ const CSonNet_Contagion_Simulation = (props) => {
                         SIR_Submodel: { id: 201, value: props.resubmit && props.resubmit.inputData.input.dynamic_inputs ? props.resubmit.inputData.input.dynamic_inputs['SIR_Submodel'] : "" },
                         SIS_Submodel: { id: 202, value: props.resubmit && props.resubmit.inputData.input.dynamic_inputs ? props.resubmit.inputData.input.dynamic_inputs['SIS_Submodel'] : "" },
                         SEIR_Submodel: { id: 203, value: props.resubmit && props.resubmit.inputData.input.dynamic_inputs ? props.resubmit.inputData.input.dynamic_inputs['SEIR_Submodel'] : "" },
-                        threshold: { id: 301, value: props.resubmit && props.resubmit.inputData.input.dynamic_inputs ? props.resubmit.inputData.input.dynamic_inputs['threshold_value'] : "" },
-                        Edge_probability: { id: 302, value: props.resubmit && props.resubmit.inputData.input.dynamic_inputs ? props.resubmit.inputData.input.dynamic_inputs['Edge_probability'] : "" },
-                        Infectious_probability_transition: { id: 303, value: props.resubmit && props.resubmit.inputData.input.dynamic_inputs ? props.resubmit.inputData.input.dynamic_inputs['Infectious_probability_transition'] : "" },
-                        Infectious_duration: { id: 304, value: props.resubmit && props.resubmit.inputData.input.dynamic_inputs ? props.resubmit.inputData.input.dynamic_inputs['Infectious_duration'] : "" },
-                        Exposed_duration: { id: 305, value: props.resubmit && props.resubmit.inputData.input.dynamic_inputs ? props.resubmit.inputData.input.dynamic_inputs['Exposed_duration'] : "" },
-                        Exposed_probability_transition: { id: 306, value: props.resubmit && props.resubmit.inputData.input.dynamic_inputs ? props.resubmit.inputData.input.dynamic_inputs['Exposed_probability_transition'] : "" },
+                        threshold: { id: 301, value: props.resubmit && String(props.resubmit.inputData.input.dynamic_inputs.threshold) !== 'undefined' ? props.resubmit.inputData.input.dynamic_inputs['threshold'] : "" },
+                        Edge_probability: { id: 302, value: props.resubmit && String(props.resubmit.inputData.input.dynamic_inputs.Edge_probability) !== 'undefined' ? props.resubmit.inputData.input.dynamic_inputs['Edge_probability'] : "" },
+                        Infectious_probability_transition: { id: 303, value: props.resubmit && String(props.resubmit.inputData.input.dynamic_inputs.Infectious_probability_transition) !== 'undefined'? props.resubmit.inputData.input.dynamic_inputs['Infectious_probability_transition'] : "" },
+                        Infectious_duration: { id: 304, value: props.resubmit && String(props.resubmit.inputData.input.dynamic_inputs.Infectious_duration) !== 'undefined'? props.resubmit.inputData.input.dynamic_inputs['Infectious_duration'] : "" },
+                        Exposed_duration: { id: 305, value: props.resubmit && String(props.resubmit.inputData.input.dynamic_inputs.Exposed_duration) !== 'undefined'? props.resubmit.inputData.input.dynamic_inputs['Exposed_duration'] : "" },
+                        Exposed_probability_transition: { id: 306, value: props.resubmit && String(props.resubmit.inputData.input.dynamic_inputs.Exposed_probability_transition) !== 'undefined'? props.resubmit.inputData.input.dynamic_inputs['Exposed_probability_transition'] : "" },
                         inputFile_Graph: [res.data.input_files[0].name, {
                             formLabel: res.data.input_files[0].name,
                             id: 0,
@@ -476,7 +476,7 @@ const CSonNet_Contagion_Simulation = (props) => {
                                                     type="text"
                                                     name='Seed'
                                                     style={{ width: '18px' }}
-                                                    value={staticProps.Seed.value}
+                                                    value={String(staticProps.Seed.value)}
                                                     label="Seed"
                                                     onBlur={(event) => staticChangedHandler(event, 'Seed')}
                                                     validations={{
@@ -502,7 +502,7 @@ const CSonNet_Contagion_Simulation = (props) => {
                                                         name='Iterations'
                                                         style={{ width: '18px' }}
                                                         label="Iterations"
-                                                        value={staticProps.Iterations.value}
+                                                        value={String(staticProps.Iterations.value)}
                                                         onBlur={(event) => staticChangedHandler(event, 'Iterations')}
                                                         validations={{
                                                             isPositiveInt: function (values, value) {
@@ -521,7 +521,7 @@ const CSonNet_Contagion_Simulation = (props) => {
                                                         type="text"
                                                         name='Time Steps'
                                                         style={{ width: '18px' }}
-                                                        value={staticProps.TimeSteps.value}
+                                                        value={String(staticProps.TimeSteps.value)}
                                                         onBlur={(event) => staticChangedHandler(event, 'TimeSteps')}
                                                         label="Time Steps"
                                                         validations={{
@@ -544,7 +544,7 @@ const CSonNet_Contagion_Simulation = (props) => {
                                                         type="text"
                                                         name='Number nodes'
                                                         style={{ width: '18px' }}
-                                                        value={staticProps.InitialConditions[0].number_nodes}
+                                                        value={String(staticProps.InitialConditions[0].number_nodes)}
                                                         onBlur={(event) => ICChangedHandler(event, 'number_nodes')}
                                                         label="Number Nodes"
                                                         validations={{

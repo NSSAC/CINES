@@ -72,6 +72,7 @@ function DetailSidebarContent(props) {
         display: 'block',
         whiteSpace: 'nowrap'
     }
+
     var styleEditor = {
         style: {
             width: "fit-content"
@@ -349,17 +350,18 @@ function DetailSidebarContent(props) {
                 )}
 
                 {selectedTab === 1 && (
-                    <React.Fragment>
+                    <div style={{width:'max-content'}}>
                         <div><Typography variant="h6">DISCOVERED META</Typography></div>
                         <JSONTree data={selectedItem.autometa} hideRoot={true} theme={{
                             tree: {
-                                backgroundColor: '#F7F7F7'
+                                backgroundColor: '#F7F7F7',
+                                paddingRight: '10px',
                             },
                             label: {
                                 color: 'black',
                                 fontSize: '14px',
-                                fontWeight: 'bold'
-                            },
+                                fontWeight: 'bold',
+                            }
                         }} />
                         <div><Typography variant="h6" style={{ display: "inline-flex" }}>USER META</Typography>
                             {canWrite && props.editContent && <Tooltip title="Edit" placement="top">
@@ -391,7 +393,7 @@ function DetailSidebarContent(props) {
                         }} />}
                         {!props.editContent && <Editor htmlElementProps={styleEditor} mode={Editor.modes.form} value={selectedItem.usermeta} name={selectedItem.name} search={true} allowedModes={[Editor.modes.form, Editor.modes.tree]} history={true} limitDragging={true} enableSort={false} enableTransform={false} onModeChange={OnModeChange} onChange={handleUsermetaChange} />}
                         {/* </div> */}
-                    </React.Fragment>
+                    </div>
                 )}
 
                 <NavigationPrompt when={(crntLocation, nextLocation) => !props.editContent} afterCancel={OnConfirm} afterConfirm={OnCancelClick}>{({ onConfirm, onCancel }) => (confirmAlert({

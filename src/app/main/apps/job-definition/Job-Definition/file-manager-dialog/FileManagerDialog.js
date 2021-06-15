@@ -34,9 +34,9 @@ function FMPopup({
   fileTypes,
 }) {
   const dispatch = useDispatch();
-  const files = useSelector(({ fMApp }) => fMApp.home);
+  const files = useSelector(({ fMApp }) => fMApp.files);
   const selectedItem = useSelector(({ fMApp }) => files[fMApp.selectedItemId]);
-  const [targetPath, setTargetPath] = useState("/");
+  const [targetPath, setTargetPath] = useState("/home/");
   const [searchbool, setSearchbool] = useState(false);
   const [search, setSearch] = useState("");
   const [checkFlag, setcheckFlag] = useState(false);
@@ -45,35 +45,34 @@ function FMPopup({
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   var token = localStorage.getItem("id_token");
   const breadcrumbArr = targetPath.split("/");
-  breadcrumbArr[0]="home"
+  breadcrumbArr[0]="files"
 
   if (uploadFile !== "") {
     files !== {} &&
       Object.values(files).map((node) => {
         if (node.name === uploadFile) {
-            setFileChosen("/home" + targetPath + node.name);
-            setFileChosenPath("/home" + targetPath + node.name);
+            setFileChosen(targetPath + node.name);
+            setFileChosenPath(targetPath + node.name);
             setUploadFile("");
-            setTargetPath("/");
+            setTargetPath("/home/");
             setSearch("");
             handleFMClose();
         }
         return null;
       });
-
   }
 
   const onCancel = () => {
     setSearch("");
-    setTargetPath("/");
+    setTargetPath("/home/");
     handleFMClose();
   };
 
   const onSelect = () => {
-    setFileChosen("/home" + targetPath + selectedItem.name);
-    setFileChosenPath("/home" + targetPath + selectedItem.name);
+    setFileChosen(targetPath + selectedItem.name);
+    setFileChosenPath(targetPath + selectedItem.name);
     setSearch("");
-    setTargetPath("/");
+    setTargetPath("/home/");
     handleFMClose();
   };
 
@@ -147,7 +146,7 @@ function FMPopup({
     if (typeof token === "string") {
       var config = {
         method: "get",
-        url: `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file/home/${targetMeta}`,
+        url: `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file${targetMeta}`,
         headers: {
           Accept: "*/*",
           Authorization: token,
@@ -184,7 +183,7 @@ function FMPopup({
   };
 
   useEffect(() => {
-    dispatch(Actions.getHome(targetPath));
+    dispatch(Actions.getFiles(targetPath, "GET_FILES"));
     var targetMeta = "";
     if (token === null || !showModal || targetPath === "/") {
       setcheckFlag(false);
@@ -353,21 +352,19 @@ function FMPopup({
       <FileUpload
         fileTypes={fileTypes}
         setUploadFile={(p) => setUploadFile(p)}
-        dialogTargetPath={"/home" + targetPath}
+        dialogTargetPath={targetPath}
         showModal={showDialog}
         setShowModal={(p) => setShowModal(p)}
         handleClose={handleClose}
         breadcrumbArr={breadcrumbArr}
-        isDialog = {true}
       />
 
       <div>
         <CreateFolder
           showModal={showCreateDialog}
-          dialogTargetPath={"/home" + targetPath}
+          dialogTargetPath={targetPath}
           handleClose={closeCreateFolderDialog}
           breadcrumbArr={breadcrumbArr}
-          isFolderManager = {true}
         />
       </div>
     </div>

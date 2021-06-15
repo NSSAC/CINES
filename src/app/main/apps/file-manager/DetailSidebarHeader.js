@@ -1,9 +1,9 @@
 import { Icon, IconButton, Tooltip, Typography } from '@material-ui/core';
 import moment from 'moment';
 import React, { useState } from 'react';
+import * as Actions from "./store/actions";
 import { confirmAlert } from 'react-confirm-alert';
-import { useSelector } from 'react-redux';
-
+import { useDispatch, useSelector } from "react-redux";
 import { FuseAnimate } from '@fuse';
 import instance from  'app/services/sciductService/sciductService.js'
 
@@ -21,6 +21,8 @@ function DetailSidebarHeader(props)
     var delete_id=localStorage.getItem("delete_id")
     const [download, setDownload] = useState(false);
     const [deleteFile, setDeleteFile] = useState(false);
+    const dispatch = useDispatch();
+    var targetPath = window.location.pathname.replace("/apps/files", "");
     var canRead = false;
     var canDelete = false;
     var isFile=true;
@@ -41,6 +43,10 @@ function DetailSidebarHeader(props)
     if(selectedItem.type === "folder" || selectedItem.type === "epihiperOutput" || selectedItem.type === "epihiper_multicell_analysis"){ 
           isFile = false;
        } 
+
+       function OnRefresh(){
+        dispatch(Actions.getFiles(targetPath, "GET_FILES"));
+       }
 
     function OnDelete(item) {
         localStorage.setItem("delete_id",item.id)
@@ -85,6 +91,13 @@ function DetailSidebarHeader(props)
     return (
         <div className="flex flex-col justify-between h-full p-4 sm:p-12">
             <div className="toolbar flex align-center justify-end h-48">
+            {<FuseAnimate animation="transition.expandIn" delay={200}>
+                  <Tooltip title="Click to Refresh" placement="bottom">
+                    <IconButton onClick={()=>OnRefresh()}>
+                        <Icon >360</Icon>
+                    </IconButton>
+                  </Tooltip>
+                </FuseAnimate>}
                {canDelete && <FuseAnimate animation="transition.expandIn" delay={200}>
                   <Tooltip title="Click to Delete" placement="bottom">
                     <IconButton onClick={()=>OnDelete(selectedItem)}>

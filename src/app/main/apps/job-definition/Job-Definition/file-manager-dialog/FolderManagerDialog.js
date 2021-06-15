@@ -33,13 +33,11 @@ function FolderPopup({ showModal, handleFMClose, folderPath, setFolderPath, file
     }
 
     const onSelect = () => {
-        localStorage.setItem("selectedFolder",targetPath)
-        setFolderPath("/home" + targetPath + selectedItem.name)
-        setSearch("")
-        setTargetPath("/");
-        setTimeout(() => {
-          handleFMClose()
-        }, 0);
+      setSearch("")
+      setTargetPath(targetPath)
+      localStorage.setItem("selectedFolder",targetPath)
+      setFolderPath("/home" + targetPath + selectedItem.name)
+      handleFMClose()
     }
 
     

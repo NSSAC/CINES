@@ -52,7 +52,7 @@ const SEIR2 = (props) => {
                             type="text"
                             name="Edge probability"
                             style={{ width: '18px' }}
-                            value={props.dynamicProps.Edge_probability.value}
+                            value={String(props.dynamicProps.Edge_probability.value)}
                             onBlur={(event) => props.changed(event, "Edge_probability")}
                             label="Edge probability"
                             autoComplete="off"
@@ -73,7 +73,7 @@ const SEIR2 = (props) => {
                             type="text"
                             name='Exposed_duration'
                             style={{ width: '18px' }}
-                            value={props.dynamicProps.Exposed_duration.value}
+                            value={String(props.dynamicProps.Exposed_duration.value)}
                             onBlur={(event) => props.changed(event, 'Exposed_duration')}
                             label="Exposed duration"
                             validations={{
@@ -94,7 +94,7 @@ const SEIR2 = (props) => {
                             type="text"
                             name="Infectious probability transition"
                             style={{ width: '18px' }}
-                            value={props.dynamicProps.Infectious_probability_transition.value}
+                            value={String(props.dynamicProps.Infectious_probability_transition.value)}
                             onBlur={(event) => props.changed(event, "Infectious_probability_transition")}
                             label="Infectious probability transition"
                             validations={{

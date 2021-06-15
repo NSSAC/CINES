@@ -53,7 +53,7 @@ const Deterministic_threshold = (props) => {
                             type="text"
                             name='Threshold'
                             style={{ width: '18px' }}
-                            value={props.dynamicProps.threshold.value}
+                            value={String(props.dynamicProps.threshold.value)}
                             onBlur={(event) => props.changed(event, 'threshold')}
                             label="Node threshold value"
                             validations={{
