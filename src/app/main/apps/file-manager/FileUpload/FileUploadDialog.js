@@ -21,7 +21,6 @@ import { useDispatch } from 'react-redux';
 import DeleteIcon from '@material-ui/icons/Delete';
 import MenuTableCell from "./MenuTableCell";
 import * as Actions from '../store/actions';
-import * as Actions_dialog from 'app/main/apps/job-definition/Job-Definition/file-manager-dialog/store/actions/home.actions';
 import './FileUpload.css'
 
 
@@ -29,7 +28,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export const FileUpload = ({ allFilesType,fileTypes, setUploadFile, dialogTargetPath, setShowModal, showModal, handleClose, breadcrumbArr, isDialog }) => {
+export const FileUpload = ({ allFilesType,fileTypes, setUploadFile, dialogTargetPath, setShowModal, showModal, handleClose, breadcrumbArr }) => {
   const useStyles = makeStyles({
     table: {
       minWidth: 450,
@@ -156,9 +155,6 @@ export const FileUpload = ({ allFilesType,fileTypes, setUploadFile, dialogTarget
     })
     if (count === initialUploadFile.length) {
       setTimeout(() => {
-        if(isDialog)
-        dispatch(Actions_dialog.getHome(dialogTargetPath.replace('/home','')));
-        else
         dispatch(Actions.getFiles(targetPath, 'GET_FILES'));
       }, 1000);
       count ++;

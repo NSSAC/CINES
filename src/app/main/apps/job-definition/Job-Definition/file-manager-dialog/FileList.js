@@ -66,9 +66,8 @@ const useStyles = makeStyles({
 function Filelist(props) {
 
     const files = useSelector(({ fMApp }) => {
-        // if (!props.fileManager)
-         { return fMApp.home }
-        // return fMApp.files
+        if (!props.fileManager) { return fMApp.home }
+        return fMApp.files
     });
     const selectedItemId = useSelector(({ fMApp }) => fMApp.selectedItemId);
     const selectedItem = useSelector(({ fMApp }) => files[fMApp.selectedItemId]);

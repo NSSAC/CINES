@@ -9,7 +9,7 @@ export const FileManagerAppConfig = {
     },
     routes  : [
         {
-            path     : '/apps/files/home',
+            path     : '/apps/files',
             component: withRouter(React.lazy(() => import('./FileManagerApp')))
         }
     ]

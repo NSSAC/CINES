@@ -31,9 +31,9 @@ function Breadcrumb(props) {
     }
 
     const breadcrumb_Array = props.targetPath.split('/');
-    // if (props.fileManager)
-    //     breadcrumb_Array[0] = "files"
-    // else
+    if (props.fileManager)
+        breadcrumb_Array[0] = "files"
+    else
         breadcrumb_Array[0] = "home"
 
     if (breadcrumb_Array[breadcrumb_Array.length - 1] === "") {

@@ -132,7 +132,7 @@ function FileManagerApp(props) {
     if (path.endsWith("/home/")) {
       var axios = require("axios");
       if (typeof token === "string") {
-        let config1 = {
+        let config = {
           method: "get",
           url: `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/initialize`,
           headers: {
@@ -140,7 +140,10 @@ function FileManagerApp(props) {
             Authorization: token,
           },
         };
-        axios(config1);
+        axios(config).then((response) => {
+          dispatch(Actions.getFiles(targetPath, "GET_FILES"));
+        })
+          ;
       }
     }
   }
@@ -234,12 +237,12 @@ function FileManagerApp(props) {
   };
 
   useEffect(() => {
+    initUser();
     dispatch(Actions.getFiles(targetPath, "GET_FILES"));
     setIsFolder(true);
     setcheckFlag(false);
     getMetadata(targetMeta);
     setSearch("");
-    initUser();
     // eslint-disable-next-line
   }, [dispatch, props, props.location, props.history]);
 

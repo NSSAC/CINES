@@ -1,5 +1,6 @@
 // import {MaterialUIComponentsNavigation} from 'app/main/documentation/material-ui-components/MaterialUIComponentsNavigation';
-// import {authRoles} from 'app/auth';const navigationConfig = [
+import {authRoles} from 'app/auth';
+
 const navigationConfig = [
         {
             'id'   : 'dashboards',
@@ -152,12 +153,23 @@ const navigationConfig = [
             //         'fg'   : '#FFFFFF'
             //     }
             // },
+            
             {
                 'id'   : 'file-manager',
                 'title': 'File Manager',
                 'type' : 'item',
                 'icon' : 'folder',
-                'url'  : '/apps/files/home'
+                auth   : authRoles.onlyGuest,
+                    'url'  : `/apps/files/`
+            },
+            {
+                'id'   : 'file-manager',
+                'title': 'File Manager',
+                'type' : 'item',
+                'icon' : 'folder',
+                auth   : authRoles.user,
+               'url'  : `/apps/files/home/`
+
             },
             // {
             //     'id'   : 'contacts',
