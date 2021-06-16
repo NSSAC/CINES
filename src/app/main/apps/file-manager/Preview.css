@@ -1,0 +1,35 @@
+img {
+    width: 50%;
+    height: auto;
+    aspect-ratio: attr(width) / attr(height);
+}
+
+video {
+    width: 50%;
+    height: auto;
+    aspect-ratio: attr(width) / attr(height);
+}
+
+audio {
+    width: 50%;
+    height: auto;
+    aspect-ratio: attr(width) / attr(height);
+}
+
+@media only screen and (max-width: 767px) {
+    img {
+        width: 100%;
+        height: auto;
+        aspect-ratio: attr(width) / attr(height);
+    }
+    video {
+        width: 100%;
+        height: auto;
+        aspect-ratio: attr(width) / attr(height);
+    }
+    audio {
+        width: 100%;
+        height: auto;
+        aspect-ratio: attr(width) / attr(height);
+    }
+}

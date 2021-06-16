@@ -5,6 +5,7 @@ import JSONTree from 'react-json-tree'
 import { FuseAnimate } from '@fuse';
 import { Vega } from 'react-vega';
 import Download from './Download';
+import './Preview.css'
 
 
 function Preview(props) {
@@ -165,7 +166,7 @@ function Preview(props) {
         </div>
       );
 
-  else if (props.size > 3200000)
+  else if (props.size > 7350000)
     return (
       <div className="flex flex-1 flex-col items-center justify-center">
         <Typography className="text-20 mt-16" color="textPrimary">The file size is too large and is not available for preview.  Click <button style={hereButton} className='cursor-pointer' onClick={() => DownloadFile('large')}>here</button> to download.</Typography>
@@ -181,7 +182,7 @@ function Preview(props) {
   }
   else if ((extentionType === 'pdf')) {
     var pdfData = Buffer.from(data, 'binary').toString('base64')
-    return (<iframe title='extentionType' width="100%" height="400" src={`data:application/pdf;base64,${pdfData}`}>  </iframe>
+    return (<iframe title='extentionType' width="100%" height="100%" src={`data:application/pdf;base64,${pdfData}#view=fit`}>  </iframe>
     );
   }
 
@@ -397,13 +398,8 @@ function Preview(props) {
       marginTop: "20px"
     }
     var imgData = Buffer.from(data, 'binary').toString('base64')
-    if (window.innerWidth < 768)
       return (
-        <img alt='img' onError={() => HandleError()} src={`data:image/png;base64,${imgData}`} width="100%" style={styles} />
-      );
-    else
-      return (
-        <img alt='img' onError={() => HandleError()} src={`data:image/png;base64,${imgData}`} width="50%" display="block" style={styles} />
+        <img alt='img' onError={() => HandleError()} src={`data:image/png;base64,${imgData}`} style={styles} />
       );
   }
 
@@ -413,15 +409,8 @@ function Preview(props) {
       marginTop: "20px"
     }
     var videoData = Buffer.from(data, 'binary').toString('base64');
-    if (window.innerWidth < 768)
       return (
-        <video width="100%" style={styles} controls>
-          <source onError={() => HandleError()} src={`data:video/mp4;base64,${videoData}`}></source>
-        </video>
-      );
-    else
-      return (
-        <video width="50%" style={styles} controls>
+        <video style={styles} controls>
           <source onError={() => HandleError()} src={`data:video/mp4;base64,${videoData}`}></source>
         </video>
       );
@@ -434,7 +423,7 @@ function Preview(props) {
     }
     var audioData = "Buffer.from(data, 'binary').toString('base64')"
     return (
-      <audio width="50%" display="block" style={styles} controls>
+      <audio display="block" style={styles} controls>
         <source onError={() => HandleError()} src={`data:audio/mp3;base64,${audioData}`}></source>
       </audio>
     );

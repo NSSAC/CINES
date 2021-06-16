@@ -361,8 +361,12 @@ function DetailSidebarContent(props) {
                                 color: 'black',
                                 fontSize: '14px',
                                 fontWeight: 'bold',
+                                
                             }
-                        }} />
+                        }} 
+                         labelRenderer={([key]) => <div style={{whiteSpace: 'nowrap'}}>{key}</div>}
+                        valueRenderer={(raw) => <div>{raw}</div>}
+                        />
                         <div><Typography variant="h6" style={{ display: "inline-flex" }}>USER META</Typography>
                             {canWrite && props.editContent && <Tooltip title="Edit" placement="top">
                                 <IconButton onClick={OnEditClick}>
