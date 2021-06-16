@@ -98,7 +98,8 @@ function FileList(props) {
         maxWidth: '200px',
         textOverflow: 'ellipsis',
         display: 'inline-block',
-        whiteSpace: 'nowrap'
+        whiteSpace: 'nowrap',
+        color:'#1565C0'
     }
 
 
@@ -126,6 +127,7 @@ function FileList(props) {
                         localStorage.setItem('nodeSize', node.size);
                         localStorage.setItem('nodeName', node.name);
 
+                    
                         if (token !== null) {
                             var canRead = false;
                             for (var team in instance.getTokenData().teams) {
@@ -156,6 +158,9 @@ function FileList(props) {
                             localStorage.setItem('readPermission', false);
                         }
                     }
+
+                    if(selectedItem.public === true)
+                    localStorage.setItem('readPermission', true);
 
                     props.history.push(target);
                 }
@@ -199,7 +204,7 @@ function FileList(props) {
                                             <Icon className={clsx(classes.typeIcon, node.type)} />
                                         </TableCell>
                                         <TableCell >{window.innerWidth < 1224 ? <Link style={tableStyle} title={node.name} to={node.name}>{node.name}</Link> :
-                                            <Link title={node.name} to={node.name}>{node.name}</Link>}</TableCell>
+                                            <Link style={{color:'#1565C0'}} title={node.name} to={node.name}>{node.name}</Link>}</TableCell>
                                         <TableCell className="hidden sm:table-cell">{node.type}</TableCell>
                                         <TableCell className="hidden sm:table-cell">{node.owner_id}</TableCell>
                                         <TableCell className="text-center hidden sm:table-cell">{(!node.size && (node.size !== 0)) ? '-' : filesize(node.size)}</TableCell>

@@ -67,6 +67,9 @@ function DetailSidebarHeader(props)
         })
       };
 
+     if(selectedItem.public === true)
+        canRead = true;
+
      if(token !==null){
         for(var team in instance.getTokenData().teams){
             for(var readRights in selectedItem.readACL){
@@ -94,7 +97,7 @@ function DetailSidebarHeader(props)
             {<FuseAnimate animation="transition.expandIn" delay={200}>
                   <Tooltip title="Click to Refresh" placement="bottom">
                     <IconButton onClick={()=>OnRefresh()}>
-                        <Icon >360</Icon>
+                        <Icon >refresh</Icon>
                     </IconButton>
                   </Tooltip>
                 </FuseAnimate>}

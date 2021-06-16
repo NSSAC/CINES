@@ -104,6 +104,26 @@ function DetailSidebarContent(props) {
       return null;
   }
 
+
+
+function convertDate(dateX){
+  if (selectedItem) {
+    let t = new Date(dateX)
+    let date = ('0' + t.getDate()).slice(-2);
+    let month = ('0' + (t.getMonth() + 1)).slice(-2);
+    let year = t.getFullYear();
+    let hours = ('0' + t.getHours()).slice(-2);
+    let minutes = ('0' + t.getMinutes()).slice(-2);
+    let seconds = ('0' + t.getSeconds()).slice(-2);
+    let tempDate = `${year}-${month}-${date} ${hours}:${minutes}:${seconds}`;
+    dateX = tempDate
+}
+return dateX;
+}
+
+selectedItem.creation_date = convertDate(selectedItem.creation_date)
+selectedItem.update_date =convertDate(selectedItem.update_date)
+
   return (
     <FuseAnimate animation="transition.slideUpIn" delay={200}>
       <div className="file-details p-16 sm:p-24">
@@ -203,7 +223,7 @@ function DetailSidebarContent(props) {
                   </tr>
                 ) : null}
 
-                {selectedItem.stdout !== "" ? (
+                {selectedItem.stdout ? (
                   <tr className="state">
                     <th> Std out</th>
                     {selectedItem.stdout ? (
@@ -217,7 +237,7 @@ function DetailSidebarContent(props) {
                   </tr>
                 ) : null}
 
-                {selectedItem.stderr !== "" ? (
+                {selectedItem.stderr ? (
                   <tr className="state">
                     <th> Std error</th>
                     {selectedItem.stderr ? (
@@ -225,6 +245,28 @@ function DetailSidebarContent(props) {
                         {/* eslint-disable-next-line */}
                         <a className="cursor-pointer">Click here</a>
                       </td>
+                    ) : (
+                      <td>-</td>
+                    )}
+                  </tr>
+                ) : null}
+
+                {selectedItem.creation_date ? (
+                  <tr className="state">
+                    <th> Creation date</th>
+                    {selectedItem.creation_date ? (
+                     <td style={{wordBreak:'break-all'}}> {selectedItem.creation_date.replace(/T|Z/g, '  ').split(".")[0]} </td>
+                    ) : (
+                      <td>-</td>
+                    )}
+                  </tr>
+                ) : null}
+
+                {selectedItem.update_date ? (
+                  <tr className="state">
+                    <th> Modified date</th>
+                    {selectedItem.update_date ? (
+                     <td style={{wordBreak:'break-all'}}> {selectedItem.update_date.replace(/T|Z/g, '  ').split(".")[0]} </td>
                     ) : (
                       <td>-</td>
                     )}
