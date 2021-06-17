@@ -121,7 +121,7 @@ function MyJobsFileList(props) {
             const timer_jobList = setInterval(() => {
                 if (changeState || !cancelledState) {
                     props.setChangeState(props.changeState + 1);
-                    setSortCount(true)
+                     cancelledState && setSortCount(true)
                 }
                 setTimeout(() => {
                     setSortCount(false);

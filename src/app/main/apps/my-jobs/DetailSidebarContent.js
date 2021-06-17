@@ -59,7 +59,7 @@ function DetailSidebarContent(props) {
   const classes = useStyles();
 
   const navigateStyle = {
-    color: "#61dafb",
+    color: "#1565C0",
     wordBreak: 'break-all',
     cursor: "pointer",
   };
@@ -107,7 +107,6 @@ function DetailSidebarContent(props) {
 
 
 function convertDate(dateX){
-  if (selectedItem) {
     let t = new Date(dateX)
     let date = ('0' + t.getDate()).slice(-2);
     let month = ('0' + (t.getMonth() + 1)).slice(-2);
@@ -117,12 +116,20 @@ function convertDate(dateX){
     let seconds = ('0' + t.getSeconds()).slice(-2);
     let tempDate = `${year}-${month}-${date} ${hours}:${minutes}:${seconds}`;
     dateX = tempDate
-}
 return dateX;
 }
 
-selectedItem.creation_date = convertDate(selectedItem.creation_date)
-selectedItem.update_date =convertDate(selectedItem.update_date)
+function dateList(){
+  var allDates = ['creation_date','update_date','completed_date','cancelled_date']
+
+  for(var i=0;i<allDates.length;i++){
+    if (selectedItem && selectedItem[allDates[i]]) {
+      selectedItem[allDates[i]] = convertDate(selectedItem[allDates[i]])
+    }
+  }
+}
+
+dateList()
 
   return (
     <FuseAnimate animation="transition.slideUpIn" delay={200}>
@@ -229,7 +236,7 @@ selectedItem.update_date =convertDate(selectedItem.update_date)
                     {selectedItem.stdout ? (
                       <td onClick={openoutputDialog}>
                         {/* eslint-disable-next-line */}
-                        <a className="cursor-pointer">Click here</a>
+                        <a style={{color:'#1565C0'}} className="cursor-pointer">Click here</a>
                       </td>
                     ) : (
                       <td>-</td>
@@ -243,7 +250,7 @@ selectedItem.update_date =convertDate(selectedItem.update_date)
                     {selectedItem.stderr ? (
                       <td onClick={openErrorDialog}>
                         {/* eslint-disable-next-line */}
-                        <a className="cursor-pointer">Click here</a>
+                        <a style={{color:'#1565C0'}} className="cursor-pointer">Click here</a>
                       </td>
                     ) : (
                       <td>-</td>
@@ -272,6 +279,76 @@ selectedItem.update_date =convertDate(selectedItem.update_date)
                     )}
                   </tr>
                 ) : null}
+
+                 {selectedItem.completed_date ? (
+                  <tr className="state">
+                    <th>Completed date</th>
+                    {selectedItem.completed_date ? (
+                     <td style={{wordBreak:'break-all'}}>{selectedItem.completed_date.replace(/T|Z/g, '  ').split(".")[0]} </td>
+                    ) : (
+                      <td>-</td>
+                    )}
+                  </tr>
+                ) : null}
+
+                {selectedItem.cancelled_date ? (
+                  <tr className="state">
+                    <th>Cancelled date</th>
+                    {selectedItem.cancelled_date ? (
+                     <td style={{wordBreak:'break-all'}}>{selectedItem.cancelled_date.replace(/T|Z/g, '  ').split(".")[0]} </td>
+                    ) : (
+                      <td>-</td>
+                    )}
+                  </tr>
+                ) : null}
+
+                 {selectedItem.created_by ? (
+                  <tr className="state">
+                    <th>Created by</th>
+                    {selectedItem.created_by ? (
+                     <td style={{wordBreak:'break-all'}}> {selectedItem.created_by} </td>
+                    ) : (
+                      <td>-</td>
+                    )}
+                  </tr>
+                ) : null}
+
+                {selectedItem.exit_code ? (
+                  <tr className="state">
+                    <th>Exit code</th>
+                    {selectedItem.exit_code ? (
+                     <td style={{wordBreak:'break-all'}}> {selectedItem.exit_code} </td>
+                    ) : (
+                      <td>-</td>
+                    )}
+                  </tr>
+                ) : null}
+
+                {selectedItem.failure_type ? (
+                  <tr className="state">
+                    <th>Failure type</th>
+                    {selectedItem.failure_type ? (
+                     <td style={{wordBreak:'break-all'}}> {selectedItem.failure_type} </td>
+                    ) : (
+                      <td>-</td>
+                    )}
+                  </tr>
+                ) : null}
+
+                 {selectedItem.status ? (
+                  <tr className="state">
+                    <th> Status</th>
+                    {selectedItem.status ? (
+                      <td onClick={()=>openDialog(['Status',selectedItem.status])}>
+                        {/* eslint-disable-next-line */}
+                        <a style={{color:'#1565C0'}} className="cursor-pointer">Click here</a>
+                      </td>
+                    ) : (
+                      <td>-</td>
+                    )}
+                  </tr>
+                ) : null}
+
               </tbody>
             </table>
           </React.Fragment>
@@ -322,7 +399,7 @@ selectedItem.update_date =convertDate(selectedItem.update_date)
                         <tr>
                           <th title={data[0]} style={labelEllipsis}>{data[0]}:</th>
                           {(() => {
-                            if ((data[0].includes('inputFile') || data[0].includes('Graph') || data[0] === 'csonnet_data_analysis' ||  data[0] === 'csonnet_simulation') && data[0] !== 'output_GraphType') {
+                            if ((data[0].includes('inputFile') || data[0].toLowerCase().includes('graph') || data[0] === 'csonnet_data_analysis' ||  data[0] === 'csonnet_simulation') && data[0] !== 'output_GraphType') {
                               return (
                                 <td style={navigateStyle} onClick={() => navigateFile(data[1])}>{data[1]}</td>
                               )
@@ -330,7 +407,7 @@ selectedItem.update_date =convertDate(selectedItem.update_date)
                               return (
                                 <td onClick={() => openDialog(data)}>
                                   {/* eslint-disable-next-line */}
-                                  <a className="cursor-pointer">Click here</a>
+                                  <a style={{color:'#1565C0'}} className="cursor-pointer">Click here</a>
                                 </td>
                               )
                             } else {
