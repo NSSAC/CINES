@@ -202,9 +202,10 @@ function FileManagerApp(props) {
         .catch((error) => {
           if (typeof token === "string") {
             setContainerFlag("error");
-          } else {
-            setContainerFlag("true");
-          }
+          } 
+          // else {
+          //   setContainerFlag("true");
+          // }
         });
     }
   }
