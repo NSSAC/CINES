@@ -127,7 +127,7 @@ function FileList(props) {
                         localStorage.setItem('nodeSize', node.size);
                         localStorage.setItem('nodeName', node.name);
 
-                    
+                        
                         if (token !== null) {
                             var canRead = false;
                             for (var team in instance.getTokenData().teams) {
@@ -238,12 +238,21 @@ function FileList(props) {
         }
 
         else if (Object.values(files).length === 0) {
-            if (props.containerFlag === 'error')
+             if (props.containerFlag === "error-unknown") {
                 return (
-                    <div className="flex flex-1 flex-col items-center justify-center mt-20">
-                        <Typography className="text-18 mt-16" color="textPrimary">No such file / folder exists.</Typography>
+                    <div className="flex flex-1 flex-col items-center justify-center">
+                        <Typography className="text-20 mt-16" color="textPrimary">An error occured. Please try again.</Typography>
                     </div>
                 )
+            }
+        
+            else if (props.containerFlag === "error-404") {
+                return (
+                    <div className="flex flex-1 flex-col items-center justify-center">
+                        <Typography className="text-20 mt-16" color="textPrimary">No such file / folder exists.</Typography>
+                    </div>
+                )
+         }
 
         else
             return (
@@ -276,9 +285,11 @@ function FileList(props) {
                 <Preview type={type} fileId={id} size={size} perm={readPermission} name={name} ></Preview>
             )
         else return (
-            <div className="flex flex-1 flex-col items-center justify-center">
-                <Typography className="text-20 mt-16" color="textPrimary">No such file / folder exists.</Typography>
+            <div className="flex flex-1 flex-col items-center justify-center mt-40">
+                <Typography className="text-20 mt-16" color="textPrimary">Loading</Typography>
+                <LinearProgress className="w-xs" color="secondary" />
             </div>
+        
         )
     }
 
@@ -291,7 +302,15 @@ function FileList(props) {
         )
     }
 
-    else if (props.containerFlag === "error") {
+    else if (props.containerFlag === "error-unknown") {
+        return (
+            <div className="flex flex-1 flex-col items-center justify-center">
+                <Typography className="text-20 mt-16" color="textPrimary">An error occured. Please try again.</Typography>
+            </div>
+        )
+    }
+
+    else if (props.containerFlag === "error-404") {
         return (
             <div className="flex flex-1 flex-col items-center justify-center">
                 <Typography className="text-20 mt-16" color="textPrimary">No such file / folder exists.</Typography>

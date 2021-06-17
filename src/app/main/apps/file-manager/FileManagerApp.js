@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useReducer, useRef } from "react";
 import {
   ClickAwayListener,
   Tooltip,
@@ -47,7 +47,9 @@ function FileManagerApp(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [fileTypeArray, setFileTypeArray] = useState([]);
   const history = useHistory();
-  const files = useSelector(({ fileManagerApp }) => fileManagerApp.files);
+      // eslint-disable-next-line
+  const [ignored, forceUpdate] = useReducer(x => x + 1, 0);
+    const files = useSelector(({ fileManagerApp }) => fileManagerApp.files);
   var path = window.location.pathname;
   var pathEnd = path.charAt(path.length - 1);
   var token = localStorage.getItem("id_token");
@@ -195,17 +197,18 @@ function FileManagerApp(props) {
             localStorage.setItem("nodeId", response.data.id);
             localStorage.setItem("nodeSize", response.data.size);
             localStorage.setItem("nodeName", response.data.name);
+             forceUpdate();
           }
           if (metaData !== undefined)
             checkPermission(metaData, ownerId, type, readPermission);
         })
         .catch((error) => {
-          if (typeof token === "string") {
-            setContainerFlag("error");
+           if (error.response && error.response.status === 404) {
+            setContainerFlag("error-404");
+           }
+           else if (error.response) {
+              setContainerFlag("error-unknown");
           } 
-          // else {
-          //   setContainerFlag("true");
-          // }
         });
     }
   }

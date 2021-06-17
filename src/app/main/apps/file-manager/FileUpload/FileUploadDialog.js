@@ -20,6 +20,7 @@ import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import DeleteIcon from '@material-ui/icons/Delete';
 import MenuTableCell from "./MenuTableCell";
+import FILEUPLOAD_CONFIG from "./FileUploadconfig";
 import * as Actions from '../store/actions';
 import './FileUpload.css'
 
@@ -60,7 +61,7 @@ export const FileUpload = ({ allFilesType,fileTypes, setUploadFile, dialogTarget
   });
 
   var fileData = [];
-  var fileTypeArray = allFilesType
+  var fileTypeArray = FILEUPLOAD_CONFIG.fileType
   if (dialogTargetPath) {
     fileTypeArray = fileTypes
   }
