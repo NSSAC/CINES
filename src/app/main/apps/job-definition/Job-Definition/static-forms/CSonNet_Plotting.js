@@ -238,7 +238,7 @@ const CSonNet_plot = (props) => {
                     "set_y_limits": (dynamicProps.set_y_limits.value === 'true' ? true : false),
                     ...(dynamicProps.set_y_limits.value === 'true' && { "y_limit_lower": parseFloat(dynamicProps.y_limit_lower.value), "y_limit_higher": parseFloat(dynamicProps.y_limit_higher.value) }),
                     "set_y_increment": (dynamicProps.set_y_increment.value === 'true' ? true : false),
-                    ...(dynamicProps.set_y_increment.value === 'true' && { "y_increment": parseFloat(dynamicProps.x_increment.value) })
+                    ...(dynamicProps.set_y_increment.value === 'true' && { "y_increment": parseFloat(dynamicProps.y_increment.value) })
                 },
                 "tick_section": {
                     "tick_fontsize": parseInt(dynamicProps.tick_fontsize.value),
