@@ -93,7 +93,8 @@ const navigationConfig = [
             'title': 'Register',
             'type' : 'link',
             'auth'   : authRoles.onlyGuest,
-            'url'  : registrationURL
+            'url'  : registrationURL,
+            "target": "_self"
 
         },  
         {
@@ -101,7 +102,8 @@ const navigationConfig = [
             'title': 'Login',
             'type' : 'link',
             'auth'   : authRoles.onlyGuest,
-            'url'  : loginURL
+            'url'  : loginURL,
+            "target": "_self"
 
         },  
 ];
