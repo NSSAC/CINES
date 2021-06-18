@@ -2,8 +2,6 @@ import jwtDecode from 'jwt-decode';
 import AUTH_CONFIG from './sciductServiceConfig';
 import axios from 'axios';
 import React from 'react';
-import { useDispatch, useSelector } from "react-redux";
-import * as FuseActions from 'app/store/actions/fuse';
 
 var timeOutHandle;
 class SciDuctService {
