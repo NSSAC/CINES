@@ -101,7 +101,7 @@ function Preview(props) {
           setErrormsg('An error occurred while loading file preview. Please click on file again to reload.')
       });
     }
-    if (props.size <= 3200000 && props.perm === "true")
+    if (props.size <= 7350000 && props.perm === "true")
       insertData()
     else {
       setLoad(true)
