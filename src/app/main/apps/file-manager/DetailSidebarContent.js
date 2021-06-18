@@ -273,9 +273,14 @@ function DetailSidebarContent(props) {
                 }
             }
         }
+
         if (instance.getTokenData().sub === selectedItem.owner_id) {
             canWrite = true
         }
+
+        if(instance.getTokenData().roles.indexOf('superadmin') !== -1){
+            canWrite = true;
+          } 
     }
 
     return (
@@ -453,6 +458,10 @@ function DetailSidebarContent(props) {
                                     <th>Owner</th>
                                     <td title={selectedItem.owner_id}>{selectedItem.owner_id}</td>
                                 </tr>
+                                <tr className="public">
+                                    <th>Public</th>
+                                    <td title={selectedItem.public.toString()}>{selectedItem.public.toString()}</td>
+                                </tr>
                                 <tr className="readacl">
                                     <th>Read ACL</th>
                                     <td title={selectedItem.readACL.join(", ")}>{selectedItem.readACL.join(", ")}</td>
@@ -465,6 +474,7 @@ function DetailSidebarContent(props) {
                                     <th>Compute ACL</th>
                                     <td title={selectedItem.computeACL.join(", ")}>{selectedItem.computeACL.join(", ")}</td>
                                 </tr>
+                                
                             </tbody>
                         </table>
                     </React.Fragment>

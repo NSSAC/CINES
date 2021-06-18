@@ -171,6 +171,8 @@ function FMPopup({
     let fileMetaDate = metaData;
     if (sciductService.getTokenData().sub === ownerId) {
       setcheckFlag(true);
+    } else if(sciductService.getTokenData().roles.indexOf('superadmin') !== -1){
+      setcheckFlag(true);
     } else {
       tokenData.forEach((element) => {
         fileMetaDate.forEach((item) => {

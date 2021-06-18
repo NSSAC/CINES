@@ -178,6 +178,8 @@ function Preview(props) {
       return (<div style={textStyle}>{JSON.stringify(data, null, 2)}</div>);
     else
       return (<div style={textStyle}>{data}</div>);
+      // return (<iframe src={`data:text/plain,${data}#view=fit`} width="100%" height="100%" frameborder='0' ></iframe>);
+
 
   }
   else if ((extentionType === 'pdf')) {
@@ -401,6 +403,13 @@ function Preview(props) {
       return (
         <img alt='img' onError={() => HandleError()} src={`data:image/png;base64,${imgData}`} style={styles} />
       );
+  }
+
+  else if (extentionType === 'svg') {
+      return (
+        <iframe title='extentionType' src={`data:image/svg+xml,${encodeURIComponent(data)}#view=fit`} width="100%" height="100%" ></iframe>
+          // <object id="svg-object" data={doc.documentElement} type="image/svg+xml"></object>
+          )
   }
 
   else if ((extentionType === 'mp4')) {
