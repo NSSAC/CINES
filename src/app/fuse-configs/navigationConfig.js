@@ -15,51 +15,79 @@ const navigationConfig = [
             'url'  : '/home'
         },
         {
-            'id'   : 'scrumboard',
-            'title': 'About',
-            'type' : 'item',
-            'icon' : 'font_download',
-            'url'  :'/about'
-            // 'url'  : '/apps/scrumboard'
-        },
+            'id': "About",
+            "title": "About",
+            "type": "group",
+            "children": [
+                {
+                    'id'   : 'aboutcines',
+                    'title': 'About CINES',
+                    'type' : 'item',
+                    'url'  :'/about'
+                    // 'url'  : '/apps/scrumboard'
+                },
+                {
+                    'id'   : 'collaborators',
+                    'title': 'Collaborators',
+                    'type' : 'item',
+                    'url'  : '/collaborators'
+                    // 'badge': {
+                    //     'title': 25,
+                    //     'bg'   : '#F44336',
+                    //     'fg'   : '#FFFFFF'
+                    // }
+                    },
+                    {
+                    'id'   : 'publications',
+                    'title': 'Publications',
+                    'type' : 'item',
+                    'url'  : '/publications'
+                }
+            ]
+        },  
         {
-            'id'   : 'mail',
-            'title': 'Collaborators',
-            'type' : 'item',
-            'icon' : 'group',
-            'url'  : '/collaborators'
-            // 'badge': {
-            //     'title': 25,
-            //     'bg'   : '#F44336',
-            //     'fg'   : '#FFFFFF'
-            // }
-            },
-            {
-            'id'   : 'publications',
-            'title': 'Publications',
-            'type' : 'item',
-            'icon' : 'library_books',
-            'url'  : '/publications'
-        },
-           
-        {
-            'id'   : 'file-manager',
-            'title': 'File Manager',
+            'id'   : 'file-manager-guest',
+            'title': 'Files',
             'type' : 'item',
             'icon' : 'folder',
             auth   : authRoles.onlyGuest,
-            'url'  : `/apps/files/`
+            'url'  : '/apps/files/resources/net.science'
         },
         {
             'id'   : 'file-manager',
-            'title': 'File Manager',
-            'type' : 'item',
+            'title': 'Files',
+            'type' : 'group',
             'icon' : 'folder',
             auth   : authRoles.user,
-            'url'  : `/apps/files/home/`
+            // 'url'  : '/apps/files',
+            "children": [
+                {
+                    'id'   : 'filehome',
+                    'title': 'Home',
+                    'type' : 'item',
+                    'icon' : 'home',
+                    'url'  : '/apps/files/home'
+                },
+                {
+                    'id'   : 'fileresources',
+                    'title': 'Resources',
+                    'type' : 'item',
+                    'icon' : 'resources',
+                    'url'  : '/apps/files/resources/net.science'
+                },
+            ]
 
         },
 
+        {
+                        
+            'id'   : 'my-jobs',
+            'title': 'My Jobs',
+             'type' : 'item',
+             'icon' : 'chrome_reader_mode',
+             'url'  : '/apps/my-jobs/',
+            'auth'   : authRoles.user,
+        },
         {
             'id'   : 'register',
             'title': 'Register',

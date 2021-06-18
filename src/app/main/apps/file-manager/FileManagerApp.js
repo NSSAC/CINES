@@ -130,26 +130,6 @@ function FileManagerApp(props) {
     document.removeEventListener("keydown", escFunction, false);
   }
 
-  function initUser() {
-    if (path.endsWith("/home/")) {
-      var axios = require("axios");
-      if (typeof token === "string") {
-        let config = {
-          method: "get",
-          url: `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/initialize`,
-          headers: {
-            Accept: "application/json",
-            Authorization: token,
-          },
-        };
-        axios(config).then((response) => {
-          dispatch(Actions.getFiles(targetPath, "GET_FILES"));
-        })
-          ;
-      }
-    }
-  }
-
   async function getMetadata(targetMeta) {
     var axios = require("axios");
     if (typeof token === "string") {
@@ -245,7 +225,6 @@ function FileManagerApp(props) {
   };
 
   useEffect(() => {
-    initUser();
     dispatch(Actions.getFiles(targetPath, "GET_FILES"));
     setIsFolder(true);
     setcheckFlag(false);

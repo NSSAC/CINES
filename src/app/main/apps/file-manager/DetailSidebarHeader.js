@@ -69,8 +69,9 @@ function DetailSidebarHeader(props) {
     canRead = true;
 
   if (token !== null) {
-    for (var team in instance.getTokenData().teams) {
-      console.log(instance.getTokenData())
+    var tokenData = instance.getTokenData()
+    for (var team in tokenData.teams) {
+      console.log(tokenData)
       for (var readRights in selectedItem.readACL) {
         if (team === readRights) {
           canRead = true
@@ -84,11 +85,11 @@ function DetailSidebarHeader(props) {
         }
       }
     }
-    if (instance.getTokenData().sub === selectedItem.owner_id) {
+    if (tokenData.sub === selectedItem.owner_id) {
       canRead = true;
       canDelete = true;
     }
-    if (instance.getTokenData().roles.indexOf('superadmin') !== -1) {
+    if (tokenData.roles && tokenData.roles.indexOf('superadmin') !== -1) {
       canRead = true;
       canDelete = true;
     }

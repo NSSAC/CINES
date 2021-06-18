@@ -265,7 +265,9 @@ function DetailSidebarContent(props) {
     }
 
     if (token !== null) {
-        for (var team in instance.getTokenData().teams) {
+        var tokenData = instance.getTokenData()
+
+        for (var team in tokenData.teams) {
             for (var writeRights in selectedItem.writeACL) {
                 if (team === writeRights) {
                     canWrite = true
@@ -274,11 +276,11 @@ function DetailSidebarContent(props) {
             }
         }
 
-        if (instance.getTokenData().sub === selectedItem.owner_id) {
+        if (tokenData.sub === selectedItem.owner_id) {
             canWrite = true
         }
 
-        if(instance.getTokenData().roles.indexOf('superadmin') !== -1){
+        if(tokenData.roles && tokenData.roles.indexOf('superadmin') !== -1){
             canWrite = true;
           } 
     }
