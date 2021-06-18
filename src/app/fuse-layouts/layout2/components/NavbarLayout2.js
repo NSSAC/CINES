@@ -1,7 +1,7 @@
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
-import { FuseScrollbars } from '@fuse';
+// import { FuseScrollbars } from '@fuse';
 import Logo from 'app/fuse-layouts/shared-components/Logo';
 import Navigation from 'app/fuse-layouts/shared-components/Navigation';
 import UserMenu from 'app/fuse-layouts/shared-components/UserMenu';

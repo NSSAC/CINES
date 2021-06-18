@@ -1,5 +1,5 @@
-import { Avatar, Button, Icon, ListItemIcon, ListItemText, MenuItem, Popover, Typography } from '@material-ui/core';
-import { Hidden } from '@material-ui/core';
+import { Button, Icon, ListItemIcon, ListItemText, MenuItem, Popover, Typography } from '@material-ui/core';
+// import { Hidden } from '@material-ui/core';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';

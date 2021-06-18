@@ -1,10 +1,10 @@
-import { Icon, Typography } from '@material-ui/core';
-import { makeStyles, useTheme } from '@material-ui/styles';
+import { Typography } from '@material-ui/core';
+import { makeStyles } from '@material-ui/styles';
 import clsx from 'clsx';
 import React from 'react';
 
-import { FuseHighlight, FusePageSimple } from '@fuse';
-import { FuseAnimate, FuseAnimateGroup } from '@fuse';
+import { FusePageSimple } from '@fuse';
+
 
 const useStyles = makeStyles(theme => ({
     header: {
@@ -24,15 +24,15 @@ const useStyles = makeStyles(theme => ({
 }));
 
 function WebSci21Content(props) {
-    const graphicContainerStyle = {
-        display: "flex",
-        justifyContent: "center"
-    }
-    const graphicStyle = {
-        width: "60%",
-        maxWidth: "600px",
-        float: "right"
-    }
+    // const graphicContainerStyle = {
+    //     display: "flex",
+    //     justifyContent: "center"
+    // }
+    // const graphicStyle = {
+    //     width: "60%",
+    //     maxWidth: "600px",
+    //     float: "right"
+    // }
 
     const classes = useStyles(props);
     return (
