@@ -115,6 +115,8 @@ function JobDefinitionForm(props) {
         createFromData[key]["formLabel"] = key;
         if(props.resubmit)
          createFromData[key]["value"] = props.resubmit.inputData.input[key];
+        else if(String(createFromData[key]['default']) !== 'undefined')
+         createFromData[key]["value"] = createFromData[key]['default'].toString();
         else
          createFromData[key]["value"] = ""
 
@@ -216,7 +218,7 @@ function JobDefinitionForm(props) {
         if (formElementsArray[key].type === "integer") {
           input[key] = parseInt(formElementsArray[key].value);
         } else if (formElementsArray[key].type === "boolean") {
-          if(formElementsArray[key].value === "true"){
+          if(formElementsArray[key].value === "true" || formElementsArray[key].value === true){
             input[key] = true;
           }
           else{
