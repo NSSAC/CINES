@@ -1,15 +1,17 @@
-import React from 'react';
-import {makeStyles} from '@material-ui/styles';
-import {FuseScrollbars, FuseMessage, FuseDialog, FuseSuspense} from '@fuse';
-import {renderRoutes} from 'react-router-config'
-import {useSelector} from 'react-redux';
+import { makeStyles } from '@material-ui/styles';
 import clsx from 'clsx';
+import React from 'react';
+import { useSelector } from 'react-redux';
+import { renderRoutes } from 'react-router-config'
+
+import { FuseDialog, FuseMessage, FuseScrollbars, FuseSuspense } from '@fuse';
 import AppContext from 'app/AppContext';
-import LeftSideLayout2 from './components/LeftSideLayout2';
-import ToolbarLayout2 from './components/ToolbarLayout2';
-import NavbarWrapperLayout2 from './components/NavbarWrapperLayout2';
+
 import FooterLayout2 from './components/FooterLayout2';
+import LeftSideLayout2 from './components/LeftSideLayout2';
+import NavbarWrapperLayout2 from './components/NavbarWrapperLayout2';
 import RightSideLayout2 from './components/RightSideLayout2';
+import ToolbarLayout2 from './components/ToolbarLayout2';
 
 const useStyles = makeStyles(theme => ({
     root          : {
