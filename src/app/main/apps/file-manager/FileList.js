@@ -86,12 +86,12 @@ function FileList(props) {
         }
     }
 
-    const infoIcon ={
+    const infoIcon = {
         right: '0',
         backgroundColor: '#eeeeee',
         position: 'sticky',
         width: '15px',
-      }
+    }
 
     const tableStyle = {
         overflow: 'hidden',
@@ -99,18 +99,18 @@ function FileList(props) {
         textOverflow: 'ellipsis',
         display: 'inline-block',
         whiteSpace: 'nowrap',
-        color:'#1565C0'
+        color: '#1565C0'
     }
 
 
-    useEffect(()=>{
+    useEffect(() => {
         setTimeout(() => {
             setSpinnerFlag(false)
         }, 5000);
 
-        if(document.getElementsByClassName('FileWrapper').length > 0)
-            document.getElementsByClassName('FileWrapper')[0].scrollTo(0,0)
-    },[files])
+        if (document.getElementsByClassName('FileWrapper').length > 0)
+            document.getElementsByClassName('FileWrapper')[0].scrollTo(0, 0)
+    }, [files])
 
     function onClickHandler(node, canLink) {
         return function (evt) {
@@ -127,7 +127,7 @@ function FileList(props) {
                         localStorage.setItem('nodeSize', node.size);
                         localStorage.setItem('nodeName', node.name);
 
-                        
+
                         if (token !== null) {
                             var canRead = false;
                             for (var team in instance.getTokenData().teams) {
@@ -150,6 +150,10 @@ function FileList(props) {
                                 canRead = true;
                                 localStorage.setItem('readPermission', true);
                             }
+                            if (instance.getTokenData().roles.indexOf('superadmin') !== -1) {
+                                canRead = true;
+                                localStorage.setItem('readPermission', true);
+                            }
                             if (canRead === false) {
                                 localStorage.setItem('readPermission', false);
                             }
@@ -160,7 +164,7 @@ function FileList(props) {
                     }
 
                     if(selectedItem.public === true)
-                    localStorage.setItem('readPermission', true);
+                        localStorage.setItem('readPermission', true);
 
                     props.history.push(target);
                 }
@@ -204,7 +208,7 @@ function FileList(props) {
                                             <Icon className={clsx(classes.typeIcon, node.type)} />
                                         </TableCell>
                                         <TableCell >{window.innerWidth < 1224 ? <Link style={tableStyle} title={node.name} to={node.name}>{node.name}</Link> :
-                                            <Link style={{color:'#1565C0'}} title={node.name} to={node.name}>{node.name}</Link>}</TableCell>
+                                            <Link style={{ color: '#1565C0' }} title={node.name} to={node.name}>{node.name}</Link>}</TableCell>
                                         <TableCell className="hidden sm:table-cell">{node.type}</TableCell>
                                         <TableCell className="hidden sm:table-cell">{node.owner_id}</TableCell>
                                         <TableCell className="text-center hidden sm:table-cell">{(!node.size && (node.size !== 0)) ? '-' : filesize(node.size)}</TableCell>
@@ -238,28 +242,28 @@ function FileList(props) {
         }
 
         else if (Object.values(files).length === 0) {
-             if (props.containerFlag === "error-unknown") {
+            if (props.containerFlag === "error-unknown") {
                 return (
                     <div className="flex flex-1 flex-col items-center justify-center">
                         <Typography className="text-20 mt-16" color="textPrimary">An error occured. Please try again.</Typography>
                     </div>
                 )
             }
-        
+
             else if (props.containerFlag === "error-404") {
                 return (
                     <div className="flex flex-1 flex-col items-center justify-center">
                         <Typography className="text-20 mt-16" color="textPrimary">No such file / folder exists.</Typography>
                     </div>
                 )
-         }
+            }
 
-        else
-            return (
-                <div className="flex flex-1 flex-col items-center justify-center mt-20">
-                    <Typography className="text-18 mt-16" color="textPrimary">The folder is empty.</Typography>
-                </div>
-            )
+            else
+                return (
+                    <div className="flex flex-1 flex-col items-center justify-center mt-20">
+                        <Typography className="text-18 mt-16" color="textPrimary">The folder is empty.</Typography>
+                    </div>
+                )
         }
 
         else if (searchResults.length === 0 && props.search !== '')
@@ -289,7 +293,7 @@ function FileList(props) {
                 <Typography className="text-20 mt-16" color="textPrimary">Loading</Typography>
                 <LinearProgress className="w-xs" color="secondary" />
             </div>
-        
+
         )
     }
 
