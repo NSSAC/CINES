@@ -25,3 +25,8 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 cines-build.tar
+cines-build-alpha.tar.gz
+cines-build-ptest.tar
+cines-build-alpha.tgz
+generated_config.json
+model-temp.json

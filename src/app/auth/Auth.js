@@ -1,24 +1,23 @@
-import React, {Component} from 'react';
-import {FuseSplashScreen} from '@fuse';
-import {connect} from 'react-redux';
+import React, { Component } from 'react';
+import { FuseSplashScreen } from '@fuse';
+import { connect } from 'react-redux';
 import * as userActions from 'app/auth/store/actions';
-import {bindActionCreators} from 'redux';
+import { bindActionCreators } from 'redux';
 import * as Actions from 'app/store/actions';
 import sciductService from 'app/services/sciductService';
-
+import * as FuseActions from 'app/store/actions/fuse';
 class Auth extends Component {
 
     state = {
         waitAuthCheck: true
     }
 
-    componentDidMount()
-    {
+    componentDidMount() {
         return Promise.all([
             // Comment the lines which you do not use
             this.sciductCheck(),
         ]).then(() => {
-            this.setState({waitAuthCheck: false})
+            this.setState({ waitAuthCheck: false })
         })
     }
 
@@ -27,48 +26,49 @@ class Auth extends Component {
     sciductCheck = () => new Promise(resolve => {
         sciductService.init(
             success => {
-                if ( !success )
-                {
+                if (!success) {
                     resolve();
                 }
             }
         );
-            /**
-             * Retrieve user data from Auth0
-             */
-            if ( sciductService.isAuthenticated() && localStorage.getItem('loggedIn'))
-            {
+        /**
+         * Retrieve user data from Auth0
+         */
+        if (sciductService.isAuthenticated() && localStorage.getItem('loggedIn')) {
             sciductService.onRefreshGetUserData().then(tokenData => {
 
                 this.props.setUserDataSciDuct(tokenData);
 
-               resolve();
+                resolve();
 
-               //this.props.showMessage({message: 'Logging in with Sciduct'});
+                // This broadcasts the home dir to update the files menu
+                this.props.setHomeDir('filehome', {
+                    'url': "/apps/files" + tokenData.home_folder
+                })
+                //this.props.showMessage({message: 'Logging in with Sciduct'});
             })
         }
-        else{
+        else {
             resolve();
         }
 
         return Promise.resolve();
     })
-   
-    render()
-    {
-        return this.state.waitAuthCheck ? <FuseSplashScreen/> : <React.Fragment children={this.props.children}/>;
+
+    render() {
+        return this.state.waitAuthCheck ? <FuseSplashScreen /> : <React.Fragment children={this.props.children} />;
     }
 }
 
-function mapDispatchToProps(dispatch)
-{
+function mapDispatchToProps(dispatch) {
     return bindActionCreators({
-            logout             : userActions.logoutUser,
-            setUserData        : userActions.setUserData,
-            showMessage        : Actions.showMessage,
-            hideMessage        : Actions.hideMessage,
-            setUserDataSciDuct :  userActions.setUserDataSciDuct,
-        },
+        logout: userActions.logoutUser,
+        setUserData: userActions.setUserData,
+        showMessage: Actions.showMessage,
+        hideMessage: Actions.hideMessage,
+        setUserDataSciDuct: userActions.setUserDataSciDuct,
+        setHomeDir: FuseActions.updateNavigationItem
+    },
         dispatch);
 }
 

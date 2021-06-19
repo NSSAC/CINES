@@ -6,7 +6,7 @@ import { FuseAnimate } from '@fuse';
 import { Vega } from 'react-vega';
 import Download from './Download';
 import './Preview.css'
-
+import {FuseScrollbars} from '@fuse';
 
 function Preview(props) {
   var extentionType = props.type;
@@ -177,10 +177,8 @@ function Preview(props) {
     if (typeof (data) === 'object')
       return (<div style={textStyle}>{JSON.stringify(data, null, 2)}</div>);
     else
-      return (<div style={textStyle}>{data}</div>);
+      return ( <FuseScrollbars><div style={textStyle}>{data}</div></FuseScrollbars>);
       // return (<iframe src={`data:text/plain,${data}#view=fit`} width="100%" height="100%" frameborder='0' ></iframe>);
-
-
   }
   else if ((extentionType === 'pdf')) {
     var pdfData = Buffer.from(data, 'binary').toString('base64')

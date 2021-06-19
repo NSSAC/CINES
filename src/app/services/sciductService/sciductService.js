@@ -2,15 +2,13 @@ import jwtDecode from 'jwt-decode';
 import AUTH_CONFIG from './sciductServiceConfig';
 import axios from 'axios';
 import React from 'react';
+
 var timeOutHandle;
 class SciDuctService {
 
-    init(success)
-    {
-        if ( Object.entries(AUTH_CONFIG).length === 0 && AUTH_CONFIG.constructor === Object )
-        {
-            if ( process.env.NODE_ENV === 'development' )
-            {
+    init(success) {
+        if (Object.entries(AUTH_CONFIG).length === 0 && AUTH_CONFIG.constructor === Object) {
+            if (process.env.NODE_ENV === 'development') {
                 console.warn("Missing SciDuct configuration at src/app/services/sciDuctService/sciductServiceConfig.js");
             }
             success(false);
@@ -30,68 +28,85 @@ class SciDuctService {
 
     onAuthenticated = (token, callback) => {
         this.setSession(token)
-        if (callback){
-            callback()
-        }
+        this.fileserviceInit(token).then(() => {
+            if (callback) {
+                callback()
+            }
+        })
     };
 
     setSession = (token) => {
-
         localStorage.setItem('id_token', token);
-        window.clearTimeout (timeOutHandle)
-      
+        window.clearTimeout(timeOutHandle)
         this.setRefreshTime(token);
     };
-    setRefreshTime(token){
-       
+ 
+    setRefreshTime(token) {
+
         //setTimeout(function(){ alert("Hello"); }, 8000);
-         timeOutHandle = window.setTimeout(
-            
-                this.refreshAPI
-             
-          ,`${AUTH_CONFIG.refresh_time}`);
+        timeOutHandle = window.setTimeout(
+
+            this.refreshAPI
+
+            , `${AUTH_CONFIG.refresh_time}`);
     }
 
     refreshAPI = () => {
         const userToken = localStorage.getItem('id_token')
-         axios.get(`${AUTH_CONFIG.refresh_token}`, {
-            headers: { 
-               'Content-Type': 'application/json',
-           'Access-Control-Allow-Origin' : '* ',
-           'Authorization' : userToken,
-        } ,
+        axios.get(`${AUTH_CONFIG.refresh_token}`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '* ',
+                'Authorization': userToken,
+            },
         }).then(res => {
-          
+
             localStorage.removeItem("id_token")
             this.setSession(res.data)
-         
+
 
         })
 
-   }
-   onRefreshGetUserData =() =>{
-    this.refreshAPI();
-    return new Promise((resolve, reject) => {
-        return resolve(this.getTokenData());
-    });
+    }
 
-}
+    fileserviceInit(token) {
+        // const dispatch = useDispatch();
+        return axios({
+            method: "get",
+            url: `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/initialize`,
+            headers: {
+                Accept: "application/json",
+                Authorization: token
+            }
+        }).then((response) => {
+            localStorage.setItem("home_folder",response.data[0])
+            return response.data[0]
+        })
+    }
 
-    
-   logout = () => {
-    // Clear access token and ID token from local storage
-    localStorage.removeItem('id_token');
-    localStorage.clear();
-    sessionStorage.clear();
-    window.clearTimeout (timeOutHandle)
-    const logout_url=encodeURIComponent(AUTH_CONFIG.logout_url)
-    console.log("Logout redirect url: ", logout_url)
-    window.open(`${AUTH_CONFIG.userServiceURL}/logout?redirect=${logout_url}`,"_self")
-};
+    onRefreshGetUserData = () => {
+        this.refreshAPI();
+        return new Promise((resolve, reject) => {
+            return resolve(this.getTokenData());
+        });
+
+    }
+
+    logout = () => {
+        // Clear access token and ID token from local storage
+        localStorage.removeItem('id_token');
+        localStorage.removeItem('home_folder');
+        localStorage.clear();
+        sessionStorage.clear();
+        window.clearTimeout(timeOutHandle)
+        const logout_url = encodeURIComponent(AUTH_CONFIG.logout_url)
+        // console.log("Logout redirect url: ", logout_url)
+        window.open(`${AUTH_CONFIG.userServiceURL}/logout?redirect=${logout_url}`, "_self")
+    };
 
     isAuthenticated = () => {
-       
-        if (localStorage.getItem('id_token')){
+
+        if (localStorage.getItem('id_token')) {
             return true;
         }
         return false;
@@ -104,7 +119,7 @@ class SciDuctService {
     };
 
     updateUserData = (user_metadata) => {
-      
+
     };
 
     getIdToken = () => {
@@ -114,21 +129,22 @@ class SciDuctService {
     getTokenData = () => {
         const token = this.getIdToken();
         const decoded = jwtDecode(token);
-        localStorage.setItem('loggedIn' ,'true')
-        if ( !decoded )
-        {
+        localStorage.setItem('loggedIn', 'true')
+        if (!decoded) {
             return null;
         }
+        decoded.home_folder = localStorage.getItem("home_folder")
 
+        // console.log("Decoded: ", decoded)
         return decoded;
     }
 
-    render(){
-       
-        return   (
+    render() {
+
+        return (
             <div>
-         
-        </div>
+
+            </div>
 
         );
     }

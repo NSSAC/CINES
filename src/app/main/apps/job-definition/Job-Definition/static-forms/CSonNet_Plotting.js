@@ -42,7 +42,7 @@ const CSonNet_plot = (props) => {
         paddingLeft: '25px',
         alignSelf: 'center'
     };
-    console.log("test" && "book")
+    // console.log("test" && "book")
 
     function disableButton() {
         setIsFormValid(false);
