@@ -15,7 +15,6 @@ function Callback(props)
         let tokenData = params.get('token');
         sciductService.onAuthenticated(tokenData, () => {
             sciductService.getUserData().then(tokenData => {
-                console.log("tokenData: ", tokenData)
                 dispatch(userActions.setUserDataSciDuct(tokenData));
                 dispatch(FuseActions.updateNavigationItem('filehome',{
                     'url'  : "/apps/files" + tokenData.home_folder
