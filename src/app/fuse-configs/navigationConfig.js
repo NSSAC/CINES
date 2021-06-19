@@ -18,19 +18,22 @@ const navigationConfig = [
             'id': "About",
             "title": "About",
             "type": "group",
+            "icon": "business",
             "children": [
                 {
                     'id'   : 'aboutcines',
                     'title': 'About CINES',
                     'type' : 'item',
-                    'url'  :'/about'
+                    'url'  :'/about',
+                    'icon' : 'picture_in_picture'
                     // 'url'  : '/apps/scrumboard'
                 },
                 {
                     'id'   : 'collaborators',
                     'title': 'Collaborators',
                     'type' : 'item',
-                    'url'  : '/collaborators'
+                    'url'  : '/collaborators',
+                    'icon': 'people'
                     // 'badge': {
                     //     'title': 25,
                     //     'bg'   : '#F44336',
@@ -41,7 +44,8 @@ const navigationConfig = [
                     'id'   : 'publications',
                     'title': 'Publications',
                     'type' : 'item',
-                    'url'  : '/publications'
+                    'url'  : '/publications',
+                    'icon': 'library_books'
                 }
             ]
         },  
@@ -72,7 +76,7 @@ const navigationConfig = [
                     'id'   : 'fileresources',
                     'title': 'Resources',
                     'type' : 'item',
-                    'icon' : 'resources',
+                    'icon' : 'vignette',
                     'url'  : '/apps/files/resources/net.science'
                 },
             ]

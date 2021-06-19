@@ -2,6 +2,7 @@ import React from 'react';
 import {Typography} from '@material-ui/core';
 import clsx from 'clsx';
 import {makeStyles} from '@material-ui/styles';
+import { version } from "../../../../package.json"
 
 const useStyles = makeStyles(theme => ({
     root      : {
@@ -35,10 +36,15 @@ function Logo()
     fontWeight: '700'
     }
 
+    const instance_name = `${process.env.REACT_APP_INSTANCE_NAME}`
+
     return (
         <div className={clsx(classes.root, "flex items-center")}>
             <img className="logo-icon" src="assets/images/logos/favicon-32x32.png" alt="logo"/>
-            <Typography className="text-16 ml-12 font-light logo-text" style={logsize}  color="inherit">Net.Science</Typography>
+            <div className="flex flex-row">
+                <Typography className="text-16 ml-12 font-light logo-text" style={logsize}  color="inherit">Net.Science</Typography>
+                <Typography className="text-xs ml-4 font-light align bottom" style={{color: 'orange'}}>v{version} {instance_name}</Typography>
+            </div>
             {/* <div className={clsx(classes.reactBadge, "react-badge flex items-center ml-12 mr-8 py-4 px-8 rounded")}>
                 <img
                     className="react-logo"
