@@ -24,7 +24,7 @@ function UserMenu(props)
     return (
         <React.Fragment>
 
-            <Button className="h-64" onClick={userMenuClick}>
+            <Button className="h-40" onClick={userMenuClick}>
             {/* <Hidden only={['lg', 'md']}>
                 {user.data.photoURL ?
                     (
@@ -65,7 +65,7 @@ function UserMenu(props)
                     horizontal: 'center'
                 }}
                 classes={{
-                    paper: "py-8"
+                    // paper: "py-8"
                 }}
             >
                 {!user.role || user.role.length === 0 ? (
