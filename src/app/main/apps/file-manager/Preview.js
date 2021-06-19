@@ -5,6 +5,7 @@ import JSONTree from 'react-json-tree'
 import { FuseAnimate } from '@fuse';
 import { Vega } from 'react-vega';
 import Download from './Download';
+import './Preview.css'
 
 
 function Preview(props) {
@@ -100,7 +101,7 @@ function Preview(props) {
           setErrormsg('An error occurred while loading file preview. Please click on file again to reload.')
       });
     }
-    if (props.size <= 3200000 && props.perm === "true")
+    if (props.size <= 7350000 && props.perm === "true")
       insertData()
     else {
       setLoad(true)
@@ -165,23 +166,25 @@ function Preview(props) {
         </div>
       );
 
-  else if (props.size > 3200000)
+  else if (props.size > 7350000)
     return (
       <div className="flex flex-1 flex-col items-center justify-center">
         <Typography className="text-20 mt-16" color="textPrimary">The file size is too large and is not available for preview.  Click <button style={hereButton} className='cursor-pointer' onClick={() => DownloadFile('large')}>here</button> to download.</Typography>
       </div>
     );
 
-  else if ((extentionType === 'text' || extentionType === 'txt') || (extentionType.includes('snap')) || (extentionType === 'PNGraph')  || (extentionType === 'PUNGraph')  || (extentionType === 'PNEANet')  ) {
+  else if ((extentionType === 'text' || extentionType === 'txt') || (extentionType.includes('snap')) || (extentionType === 'PNGraph')  || (extentionType === 'PUNGraph')  || (extentionType === 'PNEANet') || (extentionType === 'csonnet_simulation') || (extentionType === 'csonnet_data_analysis') ) {
     if (typeof (data) === 'object')
       return (<div style={textStyle}>{JSON.stringify(data, null, 2)}</div>);
     else
       return (<div style={textStyle}>{data}</div>);
+      // return (<iframe src={`data:text/plain,${data}#view=fit`} width="100%" height="100%" frameborder='0' ></iframe>);
+
 
   }
   else if ((extentionType === 'pdf')) {
     var pdfData = Buffer.from(data, 'binary').toString('base64')
-    return (<iframe title='extentionType' width="100%" height="400" src={`data:application/pdf;base64,${pdfData}`}>  </iframe>
+    return (<iframe title='extentionType' width="100%" height="100%" src={`data:application/pdf;base64,${pdfData}#view=fit`}>  </iframe>
     );
   }
 
@@ -397,14 +400,16 @@ function Preview(props) {
       marginTop: "20px"
     }
     var imgData = Buffer.from(data, 'binary').toString('base64')
-    if (window.innerWidth < 768)
       return (
-        <img alt='img' onError={() => HandleError()} src={`data:image/png;base64,${imgData}`} width="100%" style={styles} />
+        <img alt='img' onError={() => HandleError()} src={`data:image/png;base64,${imgData}`} style={styles} />
       );
-    else
+  }
+
+  else if (extentionType === 'svg') {
       return (
-        <img alt='img' onError={() => HandleError()} src={`data:image/png;base64,${imgData}`} width="50%" display="block" style={styles} />
-      );
+        <iframe title='extentionType' src={`data:image/svg+xml,${encodeURIComponent(data)}#view=fit`} width="100%" height="100%" ></iframe>
+          // <object id="svg-object" data={doc.documentElement} type="image/svg+xml"></object>
+          )
   }
 
   else if ((extentionType === 'mp4')) {
@@ -413,15 +418,8 @@ function Preview(props) {
       marginTop: "20px"
     }
     var videoData = Buffer.from(data, 'binary').toString('base64');
-    if (window.innerWidth < 768)
       return (
-        <video width="100%" style={styles} controls>
-          <source onError={() => HandleError()} src={`data:video/mp4;base64,${videoData}`}></source>
-        </video>
-      );
-    else
-      return (
-        <video width="50%" style={styles} controls>
+        <video style={styles} controls>
           <source onError={() => HandleError()} src={`data:video/mp4;base64,${videoData}`}></source>
         </video>
       );
@@ -434,7 +432,7 @@ function Preview(props) {
     }
     var audioData = "Buffer.from(data, 'binary').toString('base64')"
     return (
-      <audio width="50%" display="block" style={styles} controls>
+      <audio display="block" style={styles} controls>
         <source onError={() => HandleError()} src={`data:audio/mp3;base64,${audioData}`}></source>
       </audio>
     );

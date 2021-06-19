@@ -100,7 +100,7 @@ function JobDefinitionApp(props) {
                                 <Icon className="text-16" color="action">chevron_right</Icon>
                                 <Typography style={{ width: '100px' }} color="textSecondary">Job Definition</Typography>
                             </div>
-                            <Typography variant="h6">Job Definition</Typography>
+                            {/* <Typography variant="h6">Job Definition</Typography> */}
                         </div>
 
                         {/* <div >

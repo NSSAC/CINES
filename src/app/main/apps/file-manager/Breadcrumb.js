@@ -26,6 +26,7 @@ function Breadcrumb({props,className, styles, path})
 
     const arr = path.split('/');
     arr[0]="files"
+    // arr.shift()
     if(arr[arr.length-1] === ""){
       arr.pop()
     }

@@ -20,6 +20,7 @@ import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import DeleteIcon from '@material-ui/icons/Delete';
 import MenuTableCell from "./MenuTableCell";
+import FILEUPLOAD_CONFIG from "./FileUploadconfig";
 import * as Actions from '../store/actions';
 import './FileUpload.css'
 
@@ -60,7 +61,7 @@ export const FileUpload = ({ allFilesType,fileTypes, setUploadFile, dialogTarget
   });
 
   var fileData = [];
-  var fileTypeArray = allFilesType
+  var fileTypeArray = FILEUPLOAD_CONFIG.fileType
   if (dialogTargetPath) {
     fileTypeArray = fileTypes
   }
@@ -200,7 +201,6 @@ export const FileUpload = ({ allFilesType,fileTypes, setUploadFile, dialogTarget
       let type = element.type;
 
       let target = window.location.pathname;
-      let id = element.id;
       let targetPath = target.replace("/apps/files", "")
       if (dialogTargetPath)
         targetPath = dialogTargetPath;
@@ -247,7 +247,6 @@ export const FileUpload = ({ allFilesType,fileTypes, setUploadFile, dialogTarget
       let fileName = element.fileName;
       let content = element.contents;
       let target = window.location.pathname;
-      let id = element.id;
       let targetPath = target.replace("/apps/files", "")
       if (dialogTargetPath)
         targetPath = dialogTargetPath;
@@ -326,7 +325,22 @@ export const FileUpload = ({ allFilesType,fileTypes, setUploadFile, dialogTarget
     setDrag(false);
   };
 
+  function onEntered() {
+    var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    if (isIOS) {
+      document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+    }
 
+  }
+
+  function onExiting() {
+    var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    if (isIOS) {
+      document.body.style.overflow = 'auto';
+      document.body.style.position = 'relative';
+    }
+  }
 
   return (
     <React.Fragment>
@@ -335,6 +349,8 @@ export const FileUpload = ({ allFilesType,fileTypes, setUploadFile, dialogTarget
         TransitionComponent={Transition}
         aria-labelledby="alert-dialog-slide-title"
         aria-describedby="alert-dialog-slide-description"
+        onEntered={onEntered}
+        onExiting={onExiting}
       >
         <DialogTitle id="alert-dialog-slide-title" divider="true">{"File Upload (Click or Drag and Drop)"}</DialogTitle>
         <DialogContent divider="true">

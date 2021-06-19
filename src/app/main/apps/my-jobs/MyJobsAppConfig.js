@@ -6,6 +6,7 @@ export const MyJobsAppConfig = {
             config: {}
         }
     },
+    auth: ['user'],
     routes  : [
         {
             path     : '/apps/my-jobs/*',

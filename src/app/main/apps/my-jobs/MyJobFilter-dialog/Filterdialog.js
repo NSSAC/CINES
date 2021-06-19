@@ -78,6 +78,23 @@ export const MyJobFilter = ({
     // eslint-disable-next-line
   }, [axios]);
 
+  function onEntered() {
+    var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    if (isIOS) {
+      document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+    }
+
+  }
+
+  function onExiting() {
+    var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    if (isIOS) {
+      document.body.style.overflow = 'auto';
+      document.body.style.position = 'relative';
+    }
+  }
+
   const createjobTypeArray = (responseData) => {
     for (let i = 0; i < responseData.length; i++) {
       jobArray.push(responseData[i].id);
@@ -117,9 +134,9 @@ export const MyJobFilter = ({
         setPreStateValue((preStateValue) => [...preStateValue, selectedValue]);
       }
     } else {
-      if (!preJobTypeValue.includes(selectedValue)) {
+      if (!preJobTypeValue.includes("eq(job_definition,re:" + encodeURIComponent(selectedValue) + ")")) {
         var modifiedValue =
-          "eq(job_definition,re:" + selectedValue.replace("/", "%2F") + ")";
+          "eq(job_definition,re:" + encodeURIComponent(selectedValue) + ")";
         setPreJobTypeValue((preJobTypeValue) => [
           ...preJobTypeValue,
           modifiedValue,
@@ -140,8 +157,11 @@ export const MyJobFilter = ({
     sessionStorage.setItem("preStateValue", JSON.stringify(preStateValue));
     sessionStorage.setItem("preJobTypeValue", JSON.stringify(preJobTypeValue));
     sessionStorage.setItem("isFilterApplied", JSON.stringify(true));
+    var sortOrder = JSON.parse(sessionStorage.getItem("sortOrder"))
+    var sortType = JSON.parse(sessionStorage.getItem("type"))
     handleClose();
-    dispatch(Actions.getFiles(10, 0, true, "creation_date", true, true));
+    dispatch(Actions.getFiles(10, 0, sortOrder, sortType, true, true));
+    sessionStorage.setItem("count", 0);
   };
   const reset = () => {
     sessionStorage.setItem("resetPage", JSON.stringify(true));
@@ -149,12 +169,11 @@ export const MyJobFilter = ({
     setSelectedTypeArray([]);
     setPreJobTypeValue([]);
     let start = 0;
-    let type = "creation_date";
-    let descShort = true;
+    var sortOrder = JSON.parse(sessionStorage.getItem("sortOrder"))
+    var sortType = JSON.parse(sessionStorage.getItem("type"))
     sessionStorage.setItem("isFilterApplied", JSON.stringify(false));
-    dispatch(Actions.getFiles(10, 0, descShort, type, true));
+    dispatch(Actions.getFiles(10, 0, sortOrder, sortType, true));
     sessionStorage.setItem("count", start);
-    sessionStorage.setItem("shortOrder", JSON.stringify(descShort));
   };
 
   const onCancle = () => {
@@ -206,6 +225,8 @@ export const MyJobFilter = ({
         TransitionComponent={Transition}
         aria-labelledby="alert-dialog-slide-title"
         aria-describedby="alert-dialog-slide-description"
+        onEntered={onEntered}
+        onExiting={onExiting}
       >
         <DialogTitle id="alert-dialog-slide-title">{"Filter By"}</DialogTitle>
         <DialogContent>
@@ -234,7 +255,7 @@ export const MyJobFilter = ({
                   {jobTypeArray.sort().map((item) => {
                     return (
                       <MenuItem key={item} value={item}>
-                        {item.replace("net.science/snap_","")}
+                        {item.replace("net.science/snap_","").replace("net.science/","")}
                       </MenuItem>
                     );
                   })}
@@ -286,11 +307,9 @@ export const MyJobFilter = ({
                   <li key={index}>
                     <Chip
                       icon={icon}
-                      label={data
+                      label={decodeURIComponent(data
                         .replace("eq(job_definition,re:", "")
-                        .replace("%2F", "/")
-                        .replace("net.science/snap_","")
-                        .replace(")","")}
+                        .replace(")","")).replace("net.science/","")}
                       onDelete={() => handleDeleteJob(data)}
                       className={classes.chip}
                     />

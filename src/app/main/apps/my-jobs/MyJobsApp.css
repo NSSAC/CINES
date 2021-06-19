@@ -7,13 +7,21 @@
 } */
 
 
+.header {
+  min-height: 120px;
+    flex: none;
+    height: auto;
+}
+
 .chips{
     display: inline-block;
   background: grey;
   padding: 4px 12px;
   border-radius: 32px;
   font-size: 13px;
+  margin-left:5px;
   margin-top: 5px;
+  word-break: break-word;
 }
 
 .MuiGrid-spacing-xs-1{

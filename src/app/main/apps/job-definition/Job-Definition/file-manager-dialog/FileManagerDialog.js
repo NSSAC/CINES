@@ -36,7 +36,7 @@ function FMPopup({
   const dispatch = useDispatch();
   const files = useSelector(({ fMApp }) => fMApp.files);
   const selectedItem = useSelector(({ fMApp }) => files[fMApp.selectedItemId]);
-  const [targetPath, setTargetPath] = useState("/");
+  const [targetPath, setTargetPath] = useState("/home/");
   const [searchbool, setSearchbool] = useState(false);
   const [search, setSearch] = useState("");
   const [checkFlag, setcheckFlag] = useState(false);
@@ -45,7 +45,7 @@ function FMPopup({
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   var token = localStorage.getItem("id_token");
   const breadcrumbArr = targetPath.split("/");
-  breadcrumbArr[0] = "files";
+  breadcrumbArr[0]="files"
 
   if (uploadFile !== "") {
     files !== {} &&
@@ -54,7 +54,7 @@ function FMPopup({
             setFileChosen(targetPath + node.name);
             setFileChosenPath(targetPath + node.name);
             setUploadFile("");
-            setTargetPath("/");
+            setTargetPath("/home/");
             setSearch("");
             handleFMClose();
         }
@@ -64,7 +64,7 @@ function FMPopup({
 
   const onCancel = () => {
     setSearch("");
-    setTargetPath("/");
+    setTargetPath("/home/");
     handleFMClose();
   };
 
@@ -72,7 +72,7 @@ function FMPopup({
     setFileChosen(targetPath + selectedItem.name);
     setFileChosenPath(targetPath + selectedItem.name);
     setSearch("");
-    setTargetPath("/");
+    setTargetPath("/home/");
     handleFMClose();
   };
 
@@ -110,6 +110,23 @@ function FMPopup({
   function escFunction(event) {
     if (event.keyCode === 27) {
       hideSearch();
+    }
+  }
+
+  function onEntered() {
+    var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    if (isIOS) {
+      document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+    }
+
+  }
+
+  function onExiting() {
+    var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    if (isIOS) {
+      document.body.style.overflow = 'auto';
+      document.body.style.position = 'relative';
     }
   }
 
@@ -154,6 +171,8 @@ function FMPopup({
     let fileMetaDate = metaData;
     if (sciductService.getTokenData().sub === ownerId) {
       setcheckFlag(true);
+    } else if(sciductService.getTokenData().roles.indexOf('superadmin') !== -1){
+      setcheckFlag(true);
     } else {
       tokenData.forEach((element) => {
         fileMetaDate.forEach((item) => {
@@ -184,6 +203,8 @@ function FMPopup({
         onClose={handleFMClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
+        onEntered={onEntered}
+        onExiting={onExiting}
         maxWidth="lg"
         disableBackdropClick
       >
@@ -244,16 +265,16 @@ function FMPopup({
                   animation="transition.expandIn"
                   delay={600}
                 >
-                  <Tooltip title="Click to Upload" aria-label="add">
+                  <Tooltip title="Upload file" aria-label="add">
                     <Fab
-                      className="flex flex-col"
+                      className="flex flex-col flexShrink"
                       color="secondary"
                       aria-label="add"
                       size="small"
                     >
                       <Icon
                         className="flex flex-col"
-                        title="Click to Upload"
+                        title="Upload file"
                         onClick={showFileUploadDialog}
                       >
                         add
@@ -271,7 +292,7 @@ function FMPopup({
                 >
                   <Tooltip title="Create folder" aria-label="add">
                     <Fab
-                      className="flex flex-col"
+                      className="flex flex-col flexShrink"
                       color="secondary"
                       aria-label="add"
                       size="small"
@@ -279,7 +300,7 @@ function FMPopup({
                     >
                       <Icon
                         className="flex flex-col"
-                        title="Create Folder"
+                        title="Create folder"
                         onClick={showCreateFolderDialog}
                       >
                         folder

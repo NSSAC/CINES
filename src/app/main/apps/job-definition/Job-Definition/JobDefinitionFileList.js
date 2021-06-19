@@ -24,6 +24,7 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.text.secondary,
   },
 }));
+
 function JobDefinitionFileList(props) {
   const [page, setPage] = React.useState(0);
   const [searchPage, setSearchPage] = React.useState(0);
@@ -171,10 +172,10 @@ function JobDefinitionFileList(props) {
     );
   else {
       return formExists ? (
-        <StaticJobDefinitionForm></StaticJobDefinitionForm>
+        <StaticJobDefinitionForm resubmit={props.location.state}></StaticJobDefinitionForm>
       ) : (
           <JobDefinitionForm
-            selectedJob={selectedJobDefinition}
+            state={selectedJobDefinition} resubmit={props.location.state}
           ></JobDefinitionForm>
         );
    }  

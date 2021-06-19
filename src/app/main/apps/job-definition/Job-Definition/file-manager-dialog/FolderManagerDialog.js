@@ -33,11 +33,11 @@ function FolderPopup({ showModal, handleFMClose, folderPath, setFolderPath, file
     }
 
     const onSelect = () => {
-        setSearch("")
-        setTargetPath(targetPath)
-        localStorage.setItem("selectedFolder",targetPath)
-        setFolderPath("/home" + targetPath + selectedItem.name)
-        handleFMClose()
+      setSearch("")
+      setTargetPath(targetPath)
+      localStorage.setItem("selectedFolder",targetPath)
+      setFolderPath("/home" + targetPath + selectedItem.name)
+      handleFMClose()
     }
 
     
@@ -80,6 +80,23 @@ function FolderPopup({ showModal, handleFMClose, folderPath, setFolderPath, file
         document.removeEventListener("keydown", escFunction, false);
     }
 
+    function onEntered() {
+      var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+      if (isIOS) {
+        document.body.style.overflow = 'hidden';
+        document.body.style.position = 'fixed';
+      }
+  
+    }
+  
+    function onExiting() {
+      var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+      if (isIOS) {
+        document.body.style.overflow = 'auto';
+        document.body.style.position = 'relative';
+      }
+    }
+
    
     useEffect(() => {
         dispatch(Actions.getHome(targetPath))
@@ -96,6 +113,8 @@ return (
         aria-describedby="alert-dialog-description"
         maxWidth='lg'
         disableBackdropClick
+        onEntered={onEntered}
+        onExiting={onExiting}
       >
         <DialogTitle id="alert-dialog-title">
             <div className="flex items-center justify-between">
@@ -150,7 +169,7 @@ return (
                     >
                       <Icon
                         className="flex flex-col"
-                        title="Create Folder"
+                        title="Create folder"
                         onClick={showCreateFolderDialog}
                       >
                         folder

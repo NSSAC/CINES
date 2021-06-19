@@ -16,7 +16,7 @@ export function clearData(){
 export function getJobDefinitionFiles() {
 arr=[];
     var axios = require('axios');
-    let url = `${process.env.REACT_APP_SCIDUCT_JOB_SERVICE}/job_definition?&eq(namespace,net.science)&limit(9999)`
+    let url = `${process.env.REACT_APP_SCIDUCT_JOB_SERVICE}/job_definition?&eq(enabled,true)&limit(9999)`
     var config = {
       method: 'get',
       url: url,

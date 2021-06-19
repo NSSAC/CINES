@@ -3,6 +3,7 @@ import {FuseSplashScreen} from '@fuse';
 import * as userActions from 'app/auth/store/actions';
 import {useDispatch} from 'react-redux';
 import sciductService from 'app/services/sciductService';
+import * as FuseActions from 'app/store/actions/fuse';
 
 function Callback(props)
 {
@@ -12,13 +13,16 @@ function Callback(props)
         let searchParam = window.location.search;
         let params = new URLSearchParams(searchParam);
         let tokenData = params.get('token');
-      sciductService.onAuthenticated(tokenData, () => {
-        sciductService.getUserData().then(tokenData => {
-            console.log("tokenData: ", tokenData)
-            dispatch(userActions.setUserDataSciDuct(tokenData));
+        sciductService.onAuthenticated(tokenData, () => {
+            sciductService.getUserData().then(tokenData => {
+                console.log("tokenData: ", tokenData)
+                dispatch(userActions.setUserDataSciDuct(tokenData));
+                dispatch(FuseActions.updateNavigationItem('filehome',{
+                    'url'  : "/apps/files" + tokenData.home_folder
+                }))
+            });
         });
-    });
-}, [dispatch,props,props.location]);
+    }, [dispatch,props,props.location]);
 
 
     return (

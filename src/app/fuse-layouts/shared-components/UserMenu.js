@@ -1,9 +1,10 @@
-import React, {useState} from 'react';
-import {Avatar, Button, Icon, ListItemIcon, ListItemText, Popover, MenuItem, Typography} from '@material-ui/core';
-import {useSelector, useDispatch} from 'react-redux';
+import { Button, Icon, ListItemIcon, ListItemText, MenuItem, Popover, Typography } from '@material-ui/core';
+// import { Hidden } from '@material-ui/core';
+import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+
 import * as authActions from 'app/auth/store/actions';
-import {Link} from 'react-router-dom';
-import {Hidden} from '@material-ui/core';
 
 function UserMenu(props)
 {
@@ -24,7 +25,7 @@ function UserMenu(props)
         <React.Fragment>
 
             <Button className="h-64" onClick={userMenuClick}>
-            <Hidden only={['lg', 'md']}>
+            {/* <Hidden only={['lg', 'md']}>
                 {user.data.photoURL ?
                     (
                         <Avatar className="" alt="user photo" src={user.data.photoURL}/>
@@ -37,9 +38,9 @@ function UserMenu(props)
                         </Avatar>
                     )
                 }
-                 </Hidden>
+                 </Hidden> */}
 
-                <div className="hidden md:flex flex-col ml-12 items-start">
+                <div className="flex flex-col ml-12 items-start">
                     <Typography component="span" className="normal-case font-600 flex">
                         {user.data.displayName}
                     </Typography>

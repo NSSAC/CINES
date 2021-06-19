@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useReducer, useRef } from "react";
 import {
   ClickAwayListener,
   Tooltip,
@@ -30,6 +30,7 @@ import axios from "axios";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import FILEUPLOAD_CONFI from "./FileManagerAppConfig"
+import './FileManager.css'
 
 function FileManagerApp(props) {
   const [searchbool, setSearchbool] = useState(false);
@@ -46,6 +47,8 @@ function FileManagerApp(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [fileTypeArray, setFileTypeArray] = useState([]);
   const history = useHistory();
+  // eslint-disable-next-line
+  const [ignored, forceUpdate] = useReducer(x => x + 1, 0);
   const files = useSelector(({ fileManagerApp }) => fileManagerApp.files);
   var path = window.location.pathname;
   var pathEnd = path.charAt(path.length - 1);
@@ -127,23 +130,6 @@ function FileManagerApp(props) {
     document.removeEventListener("keydown", escFunction, false);
   }
 
-  function initUser() {
-    if (path.endsWith("/home/")) {
-      var axios = require("axios");
-      if (typeof token === "string") {
-        let config1 = {
-          method: "get",
-          url: `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/initialize`,
-          headers: {
-            Accept: "application/json",
-            Authorization: token,
-          },
-        };
-        axios(config1);
-      }
-    }
-  }
-
   async function getMetadata(targetMeta) {
     var axios = require("axios");
     if (typeof token === "string") {
@@ -191,15 +177,17 @@ function FileManagerApp(props) {
             localStorage.setItem("nodeId", response.data.id);
             localStorage.setItem("nodeSize", response.data.size);
             localStorage.setItem("nodeName", response.data.name);
+            forceUpdate();
           }
           if (metaData !== undefined)
             checkPermission(metaData, ownerId, type, readPermission);
         })
         .catch((error) => {
-          if (typeof token === "string") {
-            setContainerFlag("error");
-          } else {
-            setContainerFlag("true");
+          if (error.response && error.response.status === 404) {
+            setContainerFlag("error-404");
+          }
+          else if (error.response) {
+            setContainerFlag("error-unknown");
           }
         });
     }
@@ -208,6 +196,10 @@ function FileManagerApp(props) {
   const checkPermission = (metaData, ownerId, type, readPermission) => {
     let fileMetaDate = metaData;
     if (sciductService.getTokenData().sub === ownerId) {
+      localStorage.setItem("readPermission", "true");
+      setcheckFlag(true);
+    }
+    else if (sciductService.getTokenData().roles.indexOf('superadmin') !== -1) {
       localStorage.setItem("readPermission", "true");
       setcheckFlag(true);
     } else {
@@ -238,7 +230,6 @@ function FileManagerApp(props) {
     setcheckFlag(false);
     getMetadata(targetMeta);
     setSearch("");
-    initUser();
     // eslint-disable-next-line
   }, [dispatch, props, props.location, props.history]);
 
@@ -260,7 +251,8 @@ function FileManagerApp(props) {
       classes={{
         root: "bg-red",
         header: "h-auto min-h-128 sm:h-auto sm:min-h-140",
-        sidebarHeader: "h-auto min-h-128 sm:h-auto sm:min-h-140",
+        sidebarHeader: "h-auto min-h-128 sm:h-auto sm:min-h-140 sidebarHeader1",
+        sidebarContent: "sidebarWrapper",
         rightSidebar: "w-320",
         contentWrapper: "FileWrapper",
       }}
@@ -325,51 +317,51 @@ function FileManagerApp(props) {
               isFolder &&
               Object.values(files).length !== 0) ||
               targetMeta === "") && (
-              <FuseAnimate animation="transition.expandIn" delay={200}>
-                <span>
-                  <div className={clsx("flex", props.className)}>
-                    <Tooltip title="Click to search" placement="bottom">
-                      <div onClick={showSearch}>
-                        <IconButton className="w-64 h-64">
-                          <Icon>search</Icon>
-                        </IconButton>{" "}
-                      </div>
-                    </Tooltip>
-                    {searchbool && (
-                      <ClickAwayListener onClickAway={handleClickAway}>
-                        <div>
-                          <div className="flex items-end ">
-                            <Input
-                              placeholder="&nbsp;Search"
-                              className="flex flex-1 mb-8"
-                              value={search}
-                              inputProps={{
-                                "aria-label": "Search",
-                              }}
-                              onChange={(event) =>
-                                setSearch(event.target.value)
-                              }
-                              autoFocus
-                            />
-                            <Tooltip
-                              title="Click to clear and hide the search box"
-                              placement="bottom"
-                            >
-                              <IconButton
-                                onClick={hideSearch}
-                                className="mx-8 mt-8"
-                              >
-                                <Icon>close</Icon>
-                              </IconButton>
-                            </Tooltip>
-                          </div>
+                <FuseAnimate animation="transition.expandIn" delay={200}>
+                  <span>
+                    <div className={clsx("flex", props.className)}>
+                      <Tooltip title="Click to search" placement="bottom">
+                        <div onClick={showSearch}>
+                          <IconButton className="w-64 h-64">
+                            <Icon>search</Icon>
+                          </IconButton>{" "}
                         </div>
-                      </ClickAwayListener>
-                    )}
-                  </div>
-                </span>
-              </FuseAnimate>
-            )}
+                      </Tooltip>
+                      {searchbool && (
+                        <ClickAwayListener onClickAway={handleClickAway}>
+                          <div>
+                            <div className="flex items-end ">
+                              <Input
+                                placeholder="&nbsp;Search"
+                                className="flex flex-1 mb-8"
+                                value={search}
+                                inputProps={{
+                                  "aria-label": "Search",
+                                }}
+                                onChange={(event) =>
+                                  setSearch(event.target.value)
+                                }
+                                autoFocus
+                              />
+                              <Tooltip
+                                title="Click to clear and hide the search box"
+                                placement="bottom"
+                              >
+                                <IconButton
+                                  onClick={hideSearch}
+                                  className="mx-8 mt-8"
+                                >
+                                  <Icon>close</Icon>
+                                </IconButton>
+                              </Tooltip>
+                            </div>
+                          </div>
+                        </ClickAwayListener>
+                      )}
+                    </div>
+                  </span>
+                </FuseAnimate>
+              )}
           </div>
           <div className="flex flex-1 items-end">
             {checkFlag && containerFlag && (
@@ -378,7 +370,7 @@ function FileManagerApp(props) {
                 animation="transition.expandIn"
                 delay={600}
               >
-                <Tooltip title="Click to Upload" aria-label="add">
+                <Tooltip title="Create folder OR Upload file" aria-label="add">
                   <Fab
                     color="secondary"
                     aria-label="add"
@@ -409,9 +401,9 @@ function FileManagerApp(props) {
       }
       content={
         containerFlag === true ||
-        containerFlag === undefined ||
-        id === null ||
-        isFolder ? (
+          containerFlag === undefined ||
+          id === null ||
+          isFolder ? (
           <FileList
             isFolder={isFolder}
             containerFlag={containerFlag}

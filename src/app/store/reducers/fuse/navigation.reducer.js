@@ -26,27 +26,27 @@ const navigation = function (state = initialState, action) {
         }
         default:
         {
-            if(localStorage.getItem("loggedIn")){
+            // if(localStorage.getItem("loggedIn")){
 
-                for (var i = 0; i < state.length; i++) {
-                    if (state[i].id === 'my-jobs') {
+            //     for (var i = 0; i < state.length; i++) {
+            //         if (state[i].id === 'my-jobs') {
                         
-                             return state;                   // exit loop and function
-                    }
-                }
+            //                  return state;                   // exit loop and function
+            //         }
+            //     }
              
 
-                    state.push({
+            //         state.push({
                         
-                        'id'   : 'my-jobs',
-                     'title': 'My Jobs',
-                         'type' : 'item',
-                         'icon' : 'chrome_reader_mode',
-                         'url'  : '/apps/my-jobs/'
-                      })
+            //             'id'   : 'my-jobs',
+            //             'title': 'My Jobs',
+            //              'type' : 'item',
+            //              'icon' : 'chrome_reader_mode',
+            //              'url'  : '/apps/my-jobs/'
+            //           })
                   
              
-            }
+            // }
             return state;
         }
     }

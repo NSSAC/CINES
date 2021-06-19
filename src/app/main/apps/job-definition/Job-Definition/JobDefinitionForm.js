@@ -12,6 +12,7 @@ import { Input } from "app/main/apps/job-definition/Job-Definition/Input";
 import Toaster from "./Toaster";
 import Formsy from "formsy-react";
 import { useHistory } from "react-router-dom";
+
 function JobDefinitionForm(props) {
   const [formElementsArray, setFormElementsArray] = useState({});
   // const [jobSubmissionArray, setJobSubmissionArray] = useState({});
@@ -19,6 +20,7 @@ function JobDefinitionForm(props) {
   const [flag, setFlag] = useState(false);
   const [response, setResponse] = useState("");
   const [success, setSuccess] = useState();
+  const [errorMsg, setErrorMsg] = useState();
   const [isToasterFlag, setIsToasterFlag] = useState(false);
   const [spinnerFlag, setSpinnerFlag] = useState(true);
   const [onSubmit ,setOnSubmit] =useState()
@@ -26,6 +28,7 @@ function JobDefinitionForm(props) {
 
   var path = window.location.pathname;
   var pathEnd = path.replace("/apps/job-definition/", "");
+
   if(pathEnd.endsWith('/'))
     pathEnd = pathEnd.slice(0, -1)
   const parentGrid = {
@@ -98,8 +101,11 @@ function JobDefinitionForm(props) {
         for (let [index, obj] of inputFileData.entries()) {
           obj["id"] = index;
           obj["formLabel"] = obj.name;
-          obj["value"] = "";
           obj["outputFlag"] = false;
+          if(props.resubmit)
+            obj["value"] = props.resubmit.inputData.input[obj.name];
+         else
+         obj["value"] = "";
         }
       }
 
@@ -107,7 +113,13 @@ function JobDefinitionForm(props) {
         count++;
         createFromData[key]["id"] = count + 100;
         createFromData[key]["formLabel"] = key;
-        // createFromData[key]["value"] = "";
+        if(props.resubmit)
+         createFromData[key]["value"] = props.resubmit.inputData.input[key];
+        else if(String(createFromData[key]['default']) !== 'undefined')
+         createFromData[key]["value"] = createFromData[key]['default'].toString();
+        else
+         createFromData[key]["value"] = ""
+
 
         if (requiredFeildArray !== undefined && requiredFeildArray.includes(key)) {
           createFromData[key]["required"] = true;
@@ -138,7 +150,7 @@ function JobDefinitionForm(props) {
         let outputContainer = {
           id: 200,
           formLabel: "output_container",
-          value: "",
+          value: props.resubmit ? props.resubmit.inputData.output_container: "",
           description:
             "Select the path from File manager where the output file is to be stored.",
           types: ["folder", "epihiper_multicell_analysis", "epihiperOutput"],
@@ -147,7 +159,7 @@ function JobDefinitionForm(props) {
         let outputName = {
           id: 201,
           formLabel: "output_name",
-          value: "",
+          value: (props.resubmit && props.resubmit.inputData.state !== "Completed") ? props.resubmit.inputData.output_name: "",
           type: "string",
           fileType: outputFiles.type,
           required: true,
@@ -155,7 +167,7 @@ function JobDefinitionForm(props) {
         createFromData["output_container"] = outputContainer;
         createFromData["output_name"] = outputName;
       }
-
+      
       setFormElementsArray({ ...createFromData });
     } else {
       setFlag(false);
@@ -170,27 +182,13 @@ function JobDefinitionForm(props) {
       const updatedFormElement = {
         ...updatedJobSubmissionForm[inputIdentifier],
       };
-      if (updatedFormElement.type === "integer") {
-        updatedFormElement.value = parseInt(event.target.value);
-      } else if (updatedFormElement.type === "boolean") {
-        if(event.target.value === "true"){
-          updatedFormElement.value = true;
-        }
-        else{
-          updatedFormElement.value = false;
-        }
-       // updatedFormElement["value"] = Boolean(event.target.value);
-      } else if (updatedFormElement.type === "number") {
-        updatedFormElement.value = parseFloat(event.target.value);
-      } else {
         updatedFormElement.value = event.target.value;
-      }
       updatedJobSubmissionForm[inputIdentifier] = updatedFormElement;
       setFormElementsArray({ ...updatedJobSubmissionForm });
     }
   };
 
-  const createSubmissionData = () => {
+  const createSubmissionData = async () => {
     setIsToasterFlag(true);
     var path = window.location.pathname.replace("/apps/job-definition/", "");
     var jobDefinition = path;
@@ -217,12 +215,26 @@ function JobDefinitionForm(props) {
       } 
       
       else {
-        input[key] = formElementsArray[key].value;
+        if (formElementsArray[key].type === "integer") {
+          input[key] = parseInt(formElementsArray[key].value);
+        } else if (formElementsArray[key].type === "boolean") {
+          if(formElementsArray[key].value === "true" || formElementsArray[key].value === true){
+            input[key] = true;
+          }
+          else{
+            input[key] = false;
+          }
+         // updatedFormElement["value"] = Boolean(event.target.value);
+        } else if (formElementsArray[key].type === "number") {
+          input[key] = parseFloat(formElementsArray[key].value);
+        } else {
+          input[key] = formElementsArray[key].value;
+        }
       }
     }
     requestJson.input = input;
     // setJobSubmissionArray({ ...requestJson });
-    onFormSubmit(requestJson);
+    await onFormSubmit(requestJson);
   };
   function onFormSubmit(requestJson) {
     setOnSubmit(true)
@@ -245,8 +257,11 @@ function JobDefinitionForm(props) {
       },
       (error) => {
         setSuccess(false);
+        if(error.response)
+          setErrorMsg(`${error.response.status}-${error.response.statusText} error occured. Please try again`)
+        else
+          setErrorMsg("An internal error occured. Please try again")
         setIsToasterFlag(true);
-       
         window.setTimeout(handlingError, 4000);
       }
     );
@@ -287,13 +302,13 @@ function JobDefinitionForm(props) {
   if (spinnerFlag === false && flag === true) {
     return (
       <div style={{ paddingLeft: "8px" }}>
-        {isToasterFlag ? (
-          <Toaster success={success} id={response.id}></Toaster>
+        {isToasterFlag  ? (
+          <Toaster errorMsg={errorMsg} success={success} id={response.id}></Toaster>
         ) : null}
         <Typography className="h2">
-          &nbsp;{response !== "" ? response.id : null}
+          &nbsp;{response !== "" ? <b>{response.id}</b> : null}
         </Typography>
-        <Typography className="h4 mb-12">
+        <Typography className="h4">
           &nbsp;{response !== "" ? response.description : null}
         </Typography>
         <div>
@@ -345,8 +360,8 @@ function JobDefinitionForm(props) {
                 >
                   Submit
                 </Button>
-                <Link
-                  to="/apps/job-definition/"
+                {props.resubmit ? <Link
+                  to="/apps/my-jobs/"
                   style={{ color: "transparent" }}
                 >
                   <Button
@@ -356,7 +371,19 @@ function JobDefinitionForm(props) {
                     className="w-30 mx-8 mt-32 mb-80">
                     Cancel
                   </Button>
-                </Link>
+                </Link> :
+                <Link
+                to="/apps/job-definition/"
+                style={{ color: "transparent" }}
+              >
+                <Button
+                  variant="contained"
+                  onClick={onFormCancel}
+                  color="primary"
+                  className="w-30 mx-8 mt-32 mb-80">
+                  Cancel
+                </Button>
+              </Link>}
               </div>
             </Formsy>
           ) : null}
@@ -368,12 +395,12 @@ function JobDefinitionForm(props) {
       <div>
         <div style={{ paddingLeft: "10px" }}>
           {isToasterFlag ? (
-            <Toaster success={success} id={response.id}></Toaster>
+            <Toaster errorMsg={errorMsg} success={success} id={response.id}></Toaster>
           ) : null}
           <Typography className="h2">
-            &nbsp;{response !== "" ? response.id : null}
+            &nbsp;{response !== "" ? <b>{response.id}</b> : null}
           </Typography>
-          <Typography className="h4 mb-12">
+          <Typography className="h4">
             &nbsp;{response !== "" ? response.description : null}
           </Typography>
         </div>

@@ -1,6 +1,6 @@
 const FILEUPLOAD_CONFIG = {
 
-    fileType:['pdf', 'csv','png','json','text','mp4','xml','jpg']
+    fileType:["PUNGraph","PNGraph","PNEANet", "csv","tsv","json","text"]
 
 }
 

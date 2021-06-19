@@ -30,6 +30,10 @@ input[type=submit]:hover {
     background-color: #d5d5d5;
 }
 
+.ModelMenu {
+    white-space: pre-wrap;
+}
+
 .headerDisplay {
     display: none;
 }
@@ -38,34 +42,62 @@ input[type=submit]:hover {
     width: 80%;
 }
 
+.inputStyle-plot {
+    width: 75%;
+    margin-left: 26px;
+    margin-top: 12px;
+}
+
+.inputStyle1 {
+    width: 80%;
+    margin-top: 12px;
+}
+
 .folderPath {
     /* line-break: anywhere; */
     word-break: break-all;
     white-space: pre-wrap;
 }
 
-
 .infoIcon {
     margin-top: 38px;
 }
 
 .toolTip {
-    width:280px;
-    white-space:pre-wrap;
-    word-wrap:break-word;
+    width: 280px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
     word-break: keep-all;
 }
 
+.divideProps {
+    border-left: 1px solid black;
+}
+
+.dataSource {
+    width: 39%;
+    margin: 12px 5px;
+}
+
+.borderStyle {
+    /* border: 1px solid black; */
+    /* border-right: 1px solid black;
+    border-left: 1px solid black; */
+    width: 100%;
+    /* align-self: center; */
+    padding: 10px;
+}
 
 .root {
     white-space: nowrap;
-    width:100%;
+    width: 100%;
 }
 
-.mui-focused{
+.mui-focused {
     font-weight: 300;
     font-size: large;
 }
+
 .MuiInputLabel-shrink {
     transform: translate(0, 1.5px) scale(0.75);
     transform-origin: top left;
@@ -73,31 +105,98 @@ input[type=submit]:hover {
     font-weight: 500;
 }
 
+.desc {
+    display: none;
+}
+
+.mt-0 {
+    margin-top: 0 !important;
+}
+
+.descPlot {
+    flex-wrap: wrap;
+    display: flex;
+    width: 94%;
+}
+
 .selectedFile {
     display: flex;
     justify-content: space-between;
     align-items: center;
-  }
+}
 
-  @media only screen and (max-width: 600px) {
+.columnStyle {
+    width: 50%;
+}
+
+.content {
+    padding-left: 3px;
+    padding-right: 3px;
+    width: 100%;
+    overflow-x: hidden;
+}
+
+@media only screen and (max-width: 600px) {
+    .divideProps {
+        /* border-top: 1px solid black; */
+        border-left: 0;
+    }
+    .borderStyle {
+        width: 100%;
+        margin: 5px;
+        padding: 10px;
+    }
+    .content1 {
+        border-top: 2px solid black;
+        border-bottom: 2px solid black;
+        width: 100%;
+    }
+    .columnStyle {
+        width: 100%;
+        margin: 0px;
+    }
+}
+
+@media only screen and (max-width: 500px) {
     .selectedFile {
         justify-content: space-between;
         align-items: center;
         display: block
-      }
-
-      .infoIcon {
+    }
+    .infoIcon {
         margin-top: 15px;
     }
-    
-  }
-  
-.content {
-    padding-left: 8px;
-    width: 100%
+}
+
+.overlay {
+    opacity: .5;
+    pointer-events: none;
+}
+
+@media only screen and (max-width: 991px) {
+    .legendWrap {
+        flex-wrap: wrap;
+    }
+    .descPlot {
+        width: 89%;
+    }
+    .dpi {
+        width: 83% !important;
+    }
+}
+
+@media only screen and (min-width: 601px) {
+    .content1 {
+        border-top: 2px solid black;
+        border-bottom: 2px solid black;
+        padding-left: 8px;
+        padding-right: 8px;
+        width: 100%;
+        display: flex
+    }
 }
 
 .MuiGrid-spacing-xs-3 {
-    width: auto !important;
+    width: 100% !important;
     margin: auto !important;
 }
