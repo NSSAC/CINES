@@ -7,8 +7,8 @@ import clsx from "clsx";
 import { Tabs, Tab } from "@material-ui/core";
 import MetadataInfoDialog from "app/main/apps/my-jobs/MetadataDialog";
 import {
-  InsertDriveFile as FileIcon,
-  ListAlt as MetadataIcon,
+  ListAlt as FileIcon,
+  InfoOutlined as MetadataIcon,
 } from "@material-ui/icons";
 import { useHistory } from "react-router-dom";
 
