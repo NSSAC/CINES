@@ -71,7 +71,6 @@ function DetailSidebarHeader(props) {
   if (token !== null) {
     var tokenData = instance.getTokenData()
     for (var team in tokenData.teams) {
-      console.log(tokenData)
       for (var readRights in selectedItem.readACL) {
         if (team === readRights) {
           canRead = true

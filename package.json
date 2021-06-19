@@ -13,7 +13,7 @@
         "@material-ui/styles": "4.11.3",
         "@types/react": "*",
         "autosuggest-highlight": "3.1.1",
-        "axios": "0.21.0",
+        "axios": "0.21.1",
         "axios-mock-adapter": "1.17.0",
         "brace": "^0.11.1",
         "chart.js": "2.9.4",
