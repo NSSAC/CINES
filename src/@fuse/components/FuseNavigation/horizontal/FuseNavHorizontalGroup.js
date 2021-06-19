@@ -31,7 +31,7 @@ const useStyles = makeStyles(theme => ({
         },
         '&.level-0'                               : {
             height      : 44,
-            borderRadius: 4,
+            borderRadius: 0,
             '&:hover'   : {
                 background: 'transparent'
             },
