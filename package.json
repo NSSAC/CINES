@@ -1,6 +1,6 @@
 {
     "name": "net.science",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "private": true,
     "dependencies": {
         "@date-io/core": "^1.3.13",

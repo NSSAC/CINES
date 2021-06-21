@@ -11,6 +11,10 @@ export const CineStaticConfig = {
             component: React.lazy(() => import('./about/AboutContent'))
         },
         {
+            path     : '/contact',
+            component: React.lazy(() => import('./contact/ContactContent'))
+        },
+        {
             path     : '/collaborators',
             component: React.lazy(() => import('./collaborators/CollaboratorsContent'))
         },

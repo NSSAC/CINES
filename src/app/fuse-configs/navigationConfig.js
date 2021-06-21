@@ -46,6 +46,13 @@ const navigationConfig = [
                     'type' : 'item',
                     'url'  : '/publications',
                     'icon': 'library_books'
+                },
+                {
+                    'id'   : 'contact',
+                    'title': 'Contact',
+                    'type' : 'item',
+                    'url'  : '/contact',
+                    'icon': 'library_books'
                 }
             ]
         },  
