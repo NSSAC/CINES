@@ -19,7 +19,9 @@ function Breadcrumb({props,className, styles, path})
         for(i=0;i<arr.length;i++){
             targetPath = targetPath + arr[i] + '/'
         }
+        sessionStorage.setItem('refresh',true)
          props.history.push('/apps/' + targetPath)
+
        }
 
     }

@@ -246,6 +246,7 @@ function DetailSidebarContent(props) {
             axios(config)
                 .then((response) => {
                     dispatch(Actions.getFiles(path, 'GET_FILES'));
+                    sessionStorage.setItem('sortedFiles',true)
                     setUsermetaSuccess(true)
                     setTimeout(() => {
                         setUsermetaSuccess(false)

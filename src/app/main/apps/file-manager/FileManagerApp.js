@@ -126,7 +126,7 @@ function FileManagerApp(props) {
   }
 
   function handleClickAway() {
-    setSearchbool(false);
+    // setSearchbool(false);
     document.removeEventListener("keydown", escFunction, false);
   }
 
@@ -415,6 +415,7 @@ function FileManagerApp(props) {
             setEditContent={(p) => setEditContent(p)}
             search={search}
             setPreview={(p) => setPreview(p)}
+            setSearchbool={(p) => setSearchbool(p)}
           />
         ) : (
           <Preview
@@ -431,7 +432,7 @@ function FileManagerApp(props) {
       leftSidebarContent={<MainSidebarContent />}
       rightSidebarHeader={
         ((containerFlag && isFolder && Object.values(files).length !== 0) ||
-          targetMeta === "") && <DetailSidebarHeader pageLayout={pageLayout} />
+          targetMeta === "") && <DetailSidebarHeader pageLayout={pageLayout} setSearch={(p) => setSearch(p)}/>
       }
       rightSidebarContent={
         ((containerFlag && isFolder && Object.values(files).length !== 0) ||

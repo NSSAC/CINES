@@ -44,7 +44,7 @@ function MetadataInfoDialog(props) {
     >
       <DialogTitle > {props.headertitle}</DialogTitle>
       <DialogContent dividers>
-        {typeof (props.standardout) === 'object' ?  <pre>{JSON.stringify(props.standardout, null, 2)}</pre> : <pre>{props.standardout}</pre>}
+        {typeof (props.standardout) === 'object' ?  <pre>{JSON.stringify(props.standardout, null, 2).replace(/T/g, " ").replace(/Z/g, "")}</pre> : <pre>{props.standardout}</pre>}
       </DialogContent>
 
       <DialogActions>

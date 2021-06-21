@@ -42,6 +42,8 @@ function DeleteFile(props) {
         props.setDeleteFile(false)
         dispatch(Actions.getFiles(currPath, 'DELETE_FILE', props.fileId))
       }, 3000);
+      // sessionStorage.setItem('sortedFiles',true)
+      sessionStorage.setItem('refresh',true)
       props.pageLayout.current.toggleRightSidebar()
     })
       .catch(error => {

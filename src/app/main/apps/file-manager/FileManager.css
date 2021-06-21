@@ -2,6 +2,11 @@
     overflow: auto;
 }
 
+/* .contentStyle {
+    height: 50%;
+    overflow-y: auto;
+} */
+
 .sidebarHeader1 {
     overflow: hidden;
 }
@@ -9,3 +14,19 @@
 .sidebarWrapper {
     overflow: auto;
 }
+
+  .sort-arrow{
+    opacity: 0.1;
+  }
+  .sort-arrow:hover{
+    opacity: .5;
+  }
+
+  .fileTableStyle {
+    word-break: break-all;
+  }
+
+  .wordBreak {
+    word-break: keep-all;
+  }
+
