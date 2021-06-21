@@ -44,7 +44,6 @@ function DetailSidebarHeader(props) {
 
   function OnRefresh() {
     dispatch(Actions.getFiles(targetPath, "GET_FILES"));
-    sessionStorage.setItem('refresh',true)
     props.setSearch('')
   }
 

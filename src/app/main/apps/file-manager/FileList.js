@@ -86,10 +86,6 @@ function FileList(props) {
     const [searchResults, setSearchResults] = useState({});
 
     function populateFiles(obj) {
-        var refreshBool = sessionStorage.getItem('refresh')
-        if( refreshBool === 'true')
-          clearSort()
-
         sessionStorage.removeItem('sortedFiles')
 
         if(obj === 'files'){
@@ -98,11 +94,11 @@ function FileList(props) {
                 if (firstUser.update_date > secondUser.update_date) return -1;
                 return 0;
             }))
-                      props.setSearchbool(false)
+         clearSort()
+         props.setSearchbool(false)
         }
         else{
             setSearchResults(searchResults)
-           
         }
     }
 
@@ -118,7 +114,6 @@ function FileList(props) {
         setSortByType(false)
         setSortByOwner(false)
 
-        sessionStorage.removeItem('refresh')
     }
 
     if (props.containerFlag || props.targetMeta === '') {
@@ -319,7 +314,7 @@ function FileList(props) {
                 if (evt.target && evt.target.getAttribute("to")) {
                     if (node.type === "folder" || node.type === "epihiperOutput" || node.type === "epihiper_multicell_analysis") {
                         var target = window.location.pathname + evt.target.getAttribute("to") + "/";
-                        clearSort()
+                        // clearSort()
                     }
                     else {
                         target = window.location.pathname + evt.target.getAttribute("to");

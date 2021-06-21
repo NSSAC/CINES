@@ -158,7 +158,6 @@ export const FileUpload = ({ allFilesType,fileTypes, setUploadFile, dialogTarget
       setTimeout(() => {
         dispatch(Actions.getFiles(targetPath, 'GET_FILES'));
       }, 1000);
-      sessionStorage.setItem('refresh',true)
       count ++;
     }
   }
