@@ -110,7 +110,7 @@
         "build-docs": "find ./src/app/main/documentation/material-ui-components \\( -name '*.ts' -o -name '*.tsx' \\) -type f -delete && babel-node src/app/main/documentation/material-ui-components/build.js",
         "build-stats": "yarn run build --stats",
         "bundle-report": "yarn run build-stats && webpack-bundle-analyzer build/bundle-stats.json -m static -r build/bundle-stats.html -O",
-        "tarball-prod": "cp .env.cines_prod .env.production; yarn run build && rm cines-build-prod.tgz; npm run build && tar -czvf cines-build-prod.tar build/ ; rm .env.production",
+        "tarball-prod": "cp .env.cines_prod .env.production; yarn run build && rm cines-build-prod.tgz; npm run build && tar -czvf cines-build-prod.tgz build/ ; rm .env.production",
         "tarball-alpha": "cp .env.alpha .env.production && cat .env && yarn run build && rm cines-build-alpha.tgz; npm run build && tar -czvf cines-build-alpha.tgz build/ ; rm .env.production",
         "tarball-ptest": "cp .env.ptest .env.production && cat .env && yarn run build && rm cines-build-ptest.tgz; npm run build && tar -czvf cines-build-ptest.tgz build/ ; rm .env.production"
     },
