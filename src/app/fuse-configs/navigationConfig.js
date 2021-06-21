@@ -52,7 +52,7 @@ const navigationConfig = [
                     'title': 'Contact',
                     'type' : 'item',
                     'url'  : '/contact',
-                    'icon': 'library_books'
+                    'icon': 'mail'
                 }
             ]
         },  
