@@ -20,6 +20,7 @@ function MyJobsApp(props) {
   const [showDialog, setshowDialog] = useState(false);
   const pageLayout = useRef(null);
   const [flag, setFilterFlag] = useState(false);
+  const [renderFlag, setRenderFlag] = useState(0);
   const [initialPage, setInitialPage] = useState(true);
           /* eslint-disable-next-line */
   const [onload, setOnLoad] = useState(false);
@@ -85,6 +86,8 @@ function MyJobsApp(props) {
                 showModal={showDialog}
                 props={props}
                 handleClose={handleClose}
+                renderFlag = {renderFlag}
+                setRenderFlag={(p)=>{setRenderFlag(p)}}
               />
             </div>
           }

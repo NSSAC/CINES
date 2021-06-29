@@ -210,7 +210,7 @@ function FMPopup({
       >
         <DialogTitle id="alert-dialog-title">
           <div className="flex items-center justify-between">
-            <h2>File Manager</h2>
+            <h2 className={`${searchbool ? 'hideHeader':''}`}>File Manager</h2>
             {/* <div id="fileUpload"> */}
             {/* <FileUpload setUploadFile={(p)=>setUploadFile(p)} dialogTargetPath={targetPath} showModal={showDialog} handleClose={handleClose} /> */}
             {/* </div> */}
@@ -220,7 +220,7 @@ function FMPopup({
                   <div className={clsx("flex")}>
                     <Tooltip title="Click to search" placement="bottom">
                       <div onClick={showSearch}>
-                        <IconButton className="w-64 h-64">
+                        <IconButton  className={`w-64 h-64 ${searchbool ? 'hideHeader':''}`}>
                           <Icon>search</Icon>
                         </IconButton>{" "}
                       </div>

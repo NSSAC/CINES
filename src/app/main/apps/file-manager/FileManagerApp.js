@@ -278,7 +278,7 @@ function FileManagerApp(props) {
                     </Icon>
                     <Typography color="textSecondary">File Manager</Typography>
                   </div>
-                  <Typography variant="h6">File Manager</Typography>
+                  {/* <Typography variant="h6">File Manager</Typography> */}
                 </div>
               </div>
             </div>

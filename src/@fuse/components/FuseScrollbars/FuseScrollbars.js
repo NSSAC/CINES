@@ -138,7 +138,7 @@ const FuseScrollbars = React.forwardRef(function FuseScrollbars(props, ref) {
     return (
         <div
             id={props.id}
-            className={clsx(classes.root, props.className)}
+            className={`${clsx(classes.root, props.className)} sidebarScroll`}
             style={
                 (props.customScrollbars && (props.enable || true) && !isMobile) ?
                     {

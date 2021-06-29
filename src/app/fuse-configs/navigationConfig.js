@@ -67,9 +67,9 @@ const navigationConfig = [
             "children": [
                 {
                     'id'   : 'filehome',
-                    'title': 'Home',
+                    'title': 'User home',
                     'type' : 'item',
-                    'icon' : 'home',
+                    'icon' : 'home_work',
                     'url'  : '/apps/files/home'
                 },
                 {
