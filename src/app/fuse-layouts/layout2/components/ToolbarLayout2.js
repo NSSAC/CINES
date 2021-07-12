@@ -43,7 +43,7 @@ function ToolbarLayout2(props)
                         </Hidden>
                     )}
 
-                    <div className="flex flex-1 items-center text-center">
+                    <div className="flex flex-1 flex-col items-center text-center">
                         <div className="flex flex-shrink-0 items-center pl-8 pr-16 m-auto">
                             <Logo/>
                         </div>

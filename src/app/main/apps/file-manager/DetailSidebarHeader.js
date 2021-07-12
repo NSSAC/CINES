@@ -45,6 +45,7 @@ function DetailSidebarHeader(props) {
   function OnRefresh() {
     dispatch(Actions.getFiles(targetPath, "GET_FILES"));
     props.setSearch('')
+    props.setSearchbool(false)
   }
 
   function OnDelete(item) {

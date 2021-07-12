@@ -95,7 +95,6 @@ function FileList(props) {
                 return 0;
             }))
             clearSort()
-            props.setSearchbool(false)
         }
         else {
             setSearchResults(searchResults)
@@ -154,13 +153,13 @@ function FileList(props) {
             setSortByOwner(false)
 
             sortType === 'asc' ? setSearchResults(searchResults.slice().sort(function (firstUser, secondUser) {
-                if (firstUser.name.toLowerCase() < secondUser.name.toLowerCase()) return 1;
-                if (firstUser.name.toLowerCase() > secondUser.name.toLowerCase()) return -1;
+                if (firstUser.name < secondUser.name ) return 1;
+                if (firstUser.name > secondUser.name ) return -1;
                 return 0;
             })) :
                 setSearchResults(searchResults.slice().sort(function (firstUser, secondUser) {
-                    if (firstUser.name.toLowerCase() > secondUser.name.toLowerCase()) return 1;
-                    if (firstUser.name.toLowerCase() < secondUser.name.toLowerCase()) return -1;
+                    if (firstUser.name > secondUser.name ) return 1;
+                    if (firstUser.name < secondUser.name ) return -1;
                     return 0;
                 }));
         }
@@ -202,7 +201,7 @@ function FileList(props) {
             setSortByOwner(false)
 
             sortType === 'asc' ?
-                setSearchResults(searchResults.sort(function (firstUser, secondUser) {
+                setSearchResults(searchResults.slice().sort(function (firstUser, secondUser) {
                     if (firstUser.size === undefined) {
                         firstUser.size = null
                     }
@@ -243,13 +242,13 @@ function FileList(props) {
             setSortByOwner(false)
 
             sortType === 'asc' ? setSearchResults(searchResults.slice().sort(function (firstUser, secondUser) {
-                if (firstUser.type.toLowerCase() < secondUser.type.toLowerCase()) return 1;
-                if (firstUser.type.toLowerCase() > secondUser.type.toLowerCase()) return -1;
+                if (firstUser.type < secondUser.type ) return 1;
+                if (firstUser.type > secondUser.type ) return -1;
                 return 0;
             })) :
                 setSearchResults(searchResults.slice().sort(function (firstUser, secondUser) {
-                    if (firstUser.type.toLowerCase() > secondUser.type.toLowerCase()) return 1;
-                    if (firstUser.type.toLowerCase() < secondUser.type.toLowerCase()) return -1;
+                    if (firstUser.type > secondUser.type ) return 1;
+                    if (firstUser.type < secondUser.type ) return -1;
                     return 0;
                 }));
         }
@@ -304,10 +303,10 @@ function FileList(props) {
     }, [props.search])
 
     useEffect(() => {
-        if (searchResults.length > 0) {
-            if (document.getElementsByClassName("fileRows").length > 0)
-                document.getElementsByClassName("fileRows")[0].click()
-        }
+            if (searchResults.length > 0) {
+                if (document.getElementsByClassName("fileRows").length > 0)
+                    document.getElementsByClassName("fileRows")[0].click()
+            }       
     }, [searchResults])
 
     function onClickHandler(node, canLink) {
@@ -369,7 +368,7 @@ function FileList(props) {
                 }
             dispatch(Actions.setSelectedItem(node.id));
             setTimeout(() => {
-                document.getElementsByClassName("sidebarScroll")[2].scrollTo(0,0)
+                document.getElementsByClassName("sidebarScroll").length>0 && document.getElementsByClassName("sidebarScroll")[2].scrollTo(0,0)
             }, 0);
         }
     }
@@ -391,7 +390,7 @@ function FileList(props) {
                         <TableHead style={{ whiteSpace: 'nowrap' }}>
                             <TableRow>
                                 <TableCell className="max-w-64 w-64 p-0 text-center"> </TableCell>
-                                <TableCell>Name{(sortByName) ?
+                                <TableCell>Name{searchResults.some(result=>result.name !== searchResults[0].name) && ((sortByName) ?
 
                                     <Tooltip title="Sort by Name" placement="bottom">
                                         <IconButton aria-label="arrow_upward" onClick={() => toggleSorting('asc', 'sortByName')}>
@@ -404,8 +403,8 @@ function FileList(props) {
                                         <IconButton aria-label="arrow_downward" onClick={() => toggleSorting('desc', 'sortByName')}>
                                             <Icon className={sortNameFlag ? "" : "sort-arrow"}>arrow_downward</Icon></IconButton>
                                     </Tooltip>
-                                }</TableCell>
-                                <TableCell className="hidden sm:table-cell">Type{(sortByType) ?
+                                )}</TableCell>
+                                <TableCell className="hidden sm:table-cell">Type{searchResults.some(result=>result.type !== searchResults[0].type) && ((sortByType) ?
 
                                     <Tooltip title="Sort by Type" placement="bottom">
                                         <IconButton aria-label="arrow_upward" onClick={() => toggleSorting('asc', 'sortByType')}>
@@ -418,8 +417,8 @@ function FileList(props) {
                                         <IconButton aria-label="arrow_downward" onClick={() => toggleSorting('desc', 'sortByType')}>
                                             <Icon className={sortTypeFlag ? "" : "sort-arrow"}>arrow_downward</Icon></IconButton>
                                     </Tooltip>
-                                }</TableCell>
-                                <TableCell className="hidden sm:table-cell">Owner{(sortByOwner) ?
+                                )}</TableCell>
+                                <TableCell className="hidden sm:table-cell">Owner{searchResults.some(result=>result.owner_id !== searchResults[0].owner_id) && ((sortByOwner) ?
 
                                     <Tooltip title="Sort by Owner" placement="bottom">
                                         <IconButton aria-label="arrow_upward" onClick={() => toggleSorting('asc', 'sortByOwner')}>
@@ -432,8 +431,8 @@ function FileList(props) {
                                         <IconButton aria-label="arrow_downward" onClick={() => toggleSorting('desc', 'sortByOwner')}>
                                             <Icon className={sortOwnerFlag ? "" : "sort-arrow"}>arrow_downward</Icon></IconButton>
                                     </Tooltip>
-                                }</TableCell>
-                                <TableCell className="text-center hidden sm:table-cell">Size{(sortBySize) ?
+                                )}</TableCell>
+                                <TableCell className="text-center hidden sm:table-cell">Size{searchResults.some(result=>result.size !== searchResults[0].size) && ((sortBySize) ?
 
                                     <Tooltip title="Sort by Size" placement="bottom">
                                         <IconButton aria-label="arrow_upward" onClick={() => toggleSorting('asc', 'sortBySize')}>
@@ -446,8 +445,8 @@ function FileList(props) {
                                         <IconButton aria-label="arrow_downward" onClick={() => toggleSorting('desc', 'sortBySize')}>
                                             <Icon className={sortSizeFlag ? "" : "sort-arrow"}>arrow_downward</Icon></IconButton>
                                     </Tooltip>
-                                }</TableCell>
-                                <TableCell className="hidden sm:table-cell">Modified{(sortByDate) ?
+                                )}</TableCell>
+                                <TableCell className="hidden sm:table-cell">Modified{searchResults.some(result=>result.update_date !== searchResults[0].update_date) && ((sortByDate) ?
 
                                     <Tooltip title="Sort by Date" placement="bottom">
                                         <IconButton aria-label="arrow_upward" onClick={() => toggleSorting('asc', 'sortByDate')}>
@@ -460,7 +459,7 @@ function FileList(props) {
                                         <IconButton aria-label="arrow_downward" onClick={() => toggleSorting('desc', 'sortByDate')}>
                                             <Icon className={sortDateFlag ? "" : "sort-arrow"}>arrow_downward</Icon></IconButton>
                                     </Tooltip>
-                                }</TableCell>
+                                )}</TableCell>
                             </TableRow>
                         </TableHead>
 
