@@ -109,10 +109,10 @@ export const FileUpload = ({ allFilesType,fileTypes, setUploadFile, dialogTarget
     setDisableButton(false);
   }
 
-  const progressStatus = (status, id) => {
+  const progressStatus = (status, id, name) => {
     var fileList = []
     initialUploadFile.forEach(item => {
-      if (item.id === id) {
+      if (item.fileName === name) {
         if (status !== 100) {
           if (initialUploadFile[id].status !== "Uploading-Failed (file already exist) 0%") {
             if (initialUploadFile[id].status !== "Uploading-Failed (unsupported file name only '-_.'are allowed) 0%") {
@@ -132,7 +132,7 @@ export const FileUpload = ({ allFilesType,fileTypes, setUploadFile, dialogTarget
             }
           }
         }
-      }
+      }    
       else {
         fileList.push(item);
       }
@@ -223,17 +223,17 @@ export const FileUpload = ({ allFilesType,fileTypes, setUploadFile, dialogTarget
 
         (error) => {
           if(error.response.data.message === "Invalid File Type"){
-            progressStatus("Failed (Invalid File Type) 0", index);
+            progressStatus("Failed (Invalid File Type) 0", index, element.fileName);
           }
           else if (error.response.data.message === "File already exists") {
-            progressStatus("Failed (file already exist) 0", index);
+            progressStatus("Failed (file already exist) 0", index, element.fileName);
           }
 
           else if (error.response.data.message === "data.type should be equal to one of the allowed values") {
-            progressStatus("Failed (unsupported file type) 0", index);
+            progressStatus("Failed (unsupported file type) 0", index, element.fileName);
           }
           else {
-            progressStatus("Failed (unsupported file name only '-_.'are allowed) 0", index);
+            progressStatus("Failed (unsupported file name only '-_.'are allowed) 0", index, element.fileName);
           }
         }
       )
@@ -263,7 +263,7 @@ export const FileUpload = ({ allFilesType,fileTypes, setUploadFile, dialogTarget
         data: content,
         onUploadProgress: (progress) => {
           const percentage = Math.floor(progress.loaded * 100 / progress.total)
-          progressStatus(percentage, index);
+          progressStatus(percentage, index, element.fileName);
         }
       }).then(res => {
         if (dialogTargetPath) {

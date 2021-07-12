@@ -62,3 +62,10 @@
         background-color: lightgray;
     }
   }
+
+  @media only screen and (max-width: 500px) {
+     .hideHeader {
+         display: none;
+     }
+
+  }

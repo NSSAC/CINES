@@ -96,7 +96,6 @@ function DetailSidebarContent(props) {
                 ],
                 closeOnClickOutside: false
             }))
-            props.pageLayout.current.toggleRightSidebar()
         }
     }
 
@@ -149,6 +148,10 @@ function DetailSidebarContent(props) {
     function OnCancelClick() {
         props.setPrompt(false)
         props.setEditContent(true)
+        setTimeout(() => {
+            props.pageLayout.current.toggleRightSidebar()
+        }, 1000);
+
     }
 
     function OnConfirm() {

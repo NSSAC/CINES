@@ -154,8 +154,8 @@ function FileManagerApp(props) {
     function addData() {
       const request = axios(config);
       request
-        .then((response) => {
-          let metaData = response.data.writeACL;
+      .then((response) => {
+                  let metaData = response.data.writeACL;
           let readPermission = response.data.readACL;
           let ownerId = response.data.owner_id;
           let type = response.data.type;
@@ -278,7 +278,7 @@ function FileManagerApp(props) {
                     </Icon>
                     <Typography color="textSecondary">File Manager</Typography>
                   </div>
-                  <Typography variant="h6">File Manager</Typography>
+                  {/* <Typography variant="h6">File Manager</Typography> */}
                 </div>
               </div>
             </div>
@@ -415,7 +415,6 @@ function FileManagerApp(props) {
             setEditContent={(p) => setEditContent(p)}
             search={search}
             setPreview={(p) => setPreview(p)}
-            setSearchbool={(p) => setSearchbool(p)}
           />
         ) : (
           <Preview
@@ -432,7 +431,7 @@ function FileManagerApp(props) {
       leftSidebarContent={<MainSidebarContent />}
       rightSidebarHeader={
         ((containerFlag && isFolder && Object.values(files).length !== 0) ||
-          targetMeta === "") && <DetailSidebarHeader pageLayout={pageLayout} setSearch={(p) => setSearch(p)}/>
+          targetMeta === "") && <DetailSidebarHeader pageLayout={pageLayout} setSearchbool={(p) => setSearchbool(p)} setSearch={(p) => setSearch(p)}/>
       }
       rightSidebarContent={
         ((containerFlag && isFolder && Object.values(files).length !== 0) ||

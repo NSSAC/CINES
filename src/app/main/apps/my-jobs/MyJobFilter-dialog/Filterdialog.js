@@ -26,6 +26,8 @@ export const MyJobFilter = ({
   handleClose,
   handleLogout,
   remainingTime,
+  renderFlag,
+  setRenderFlag
 }) => {
   const useStyles = makeStyles((theme) => ({
     root: {
@@ -168,6 +170,7 @@ export const MyJobFilter = ({
     setPreStateValue([]);
     setSelectedTypeArray([]);
     setPreJobTypeValue([]);
+    setRenderFlag(renderFlag + 1)
     let start = 0;
     var sortOrder = JSON.parse(sessionStorage.getItem("sortOrder"))
     var sortType = JSON.parse(sessionStorage.getItem("type"))
@@ -252,10 +255,14 @@ export const MyJobFilter = ({
                   variant="outlined"
                   onChange={(e) => onvalueChangeHandeler(e)}
                 >
-                  {jobTypeArray.sort().map((item) => {
+                  {jobTypeArray.slice().sort(function (first, second) {
+                    if (first.replace("net.science/snap_", "").replace("net.science/", "") > second.replace("net.science/snap_", "").replace("net.science/", "")) return 1;
+                    if (first.replace("net.science/snap_", "").replace("net.science/", "") < second.replace("net.science/snap_", "").replace("net.science/", "")) return -1;
+                    return 0;
+                  }).map((item) => {
                     return (
                       <MenuItem key={item} value={item}>
-                        {item.replace("net.science/snap_","").replace("net.science/","")}
+                        {item.replace("net.science/snap_", "").replace("net.science/", "")}
                       </MenuItem>
                     );
                   })}
