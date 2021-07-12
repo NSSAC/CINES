@@ -31,6 +31,7 @@ import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import FILEUPLOAD_CONFI from "./FileManagerAppConfig"
 import './FileManager.css'
+import FMInstance from './FileManagerService'
 
 function FileManagerApp(props) {
   const [searchbool, setSearchbool] = useState(false);
@@ -132,30 +133,13 @@ function FileManagerApp(props) {
 
   async function getMetadata(targetMeta) {
     var axios = require("axios");
-    if (typeof token === "string") {
-      var config = {
-        method: "get",
-        url: `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file${targetMeta}`,
-        headers: {
-          Accept: "*/*",
-          Authorization: token,
-        },
-      };
-    } else {
-      config = {
-        method: "get",
-        url: `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file${targetMeta}`,
-        headers: {
-          Accept: "*/*",
-        },
-      };
-    }
+    var config = FMInstance.metaDataConfig(targetMeta)
+
     addData();
     function addData() {
       const request = axios(config);
-      request
-      .then((response) => {
-                  let metaData = response.data.writeACL;
+      request.then((response) => {
+          let metaData = response.data.writeACL;
           let readPermission = response.data.readACL;
           let ownerId = response.data.owner_id;
           let type = response.data.type;
@@ -169,8 +153,8 @@ function FileManagerApp(props) {
                 null,
                 props.location.pathname + "/"
               );
-              dispatch(Actions.getFiles(targetPath, "GET_FILES"));
             }
+              dispatch(Actions.getFiles(targetPath, "GET_FILES"));
             setIsFolder(true);
           } else {
             localStorage.setItem("nodeType", response.data.type);
@@ -225,10 +209,9 @@ function FileManagerApp(props) {
   };
 
   useEffect(() => {
-    dispatch(Actions.getFiles(targetPath, "GET_FILES"));
+    getMetadata(targetMeta);
     setIsFolder(true);
     setcheckFlag(false);
-    getMetadata(targetMeta);
     setSearch("");
     // eslint-disable-next-line
   }, [dispatch, props, props.location, props.history]);

@@ -72,9 +72,6 @@ function JobDefinitionFileList(props) {
 
     });
 
-    if (Object.keys(selectedItem).length === 0 && searchResult.length > 0 && (path.endsWith('job-definition/') === true)) {
-      dispatch(Actions.setSelectedItem(searchResult[0].id));
-    }
   }
   const classes = useStyles();
   useEffect(() => {
@@ -119,7 +116,8 @@ function JobDefinitionFileList(props) {
   };
 
 
-  const onSelectClick = (row) => {
+  const onSelectClick = (row,e) => {
+    e.stopPropagation()
     localStorage.setItem("selectedJobDefinition", JSON.stringify(row));
     var target = window.location.pathname + row.id;
     props.history.push(target);
@@ -250,7 +248,7 @@ function JobDefinitionFileList(props) {
                             ////size="small"
                             //color="primary"
                             className={classes.button}
-                            onClick={() => onSelectClick(row)}
+                            onClick={(e) => onSelectClick(row,e)}
                           >
                             Select
                           </Button>

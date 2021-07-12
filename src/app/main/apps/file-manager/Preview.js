@@ -7,6 +7,7 @@ import { Vega } from 'react-vega';
 import Download from './Download';
 import './Preview.css'
 import {FuseScrollbars} from '@fuse';
+import FMInstance from './FileManagerService'
 
 function Preview(props) {
   var extentionType = props.type;
@@ -16,7 +17,6 @@ function Preview(props) {
   const [downloadFlag, setDownloadFlag] = useState(false);
   const [errormsg, setErrormsg] = useState("");
   const [previewmsg, setPreviewmsg] = useState("");
-  var token = localStorage.getItem('id_token')
   const [selectedTab, setSelectedTab] = useState(0);
 
   const hereButton = {
@@ -37,38 +37,7 @@ function Preview(props) {
     setPreviewmsg(issue)
   }
 
-  if (typeof (token) === "string" && (props.type === "pdf" || props.type === "png" || props.type === "jpeg" || props.type === "jpg" || props.type === "excel" || props.type === "mp3" || props.type === "mp4")) {
-    var config = {
-      method: 'get',
-      url: `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file/${props.fileId}`,
-      headers: {
-        'Accept': 'application/octet-stream',
-        'Authorization': token
-      },
-      responseType: 'arraybuffer'
-    };
-  }
-
-  else if (typeof (token) == "string") {
-    config = {
-      method: 'get',
-      url: `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file/${props.fileId}`,
-      headers: {
-        'Accept': 'application/octet-stream',
-        'Authorization': token
-      },
-    };
-  }
-
-  else if (typeof (token) == "object") {
-    config = {
-      method: 'get',
-      url: `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file/${props.fileId}`,
-      headers: {
-        'Accept': 'application/octet-stream'
-      }
-    };
-  }
+  var config = FMInstance.previewConfig(props.fileId, props.type)
 
   function HandleError() {
     setError(true)
@@ -236,46 +205,6 @@ function Preview(props) {
       </div>
     );
   }
-
-//   else if ((extentionType === 'snap_graph') || (extentionType === 'snap_TIntPrV')) {
-//     allTextLines = data.split(/\r\n|\n/).filter(item => !item.includes('#'))
-//    var desc = data.split(/\r\n|\n/).filter(item => item.includes('#'))
-//    lines = [];
-
-//    for (i = 0; i < allTextLines.length; i++) {
-//      dataCsv = allTextLines[i].replace(/\s+/g, " ").replace(/\t/g, ' ');;
-//      dataCsv = dataCsv.split(" ");
-
-//      tarr = [];
-//      for (j = 0; j < 2; j++) {
-//        tarr.push(dataCsv[j]);
-//      }
-//      lines.push(tarr);
-
-//      outputData = lines;
-//    }
-//    return (
-//      <div style={{ overflow: 'auto' }}>
-//        { desc.map((a1, k) => {
-//          return (<div style={textStyle}>{a1}</div>);
-//        })
-//        }
-//        <FuseAnimate>
-//          <Table>
-//            <TableBody>
-//              {outputData.map((e1, k) => {
-//                return (
-//                  <TableRow key={k}>
-//                    {e1.map((e2, j) => (<TableCell key={j}>{e2}</TableCell>))}
-//                  </TableRow>
-//                )
-//              })}
-//            </TableBody>
-//          </Table>
-//        </FuseAnimate>
-//      </div>
-//    );
-//  }
 
   else if ((extentionType === 'csv')) {
     allTextLines = data.split(/\r\n|\n/);

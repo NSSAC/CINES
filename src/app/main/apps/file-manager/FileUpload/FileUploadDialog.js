@@ -23,6 +23,7 @@ import MenuTableCell from "./MenuTableCell";
 import FILEUPLOAD_CONFIG from "./FileUploadconfig";
 import * as Actions from '../store/actions';
 import './FileUpload.css'
+import { FileService } from 'node-sciduct';
 
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -194,7 +195,6 @@ export const FileUpload = ({ allFilesType,fileTypes, setUploadFile, dialogTarget
       }
 
     })
-    const userToken = localStorage.getItem('id_token')
     initialUploadFile.forEach((element ,index) => {
 
       let fileName = element.fileName;
@@ -205,31 +205,26 @@ export const FileUpload = ({ allFilesType,fileTypes, setUploadFile, dialogTarget
       if (dialogTargetPath)
         targetPath = dialogTargetPath;
 
-      return axios({
-        method: 'post',
-        url: `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file/${targetPath}`,
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': userToken,
-
-        },
-        data: {
+        const url = `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/`
+        const token = localStorage.getItem('id_token');
+        const fileServiceInstance = new FileService(url, token)
+        let metadata = {
           "name": fileName,
           "type": type
-        },
-      }).then(res => {
+      }
+      return fileServiceInstance.create(targetPath,metadata).then(res => {
         writeContent(element,index);
       },
 
         (error) => {
-          if(error.response.data.message === "Invalid File Type"){
+          if(error.response.message === "Invalid File Type"){
             progressStatus("Failed (Invalid File Type) 0", index, element.fileName);
           }
-          else if (error.response.data.message === "File already exists") {
+          else if (error.response.message === "File already exists") {
             progressStatus("Failed (file already exist) 0", index, element.fileName);
           }
 
-          else if (error.response.data.message === "data.type should be equal to one of the allowed values") {
+          else if (error.response.message === "data.type should be equal to one of the allowed values") {
             progressStatus("Failed (unsupported file type) 0", index, element.fileName);
           }
           else {
@@ -251,20 +246,20 @@ export const FileUpload = ({ allFilesType,fileTypes, setUploadFile, dialogTarget
       if (dialogTargetPath)
         targetPath = dialogTargetPath;
 
-      axios({
-        method: 'put',
-        url: `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file/${targetPath}${fileName}`,
-        headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '* ',
-          'Authorization': userToken,
-
-        },
-        data: content,
-        onUploadProgress: (progress) => {
-          const percentage = Math.floor(progress.loaded * 100 / progress.total)
-          progressStatus(percentage, index, element.fileName);
-        }
+        axios({
+          method: 'put',
+          url: `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file/${targetPath}${fileName}`,
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '* ',
+            'Authorization': userToken,
+  
+          },
+          data: content,
+          onUploadProgress: (progress) => {
+            const percentage = Math.floor(progress.loaded * 100 / progress.total)
+            progressStatus(percentage, index, element.fileName);
+          }
       }).then(res => {
         if (dialogTargetPath) {
           setUploadFile(element.fileName);

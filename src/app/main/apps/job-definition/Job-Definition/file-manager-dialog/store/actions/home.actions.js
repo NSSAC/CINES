@@ -1,38 +1,18 @@
+import { FileService } from 'node-sciduct';
+
 export const GET_HOME = 'GET_HOME';
 
-var token=localStorage.getItem('id_token')
 export function getHome(path)
 {
-            
-        var axios = require('axios');
-        if(typeof(token) == "string") {
-        var config = {
-          method: 'get',
-          url: `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file/home/${path}`,
-          headers: { 
-            'Accept': '*/*',
-            'Authorization': token
-          }
-       };
-    }
-
-    if(typeof(token) == "object") {
-     config = {
-        method: 'get',
-        url: `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file/home/${path}`,
-        headers: { 
-          'Accept': '*/*',
-        }
-     };
-  }
-
-    const request = axios(config)
+  const url = `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/`
+  const token = localStorage.getItem('id_token');
+  const fileServiceInstance = new FileService(url, token)
 
     return (dispatch) =>
-        request.then((response) =>
+        fileServiceInstance.list(`/home/${path}`).then((response) =>
             dispatch({
                 type   : GET_HOME,
-                payload: response.data,
+                payload: response,
             })
         );
 

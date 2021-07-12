@@ -7,7 +7,6 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import Slide from "@material-ui/core/Slide";
 import { SelectFormsy } from "@fuse";
 import Formsy from "formsy-react";
-import axios from "axios";
 import "./Filterdialog.css";
 import MenuItem from "@material-ui/core/MenuItem";
 import JOBTYPEVALUE from "./jobtypevalueconfig.js";
@@ -15,8 +14,9 @@ import Chip from "@material-ui/core/Chip";
 import TagFacesIcon from "@material-ui/icons/TagFaces";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import * as Actions from "../store/actions";
+
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -47,6 +47,9 @@ export const MyJobFilter = ({
       minWidth: "100px !important",
     },
   }));
+  const jobData = useSelector(
+    ({ myJobsApp }) => myJobsApp && myJobsApp.jobDef
+    );
   const dispatch = useDispatch();
   const [state, setState1] = React.useState("");
   const [preStateValue, setPreStateValue] = useState([]);
@@ -60,25 +63,12 @@ export const MyJobFilter = ({
 
   var jobArray = [];
   useEffect(() => {
-    var userToken = localStorage.getItem("id_token");
-
-    axios({
-      method: "get",
-      url: `${process.env.REACT_APP_SCIDUCT_JOB_SERVICE}/job_definition?limit(99999)`,
-      headers: {
-        Accept: "*/*",
-        "Access-Control-Allow-Origin": "* ",
-
-        Authorization: userToken,
-      },
-    }).then((res) => {
-      if (res.data) {
-        var responseData = res.data;
-        createjobTypeArray(responseData);
-      }
-    });
+    if(Object.keys(jobData).length === 0)
+    dispatch(Actions.getJobDefinitionList())
+    if(jobData)
+    createjobTypeArray(jobData);
     // eslint-disable-next-line
-  }, [axios]);
+  }, [jobData && jobData.length]);
 
   function onEntered() {
     var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);

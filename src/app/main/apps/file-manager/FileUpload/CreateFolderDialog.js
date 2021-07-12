@@ -12,11 +12,11 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Icon } from "@material-ui/core";
 import { TextFieldFormsy } from "@fuse/components/formsy";
 import Formsy from "formsy-react";
-import axios from "axios";
 import { useDispatch } from "react-redux";
 import DialogContentText from '@material-ui/core/DialogContentText';
 import { toast, ToastContainer } from "material-react-toastify";
 import ReactDOM from 'react-dom';
+import { FileService } from "node-sciduct";
 
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -79,25 +79,19 @@ export const CreateFolder = ({
 
   function onSubmit() {
 
-    const userToken = localStorage.getItem("id_token");
     let target = window.location.pathname;
     if (dialogTargetPath) {
       target = dialogTargetPath;
     }
     let targetPath = target.replace("/apps/files", "");
-
-    return axios({
-      method: "post",
-      url: `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file${targetPath}`,
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: userToken,
-      },
-      data: {
-        name: name,
-        type: "folder",
-      },
-    }).then(
+    const url = `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/`
+    const token = localStorage.getItem('id_token');
+    const fileServiceInstance = new FileService(url, token)
+    let metadata = {
+      "name": name,
+      "type": 'folder'
+  }
+  return fileServiceInstance.create(targetPath,metadata).then(
       (res) => {
         setSuccess(true)
         setSuccess(false)
@@ -115,10 +109,10 @@ export const CreateFolder = ({
           setError(false)
         }, 1000);
        
-        if (error.response.data.message === "File already exists") {
+        if (error.response.message === "File already exists") {
           setErrorMsg("Folder already exists");
         } else if (
-          error.response.data.message ===
+          error.response.message ===
           "data.type should be equal to one of the allowed values"
         ) {
           setErrorMsg("Failed (unsupported folder type) ");

@@ -14,7 +14,6 @@ import React, { useEffect, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
 import { FusePageSimple } from '@fuse';
-import axios from 'axios';
 import { Icon } from '@material-ui/core';
 import ReactTooltip from 'react-tooltip';
 import PlotTypes from './CSonNet_plot/plotTypes.js';
@@ -26,8 +25,14 @@ import TickSection from './CSonNet_plot/tickSection.js';
 import { Input } from './SelectFile.js'
 import './SelectFile.css'
 import Toaster from '../Toaster.js';
+import { useDispatch, useSelector } from "react-redux";
+import * as Actions from "../store/actions";
+import { JobService } from 'node-sciduct';
 
 const CSonNet_plot = (props) => {
+    const jobData = useSelector(
+        ({ JobDefinitionApp }) => JobDefinitionApp.selectedjobid
+      );
     const [modelJSON, setModelJSON] = useState({});
     const [isFormValid, setIsFormValid] = useState(false);
     const [success, setSuccess] = useState();
@@ -37,6 +42,7 @@ const CSonNet_plot = (props) => {
     const [errorMsg, setErrorMsg] = useState();
     const [dynamicProps, setDynamicProps] = useState({})
     const history = useHistory();
+    const dispatch = useDispatch()
 
     const childGrid = {
         paddingLeft: '25px',
@@ -62,19 +68,12 @@ const CSonNet_plot = (props) => {
 
     useEffect(() => {
         setIsToasterFlag(false);
-        var userToken = localStorage.getItem('id_token');
-
-        axios({
-            method: 'get',
-            url: `${process.env.REACT_APP_SCIDUCT_JOB_SERVICE}/job_definition/net.science/CSonNet_Plotting`,
-            headers: {
-                'Access-Control-Allow-Origin': '* ',
-                Authorization: userToken
-            }
-        }).then(
-            (res) => {
-                // setSpinnerFlag(false)
-                if (res.data) {
+        let pathEnd = 'net.science/CSonNet_Plotting'
+        setIsToasterFlag(false);
+        if (jobData.id && !jobData.id.includes(pathEnd) || Object.keys(jobData).length === 0)
+        dispatch(Actions.setSelectedItem(pathEnd));
+        if (Object.keys(jobData).length !== 0 && jobData.id.includes(pathEnd)) {
+                if (jobData) {
                     setDynamicProps({errorbar_plot: { id: 101, value: props.resubmit && Boolean(props.resubmit.inputData.input.plot_types.errorbar_plot.toString())? props.resubmit.inputData.input.plot_types.errorbar_plot.exists.toString(): '' },
                     line_plot: { id: 102, value: props.resubmit && Boolean(props.resubmit.inputData.input.plot_types.line_plot.toString())? props.resubmit.inputData.input.plot_types.line_plot.toString(): '' },
                     scatter_plot: { id: 103, value: props.resubmit && Boolean(props.resubmit.inputData.input.plot_types.scatter_plot.toString())? props.resubmit.inputData.input.plot_types.scatter_plot.toString():'' },
@@ -112,13 +111,13 @@ const CSonNet_plot = (props) => {
                     axes_in_scientfic: { id: 702, value: props.resubmit && props.resubmit.inputData.input.text_sections.tick_section.axes_in_scientific ? props.resubmit.inputData.input.text_sections.tick_section.axes_in_scientific:"" },
                     dpi: { id: 801, value:  props.resubmit && props.resubmit.inputData.input.dpi ? props.resubmit.inputData.input.dpi.toString():600 },
                     Output_name: { value: (props.resubmit && props.resubmit.inputData.state !== "Completed") ? props.resubmit.inputData.output_name :'' },
-                    inputFile_Graph: [res.data.input_files[0].name, {
-                        formLabel: res.data.input_files[0].name,
+                    inputFile_Graph: [jobData.input_files[0].name, {
+                        formLabel: jobData.input_files[0].name,
                         id: 0,
-                        name: res.data.input_files[0].name,
+                        name: jobData.input_files[0].name,
                         outputFlag: false,
                         required: true,
-                        types: res.data.input_files[0].types,
+                        types: jobData.input_files[0].types,
                         value: props.resubmit ? props.resubmit.inputData.input["csonnet_data_analysis"] : ""
                     }],
                     outputPath: ['outputPath', {
@@ -130,16 +129,11 @@ const CSonNet_plot = (props) => {
                         value: props.resubmit ? props.resubmit.inputData.output_container :""
                     }]
                  })
-                 setModelJSON(res.data.input_schema)
+                 setModelJSON(jobData.input_schema)
                 }
-            },
-            (error) => {
-
             }
-
-        );
         // eslint-disable-next-line
-    }, []);
+    }, [jobData.id]);
 
     useEffect(()=>{
         inputFields.length == 0 && props.resubmit && props.resubmit.inputData.input.text_sections.legend_section.legend_items && setInputFields(props.resubmit.inputData.input.text_sections.legend_section.legend_items)
@@ -270,18 +264,10 @@ const CSonNet_plot = (props) => {
     }
 
     function onFormSubmit(requestJson) {
-        const userToken = localStorage.getItem('id_token')
-        axios({
-            method: 'post',
-            url: `${process.env.REACT_APP_SCIDUCT_JOB_SERVICE}/job_instance/`,
-            headers: {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '* ',
-                'Authorization': userToken,
-
-            },
-            data: requestJson,
-        }).then(res => {
+        const url = `${process.env.REACT_APP_SCIDUCT_JOB_SERVICE}/`
+        const token = localStorage.getItem('id_token');
+        const jobServiceInstance = new JobService(url, token)
+        jobServiceInstance.createJobInstance(requestJson.job_definition, requestJson.input, requestJson.pragmas, requestJson.output_name, requestJson.output_container).then(res => {
             setIsToasterFlag(true)
             setSuccess(true)
             window.setTimeout(

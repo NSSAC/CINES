@@ -18,6 +18,8 @@ import './Confirm-alert.css'
 import { ToastContainer, toast } from 'material-react-toastify';
 import 'material-react-toastify/dist/ReactToastify.css';
 import ReactDOM from 'react-dom';
+import FMInstance from './FileManagerService'
+
 
 const useStyles = makeStyles({
     table: {
@@ -149,7 +151,7 @@ function DetailSidebarContent(props) {
         props.setPrompt(false)
         props.setEditContent(true)
         setTimeout(() => {
-            props.pageLayout.current.toggleRightSidebar()
+        props.pageLayout.current && props.pageLayout.current.toggleRightSidebar()
         }, 1000);
 
     }
@@ -235,16 +237,7 @@ function DetailSidebarContent(props) {
         var axios = require('axios');
 
         if (data.length > 0) {
-            var config = {
-                method: 'patch',
-                /* eslint-disable-next-line */
-                url: `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file${path}` + `${selectedItem.name}`,
-                headers: {
-                    'Content-Type': 'application/json-patch+json',
-                    'Authorization': token
-                },
-                data: data
-            };
+            var config = FMInstance.editUsermetaConfig(path, selectedItem.name, data)
 
             axios(config)
                 .then((response) => {

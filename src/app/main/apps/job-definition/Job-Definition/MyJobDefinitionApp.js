@@ -10,16 +10,13 @@ import JobDefinitionFileList from './JobDefinitionFileList';
 // import DetailSidebarContent from './DetailSidebarContent';
 import MainSidebarHeader from './MainSidebarHeader';
 import MainSidebarContent from './MainSidebarContent';
-import { MyJobFilter } from 'app/main/apps/my-jobs/MyJobFilter-dialog/Filterdialog';
 import clsx from 'clsx';
 import { useHistory } from "react-router-dom";
 
 function JobDefinitionApp(props) {
 
     const dispatch = useDispatch();
-    const [showDialog, setshowDialog] = useState(false);
     const pageLayout = useRef(null);
-    const [flag, setFilterFlag] = useState(false);
     const [searchbool, setSearchbool] = useState(false);
     const [search, setSearch] = useState("");
     const history = useHistory();
@@ -66,11 +63,6 @@ function JobDefinitionApp(props) {
         }
     }
 
-    function handleClose() {
-        setshowDialog(false)
-        setFilterFlag(true)
-    }
-
     function navigateHome() {
         history.push('/home/')
     }
@@ -81,18 +73,14 @@ function JobDefinitionApp(props) {
                 root: "bg-red",
                 header: "h-128 min-h-128",
                 sidebarHeader: "h-128 min-h-128",
+                // content: "contentStyle",
+                // sidebarHeader: "h-96 min-h-96 sidebarHeader1",
+                // sidebarContent: "sidebarWrapper",
                 rightSidebar: "w-320",
                 contentWrapper: "jobBody"
             }}
             header={
                 <div className="flex flex-col flex-1 p-8 sm:p-12 relative">
-                    {<div>
-                        <MyJobFilter
-                            showModal={showDialog}
-                            props={props}
-                            handleClose={handleClose} />
-                    </div>}
-
                     <div className="flex items-center justify-between">
                         <div className="flex flex-col" style={{ flexGrow: "1" }}>
                             <div className="flex items-center mb-16">
@@ -102,41 +90,6 @@ function JobDefinitionApp(props) {
                             </div>
                             {/* <Typography variant="h6">Job Definition</Typography> */}
                         </div>
-
-                        {/* <div >
-
-                            {
-                                sessionStorage.getItem("preJobTypeValue") && JSON.parse(sessionStorage.getItem("preJobTypeValue")).length != 0 ? <span> Job Type :</span> : null
-                            }
-                            {sessionStorage.getItem("preJobTypeValue") && JSON.parse(sessionStorage.getItem("preJobTypeValue")).length != 0 ? JSON.parse(sessionStorage.getItem("preJobTypeValue")).map((data) => {
-                                let icon;
-                                return (
-                                    <span className="chips">{data}</span>
-                                );
-                            }) : null}
-
-
-
-                            {
-                                sessionStorage.getItem("preStateValue") && JSON.parse(sessionStorage.getItem("preStateValue")).length != 0 ? <span style={{ marginLeft: "4px" }}> Status :</span> : null
-                            }
-                            {sessionStorage.getItem("preStateValue") && JSON.parse(sessionStorage.getItem("preStateValue")).length != 0 ? JSON.parse(sessionStorage.getItem("preStateValue")).map((data) => {
-                                let icon;
-                                return (
-                                    <span className="chips">{data}</span>
-                                );
-                            }) : null}
-
-
-                        </div>
-
-                        <FuseAnimate animation="transition.expandIn" delay={200}>
-                        <Tooltip title="Filter" placement="bottom">
-                            <IconButton aria-label="search">
-                                <Icon onClick={showFileUploadDialog}>filter_list</Icon>
-                            </IconButton>
-                            </Tooltip>
-                        </FuseAnimate> */}
 
 {(
                             <FuseAnimate animation="transition.expandIn" delay={200}>
@@ -175,26 +128,10 @@ function JobDefinitionApp(props) {
                         )}
 
                     </div>
-
-
-                    <div className="flex flex-1 items-end">
-                        {/* <FuseAnimate animation="transition.expandIn" delay={600}>
-                            <Fab color="secondary" aria-label="add" className="absolute bottom-0 left-0 ml-16 -mb-28 z-999">
-                                <Icon>add</Icon>
-                            </Fab>
-                        </FuseAnimate> */}
-                        {/* <FuseAnimate delay={200}>
-                            <div>
-                                {selectedItem && (
-                                    <Breadcrumb selected={selectedItem} className="flex flex-1 pl-72 pb-12 text-16 sm:text-24"/>
-                                )}
-                            </div>
-                        </FuseAnimate> */}
-                    </div>
                 </div>
             }
             content={
-                <JobDefinitionFileList flag={flag} pageLayout={pageLayout} search={search} />
+                <JobDefinitionFileList pageLayout={pageLayout} search={search} />
             }
             leftSidebarVariant="temporary"
 
