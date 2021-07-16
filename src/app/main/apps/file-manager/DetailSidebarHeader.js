@@ -50,13 +50,29 @@ function DetailSidebarHeader(props) {
 
   function OnDelete(item) {
     localStorage.setItem("delete_id", item.id)
-    confirmAlert({
+    item.type !== 'folder' && confirmAlert({
       title: 'Confirm',
-      message: `Are you sure you want to delete ${item.name}?`,
+      message: `Are you sure you want to delete the file '${item.name}'?`,
       buttons: [
         {
           label: 'No',
           onClick: (null)
+        },
+        {
+          label: 'Yes',
+          onClick: () => setDeleteFile(true)
+        }
+      ],
+      closeOnClickOutside: false
+    })
+
+    item.type === 'folder' && confirmAlert({
+      title: 'Confirm',
+      message: `Are you sure you want to recursively delete the folder '${item.name}'?`,
+      buttons: [
+        {
+          label: 'No',
+          onClick: () => (null)
         },
         {
           label: 'Yes',

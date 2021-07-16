@@ -145,7 +145,7 @@ function FileManagerApp(props) {
           let type = response.data.type;
           let isContainer = response.data.isContainer;
           setContainerFlag(isContainer);
-          if (isContainer === true) {
+          if (isContainer === true || targetMeta === '') {
             if (pathEnd !== "/") {
               targetPath = targetPath + "/";
               window.history.replaceState(
