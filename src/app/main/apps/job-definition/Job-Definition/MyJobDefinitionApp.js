@@ -53,7 +53,7 @@ function JobDefinitionApp(props) {
     }
     
     function handleClickAway() {
-        setSearchbool(false);
+        search === '' && setSearchbool(false);
         document.removeEventListener("keydown", escFunction, false);
     }
 

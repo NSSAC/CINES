@@ -217,14 +217,14 @@ export const FileUpload = ({ allFilesType,fileTypes, setUploadFile, dialogTarget
       },
 
         (error) => {
-          if(error.response.message === "Invalid File Type"){
+          if(error.response && error.response.message === "Invalid File Type"){
             progressStatus("Failed (Invalid File Type) 0", index, element.fileName);
           }
-          else if (error.response.message === "File already exists") {
+          else if (error.response && error.response.message === "File already exists") {
             progressStatus("Failed (file already exist) 0", index, element.fileName);
           }
 
-          else if (error.response.message === "data.type should be equal to one of the allowed values") {
+          else if (error.response && error.response.message === "data.type should be equal to one of the allowed values") {
             progressStatus("Failed (unsupported file type) 0", index, element.fileName);
           }
           else {

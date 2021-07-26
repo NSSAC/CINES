@@ -548,7 +548,7 @@ const CSonNet_Contagion_Simulation = (props) => {
                                                         className="my-12 inputStyle1 model"
                                                         name="state"
                                                         label={["State", <span key={1} style={{ color: 'red' }}>{'*'}</span>]}
-                                                        value={staticProps.InitialConditions[0].state}
+                                                        value={modelJSON.models.threshold_model.states.indexOf(staticProps.InitialConditions[0].state) !== -1?staticProps.InitialConditions[0].state:""}
                                                         onChange={(event) => ICChangedHandler(event, 'state')}
                                                         required
                                                     >
@@ -565,7 +565,7 @@ const CSonNet_Contagion_Simulation = (props) => {
                                                         className="my-12 inputStyle1 model"
                                                         name="state"
                                                         label={["State", <span key={1} style={{ color: 'red' }}>{'*'}</span>]}
-                                                        value={staticProps.InitialConditions[0].state}
+                                                        value={modelJSON.models.SEIR.submodels['fixed exposed fixed infectious'].states.indexOf(staticProps.InitialConditions[0].state) !== -1?staticProps.InitialConditions[0].state:""}
                                                         onChange={(event) => ICChangedHandler(event, 'state')}
                                                         required
                                                     >
@@ -582,7 +582,7 @@ const CSonNet_Contagion_Simulation = (props) => {
                                                         className="my-12 inputStyle1 model"
                                                         name="state"
                                                         label={["State", <span key={1} style={{ color: 'red' }}>{'*'}</span>]}
-                                                        value={staticProps.InitialConditions[0].state}
+                                                        value={modelJSON.models.SIR.submodels['fixed infectious'].states.indexOf(staticProps.InitialConditions[0].state) !== -1?staticProps.InitialConditions[0].state:""}
                                                         onChange={(event) => ICChangedHandler(event, 'state')}
                                                         required
                                                     >

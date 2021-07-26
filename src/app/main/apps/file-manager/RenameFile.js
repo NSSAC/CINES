@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useRef} from "react";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -6,14 +6,11 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Slide from "@material-ui/core/Slide";
 import { useState } from "react";
-import * as Actions from "../store/actions";
-import * as ActionsHome from "app/main/apps/job-definition/Job-Definition/file-manager-dialog/store/actions";
+import * as Actions from "./store/actions";
 import { makeStyles } from "@material-ui/core/styles";
-import { Icon } from "@material-ui/core";
 import { TextFieldFormsy } from "@fuse/components/formsy";
 import Formsy from "formsy-react";
-import { useDispatch } from "react-redux";
-import DialogContentText from '@material-ui/core/DialogContentText';
+import { useDispatch} from "react-redux";
 import { toast, ToastContainer } from "material-react-toastify";
 import ReactDOM from 'react-dom';
 import { FileService } from "node-sciduct";
@@ -23,14 +20,10 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export const CreateFolder = ({
-
-  dialogTargetPath,
-  setShowModal,
+export const RenameFile = ({
   showModal,
   handleClose,
-  breadcrumbArr,
-  isFolderManager
+  selectedItem
 }) => {
   const useStyles = makeStyles({
     inputsize: {
@@ -55,12 +48,13 @@ export const CreateFolder = ({
   const [isFormValid, setIsFormValid] = useState(false);
   const [error, setError] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [errorMsg, setErrorMsg] = useState();
+  const [errorMsg, setErrorMsg] = useState('An error occured. Please try again');
   const dispatch = useDispatch();
-  const [name, setName] = useState("");
+  const [name, setName] = useState(selectedItem.name);
   // eslint-disable-next-line 
   const classes = useStyles();
-  const onCancle = () => {
+  const ref = useRef()
+  const onCancel = () => {
     setName("");
     handleClose();
 
@@ -78,49 +72,24 @@ export const CreateFolder = ({
   }
 
   function onSubmit() {
-
     let target = window.location.pathname;
-    if (dialogTargetPath) {
-      target = dialogTargetPath;
-    }
     let targetPath = target.replace("/apps/files", "");
     const url = `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/`
     const token = localStorage.getItem('id_token');
     const fileServiceInstance = new FileService(url, token)
-    let metadata = {
-      "name": name,
-      "type": 'folder'
-  }
-  return fileServiceInstance.create(targetPath,metadata).then(
+    fileServiceInstance.rename(selectedItem.id, name).then(
       (res) => {
         setSuccess(true)
         setSuccess(false)
-        setName("")
-        if (isFolderManager === true)
-          dispatch(ActionsHome.getHome(targetPath.replace('/home/', '')));
-        else
-          dispatch(Actions.getFiles(targetPath, "GET_FILES"));
         handleClose()
-      },
+        dispatch(Actions.getFiles(targetPath, "GET_FILES"));
+    },
 
       (error) => {
         setTimeout(() => {
           setError(true)
           setError(false)
         }, 1000);
-       
-        if (error.response && error.response.message === "File already exists") {
-          setErrorMsg("Folder already exists");
-        } else if (
-          error.response && error.response.message ===
-          "data.type should be equal to one of the allowed values"
-        ) {
-          setErrorMsg("Failed (unsupported folder type) ");
-        } else {
-          setErrorMsg(
-            "Unsupported folder name. Special characters '-_.'are allowed"
-          );
-        }
 
       }
     );
@@ -148,8 +117,8 @@ export const CreateFolder = ({
     <React.Fragment>
       {ReactDOM.createPortal(<div>
         {error === true && <div> {toast.error(errorMsg)}</div>}
-
-        {success === true && <div> {toast.success(`Folder '${name}' created successfully`)}</div>}
+       
+        {success === true && <div> {toast.success(`'${selectedItem.name}' renamed to '${name}'`)}</div>}
         <ToastContainer limit={1} bodyStyle={{ fontSize: "14px" }} position="top-right" />
       </div>, document.getElementById("portal"))}
       <Dialog
@@ -162,32 +131,23 @@ export const CreateFolder = ({
         aria-describedby="alert-dialog-slide-description"
       >
         <DialogTitle id="alert-dialog-slide-title" divider="true">
-          {"Create folder"}
+          {"Rename file/folder"}
         </DialogTitle>
         <DialogContent divider="true">
-          <DialogContentText className='mb-0' id="alert-dialog-slide-description">
-            {breadcrumbArr ? <span className="flex text-16 sm:text-16" style={breadcrumb_wrap}>
-              {breadcrumbArr.map((path, i) => (
-                <span key={i} className="flex items-center" >
-                  <span title={path} style={ellipsis} >{path} </span>
-                  {breadcrumbArr.length - 1 !== i && (
-                    <Icon>chevron_right</Icon>
-                  )}
-                </span>))}
-            </span> : null}
-          </DialogContentText>
           <Formsy
             onValid={enableButton}
             onInvalid={disableButton}
             className="flex flex-col justify-center"
           >
             <TextFieldFormsy
+            inputRef={ref}
               className={classes.inputsize}
               type="text"
               name="name"
-              label="Enter folder name"
-              value={name}
+              // label="Rename file"
+              value={selectedItem.name}
               autoComplete='off'
+              on
               onChange={(event) => inputChangedHandler(event)}
               validations={{
                 isPositiveInt: function (values, value) {
@@ -201,11 +161,11 @@ export const CreateFolder = ({
         </DialogContent>
 
         <DialogActions>
-          <Button disabled={!isFormValid} onClick={onSubmit}>
-            Create
+          <Button disabled={!isFormValid || ref.current === null || (ref.current && ref.current.value === selectedItem.name)} onClick={onSubmit}>
+            Rename
           </Button>
 
-          <Button onClick={onCancle}>Close</Button>
+          <Button onClick={onCancel}>Cancel</Button>
         </DialogActions>
       </Dialog>
     </React.Fragment>

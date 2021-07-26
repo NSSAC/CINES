@@ -32,6 +32,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import FILEUPLOAD_CONFI from "./FileManagerAppConfig"
 import './FileManager.css'
 import FMInstance from './FileManagerService'
+import { RenameFile } from "./RenameFile";
 
 function FileManagerApp(props) {
   const [searchbool, setSearchbool] = useState(false);
@@ -41,9 +42,11 @@ function FileManagerApp(props) {
   const [preview, setPreview] = useState(true);
   const [showDialog, setshowDialog] = useState(false);
   const [showCreateDialog, setShowCreateDialog] = useState(false);
+  const [showRenameDialog, setShowRenameDialog] = useState(false);
   const [checkFlag, setcheckFlag] = useState(false);
   const [prompt, setPrompt] = useState(true);
   const [isFolder, setIsFolder] = useState(false);
+  const [selectedItem, setSelectedItem] = useState({});
   const [containerFlag, setContainerFlag] = useState("");
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [fileTypeArray, setFileTypeArray] = useState([]);
@@ -114,6 +117,10 @@ function FileManagerApp(props) {
     setShowCreateDialog(false);
   }
 
+  function closeRenameFolderDialog() {
+    setShowRenameDialog(false);
+  }
+
   function hideSearch() {
     setSearchbool(false);
     setSearch("");
@@ -131,6 +138,12 @@ function FileManagerApp(props) {
     document.removeEventListener("keydown", escFunction, false);
   }
 
+  function OnRefresh() {
+    dispatch(Actions.getFiles(targetPath, "GET_FILES"));
+    setSearch('')
+    setSearchbool(false)
+  }
+
   async function getMetadata(targetMeta) {
     var axios = require("axios");
     var config = FMInstance.metaDataConfig(targetMeta)
@@ -139,33 +152,33 @@ function FileManagerApp(props) {
     function addData() {
       const request = axios(config);
       request.then((response) => {
-          let metaData = response.data.writeACL;
-          let readPermission = response.data.readACL;
-          let ownerId = response.data.owner_id;
-          let type = response.data.type;
-          let isContainer = response.data.isContainer;
-          setContainerFlag(isContainer);
-          if (isContainer === true || targetMeta === '') {
-            if (pathEnd !== "/") {
-              targetPath = targetPath + "/";
-              window.history.replaceState(
-                null,
-                null,
-                props.location.pathname + "/"
-              );
-            }
-              dispatch(Actions.getFiles(targetPath, "GET_FILES"));
-            setIsFolder(true);
-          } else {
-            localStorage.setItem("nodeType", response.data.type);
-            localStorage.setItem("nodeId", response.data.id);
-            localStorage.setItem("nodeSize", response.data.size);
-            localStorage.setItem("nodeName", response.data.name);
-            forceUpdate();
+        let metaData = response.data.writeACL;
+        let readPermission = response.data.readACL;
+        let ownerId = response.data.owner_id;
+        let type = response.data.type;
+        let isContainer = response.data.isContainer;
+        setContainerFlag(isContainer);
+        if (isContainer === true || targetMeta === '') {
+          if (pathEnd !== "/") {
+            targetPath = targetPath + "/";
+            window.history.replaceState(
+              null,
+              null,
+              props.location.pathname + "/"
+            );
           }
-          if (metaData !== undefined)
-            checkPermission(metaData, ownerId, type, readPermission);
-        })
+          dispatch(Actions.getFiles(targetPath, "GET_FILES"));
+          setIsFolder(true);
+        } else {
+          localStorage.setItem("nodeType", response.data.type);
+          localStorage.setItem("nodeId", response.data.id);
+          localStorage.setItem("nodeSize", response.data.size);
+          localStorage.setItem("nodeName", response.data.name);
+          forceUpdate();
+        }
+        if (metaData !== undefined)
+          checkPermission(metaData, ownerId, type, readPermission);
+      })
         .catch((error) => {
           if (error.response && error.response.status === 404) {
             setContainerFlag("error-404");
@@ -231,14 +244,14 @@ function FileManagerApp(props) {
   var readPermission = localStorage.getItem("readPermission");
   return (
     <FusePageSimple
-      classes={{
-        root: "bg-red",
-        header: "h-auto min-h-128 sm:h-auto sm:min-h-140",
-        sidebarHeader: "h-auto min-h-128 sm:h-auto sm:min-h-140 sidebarHeader1",
-        sidebarContent: "sidebarWrapper",
-        rightSidebar: "w-320",
-        contentWrapper: "FileWrapper",
-      }}
+    classes={{
+      root: "bg-red",
+      header: "h-auto min-h-128 sm:h-auto sm:min-h-140",
+      sidebarHeader: "h-auto min-h-128 sm:h-auto sm:min-h-140 sidebarHeader1",
+      sidebarContent: "sidebarWrapper",
+      rightSidebar: "w-320",
+      contentWrapper: "FileWrapper",
+    }}
       header={
         <div
           className="flex flex-col flex-1 p-8 sm:p-12 relative"
@@ -279,6 +292,14 @@ function FileManagerApp(props) {
                 props={props}
                 handleClose={closeCreateFolderDialog}
                 allFilesType={fileTypeArray}
+              />
+            </div>
+            <div>
+            <RenameFile
+                showModal={showRenameDialog}
+                selectedItem={selectedItem}
+                props={props}
+                handleClose={closeRenameFolderDialog}
               />
             </div>
 
@@ -341,6 +362,11 @@ function FileManagerApp(props) {
                           </div>
                         </ClickAwayListener>
                       )}
+                        <Tooltip title="Click to Refresh" placement="bottom">
+                        <IconButton onClick={() => OnRefresh()}>
+                          <Icon >refresh</Icon>
+                        </IconButton>
+                      </Tooltip>
                     </div>
                   </span>
                 </FuseAnimate>
@@ -414,7 +440,7 @@ function FileManagerApp(props) {
       leftSidebarContent={<MainSidebarContent />}
       rightSidebarHeader={
         ((containerFlag && isFolder && Object.values(files).length !== 0) ||
-          targetMeta === "") && <DetailSidebarHeader pageLayout={pageLayout} setSearchbool={(p) => setSearchbool(p)} setSearch={(p) => setSearch(p)}/>
+          targetMeta === "") && <DetailSidebarHeader pageLayout={pageLayout} setSelectedItem={(p)=>{setSelectedItem(p)}} showRenameDialog={(p)=>{setShowRenameDialog(p)}}/>
       }
       rightSidebarContent={
         ((containerFlag && isFolder && Object.values(files).length !== 0) ||

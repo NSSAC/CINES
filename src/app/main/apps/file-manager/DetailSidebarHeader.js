@@ -42,11 +42,10 @@ function DetailSidebarHeader(props) {
     isFile = false;
   }
 
-  function OnRefresh() {
-    dispatch(Actions.getFiles(targetPath, "GET_FILES"));
-    props.setSearch('')
-    props.setSearchbool(false)
-  }
+  function editFilename(node) {
+    props.showRenameDialog(true)
+    props.setSelectedItem(node)
+}
 
   function OnDelete(item) {
     localStorage.setItem("delete_id", item.id)
@@ -115,12 +114,12 @@ function DetailSidebarHeader(props) {
   return (
     <div className="flex flex-col justify-between h-full p-4 sm:p-12">
       <div className="toolbar flex align-center justify-end h-48">
-        {<FuseAnimate animation="transition.expandIn" delay={200}>
-          <Tooltip title="Click to Refresh" placement="bottom">
-            <IconButton onClick={() => OnRefresh()}>
-              <Icon >refresh</Icon>
-            </IconButton>
-          </Tooltip>
+        {canDelete && <FuseAnimate animation="transition.expandIn" delay={200}>
+           <Tooltip title="Rename file/folder" placement="top">
+          <IconButton id="editBtn" onClick={() => editFilename(selectedItem)}>
+            <Icon fontSize='small'>edit</Icon>
+          </IconButton>
+        </Tooltip>
         </FuseAnimate>}
         {canDelete && <FuseAnimate animation="transition.expandIn" delay={200}>
           <Tooltip title="Click to Delete" placement="bottom">
