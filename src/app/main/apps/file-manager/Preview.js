@@ -29,7 +29,8 @@ function Preview(props) {
   const textStyle = {
     paddingTop: '10px',
     paddingLeft: '10px',
-    whiteSpace: 'break-spaces'
+    whiteSpace: 'break-spaces',
+    overflowWrap: 'break-word'
   }
 
   function DownloadFile(issue) {

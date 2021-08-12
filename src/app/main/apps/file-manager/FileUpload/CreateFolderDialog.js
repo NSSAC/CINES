@@ -191,7 +191,7 @@ export const CreateFolder = ({
               onChange={(event) => inputChangedHandler(event)}
               validations={{
                 isPositiveInt: function (values, value) {
-									return RegExp(/^([0-9]|[a-zA-Z]|[._\-\s])+$/).test(value);
+									return RegExp(/^([0-9]|[a-zA-Z]|[._\-\s])+$/).test(value) && value.trim() !== '';
                 },
               }}
               validationError="This is not a valid value"

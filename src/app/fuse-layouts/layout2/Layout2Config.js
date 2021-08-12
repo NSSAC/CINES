@@ -14,6 +14,11 @@ const config = {
             display: false,
             style  : 'static'
         },
+          // footer        : {
+        //     display : true,
+        //     style   : 'fixed',
+        //     position: 'below'
+        // },
         leftSidePanel : {
             display: true
         },

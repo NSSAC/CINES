@@ -1,5 +1,23 @@
 .FileWrapper {
-    overflow: auto;
+  overflow: auto;
+}
+
+.sidebarStyle {
+  min-width: 320px;
+  max-width: 515px;
+}
+
+.subcategory-count-badge {
+  top: 11px;
+  font-size: 12px !important;
+  background: #61dafb;
+  right: 7px;
+  color: black !important;
+  position: absolute;
+  border-radius: 50% !important;
+  padding: 0px 6px !important;
+  width: auto;
+  height: auto;
 }
 
 /* .contentStyle {
@@ -7,26 +25,35 @@
     overflow-y: auto;
 } */
 
+.hideRoot {
+  display: none;
+}
+
+.overflowContent {
+  /* overflow-x: auto; */
+  overflow: initial;
+}
+
 .sidebarHeader1 {
-    overflow: hidden;
+  overflow: hidden;
 }
 
 .sidebarWrapper {
-    overflow: auto;
+  overflow: auto;
 }
 
-  .sort-arrow{
-    opacity: 0.1;
-  }
-  .sort-arrow:hover{
-    opacity: .5;
-  }
+.sort-arrow {
+  opacity: 0.1;
+}
 
-  .fileTableStyle {
-    word-break: break-all;
-  }
+.sort-arrow:hover {
+  opacity: .5;
+}
 
-  .wordBreak {
-    word-break: keep-all;
-  }
+.fileTableStyle {
+  word-break: break-all;
+}
 
+.wordBreak {
+  word-break: keep-all;
+}

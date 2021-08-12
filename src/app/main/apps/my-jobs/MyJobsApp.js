@@ -75,7 +75,7 @@ function MyJobsApp(props) {
         root: "bg-red",
         header: "header",
         sidebarHeader: "header",
-        rightSidebar: "w-320",
+        rightSidebar: "w-auto sidebarStyle",
         contentWrapper: "jobBody"
       }}
       header={

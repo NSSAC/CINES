@@ -226,6 +226,7 @@ function FileManagerApp(props) {
     setIsFolder(true);
     setcheckFlag(false);
     setSearch("");
+    localStorage.removeItem('moveDestPath')
     // eslint-disable-next-line
   }, [dispatch, props, props.location, props.history]);
 
@@ -246,10 +247,11 @@ function FileManagerApp(props) {
     <FusePageSimple
     classes={{
       root: "bg-red",
+      content:'overflowContent',
       header: "h-auto min-h-128 sm:h-auto sm:min-h-140",
       sidebarHeader: "h-auto min-h-128 sm:h-auto sm:min-h-140 sidebarHeader1",
       sidebarContent: "sidebarWrapper",
-      rightSidebar: "w-320",
+      rightSidebar: "w-auto sidebarStyle",
       contentWrapper: "FileWrapper",
     }}
       header={

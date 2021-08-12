@@ -1,15 +1,12 @@
 import { Icon, IconButton, Tooltip, Typography } from '@material-ui/core';
 import moment from 'moment';
 import React, { useState } from 'react';
-import * as Actions from "./store/actions";
 import { confirmAlert } from 'react-confirm-alert';
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { FuseAnimate } from '@fuse';
 import instance from 'app/services/sciductService/sciductService.js'
-
 import DeleteFile from './DeleteFile'
 import Download from './Download'
-
 import './Confirm-alert.css'
 import 'react-responsive-modal/styles.css';
 
@@ -20,11 +17,10 @@ function DetailSidebarHeader(props) {
   var delete_id = localStorage.getItem("delete_id")
   const [download, setDownload] = useState(false);
   const [deleteFile, setDeleteFile] = useState(false);
-  const dispatch = useDispatch();
-  var targetPath = window.location.pathname.replace("/apps/files", "");
   var canRead = false;
   var canDelete = false;
   var isFile = true;
+  var checked = localStorage.getItem('checked')
 
   const tableStyle = {
     overflow: 'hidden',
@@ -116,14 +112,14 @@ function DetailSidebarHeader(props) {
       <div className="toolbar flex align-center justify-end h-48">
         {canDelete && <FuseAnimate animation="transition.expandIn" delay={200}>
            <Tooltip title="Rename file/folder" placement="top">
-          <IconButton id="editBtn" onClick={() => editFilename(selectedItem)}>
+          <IconButton disabled={checked === 'true'} id="editBtn" onClick={() => editFilename(selectedItem)}>
             <Icon fontSize='small'>edit</Icon>
           </IconButton>
         </Tooltip>
         </FuseAnimate>}
         {canDelete && <FuseAnimate animation="transition.expandIn" delay={200}>
           <Tooltip title="Click to Delete" placement="bottom">
-            <IconButton onClick={() => OnDelete(selectedItem)}>
+            <IconButton disabled={checked === 'true'} onClick={() => OnDelete(selectedItem)}>
               <Icon >delete</Icon>
               {(delete_id === selectedItem.id) && deleteFile ? <DeleteFile pageLayout={props.pageLayout} setDeleteFile={(p) => setDeleteFile(p)} name={selectedItem.name} size={selectedItem.size} fileId={selectedItem.id} type={selectedItem.type}></DeleteFile> : null}
             </IconButton>
@@ -131,7 +127,7 @@ function DetailSidebarHeader(props) {
         </FuseAnimate>}
         {isFile && canRead && <FuseAnimate animation="transition.expandIn" delay={200}>
           <Tooltip title="Click to Download" placement="bottom">
-            <IconButton onClick={() => setDownload(true)}>
+            <IconButton disabled={checked === 'true'} onClick={() => setDownload(true)}>
               <Icon>cloud_download</Icon>
               {download ? <Download setDownload={(p) => setDownload(p)} name={selectedItem.name} size={selectedItem.size} fileId={selectedItem.id} type={selectedItem.type}></Download> : null}
             </IconButton>
@@ -139,7 +135,7 @@ function DetailSidebarHeader(props) {
         </FuseAnimate>}
       </div>
 
-      <div>
+      {checked !== 'true' && <div>
         <FuseAnimate delay={200}>
           <Typography variant="subtitle1" className="mb-8">
             <span style={tableStyle}>{selectedItem.name}</span></Typography>
@@ -150,7 +146,7 @@ function DetailSidebarHeader(props) {
             <span>: {moment.utc(selectedItem.update_date).local().fromNow()}</span>
           </Typography>
         </FuseAnimate>
-      </div>
+      </div>}
     </div>
   );
 }

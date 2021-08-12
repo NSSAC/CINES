@@ -31,24 +31,9 @@ export const RenameFile = ({
     },
   });
 
-  const breadcrumb_wrap = {
-    width: '100%',
-    flexWrap: 'wrap'
-  }
-
-  const ellipsis = {
-    textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap',
-    overflow: 'hidden',
-    maxWidth: '170px',
-    cursor: 'default'
-  }
-
-
   const [isFormValid, setIsFormValid] = useState(false);
   const [error, setError] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [errorMsg, setErrorMsg] = useState('An error occured. Please try again');
   const dispatch = useDispatch();
   const [name, setName] = useState(selectedItem.name);
   // eslint-disable-next-line 
@@ -116,7 +101,7 @@ export const RenameFile = ({
   return (
     <React.Fragment>
       {ReactDOM.createPortal(<div>
-        {error === true && <div> {toast.error(errorMsg)}</div>}
+        {error === true && <div> {toast.error('An error occured. Please try again')}</div>}
        
         {success === true && <div> {toast.success(`'${selectedItem.name}' renamed to '${name}'`)}</div>}
         <ToastContainer limit={1} bodyStyle={{ fontSize: "14px" }} position="top-right" />
@@ -131,7 +116,7 @@ export const RenameFile = ({
         aria-describedby="alert-dialog-slide-description"
       >
         <DialogTitle id="alert-dialog-slide-title" divider="true">
-          {"Rename file/folder"}
+          {"Rename file / folder"}
         </DialogTitle>
         <DialogContent divider="true">
           <Formsy
@@ -151,7 +136,7 @@ export const RenameFile = ({
               onChange={(event) => inputChangedHandler(event)}
               validations={{
                 isPositiveInt: function (values, value) {
-									return RegExp(/^([0-9]|[a-zA-Z]|[._\-\s])+$/).test(value);
+									return RegExp(/^([0-9]|[a-zA-Z]|[._\-\s])+$/).test(value) && value.trim() !== '';
                 },
               }}
               validationError="This is not a valid value"

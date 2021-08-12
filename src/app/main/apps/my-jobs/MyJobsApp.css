@@ -13,6 +13,17 @@
     height: auto;
 }
 
+.overflowContent {
+  /* overflow-x: auto; */
+  overflow: initial;
+}
+
+.sidebarStyle {
+  min-width: 320px;
+  max-width: 515px;
+}
+
+
 .chips{
     display: inline-block;
   background: grey;
