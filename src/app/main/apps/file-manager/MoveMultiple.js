@@ -140,9 +140,8 @@ export const MoveMultiple = ({
       classes={{ root: 'hideRoot' }}
       header={<React.Fragment>
         {ReactDOM.createPortal(<div>
-          {moveData.errorArr.length > 0 && moveData.errorArr.map(errorItem => <div key={errorItem.id}> {toast.error(`An error occured while deleting '${errorItem.name}'`)}</div>)}
-
-          {moveData.errorArr.length === 0 && moveData.movedCount !== 0 && <div> {toast.success(`${moveData.movedCount} item(s) moved successfully`)}</div>}
+          {moveData.movedCount !== 0 && <div> {toast.success(`${moveData.movedCount} item(s) moved successfully`)}</div>}
+          {moveData.errorArr.length > 0 && moveData.errorArr.map(errorItem => <div key={errorItem.id}> {toast.error(`An error occured while moving '${errorItem.name}'`)}</div>)}
           <ToastContainer bodyStyle={{ fontSize: "14px" }} position="top-right" />
         </div>, document.getElementById("portal"))}
         {showFolderDialog && <FolderPopup

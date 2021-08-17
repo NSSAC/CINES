@@ -26,7 +26,7 @@ function DeleteMultiple(props) {
         // setDeleteId(props.fileId)
         let newError = [];
         var tempCount = 0
-       var requests =  props.selectedItems.map((item, index) => fileServiceInstance.remove(item.id, true).then(response => {
+        var requests =  props.selectedItems.map((item, index) => fileServiceInstance.remove(item.id, true).then(response => {
             tempCount = tempCount + 1
         })
             .catch(error => {
@@ -45,9 +45,8 @@ function DeleteMultiple(props) {
     if(flag === true)
      return (
         ReactDOM.createPortal(<div>
+            {deleteData.deletedCount !== 0 && <div> {toast.success(`${deleteData.deletedCount} item(s) deleted successfully`)}</div>}
             {deleteData.errorArr.length > 0 && deleteData.errorArr.map(errorItem => <div key={errorItem.id}> {toast.error(`An error occured while deleting '${errorItem.name}'`)}</div>)}
-
-            {deleteData.errorArr.length === 0 && deleteData.deletedCount !== 0 && <div> {toast.success(`${deleteData.deletedCount} item(s) deleted successfully`)}</div>}
             <ToastContainer limit={1} bodyStyle={{ fontSize: "14px" }} position="top-right" />
         </div>, document.getElementById("portal"))
     )

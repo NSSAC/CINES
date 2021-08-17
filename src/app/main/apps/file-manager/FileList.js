@@ -493,6 +493,7 @@ function FileList(props) {
                                 <TableRow>
                                     <TableCell padding="checkbox">
                                         <div className='flex flex-col items-center justify-between'>
+                                        <Tooltip title={`${modifiedData.length === selected.length ? 'Deselect All' : 'Select All'}`} placement="bottom">
                                             <Checkbox size='small'
                                                 onClick={event =>
                                                     handleAllCheckboxClick(event, modifiedData)
@@ -500,6 +501,7 @@ function FileList(props) {
                                                 className="selectCheckbox"
                                                 checked={modifiedData.length === selected.length}
                                             />
+                                        </Tooltip>
                                             {/* {selected.length > 0 && <span className="badge badge-light subcategory-count-badge">{selectedCount}</span>} */}
                                         </div>
                                     </TableCell>
@@ -525,7 +527,7 @@ function FileList(props) {
                                                     <IconButton className='py-0 pl-0' style={{ pointerEvents: 'none' }}>
                                                         <Icon>delete</Icon>
                                                         {deleteAll && <DeleteMultiple selectedCount={selectedCount} selectedItems={selected} setDeleteAll={(p) => setDeleteAll(p)}></DeleteMultiple>}
-                                                    </IconButton>
+                                                    </IconButton>   
                                                     Delete
                                                 </MenuItem>
                                                 <MenuItem style={{ height: '36px' }} onClick={() => handleMoveAll()} disabled={!token || (selected.some(selectedItem => token && tokenData.teams.filter(value => selectedItem.writeACL.includes(value)).length === 0 && tokenData.sub !== selectedItem.owner_id) || (tokenData.roles && tokenData.roles.indexOf('superadmin') !== -1))}>
