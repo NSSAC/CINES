@@ -67,19 +67,21 @@ function MyJobsFileList(props) {
     var type;
     var rowLength = 10;
 
-    const infoIcon ={
+    const infoIcon = {
         right: '0',
         backgroundColor: 'whitesmoke',
         position: 'sticky',
         width: '100px'
-      }
+    }
 
     useEffect(() => {
         if (files.length > 0 && sortCount === false) {
             if (document.getElementsByClassName("jobRows").length > 0)
                 document.getElementsByClassName("jobRows")[0].click()
-            if (page === 1)
+            if (page === 1) {
                 document.getElementsByClassName('jobBody')[0].scrollTop = document.getElementsByClassName('jobBody')[0].scrollHeight;
+                document.getElementsByClassName("jobRows")[0].click()
+            }
         }
     }, [files1])
 
@@ -121,7 +123,7 @@ function MyJobsFileList(props) {
             const timer_jobList = setInterval(() => {
                 if (changeState || !cancelledState) {
                     props.setChangeState(props.changeState + 1);
-                     cancelledState && setSortCount(true)
+                    cancelledState && setSortCount(true)
                 }
                 setTimeout(() => {
                     setSortCount(false);
@@ -135,6 +137,11 @@ function MyJobsFileList(props) {
         }
 
     })
+
+    useEffect(()=>{
+        if (document.getElementsByClassName("jobRows").length > 0)
+            document.getElementsByClassName("jobRows")[0].click()
+    },[page])
 
     const handleChangePage = (event, newPage) => {
         setSpinnerFlag(true)
@@ -223,7 +230,6 @@ function MyJobsFileList(props) {
         setPage(currentPage)
         if (currentPage === 0)
             props.setInitialPage(true)
-
     }
     function onRowClick(selectedId) {
         setSelectedFlag(false)
@@ -245,8 +251,8 @@ function MyJobsFileList(props) {
             <div>
 
                 <FuseAnimate animation="transition.slideUpIn" delay={100}>
-                    <TableContainer className='overflowContent' component={Paper}>
-                        <Table stickyHeader aria-label="a dense table">
+                    <TableContainer component={Paper}>
+                        <Table aria-label="a dense table">
 
                             <TableHead>
                                 <TableRow style={{ whiteSpace: 'nowrap' }}>
@@ -312,7 +318,7 @@ function MyJobsFileList(props) {
                                                     {row.id}
                                                 </TableCell >
                                                 <TableCell >
-                                                    {row.job_definition.replace('net.science/',"")}
+                                                    {row.job_definition.replace('net.science/', "")}
                                                 </TableCell>
                                                 <TableCell  >
                                                     {row.state}

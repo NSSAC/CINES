@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -60,6 +60,7 @@ export const CreateFolder = ({
   const [name, setName] = useState("");
   // eslint-disable-next-line 
   const classes = useStyles();
+  const ref = useRef()
   const onCancle = () => {
     setName("");
     handleClose();
@@ -143,6 +144,11 @@ export const CreateFolder = ({
     }
   }
 
+  useEffect(()=>{
+    setTimeout(() => {
+      ref.current && ref.current.focus()
+    }, 1000);
+  })
 
   return (
     <React.Fragment>
@@ -182,6 +188,7 @@ export const CreateFolder = ({
             className="flex flex-col justify-center"
           >
             <TextFieldFormsy
+              inputRef={ref}
               className={classes.inputsize}
               type="text"
               name="name"

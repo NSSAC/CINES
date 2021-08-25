@@ -139,6 +139,8 @@ function FileManagerApp(props) {
   }
 
   function OnRefresh() {
+    if (targetPath.charAt(targetPath.length-1) !== "/")
+      targetPath = targetPath + "/";
     dispatch(Actions.getFiles(targetPath, "GET_FILES"));
     setSearch('')
     setSearchbool(false)
@@ -247,7 +249,7 @@ function FileManagerApp(props) {
     <FusePageSimple
     classes={{
       root: "bg-red",
-      content:'overflowContent',
+      content:'overflowContentFiles',
       header: "h-auto min-h-128 sm:h-auto sm:min-h-140",
       sidebarHeader: "h-auto min-h-128 sm:h-auto sm:min-h-140 sidebarHeader1",
       sidebarContent: "sidebarWrapper",
@@ -364,11 +366,13 @@ function FileManagerApp(props) {
                           </div>
                         </ClickAwayListener>
                       )}
+                      <div>
                         <Tooltip title="Click to Refresh" placement="bottom">
-                        <IconButton onClick={() => OnRefresh()}>
+                        <IconButton className="w-64 h-64" onClick={() => OnRefresh()}>
                           <Icon >refresh</Icon>
                         </IconButton>
                       </Tooltip>
+                      </div>
                     </div>
                   </span>
                 </FuseAnimate>

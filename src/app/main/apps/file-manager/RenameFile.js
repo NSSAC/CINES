@@ -1,4 +1,4 @@
-import React, {useRef} from "react";
+import React, { useEffect, useRef } from "react";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -10,7 +10,7 @@ import * as Actions from "./store/actions";
 import { makeStyles } from "@material-ui/core/styles";
 import { TextFieldFormsy } from "@fuse/components/formsy";
 import Formsy from "formsy-react";
-import { useDispatch} from "react-redux";
+import { useDispatch } from "react-redux";
 import { toast, ToastContainer } from "material-react-toastify";
 import ReactDOM from 'react-dom';
 import { FileService } from "node-sciduct";
@@ -68,7 +68,7 @@ export const RenameFile = ({
         setSuccess(false)
         handleClose()
         dispatch(Actions.getFiles(targetPath, "GET_FILES"));
-    },
+      },
 
       (error) => {
         setTimeout(() => {
@@ -97,12 +97,17 @@ export const RenameFile = ({
     }
   }
 
+  useEffect(() => {
+    setTimeout(() => {
+      ref.current && ref.current.focus()
+    }, 1000);
+  })
 
   return (
     <React.Fragment>
       {ReactDOM.createPortal(<div>
         {error === true && <div> {toast.error('An error occured. Please try again')}</div>}
-       
+
         {success === true && <div> {toast.success(`'${selectedItem.name}' renamed to '${name}'`)}</div>}
         <ToastContainer limit={1} bodyStyle={{ fontSize: "14px" }} position="top-right" />
       </div>, document.getElementById("portal"))}
@@ -125,7 +130,7 @@ export const RenameFile = ({
             className="flex flex-col justify-center"
           >
             <TextFieldFormsy
-            inputRef={ref}
+              inputRef={ref}
               className={classes.inputsize}
               type="text"
               name="name"
@@ -136,7 +141,7 @@ export const RenameFile = ({
               onChange={(event) => inputChangedHandler(event)}
               validations={{
                 isPositiveInt: function (values, value) {
-									return RegExp(/^([0-9]|[a-zA-Z]|[._\-\s])+$/).test(value) && value.trim() !== '';
+                  return RegExp(/^([0-9]|[a-zA-Z]|[._\-\s])+$/).test(value) && value.trim() !== '';
                 },
               }}
               validationError="This is not a valid value"

@@ -62,7 +62,7 @@ export const MoveMultiple = ({
   const [isFormValid, setIsFormValid] = useState(false);
   const [moveData, setMoveData] = useState({ 'errorArr': [], 'movedCount': 0 });
   const [showFolderDialog, setShowFolderDialog] = useState(false);
-  const [destinationPath, setDestinationPath] = useState(path);
+  const [destinationPath, setDestinationPath] = useState(decodeURIComponent(path));
   const dispatch = useDispatch();
   // eslint-disable-next-line 
   const classes = useStyles();
@@ -150,6 +150,7 @@ export const MoveMultiple = ({
           folderPath={destinationPath}
           setFolderPath={(p) => setDestinationPath(p)}
           fileTypes={["folder", "epihiper_multicell_analysis", "epihiperOutput"]}
+          selectedItems = {selectedItems}
         />}
 
         <Dialog
@@ -175,8 +176,9 @@ export const MoveMultiple = ({
                 className={classes.inputsize}
                 type="text"
                 name="Source"
+                multiline
                 label={<span style={{ fontSize: '17px' }}>{'Source'}</span>}
-                value={path}
+                value={decodeURIComponent(path)}
                 autoComplete='off'
                 disabled
                 required
@@ -186,6 +188,7 @@ export const MoveMultiple = ({
                 <TextFieldFormsy
                   className={`${classes.inputsize} mt-20`}
                   type="text"
+                  multiline
                   id='Destination'
                   name="Destination"
                   label={<span style={{ fontSize: '17px' }}>{'Destination'}</span>}

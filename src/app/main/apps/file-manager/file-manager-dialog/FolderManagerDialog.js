@@ -14,7 +14,7 @@ import sciductService from "app/services/sciductService";
 import { FileService } from "node-sciduct";
 
 
-function FolderPopup({ showModal, handleFMClose, folderPath, setFolderPath, fileTypes })  {
+function FolderPopup({ showModal, handleFMClose, folderPath, setFolderPath, fileTypes, selectedItems })  {
 
     const dispatch = useDispatch()
     const files = useSelector(({fMApp}) => fMApp.home);
@@ -233,7 +233,7 @@ return (
         </DialogTitle>
         <DialogContent style={dialogcontentStyle} >
           <Breadcrumb  setSearch={(p)=>setSearch(p)} targetPath={targetPath} setTargetPath={(p)=>setTargetPath(p)}></Breadcrumb>
-         <Filelist search={search} setSelectedItemName={(p)=>{setSelectedItemName(p)}}  setSearch={(p)=>setSearch(p)} targetPath={targetPath} setTargetPath={(p)=>setTargetPath(p)} fileTypes={fileTypes}></Filelist>
+         <Filelist search={search} setSelectedItemName={(p)=>{setSelectedItemName(p)}}  setSearch={(p)=>setSearch(p)} targetPath={targetPath} setTargetPath={(p)=>setTargetPath(p)} fileTypes={fileTypes} selectedItems={selectedItems}></Filelist>
         </DialogContent>
         <DialogActions>
           <Button variant="contained" id='selectFile' disabled={!selectedFlag} className="buttonDisabled"  size='small' onClick={onSelect}>

@@ -95,7 +95,7 @@ export const FileUpload = ({ allFilesType,fileTypes, setUploadFile, dialogTarget
     setUploadedfiles([...fileData]);
     for (let i = 0; i <= event.target.files.length - 1; i++) {
       let fileDataObject = {};
-      fileDataObject.type = event.target.files[i].name.split('.').pop();
+      fileDataObject.type = FILEUPLOAD_CONFIG.fileType.indexOf(event.target.files[i].name.split('.').pop()) !== -1 && event.target.files[i].name.split('.').pop();
       if(fileTypeArray.length === 1)
          fileDataObject.type = fileTypeArray[0];
       fileDataObject.fileName = event.target.files[i].name;
@@ -304,7 +304,7 @@ export const FileUpload = ({ allFilesType,fileTypes, setUploadFile, dialogTarget
 
           let file = item.getAsFile();
           let tempObj = {};
-          tempObj.type = file.name.split('.').pop();
+          tempObj.type = FILEUPLOAD_CONFIG.fileType.indexOf(file.name.split('.').pop()) !== -1 && file.name.split('.').pop();
           tempObj.fileName = file.name;
           tempObj.id = i;
           tempObj.status = "-";

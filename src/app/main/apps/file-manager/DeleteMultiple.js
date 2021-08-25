@@ -8,8 +8,7 @@ import ReactDOM from 'react-dom';
 import { FileService } from 'node-sciduct'
 
 function DeleteMultiple(props) {
-    const [flag, setFlag] = useState(false);
-    const [deleteData, setDeleteData] = useState({'errorArr':[],'deletedCount':0});
+    const [deleteData, setDeleteData] = useState({'errorArr':[],'deletedCount':0,'flag':false});
     var currPath = window.location.pathname.replace("/apps/files", "")
     const dispatch = useDispatch();
     const url = `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/`
@@ -35,14 +34,14 @@ function DeleteMultiple(props) {
             }))
 
         return Promise.all(requests).then(() => {
-            setDeleteData({'errorArr':newError, 'deletedCount':tempCount})
-            setFlag(true)
+            setDeleteData({'errorArr':newError, 'deletedCount':tempCount, 'flag':true})
+            // setFlag(true)
             props.setDeleteAll(false)
             dispatch(Actions.getFiles(currPath, "GET_FILES"));
         })
     }
 
-    if(flag === true)
+    if(deleteData.flag === true)
      return (
         ReactDOM.createPortal(<div>
             {deleteData.deletedCount !== 0 && <div> {toast.success(`${deleteData.deletedCount} item(s) deleted successfully`)}</div>}

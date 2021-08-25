@@ -80,9 +80,10 @@ function Filelist(props) {
         textOverflow: 'ellipsis',
         whiteSpace: 'nowrap'
     }
-
-    var searchResults = Object.values(files).filter((data) => {
+    let checkedFilter = props.selectedItems.map(itemY => { return itemY.name; });
+    var searchResults = Object.values(files).filter(item=>!checkedFilter.includes(item.name)).filter((data) => {
         var reqType = false
+        
         for (var f in props.fileTypes) {
             if (data.type === props.fileTypes[f] || data.type === "folder" || data.type === "epihiperOutput" || data.type === "epihiper_multicell_analysis") {
                 reqType = true;

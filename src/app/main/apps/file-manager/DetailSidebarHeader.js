@@ -41,7 +41,7 @@ function DetailSidebarHeader(props) {
   function editFilename(node) {
     props.showRenameDialog(true)
     props.setSelectedItem(node)
-}
+  }
 
   function OnDelete(item) {
     localStorage.setItem("delete_id", item.id)
@@ -111,11 +111,11 @@ function DetailSidebarHeader(props) {
     <div className="flex flex-col justify-between h-full p-4 sm:p-12">
       <div className="toolbar flex align-center justify-end h-48">
         {canDelete && <FuseAnimate animation="transition.expandIn" delay={200}>
-           <Tooltip title="Rename file/folder" placement="top">
-          <IconButton disabled={checked === 'true'} id="editBtn" onClick={() => editFilename(selectedItem)}>
-            <Icon fontSize='small'>edit</Icon>
-          </IconButton>
-        </Tooltip>
+          <Tooltip title="Rename file/folder" placement="top">
+            <IconButton disabled={checked === 'true'} id="editBtn" onClick={() => editFilename(selectedItem)}>
+              <Icon fontSize='small'>edit</Icon>
+            </IconButton>
+          </Tooltip>
         </FuseAnimate>}
         {canDelete && <FuseAnimate animation="transition.expandIn" delay={200}>
           <Tooltip title="Click to Delete" placement="bottom">
@@ -137,8 +137,10 @@ function DetailSidebarHeader(props) {
 
       {checked !== 'true' && <div>
         <FuseAnimate delay={200}>
-          <Typography variant="subtitle1" className="mb-8">
-            <span style={tableStyle}>{selectedItem.name}</span></Typography>
+          <Tooltip title={selectedItem.name} placement="bottom">
+            <Typography variant="subtitle1" className="mb-8">
+              <span style={tableStyle}>{selectedItem.name}</span></Typography>
+          </Tooltip>
         </FuseAnimate>
         <FuseAnimate delay={300}>
           <Typography variant="caption" className="">
