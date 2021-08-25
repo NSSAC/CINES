@@ -253,7 +253,7 @@ function FileManagerApp(props) {
       header: "h-auto min-h-128 sm:h-auto sm:min-h-140",
       sidebarHeader: "h-auto min-h-128 sm:h-auto sm:min-h-140 sidebarHeader1",
       sidebarContent: "sidebarWrapper",
-      rightSidebar: "w-auto sidebarStyle",
+      rightSidebar: "sidebarStyle",
       contentWrapper: "FileWrapper",
     }}
       header={
