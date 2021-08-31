@@ -21,6 +21,10 @@ function DeleteMultiple(props) {
         // eslint-disable-next-line
     }, [])
 
+    useEffect(()=>{
+        deleteData.flag === true && props.setDeleteAll(false)
+    },[deleteData.flag])
+
     function DeleteData() {
         // setDeleteId(props.fileId)
         let newError = [];
@@ -36,7 +40,6 @@ function DeleteMultiple(props) {
         return Promise.all(requests).then(() => {
             setDeleteData({'errorArr':newError, 'deletedCount':tempCount, 'flag':true})
             // setFlag(true)
-            props.setDeleteAll(false)
             dispatch(Actions.getFiles(currPath, "GET_FILES"));
         })
     }

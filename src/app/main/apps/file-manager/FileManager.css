@@ -30,9 +30,14 @@
   display: none;
 }
 
+/* .webkitSticky {
+  position: -webkit-sticky !important;
+} */
+
+
 .overflowContentFiles {
-  /* overflow-x: auto; */
-  overflow: initial;
+  overflow-x: auto;
+  /* overflow: initial; */
 }
 
 .sidebarHeader1 {
@@ -63,4 +68,8 @@
   .sidebarStyle {
     width: 320px;
   }
+
+  /* .overflowContentFiles {
+    overflow: auto;
+  } */
 }

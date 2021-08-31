@@ -14,8 +14,7 @@
 }
 
 .overflowContentJob {
-  /* overflow-x: auto; */
-  overflow: initial;
+  overflow: auto;
 }
 
 .sidebarStyle {
@@ -44,4 +43,8 @@
   .sidebarStyle {
     width: 320px;
   }
+
+  /* .overflowContentJob {
+    overflow: auto;
+  } */
 }
