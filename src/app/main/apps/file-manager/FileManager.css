@@ -30,14 +30,14 @@
   display: none;
 }
 
-/* .webkitSticky {
+.webkitSticky {
   position: -webkit-sticky !important;
-} */
+}
 
 
 .overflowContentFiles {
-  overflow-x: auto;
-  /* overflow: initial; */
+  /* overflow-x: auto; */
+  overflow: visible;
 }
 
 .sidebarHeader1 {
@@ -69,7 +69,7 @@
     width: 320px;
   }
 
-  /* .overflowContentFiles {
+  .overflowContentFiles {
     overflow: auto;
-  } */
+  }
 }

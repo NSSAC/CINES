@@ -488,7 +488,7 @@ function FileList(props) {
             return (
                 <React.Fragment>
                     <FuseAnimate animation="transition.slideUpIn" delay={300}>
-                        <Table className='fileTableStyle'>
+                        <Table stickyHeader className='fileTableStyle webkitSticky'>
                             <TableHead style={{ whiteSpace: 'nowrap' }}>
                                 <TableRow>
                                     <TableCell padding="checkbox">

@@ -251,8 +251,8 @@ function MyJobsFileList(props) {
             <div>
 
                 <FuseAnimate animation="transition.slideUpIn" delay={100}>
-                    <TableContainer component={Paper}>
-                        <Table aria-label="a dense table">
+                    <TableContainer className='overflowContentJob' component={Paper}>
+                        <Table stickyHeader className='webkitSticky' aria-label="a dense table">
 
                             <TableHead>
                                 <TableRow style={{ whiteSpace: 'nowrap' }}>
