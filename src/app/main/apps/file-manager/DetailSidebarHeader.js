@@ -113,14 +113,14 @@ function DetailSidebarHeader(props) {
         {canDelete && <FuseAnimate animation="transition.expandIn" delay={200}>
           <Tooltip title="Rename file/folder" placement="top">
             <IconButton disabled={checked === 'true'} id="editBtn" onClick={() => editFilename(selectedItem)}>
-              <Icon fontSize='small'>edit</Icon>
+              <Icon>edit</Icon>
             </IconButton>
           </Tooltip>
         </FuseAnimate>}
         {canDelete && <FuseAnimate animation="transition.expandIn" delay={200}>
           <Tooltip title="Click to Delete" placement="bottom">
             <IconButton disabled={checked === 'true'} onClick={() => OnDelete(selectedItem)}>
-              <Icon >delete</Icon>
+              <Icon>delete</Icon>
               {(delete_id === selectedItem.id) && deleteFile ? <DeleteFile pageLayout={props.pageLayout} setDeleteFile={(p) => setDeleteFile(p)} name={selectedItem.name} size={selectedItem.size} fileId={selectedItem.id} type={selectedItem.type}></DeleteFile> : null}
             </IconButton>
           </Tooltip>
