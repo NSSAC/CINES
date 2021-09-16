@@ -24,6 +24,7 @@ import "./FileManagerDialog.css";
 import { FileUpload } from "app/main/apps/file-manager/FileUpload/FileUploadDialog";
 import { CreateFolder } from "app/main/apps/file-manager/FileUpload/CreateFolderDialog";
 import sciductService from "app/services/sciductService";
+import { FileService } from "node-sciduct";
 
 function FMPopup({
   showModal,
@@ -141,25 +142,16 @@ function FMPopup({
 
   async function getMetadata(targetMeta) {
     setcheckFlag(false);
+    const url = `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/`
+    const token = localStorage.getItem('id_token');
+    const fileServiceInstance = new FileService(url, token)
 
-    var axios = require("axios");
-    if (typeof token === "string") {
-      var config = {
-        method: "get",
-        url: `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file${targetMeta}`,
-        headers: {
-          Accept: "*/*",
-          Authorization: token,
-        },
-      };
-    }
     addData();
     async function addData() {
-      const request = axios(config);
-      await request.then((response) => {
-        let metaData = response.data.writeACL;
-        let ownerId = response.data.owner_id;
-        let type = response.data.type;
+      fileServiceInstance.show(targetMeta).then((response) => {
+        let metaData = response.writeACL;
+        let ownerId = response.owner_id;
+        let type = response.type;
 
         if (metaData !== undefined)
         checkPermission(metaData, ownerId, type);
@@ -210,7 +202,7 @@ function FMPopup({
       >
         <DialogTitle id="alert-dialog-title">
           <div className="flex items-center justify-between">
-            <h2>File Manager</h2>
+            <h2 className={`${searchbool ? 'hideHeader':''}`}>File Manager</h2>
             {/* <div id="fileUpload"> */}
             {/* <FileUpload setUploadFile={(p)=>setUploadFile(p)} dialogTargetPath={targetPath} showModal={showDialog} handleClose={handleClose} /> */}
             {/* </div> */}
@@ -220,7 +212,7 @@ function FMPopup({
                   <div className={clsx("flex")}>
                     <Tooltip title="Click to search" placement="bottom">
                       <div onClick={showSearch}>
-                        <IconButton className="w-64 h-64">
+                        <IconButton  className={`w-64 h-64 ${searchbool ? 'hideHeader':''}`}>
                           <Icon>search</Icon>
                         </IconButton>{" "}
                       </div>

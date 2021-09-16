@@ -7,13 +7,18 @@ import {
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "./JobDefinitionForm.css";
-import axios from "axios";
 import { Input } from "app/main/apps/job-definition/Job-Definition/Input";
 import Toaster from "./Toaster";
 import Formsy from "formsy-react";
 import { useHistory } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import * as Actions from "./store/actions";
+import { JobService } from "node-sciduct";
 
 function JobDefinitionForm(props) {
+  const jobData = useSelector(
+    ({ JobDefinitionApp }) => JobDefinitionApp.selectedjobid
+  );
   const [formElementsArray, setFormElementsArray] = useState({});
   // const [jobSubmissionArray, setJobSubmissionArray] = useState({});
   const [isFormValid, setIsFormValid] = useState(false);
@@ -23,13 +28,13 @@ function JobDefinitionForm(props) {
   const [errorMsg, setErrorMsg] = useState();
   const [isToasterFlag, setIsToasterFlag] = useState(false);
   const [spinnerFlag, setSpinnerFlag] = useState(true);
-  const [onSubmit ,setOnSubmit] =useState()
-
+  const [onSubmit, setOnSubmit] = useState()
+  const dispatch = useDispatch()
 
   var path = window.location.pathname;
   var pathEnd = path.replace("/apps/job-definition/", "");
 
-  if(pathEnd.endsWith('/'))
+  if (pathEnd.endsWith('/'))
     pathEnd = pathEnd.slice(0, -1)
   const parentGrid = {
     borderTop: "2px solid black",
@@ -51,40 +56,25 @@ function JobDefinitionForm(props) {
 
   useEffect(() => {
     setIsToasterFlag(false);
-    var userToken = localStorage.getItem("id_token");
-
-    axios({
-      method: "get",
-      url: `${process.env.REACT_APP_SCIDUCT_JOB_SERVICE}/job_definition/${pathEnd}`,
-      headers: {
-
-        'Accept': '*/*',
-        "Access-Control-Allow-Origin": "* ",
-
-        Authorization: userToken,
-      },
-    }).then(
-      (res) => {
-        setSpinnerFlag(false);
-        if (res.data) {
-          var createFromData = res.data.input_schema.properties;
-          var inputFileData = res.data.input_files;
-          var outputFiles = res.data.output_files;
-          var requiredFeildArray = res.data.input_schema.required;
-          var responseData = res.data;
-          creatForm(
-            createFromData,
-            inputFileData,
-            outputFiles,
-            responseData,
-            requiredFeildArray
-          );
-        }
-      },
-      (error) => {}
-    );
+    if ((jobData.id && !jobData.id.includes(pathEnd)) || Object.keys(jobData).length === 0)
+      dispatch(Actions.setSelectedItem(pathEnd));
+    if (Object.keys(jobData).length !== 0 && jobData.id.includes(pathEnd)) {
+      setSpinnerFlag(false);
+      var createFromData = jobData.input_schema.properties;
+      var inputFileData = jobData.input_files;
+      var outputFiles = jobData.output_files;
+      var requiredFeildArray = jobData.input_schema.required;
+      var responseData = jobData;
+      creatForm(
+        createFromData,
+        inputFileData,
+        outputFiles,
+        responseData,
+        requiredFeildArray
+      );
+    }
     // eslint-disable-next-line
-  }, [axios]);
+  }, [jobData.id]);
 
   const creatForm = (
     createFromData,
@@ -102,10 +92,10 @@ function JobDefinitionForm(props) {
           obj["id"] = index;
           obj["formLabel"] = obj.name;
           obj["outputFlag"] = false;
-          if(props.resubmit)
+          if (props.resubmit)
             obj["value"] = props.resubmit.inputData.input[obj.name];
-         else
-         obj["value"] = "";
+          else
+            obj["value"] = "";
         }
       }
 
@@ -113,12 +103,12 @@ function JobDefinitionForm(props) {
         count++;
         createFromData[key]["id"] = count + 100;
         createFromData[key]["formLabel"] = key;
-        if(props.resubmit)
-         createFromData[key]["value"] = props.resubmit.inputData.input[key];
-        else if(String(createFromData[key]['default']) !== 'undefined')
-         createFromData[key]["value"] = createFromData[key]['default'].toString();
+        if (props.resubmit)
+          createFromData[key]["value"] = props.resubmit.inputData.input[key];
+        else if (String(createFromData[key]['default']) !== 'undefined')
+          createFromData[key]["value"] = createFromData[key]['default'].toString();
         else
-         createFromData[key]["value"] = ""
+          createFromData[key]["value"] = ""
 
 
         if (requiredFeildArray !== undefined && requiredFeildArray.includes(key)) {
@@ -150,7 +140,7 @@ function JobDefinitionForm(props) {
         let outputContainer = {
           id: 200,
           formLabel: "output_container",
-          value: props.resubmit ? props.resubmit.inputData.output_container: "",
+          value: props.resubmit ? props.resubmit.inputData.output_container : "",
           description:
             "Select the path from File manager where the output file is to be stored.",
           types: ["folder", "epihiper_multicell_analysis", "epihiperOutput"],
@@ -159,7 +149,7 @@ function JobDefinitionForm(props) {
         let outputName = {
           id: 201,
           formLabel: "output_name",
-          value: (props.resubmit && props.resubmit.inputData.state !== "Completed") ? props.resubmit.inputData.output_name: "",
+          value: (props.resubmit && props.resubmit.inputData.state !== "Completed") ? props.resubmit.inputData.output_name : "",
           type: "string",
           fileType: outputFiles.type,
           required: true,
@@ -167,7 +157,7 @@ function JobDefinitionForm(props) {
         createFromData["output_container"] = outputContainer;
         createFromData["output_name"] = outputName;
       }
-      
+
       setFormElementsArray({ ...createFromData });
     } else {
       setFlag(false);
@@ -182,7 +172,7 @@ function JobDefinitionForm(props) {
       const updatedFormElement = {
         ...updatedJobSubmissionForm[inputIdentifier],
       };
-        updatedFormElement.value = event.target.value;
+      updatedFormElement.value = event.target.value;
       updatedJobSubmissionForm[inputIdentifier] = updatedFormElement;
       setFormElementsArray({ ...updatedJobSubmissionForm });
     }
@@ -212,19 +202,19 @@ function JobDefinitionForm(props) {
         formElementsArray[key].formLabel === "output_name"
       ) {
         requestJson["output_name"] = formElementsArray[key].value;
-      } 
-      
+      }
+
       else {
         if (formElementsArray[key].type === "integer") {
           input[key] = parseInt(formElementsArray[key].value);
         } else if (formElementsArray[key].type === "boolean") {
-          if(formElementsArray[key].value === "true" || formElementsArray[key].value === true){
+          if (formElementsArray[key].value === "true" || formElementsArray[key].value === true) {
             input[key] = true;
           }
-          else{
+          else {
             input[key] = false;
           }
-         // updatedFormElement["value"] = Boolean(event.target.value);
+          // updatedFormElement["value"] = Boolean(event.target.value);
         } else if (formElementsArray[key].type === "number") {
           input[key] = parseFloat(formElementsArray[key].value);
         } else {
@@ -236,19 +226,13 @@ function JobDefinitionForm(props) {
     // setJobSubmissionArray({ ...requestJson });
     await onFormSubmit(requestJson);
   };
+
   function onFormSubmit(requestJson) {
     setOnSubmit(true)
-    const userToken = localStorage.getItem("id_token");
-    axios({
-      method: "post",
-      url: `${process.env.REACT_APP_SCIDUCT_JOB_SERVICE}/job_instance/`,
-      headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "* ",
-        Authorization: userToken,
-      },
-      data: requestJson,
-    }).then(
+    const url = `${process.env.REACT_APP_SCIDUCT_JOB_SERVICE}/`
+    const token = localStorage.getItem('id_token');
+    const jobServiceInstance = new JobService(url, token)
+    jobServiceInstance.createJobInstance(requestJson.job_definition, requestJson.input, requestJson.pragmas, requestJson.output_name, requestJson.output_container).then(
       (res) => {
         setIsToasterFlag(true);
         setSuccess(true);
@@ -257,7 +241,7 @@ function JobDefinitionForm(props) {
       },
       (error) => {
         setSuccess(false);
-        if(error.response)
+        if (error.response)
           setErrorMsg(`${error.response.status}-${error.response.statusText} error occured. Please try again`)
         else
           setErrorMsg("An internal error occured. Please try again")
@@ -269,7 +253,7 @@ function JobDefinitionForm(props) {
   function handlingError() {
     setIsToasterFlag(false);
     setSuccess();
-     setOnSubmit(false)
+    setOnSubmit(false)
   }
   function delayNavigation() {
     history.push("/apps/my-jobs/");
@@ -302,7 +286,7 @@ function JobDefinitionForm(props) {
   if (spinnerFlag === false && flag === true) {
     return (
       <div style={{ paddingLeft: "8px" }}>
-        {isToasterFlag  ? (
+        {isToasterFlag ? (
           <Toaster errorMsg={errorMsg} success={success} id={response.id}></Toaster>
         ) : null}
         <Typography className="h2">
@@ -334,18 +318,18 @@ function JobDefinitionForm(props) {
                       />
                     </Grid>
                   ) : (
-                      <Grid  key={formElement[1].id} style={outputGrid} item container xs={12} sm={6}>
-                        <Input
-                          key={formElement.id}
-                          formData={formElement}
-                          elementType={formElement.type}
-                          value={formElement.value}
-                          changed={(event) =>
-                            inputChangedHandler(event, formElement[0])
-                          }
-                        />
-                      </Grid>
-                    )
+                    <Grid key={formElement[1].id} style={outputGrid} item container xs={12} sm={6}>
+                      <Input
+                        key={formElement.id}
+                        formData={formElement}
+                        elementType={formElement.type}
+                        value={formElement.value}
+                        changed={(event) =>
+                          inputChangedHandler(event, formElement[0])
+                        }
+                      />
+                    </Grid>
+                  )
                 )}
               </Grid>
               <div style={{ alignSelf: "flex-end" }}>
@@ -356,7 +340,7 @@ function JobDefinitionForm(props) {
                   className="w-30  mt-32 mb-80"
                   aria-label="LOG IN"
                   onClick={createSubmissionData}
-                  disabled={!isFormValid || success ||onSubmit }
+                  disabled={!isFormValid || success || onSubmit}
                 >
                   Submit
                 </Button>
@@ -372,18 +356,18 @@ function JobDefinitionForm(props) {
                     Cancel
                   </Button>
                 </Link> :
-                <Link
-                to="/apps/job-definition/"
-                style={{ color: "transparent" }}
-              >
-                <Button
-                  variant="contained"
-                  onClick={onFormCancel}
-                  color="primary"
-                  className="w-30 mx-8 mt-32 mb-80">
-                  Cancel
+                  <Link
+                    to="/apps/job-definition/"
+                    style={{ color: "transparent" }}
+                  >
+                    <Button
+                      variant="contained"
+                      onClick={onFormCancel}
+                      color="primary"
+                      className="w-30 mx-8 mt-32 mb-80">
+                      Cancel
                 </Button>
-              </Link>}
+                  </Link>}
               </div>
             </Formsy>
           ) : null}

@@ -9,7 +9,7 @@ export function getHome(path)
   const fileServiceInstance = new FileService(url, token)
 
     return (dispatch) =>
-        fileServiceInstance.list(`/home/${path}`).then((response) =>
+        fileServiceInstance.list(path).then((response) =>
             dispatch({
                 type   : GET_HOME,
                 payload: response,

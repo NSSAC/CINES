@@ -15,8 +15,10 @@ import { useHistory } from "react-router-dom";
 const useStyles = makeStyles({
   table: {
     "& th": {
-      padding: "16px 0",
+      padding: "16px 0"
     },
+    borderCollapse: 'separate',
+    borderSpacing: '9px 0'
   },
 
   typeIcon: {
@@ -133,7 +135,7 @@ dateList()
 
   return (
     <FuseAnimate animation="transition.slideUpIn" delay={200}>
-      <div className="file-details p-16 sm:p-24">
+      <div className="file-details p-16 sm:p-8">
         {
 
           <MetadataInfoDialog

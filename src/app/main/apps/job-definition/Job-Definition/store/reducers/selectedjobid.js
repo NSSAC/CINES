@@ -4,7 +4,7 @@ const selectedjobid = function (state ={}, action) {
     switch ( action.type )
     {
         case Actions.SET_SELECTED_ITEM_ID:
-            return action.payload.data;
+            return action.payload;
         default:
             return state;
     }

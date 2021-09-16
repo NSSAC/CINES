@@ -6,7 +6,6 @@ import React, { useEffect, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
 import { FusePageSimple, SelectFormsy, TextFieldFormsy } from '@fuse';
-import axios from 'axios';
 import { Input } from './SelectFile.js'
 import { Icon, LinearProgress, MenuItem } from '@material-ui/core';
 import Toaster from "../Toaster";
@@ -19,8 +18,14 @@ import SIR from './CSonNet/SIR/SIR.js';
 import SEIR from './CSonNet/SEIR/SEIR.js';
 import { modelJSON } from './Schemas/CSonNet_modelDefinition'
 import ReactTooltip from 'react-tooltip';
+import { useDispatch, useSelector } from "react-redux";
+import * as Actions from "../store/actions";
+import { JobService } from 'node-sciduct';
 
 const CSonNet_Contagion_Simulation = (props) => {
+    const jobData = useSelector(
+        ({ JobDefinitionApp }) => JobDefinitionApp.selectedjobid
+      );
     const [isFormValid, setIsFormValid] = useState(false);
     const [isToasterFlag, setIsToasterFlag] = useState(false);
     const [inputSchema, setInputSchema] = useState({});
@@ -31,6 +36,7 @@ const CSonNet_Contagion_Simulation = (props) => {
     const [spinnerFlag, setSpinnerFlag] = useState(true);
     const [onSubmit, setOnSubmit] = useState()
     const history = useHistory();
+    const dispatch = useDispatch()
 
     const childGrid = {
         paddingLeft: '8px',
@@ -42,20 +48,13 @@ const CSonNet_Contagion_Simulation = (props) => {
     }
 
     useEffect(() => {
+        let pathEnd = 'net.science/CSonNet_Contagion_Simulation'
         setIsToasterFlag(false);
-        var userToken = localStorage.getItem('id_token');
-
-        axios({
-            method: 'get',
-            url: `${process.env.REACT_APP_SCIDUCT_JOB_SERVICE}/job_definition/net.science/CSonNet_Contagion_Simulation`,
-            headers: {
-                'Access-Control-Allow-Origin': '* ',
-                Authorization: userToken
-            }
-        }).then(
-            (res) => {
+        if (jobData.id && !jobData.id.includes(pathEnd) || Object.keys(jobData).length === 0)
+          dispatch(Actions.setSelectedItem(pathEnd));
+        if (Object.keys(jobData).length !== 0 && jobData.id.includes(pathEnd)) {
                 setSpinnerFlag(false)
-                if (res.data) {
+                if (jobData) {
                      setDynamicProps({
                         Behaviour: { id: 101, value: props.resubmit && props.resubmit.inputData.input.dynamic_inputs ? props.resubmit.inputData.input.dynamic_inputs['Behaviour_model'] : "" },
                         SIR_Submodel: { id: 201, value: props.resubmit && props.resubmit.inputData.input.dynamic_inputs ? props.resubmit.inputData.input.dynamic_inputs['SIR_Submodel'] : "" },
@@ -67,13 +66,13 @@ const CSonNet_Contagion_Simulation = (props) => {
                         Infectious_duration: { id: 304, value: props.resubmit && String(props.resubmit.inputData.input.dynamic_inputs.Infectious_duration) !== 'undefined'? props.resubmit.inputData.input.dynamic_inputs['Infectious_duration'] : "" },
                         Exposed_duration: { id: 305, value: props.resubmit && String(props.resubmit.inputData.input.dynamic_inputs.Exposed_duration) !== 'undefined'? props.resubmit.inputData.input.dynamic_inputs['Exposed_duration'] : "" },
                         Exposed_probability_transition: { id: 306, value: props.resubmit && String(props.resubmit.inputData.input.dynamic_inputs.Exposed_probability_transition) !== 'undefined'? props.resubmit.inputData.input.dynamic_inputs['Exposed_probability_transition'] : "" },
-                        inputFile_Graph: [res.data.input_files[0].name, {
-                            formLabel: res.data.input_files[0].name,
+                        inputFile_Graph: [jobData.input_files[0].name, {
+                            formLabel: jobData.input_files[0].name,
                             id: 0,
-                            name: res.data.input_files[0].name,
+                            name: jobData.input_files[0].name,
                             outputFlag: false,
                             required: true,
-                            types: res.data.input_files[0].types,
+                            types: jobData.input_files[0].types,
                             value: props.resubmit ? props.resubmit.inputData.input["Graph"] : ""
                         }]
                     })
@@ -93,17 +92,12 @@ const CSonNet_Contagion_Simulation = (props) => {
                             value: props.resubmit ? props.resubmit.inputData.output_container : "",
                         }]
                     })
-                    setInputSchema(res.data.input_schema)
+                    setInputSchema(jobData.input_schema)
 
                 }
-            },
-            (error) => {
-
             }
-
-        );
         // eslint-disable-next-line
-    }, [axios]);
+    }, [jobData.id]);
 
     function disableButton() {
         setIsFormValid(false);
@@ -274,18 +268,10 @@ const CSonNet_Contagion_Simulation = (props) => {
 
     function onFormSubmit(requestJson) {
         setOnSubmit(true)
-        const userToken = localStorage.getItem('id_token')
-        axios({
-            method: 'post',
-            url: `${process.env.REACT_APP_SCIDUCT_JOB_SERVICE}/job_instance/`,
-            headers: {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '* ',
-                'Authorization': userToken,
-
-            },
-            data: requestJson,
-        }).then(res => {
+        const url = `${process.env.REACT_APP_SCIDUCT_JOB_SERVICE}/`
+        const token = localStorage.getItem('id_token');
+        const jobServiceInstance = new JobService(url, token)
+        jobServiceInstance.createJobInstance(requestJson.job_definition, requestJson.input, requestJson.pragmas, requestJson.output_name, requestJson.output_container).then(res => {
             setIsToasterFlag(true)
             setSuccess(true)
             window.setTimeout(
@@ -562,7 +548,7 @@ const CSonNet_Contagion_Simulation = (props) => {
                                                         className="my-12 inputStyle1 model"
                                                         name="state"
                                                         label={["State", <span key={1} style={{ color: 'red' }}>{'*'}</span>]}
-                                                        value={staticProps.InitialConditions[0].state}
+                                                        value={modelJSON.models.threshold_model.states.indexOf(staticProps.InitialConditions[0].state) !== -1?staticProps.InitialConditions[0].state:""}
                                                         onChange={(event) => ICChangedHandler(event, 'state')}
                                                         required
                                                     >
@@ -579,7 +565,7 @@ const CSonNet_Contagion_Simulation = (props) => {
                                                         className="my-12 inputStyle1 model"
                                                         name="state"
                                                         label={["State", <span key={1} style={{ color: 'red' }}>{'*'}</span>]}
-                                                        value={staticProps.InitialConditions[0].state}
+                                                        value={modelJSON.models.SEIR.submodels['fixed exposed fixed infectious'].states.indexOf(staticProps.InitialConditions[0].state) !== -1?staticProps.InitialConditions[0].state:""}
                                                         onChange={(event) => ICChangedHandler(event, 'state')}
                                                         required
                                                     >
@@ -596,7 +582,7 @@ const CSonNet_Contagion_Simulation = (props) => {
                                                         className="my-12 inputStyle1 model"
                                                         name="state"
                                                         label={["State", <span key={1} style={{ color: 'red' }}>{'*'}</span>]}
-                                                        value={staticProps.InitialConditions[0].state}
+                                                        value={modelJSON.models.SIR.submodels['fixed infectious'].states.indexOf(staticProps.InitialConditions[0].state) !== -1?staticProps.InitialConditions[0].state:""}
                                                         onChange={(event) => ICChangedHandler(event, 'state')}
                                                         required
                                                     >

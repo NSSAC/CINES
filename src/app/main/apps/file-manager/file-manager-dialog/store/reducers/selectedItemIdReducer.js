@@ -1,6 +1,6 @@
 import * as Actions from '../actions';
 
-const selectedjobid = function (state ={}, action) {
+const selectedItemIdReducer = function (state = "1", action) {
     switch ( action.type )
     {
         case Actions.SET_SELECTED_ITEM_ID:
@@ -10,4 +10,4 @@ const selectedjobid = function (state ={}, action) {
     }
 };
 
-export default selectedjobid;
+export default selectedItemIdReducer;

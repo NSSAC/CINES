@@ -7,6 +7,40 @@
     font-style: normal;
 }
 
+.customHandle {
+    cursor:col-resize;
+    width: 12px;
+    height: 50px;
+    background: white;
+    border: 2px solid lightgray;
+    border-radius: 8px;
+    text-align: center;
+    z-index: 10;
+    overflow: hidden;
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    position:absolute;
+    top: 50%;
+    background-color: #61dafb;
+    left:-5px;
+}
+
+.customHandle::after {
+    content: '. . . .';
+    writing-mode: vertical-lr;
+}
+
+
+.customResizeBorder {
+    width: 20px;
+    margin-left: -10px;
+    margin-right: -10px;
+    cursor:col-resize;
+    z-index: 9999;
+}
+
 .material-icons {
     /* use !important to prevent issues with browser extensions that change fonts */
     font-family: 'material-outline-icons' !important;

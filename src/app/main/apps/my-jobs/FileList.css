@@ -28,7 +28,7 @@ display: none;
      margin-bottom: 5px;
   }
   .sort-arrow{
-    opacity: 0;
+    opacity: 0.1;
   }
   .sort-arrow:hover{
     opacity: .5;
