@@ -309,8 +309,8 @@ export const Input = (props) => {
 							required
 						/>
 					</label>
-					{props.formData[1].outputFlag ? <div className="folderPath">{folderChosenPath === '' ? 'No folder specified' : <b onBlur={props.changed} >{folderChosenPath}</b>}</div>
-						: <div className="folderPath">{fileChosen === '' ? 'No file chosen' : <b onBlur={props.changed} >{fileChosen}</b>}</div>}
+					{props.formData[1].outputFlag ? <div className={`folderPath ${folderChosenPath === '' ? '' : 'pathBreak'}`}>{folderChosenPath === '' ? 'No folder specified' : <b onBlur={props.changed} >{folderChosenPath}</b>}</div>
+						: <div className={`folderPath ${fileChosen === '' ? '' : 'pathBreak'}`}>{fileChosen === '' ? 'No file chosen' : <b onBlur={props.changed} >{fileChosen}</b>}</div>}
 				</div>
 			);
 	}
