@@ -129,6 +129,7 @@ const CSonNet_plot = (props) => {
                         value: props.resubmit ? props.resubmit.inputData.output_container :""
                     }]
                  })
+                 props.resubmit && localStorage.setItem('formLastPath',props.resubmit.inputData.output_container)
                  setModelJSON(jobData.input_schema)
                 }
             }
@@ -331,7 +332,9 @@ const CSonNet_plot = (props) => {
                                     <Toaster errorMsg={errorMsg} success={success} id="CSonNet Plotting"></Toaster>
                                 ) : null}
                             <Typography className="h2"><b>CSonNet plot</b></Typography>
-                            <Typography className="h4" style={{ whiteSpace: "break-spaces" }}>&nbsp;{modelJSON.description}</Typography>
+                            <Typography className="h4" style={{ whiteSpace: "break-spaces" }}>&nbsp;{modelJSON.description}
+                            {`. This task outputs files of type ${(jobData.output_files.contents.map(a => a.name)).toString()} in your chosen location. `}
+                            </Typography>
                             <div>
                                 <Formsy
                                     onValid={enableButton}

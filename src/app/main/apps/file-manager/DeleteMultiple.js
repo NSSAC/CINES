@@ -23,6 +23,7 @@ function DeleteMultiple(props) {
 
     useEffect(()=>{
         deleteData.flag === true && props.setDeleteAll(false)
+        // eslint-disable-next-line
     },[deleteData.flag])
 
     function DeleteData() {

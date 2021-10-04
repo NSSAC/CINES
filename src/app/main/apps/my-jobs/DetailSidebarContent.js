@@ -55,7 +55,6 @@ function DetailSidebarContent(props) {
   const [showDialog, setshowDialog] = useState(false);
   const [standardOut, setStandardOut] = useState("");
   const [headerTitle, setHeaderTitle] = useState("");
-  const x = false;
 
   //const opendialog =Boolean;
   const classes = useStyles();
@@ -101,14 +100,13 @@ function DetailSidebarContent(props) {
     history.push("/apps/files" + selectedItem + "/");
   }
 
-  if ((files.payload && files.payload.length === 0) || !selectedItem || (Object.keys(selectedItem).length === 0 && selectedItem.constructor === Object))
-  {
-      return null;
+  if ((files.payload && files.payload.length === 0) || !selectedItem || (Object.keys(selectedItem).length === 0 && selectedItem.constructor === Object)) {
+    return null;
   }
 
 
 
-function convertDate(dateX){
+  function convertDate(dateX) {
     let t = new Date(dateX)
     let date = ('0' + t.getDate()).slice(-2);
     let month = ('0' + (t.getMonth() + 1)).slice(-2);
@@ -118,20 +116,20 @@ function convertDate(dateX){
     let seconds = ('0' + t.getSeconds()).slice(-2);
     let tempDate = `${year}-${month}-${date} ${hours}:${minutes}:${seconds}`;
     dateX = tempDate
-return dateX;
-}
+    return dateX;
+  }
 
-function dateList(){
-  var allDates = ['creation_date','update_date','completed_date','cancelled_date']
+  function dateList() {
+    var allDates = ['creation_date', 'update_date', 'completed_date', 'cancelled_date']
 
-  for(var i=0;i<allDates.length;i++){
-    if (selectedItem && selectedItem[allDates[i]]) {
-      selectedItem[allDates[i]] = convertDate(selectedItem[allDates[i]])
+    for (var i = 0; i < allDates.length; i++) {
+      if (selectedItem && selectedItem[allDates[i]]) {
+        selectedItem[allDates[i]] = convertDate(selectedItem[allDates[i]])
+      }
     }
   }
-}
 
-dateList()
+  dateList()
 
   return (
     <FuseAnimate animation="transition.slideUpIn" delay={200}>
@@ -154,6 +152,11 @@ dateList()
           className="w-full mb-32"
         >
           <Tab
+            icon={<FileIcon alt="File Info" />}
+            className="min-w-0"
+            title="Output"
+          />
+          <Tab
             className="min-w-0"
             icon={<MetadataIcon alt="Metadata" />}
             title="Metadata"
@@ -165,6 +168,73 @@ dateList()
           />
         </Tabs>
         {selectedTab === 0 && (
+          <React.Fragment>
+            {
+              <div>
+                <Typography variant="h6">OUTPUT</Typography>
+              </div>
+            }
+            <table className={clsx(classes.table, "w-full, text-left")}>
+              <tbody>
+                {
+                  <tr>
+                    <th> Output file(s)</th>
+                    {selectedItem.output_container ? (
+                      <td
+                        style={navigateStyle}
+                        onClick={() => navigateFile(selectedItem.output_container + '/' + selectedItem.output_name)}
+                      >
+                        {selectedItem.output_container + '/' + selectedItem.output_name}
+                      </td>
+                    ) : (
+                      <td>none</td>
+                    )}
+                  </tr>
+                }
+                 {
+                  <tr>
+                    <th> Output data</th>
+                    {selectedItem.output ? (
+                      <td>{String(selectedItem.output.output)}</td>
+                    ) : (
+                      <td>none</td>
+                    )}
+                  </tr>
+                }
+
+{selectedItem.stdout ? (
+                  <tr className="state">
+                    <th> Std out</th>
+                    {selectedItem.stdout ? (
+                      <td onClick={openoutputDialog}>
+                        {/* eslint-disable-next-line */}
+                        <a style={{ color: '#1565C0' }} className="cursor-pointer">Click here</a>
+                      </td>
+                    ) : (
+                      <td>-</td>
+                    )}
+                  </tr>
+                ) : null}
+
+                {selectedItem.stderr ? (
+                  <tr className="state">
+                    <th> Std error</th>
+                    {selectedItem.stderr ? (
+                      <td onClick={openErrorDialog}>
+                        {/* eslint-disable-next-line */}
+                        <a style={{ color: '#1565C0' }} className="cursor-pointer">Click here</a>
+                      </td>
+                    ) : (
+                      <td>-</td>
+                    )}
+                  </tr>
+                ) : null}
+              </tbody>
+            </table>
+          </React.Fragment>
+        )}
+
+        {selectedTab === 1 && (
           <React.Fragment>
             {
               <div>
@@ -194,77 +264,11 @@ dateList()
                   </tr>
                 ) : null}
 
-                {selectedItem.output_name ? (
-                  <tr>
-                    <th> Output name</th>
-                    {selectedItem.output_name ? (
-                      <td style={{wordBreak:'break-all'}}> {selectedItem.output_name} </td>
-                    ) : (
-                      "-"
-                    )}
-                  </tr>
-                ) : null}
-
-                {selectedItem.output ? (
-                  <tr>
-                    <th> Output data- {x}</th>
-                    <td> {String(selectedItem.output.output)} </td>
-                  </tr>
-                ) : null}
-
-                {selectedItem.output_container ? (
-                  <tr>
-                    <th> Output Container</th>
-                    {selectedItem.output_container ? (
-                      // <Link
-                      //   to={"/apps/files" + selectedItem.output_container + "/"}
-                      // >
-                      <td
-                        style={navigateStyle}
-                        onClick={() => navigateFile(selectedItem.output_container)}
-                      >
-                        &nbsp;&nbsp;{selectedItem.output_container}{" "}
-                      </td>
-                    ) : (
-                      // </Link>
-                      "-"
-                    )}
-                  </tr>
-                ) : null}
-
-                {selectedItem.stdout ? (
-                  <tr className="state">
-                    <th> Std out</th>
-                    {selectedItem.stdout ? (
-                      <td onClick={openoutputDialog}>
-                        {/* eslint-disable-next-line */}
-                        <a style={{color:'#1565C0'}} className="cursor-pointer">Click here</a>
-                      </td>
-                    ) : (
-                      <td>-</td>
-                    )}
-                  </tr>
-                ) : null}
-
-                {selectedItem.stderr ? (
-                  <tr className="state">
-                    <th> Std error</th>
-                    {selectedItem.stderr ? (
-                      <td onClick={openErrorDialog}>
-                        {/* eslint-disable-next-line */}
-                        <a style={{color:'#1565C0'}} className="cursor-pointer">Click here</a>
-                      </td>
-                    ) : (
-                      <td>-</td>
-                    )}
-                  </tr>
-                ) : null}
-
                 {selectedItem.creation_date ? (
                   <tr className="state">
                     <th> Creation date</th>
                     {selectedItem.creation_date ? (
-                     <td style={{wordBreak:'break-all'}}> {selectedItem.creation_date.replace(/T|Z/g, '  ').split(".")[0]} </td>
+                      <td style={{ wordBreak: 'break-all' }}> {selectedItem.creation_date.replace(/T|Z/g, '  ').split(".")[0]} </td>
                     ) : (
                       <td>-</td>
                     )}
@@ -275,18 +279,18 @@ dateList()
                   <tr className="state">
                     <th> Modified date</th>
                     {selectedItem.update_date ? (
-                     <td style={{wordBreak:'break-all'}}> {selectedItem.update_date.replace(/T|Z/g, '  ').split(".")[0]} </td>
+                      <td style={{ wordBreak: 'break-all' }}> {selectedItem.update_date.replace(/T|Z/g, '  ').split(".")[0]} </td>
                     ) : (
                       <td>-</td>
                     )}
                   </tr>
                 ) : null}
 
-                 {selectedItem.completed_date ? (
+                {selectedItem.completed_date ? (
                   <tr className="state">
                     <th>Completed date</th>
                     {selectedItem.completed_date ? (
-                     <td style={{wordBreak:'break-all'}}>{selectedItem.completed_date.replace(/T|Z/g, '  ').split(".")[0]} </td>
+                      <td style={{ wordBreak: 'break-all' }}>{selectedItem.completed_date.replace(/T|Z/g, '  ').split(".")[0]} </td>
                     ) : (
                       <td>-</td>
                     )}
@@ -297,18 +301,18 @@ dateList()
                   <tr className="state">
                     <th>Cancelled date</th>
                     {selectedItem.cancelled_date ? (
-                     <td style={{wordBreak:'break-all'}}>{selectedItem.cancelled_date.replace(/T|Z/g, '  ').split(".")[0]} </td>
+                      <td style={{ wordBreak: 'break-all' }}>{selectedItem.cancelled_date.replace(/T|Z/g, '  ').split(".")[0]} </td>
                     ) : (
                       <td>-</td>
                     )}
                   </tr>
                 ) : null}
 
-                 {selectedItem.created_by ? (
+                {selectedItem.created_by ? (
                   <tr className="state">
                     <th>Created by</th>
                     {selectedItem.created_by ? (
-                     <td style={{wordBreak:'break-all'}}> {selectedItem.created_by} </td>
+                      <td style={{ wordBreak: 'break-all' }}> {selectedItem.created_by} </td>
                     ) : (
                       <td>-</td>
                     )}
@@ -319,7 +323,7 @@ dateList()
                   <tr className="state">
                     <th>Exit code</th>
                     {selectedItem.exit_code ? (
-                     <td style={{wordBreak:'break-all'}}> {selectedItem.exit_code} </td>
+                      <td style={{ wordBreak: 'break-all' }}> {selectedItem.exit_code} </td>
                     ) : (
                       <td>-</td>
                     )}
@@ -330,20 +334,20 @@ dateList()
                   <tr className="state">
                     <th>Failure type</th>
                     {selectedItem.failure_type ? (
-                     <td style={{wordBreak:'break-all'}}> {selectedItem.failure_type} </td>
+                      <td style={{ wordBreak: 'break-all' }}> {selectedItem.failure_type} </td>
                     ) : (
                       <td>-</td>
                     )}
                   </tr>
                 ) : null}
 
-                 {selectedItem.status ? (
+                {selectedItem.status ? (
                   <tr className="state">
                     <th> Status</th>
                     {selectedItem.status ? (
-                      <td onClick={()=>openDialog(['Status',selectedItem.status])}>
+                      <td onClick={() => openDialog(['Status', selectedItem.status])}>
                         {/* eslint-disable-next-line */}
-                        <a style={{color:'#1565C0'}} className="cursor-pointer">Click here</a>
+                        <a style={{ color: '#1565C0' }} className="cursor-pointer">Click here</a>
                       </td>
                     ) : (
                       <td>-</td>
@@ -356,7 +360,7 @@ dateList()
           </React.Fragment>
         )}
 
-        {selectedTab === 1 && selectedItem.input_files && selectedItem.input && (
+        {selectedTab === 2 && selectedItem.input_files && selectedItem.input && (
           <React.Fragment>
             {selectedItem.input_files.length > 0 && <div>
               <Typography variant="h6">INPUT FILE</Typography>
@@ -401,7 +405,7 @@ dateList()
                         <tr>
                           <th title={data[0]} style={labelEllipsis}>{data[0]}:</th>
                           {(() => {
-                            if ((data[0].includes('inputFile') || data[0].toLowerCase().includes('graph') || data[0] === 'csonnet_data_analysis' ||  data[0] === 'csonnet_simulation') && data[0] !== 'output_GraphType') {
+                            if ((data[0].includes('inputFile') || data[0].toLowerCase().includes('graph') || data[0] === 'csonnet_data_analysis' || data[0] === 'csonnet_simulation') && data[0] !== 'output_GraphType') {
                               return (
                                 <td style={navigateStyle} onClick={() => navigateFile(data[1])}>{data[1]}</td>
                               )
@@ -409,7 +413,7 @@ dateList()
                               return (
                                 <td onClick={() => openDialog(data)}>
                                   {/* eslint-disable-next-line */}
-                                  <a style={{color:'#1565C0'}} className="cursor-pointer">Click here</a>
+                                  <a style={{ color: '#1565C0' }} className="cursor-pointer">Click here</a>
                                 </td>
                               )
                             } else {

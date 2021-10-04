@@ -26,6 +26,7 @@ function MyJobsApp(props) {
   const [onload, setOnLoad] = useState(false);
   const [changeState, setChangeState] = useState(0);
   const history = useHistory();
+  var path = window.location.pathname;
 
   useEffect(() => {
     setOnLoad(true);
@@ -52,7 +53,6 @@ function MyJobsApp(props) {
 
   useEffect(()=>{
     return () => {dispatch(Actions.clearData());}
-                //  dispatch(Actions.clearSelectedItem());}
         /* eslint-disable-next-line */
   },[props.history])
 
@@ -111,7 +111,7 @@ function MyJobsApp(props) {
               </div>
             </div>
 
-            <div>
+            {path.endsWith('my-jobs/') === true && <div>
               {sessionStorage.getItem("preJobTypeValue") &&
               JSON.parse(sessionStorage.getItem("preJobTypeValue")).length !==
                 0 ? (
@@ -150,15 +150,15 @@ function MyJobsApp(props) {
                     }
                   )
                 : null}
-            </div>
+            </div>}
 
-            <FuseAnimate animation="transition.expandIn" delay={200}>
+            {path.endsWith('my-jobs/') === true && <FuseAnimate animation="transition.expandIn" delay={200}>
               <Tooltip title="Filter" placement="bottom">
                 <IconButton aria-label="search" onClick={showFileUploadDialog}>
                   <Icon>filter_list</Icon>
                 </IconButton>
               </Tooltip>
-            </FuseAnimate>
+            </FuseAnimate>}
           </div>
 
           <div className="flex flex-1 items-end">
@@ -190,8 +190,8 @@ function MyJobsApp(props) {
       leftSidebarVariant="temporary"
       leftSidebarHeader={<MainSidebarHeader />}
       leftSidebarContent={<MainSidebarContent />}
-      rightSidebarHeader={<DetailSidebarHeader pageLayout={pageLayout} history={history}/>}
-      rightSidebarContent={<DetailSidebarContent/>}
+      rightSidebarHeader={path.endsWith('my-jobs/') === true && <DetailSidebarHeader pageLayout={pageLayout} history={history}/>}
+      rightSidebarContent={path.endsWith('my-jobs/') === true && <DetailSidebarContent/>}
       ref={pageLayout}
       innerScroll
     />

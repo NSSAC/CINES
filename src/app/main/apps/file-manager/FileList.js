@@ -99,6 +99,49 @@ function FileList(props) {
     const [moveAll, setMoveAll] = useState(false);
     const [selectedCount, setSelectedCount] = useState(0);
 
+    const handleCheckboxClick = (event, node, row) => {
+        event !== null && event.stopPropagation();
+        const selectedIndex = selected.indexOf(node);
+        let newSelected = [];
+
+        if(row){
+           newSelected.push(node)
+           setSelectedCount(1)
+        }
+       else{
+        if (selectedIndex === -1) {
+            setSelectedCount(selectedCount + 1)
+            newSelected = newSelected.concat(selected, node);
+        } else if (selectedIndex === 0) {
+            newSelected = newSelected.concat(selected.slice(1));
+            setSelectedCount(selectedCount - 1)
+        } else if (selectedIndex === selected.length - 1) {
+            newSelected = newSelected.concat(selected.slice(0, -1));
+            setSelectedCount(selectedCount - 1)
+        } else if (selectedIndex > 0) {
+            setSelectedCount(selectedCount - 1)
+            newSelected = newSelected.concat(
+                selected.slice(0, selectedIndex),
+                selected.slice(selectedIndex + 1)
+            );
+        }}
+        setSelected(newSelected);
+        if(newSelected.length === 1)
+        dispatch(Actions.setSelectedItem(newSelected[0].id));
+         
+    };
+
+    const handleAllCheckboxClick = (event, modifiedData) => {
+        if (event.target.checked) {
+            setSelected(modifiedData.map(n => n))
+            setSelectedCount(modifiedData.length)
+        }
+        else {
+            setSelected([selectedItem])
+            setSelectedCount(1)
+        }
+    }
+
     function populateFiles(obj) {
         sessionStorage.removeItem('sortedFiles')
 
@@ -136,6 +179,8 @@ function FileList(props) {
             }
         }
     }
+
+    const isSelected1 = node => selected.indexOf(node) !== -1
 
     const infoIcon = {
         right: '0',
@@ -302,7 +347,7 @@ function FileList(props) {
 
     useEffect(() => {
         localStorage.setItem('selectedCount', selectedCount)
-        selectedCount === 0 ? localStorage.setItem('checked', false) : localStorage.setItem('checked', true)
+        selectedCount < 2 ? localStorage.setItem('checked', false) : localStorage.setItem('checked', true)
         selectedItem && dispatch(Actions.setSelectedItem(selectedItem))
         selectedItem && dispatch(Actions.setSelectedItem(selectedItem.id))
                 // eslint-disable-next-line
@@ -335,50 +380,14 @@ function FileList(props) {
         if (searchResults.length > 0) {
             if (document.getElementsByClassName("fileRows").length > 0)
                 document.getElementsByClassName("fileRows")[0].click()
+             setSelected([searchResults[0]])
+             setSelectedCount(1)
         }
-        setSelected([])
-        setSelectedCount(0)
         localStorage.setItem('checked', false)
 
         if (document.getElementsByClassName('FileWrapper').length > 0)
             document.getElementsByClassName('FileWrapper')[0].scrollTo(0, 0)
     }, [searchResults])
-
-    const handleCheckboxClick = (event, node) => {
-        event.stopPropagation();
-        const selectedIndex = selected.indexOf(node);
-        let newSelected = [];
-
-        if (selectedIndex === -1) {
-            setSelectedCount(selectedCount + 1)
-            newSelected = newSelected.concat(selected, node);
-        } else if (selectedIndex === 0) {
-            newSelected = newSelected.concat(selected.slice(1));
-            setSelectedCount(selectedCount - 1)
-        } else if (selectedIndex === selected.length - 1) {
-            newSelected = newSelected.concat(selected.slice(0, -1));
-            setSelectedCount(selectedCount - 1)
-        } else if (selectedIndex > 0) {
-            setSelectedCount(selectedCount - 1)
-            newSelected = newSelected.concat(
-                selected.slice(0, selectedIndex),
-                selected.slice(selectedIndex + 1)
-            );
-        }
-        setSelected(newSelected);
-    };
-
-    const handleAllCheckboxClick = (event, modifiedData) => {
-        if (event.target.checked) {
-            setSelected(modifiedData.map(n => n))
-            setSelectedCount(modifiedData.length)
-        }
-        else {
-            setSelected([])
-            setSelectedCount(0)
-            console.log(selected)
-        }
-    }
 
     const handleDeleteAll = () => {
         setAnchorEl(null)
@@ -408,7 +417,6 @@ function FileList(props) {
         setMoveAll(false)
     }
 
-    const isSelected1 = node => selected.indexOf(node) !== -1
     function onClickHandler(node, canLink) {
         return function (evt) {
             if (evt.detail === 1)
@@ -467,6 +475,7 @@ function FileList(props) {
                     props.history.push(target);
                 }
             dispatch(Actions.setSelectedItem(node.id));
+            selectedCount === 1 && handleCheckboxClick(evt,node,'row')
             setTimeout(() => {
                 document.getElementsByClassName("sidebarScroll").length > 0 && document.getElementsByClassName("sidebarScroll")[2].scrollTo(0, 0)
             }, 0);

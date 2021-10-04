@@ -93,7 +93,7 @@ export const Input = (props) => {
 			}}
 			header={
 				<div>
-					{props.formData[1].type===undefined && <FMPopup
+					{showFMDialog && <FMPopup
 						showModal={showFMDialog}
 						setShowModal={(p) => setShowFMDialog(p)}
 						handleFMClose={handleFMClose}

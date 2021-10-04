@@ -376,7 +376,7 @@ function DetailSidebarContent(props) {
                         // valueRenderer={(raw) => <div>{raw}</div>}
                         />
                         <div><Typography variant="h6" style={{ display: "inline-flex" }}>USER META</Typography>
-                            {canWrite && props.editContent && <Tooltip title="Edit" placement="top">
+                            {canWrite && props.editContent && props.isContainer && <Tooltip title="Edit" placement="top">
                                 <IconButton onClick={OnEditClick}>
                                     <Icon>edit</Icon>
                                 </IconButton>
@@ -403,7 +403,7 @@ function DetailSidebarContent(props) {
                                 fontWeight: 'bold'
                             }
                         }} />}
-                        {!props.editContent && <Editor htmlElementProps={styleEditor} mode={Editor.modes.form} value={selectedItem.usermeta} name={selectedItem.name} search={true} allowedModes={[Editor.modes.form, Editor.modes.tree]} history={true} limitDragging={true} enableSort={false} enableTransform={false} onModeChange={OnModeChange} onChange={handleUsermetaChange} />}
+                        {!props.editContent && <Editor htmlElementProps={styleEditor} mode={Editor.modes.tree} value={selectedItem.usermeta} name={selectedItem.name} search={true} allowedModes={[Editor.modes.tree, Editor.modes.form]} history={true} limitDragging={true} enableSort={false} enableTransform={false} onModeChange={OnModeChange} onChange={handleUsermetaChange} />}
                         {/* </div> */}
                     </div>
                 )}

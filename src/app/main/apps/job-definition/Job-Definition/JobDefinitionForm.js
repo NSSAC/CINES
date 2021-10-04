@@ -14,6 +14,7 @@ import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import * as Actions from "./store/actions";
 import { JobService } from "node-sciduct";
+import MetadataInfoDialog from "../../my-jobs/MetadataDialog";
 
 function JobDefinitionForm(props) {
   const jobData = useSelector(
@@ -29,6 +30,9 @@ function JobDefinitionForm(props) {
   const [isToasterFlag, setIsToasterFlag] = useState(false);
   const [spinnerFlag, setSpinnerFlag] = useState(true);
   const [onSubmit, setOnSubmit] = useState()
+  const [showDialog, setshowDialog] = useState(false);
+  const [standardOut, setStandardOut] = useState("");
+  const [headerTitle, setHeaderTitle] = useState("");
   const dispatch = useDispatch()
 
   var path = window.location.pathname;
@@ -52,7 +56,20 @@ function JobDefinitionForm(props) {
     borderTop: "2px solid black",
   };
 
+  const hereButton = {
+    fontFamily: 'Muli,Roboto,"Helvetica",Arial,sans-serif',
+    fontSize: '15px',
+    fontWeight: '500',
+    color: 'deepskyblue'
+  }
+
   const history = useHistory();
+
+  useEffect(() => {
+    return (
+      localStorage.removeItem('formLastPath')
+    )
+  }, [])
 
   useEffect(() => {
     setIsToasterFlag(false);
@@ -76,6 +93,16 @@ function JobDefinitionForm(props) {
     // eslint-disable-next-line
   }, [jobData.id]);
 
+  const openDialog = (data) => {
+    setshowDialog(true);
+    setStandardOut(data[1]);
+    setHeaderTitle(data[0]);
+  }
+
+  const handleClose = () => {
+    setshowDialog(false);
+  };
+
   const creatForm = (
     createFromData,
     inputFileData,
@@ -92,8 +119,12 @@ function JobDefinitionForm(props) {
           obj["id"] = index;
           obj["formLabel"] = obj.name;
           obj["outputFlag"] = false;
-          if (props.resubmit)
+          // obj["required"] = obj.required
+          if (props.resubmit){
             obj["value"] = props.resubmit.inputData.input[obj.name];
+            if (outputFiles === undefined) 
+              localStorage.setItem('formLastPath',props.resubmit.inputData.input[obj.name])
+          }
           else
             obj["value"] = "";
         }
@@ -137,6 +168,7 @@ function JobDefinitionForm(props) {
 
       }
       if (outputFiles !== undefined) {
+        props.resubmit && localStorage.setItem('formLastPath',props.resubmit.inputData.output_container)
         let outputContainer = {
           id: 200,
           formLabel: "output_container",
@@ -286,15 +318,28 @@ function JobDefinitionForm(props) {
   if (spinnerFlag === false && flag === true) {
     return (
       <div style={{ paddingLeft: "8px" }}>
+        <MetadataInfoDialog
+          opendialog={showDialog}
+          closedialog={handleClose}
+          standardout={standardOut}
+          headertitle={headerTitle}
+        ></MetadataInfoDialog>
+
         {isToasterFlag ? (
           <Toaster errorMsg={errorMsg} success={success} id={response.id}></Toaster>
         ) : null}
         <Typography className="h2">
           &nbsp;{response !== "" ? <b>{response.id}</b> : null}
         </Typography>
-        <Typography className="h4">
+        <span className="h4">
           &nbsp;{response !== "" ? response.description : null}
-        </Typography>
+          {response.output_files && response.output_files.type !== 'folder' && (typeof (response.output_files.type) === 'string' ? ` This task outputs a file of type ${response.output_files.type} in your chosen location ` : ` This task outputs a file of type ${Object.values(response.output_files.type)[0]} in your chosen location `)}
+          {response.output_files && response.output_files.contents && ` This task outputs files of type ${(response.output_files.contents.map(a => a.type)).toString()} in your chosen location. `}
+          {response.output_files && response.output_schema && response.output_schema.properties && ` along with output data attached to the job. Click `}
+          {!response.output_files && response.output_schema && response.output_schema.properties && ` This task outputs data attached to the job. Click `}
+        </span>
+        {response.output_schema && response.output_schema.properties && <button className='cursor-pointer' style={hereButton} onClick={() => openDialog(['Output schema', response.output_schema])}> here </button>}
+        <span>{response.output_schema && response.output_schema.properties && ' to see the schema of the output.'} </span>
         <div>
           {Object.entries(formElementsArray).length !== 0 ? (
             <Formsy
@@ -366,7 +411,7 @@ function JobDefinitionForm(props) {
                       color="primary"
                       className="w-30 mx-8 mt-32 mb-80">
                       Cancel
-                </Button>
+                    </Button>
                   </Link>}
               </div>
             </Formsy>

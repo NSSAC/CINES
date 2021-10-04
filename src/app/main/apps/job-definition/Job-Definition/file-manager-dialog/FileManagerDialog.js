@@ -35,9 +35,10 @@ function FMPopup({
   fileTypes,
 }) {
   const dispatch = useDispatch();
+  var formLastPath = localStorage.getItem('formLastPath')
   const files = useSelector(({ fMApp }) => fMApp.files);
   const selectedItem = useSelector(({ fMApp }) => files[fMApp.selectedItemId]);
-  const [targetPath, setTargetPath] = useState("/home/");
+  const [targetPath, setTargetPath] = useState(formLastPath ? formLastPath : '/home/')
   const [searchbool, setSearchbool] = useState(false);
   const [search, setSearch] = useState("");
   const [checkFlag, setcheckFlag] = useState(false);
@@ -54,6 +55,7 @@ function FMPopup({
         if (node.name === uploadFile) {
             setFileChosen(targetPath + node.name);
             setFileChosenPath(targetPath + node.name);
+            targetPath.includes('/home') && localStorage.setItem("formLastPath",targetPath)
             setUploadFile("");
             setTargetPath("/home/");
             setSearch("");
@@ -74,6 +76,7 @@ function FMPopup({
     setFileChosenPath(targetPath + selectedItem.name);
     setSearch("");
     setTargetPath("/home/");
+    targetPath.includes('/home') && localStorage.setItem("formLastPath",targetPath)
     handleFMClose();
   };
 
@@ -90,7 +93,7 @@ function FMPopup({
 
   function showFileUploadDialog() {
     setshowDialog(true);
-    handleFMClose();
+    document.getElementById('FMPopUp').style.contentVisibility='hidden'
   }
 
   function handleClose() {
@@ -199,6 +202,9 @@ function FMPopup({
         onExiting={onExiting}
         maxWidth="lg"
         disableBackdropClick
+        PaperProps={{
+        id:'FMPopUp'
+        }}
       >
         <DialogTitle id="alert-dialog-title">
           <div className="flex items-center justify-between">

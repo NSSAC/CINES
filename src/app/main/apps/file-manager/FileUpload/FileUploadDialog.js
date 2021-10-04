@@ -168,7 +168,7 @@ export const FileUpload = ({ allFilesType,fileTypes, setUploadFile, dialogTarget
     setUploadedfiles([...fileData1]);
     handleClose()
     if (dialogTargetPath)
-      setShowModal(true);
+    document.getElementById('FMPopUp').style.contentVisibility='visible'
   }
 
   const OnUploadAndSubmit = () => {

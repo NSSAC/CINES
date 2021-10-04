@@ -92,6 +92,7 @@ const CSonNet_Contagion_Simulation = (props) => {
                             value: props.resubmit ? props.resubmit.inputData.output_container : "",
                         }]
                     })
+                    props.resubmit && localStorage.setItem('formLastPath',props.resubmit.inputData.output_container)
                     setInputSchema(jobData.input_schema)
 
                 }
@@ -395,7 +396,9 @@ const CSonNet_Contagion_Simulation = (props) => {
                                     <Toaster errorMsg={errorMsg} success={success} id="CSonNet Contagion Simulation"></Toaster>
                                 ) : null}
                                 <Typography className="h2"><b>CSonNet Contagion Simulation</b></Typography>
-                                <Typography className="h4" style={descStyle}>&nbsp;{modelJSON['description']}</Typography>
+                                <Typography className="h4" style={descStyle}>&nbsp;{modelJSON['description']}
+                                {`. This task outputs a file of type ${jobData.output_files.type} in your chosen location `}
+                                </Typography>
                                 <Formsy
                                     onValid={enableButton}
                                     onInvalid={disableButton}

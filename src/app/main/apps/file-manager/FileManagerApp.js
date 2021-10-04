@@ -35,6 +35,8 @@ import FMInstance from './FileManagerService'
 import { RenameFile } from "./RenameFile";
 
 function FileManagerApp(props) {
+  const files = useSelector(({ fileManagerApp }) => fileManagerApp.files);
+  const selectedFile = useSelector(({ fileManagerApp }) => files[fileManagerApp.selectedItemId]);
   const [searchbool, setSearchbool] = useState(false);
   const [search, setSearch] = useState("");
   const [editContent, setEditContent] = useState(true);
@@ -53,7 +55,6 @@ function FileManagerApp(props) {
   const history = useHistory();
   // eslint-disable-next-line
   const [ignored, forceUpdate] = useReducer(x => x + 1, 0);
-  const files = useSelector(({ fileManagerApp }) => fileManagerApp.files);
   var path = window.location.pathname;
   var pathEnd = path.charAt(path.length - 1);
   var token = localStorage.getItem("id_token");
@@ -139,7 +140,7 @@ function FileManagerApp(props) {
   }
 
   function OnRefresh() {
-    if (targetPath.charAt(targetPath.length-1) !== "/")
+    if (targetPath.charAt(targetPath.length - 1) !== "/")
       targetPath = targetPath + "/";
     dispatch(Actions.getFiles(targetPath, "GET_FILES"));
     setSearch('')
@@ -247,15 +248,15 @@ function FileManagerApp(props) {
   var readPermission = localStorage.getItem("readPermission");
   return (
     <FusePageSimple
-    classes={{
-      root: "bg-red",
-      content:'overflowContentFiles',
-      header: "h-auto min-h-128 sm:h-auto sm:min-h-140",
-      sidebarHeader: "h-auto min-h-128 sm:h-auto sm:min-h-140 sidebarHeader1",
-      sidebarContent: "sidebarWrapper",
-      rightSidebar: "sidebarStyle",
-      contentWrapper: "FileWrapper",
-    }}
+      classes={{
+        root: "bg-red",
+        content: 'overflowContentFiles',
+        header: "h-auto min-h-128 sm:h-auto sm:min-h-140",
+        sidebarHeader: "h-auto min-h-128 sm:h-auto sm:min-h-140 sidebarHeader1",
+        sidebarContent: "sidebarWrapper",
+        rightSidebar: "sidebarStyle",
+        contentWrapper: "FileWrapper",
+      }}
       header={
         <div
           className="flex flex-col flex-1 p-8 sm:p-12 relative"
@@ -299,7 +300,7 @@ function FileManagerApp(props) {
               />
             </div>
             <div>
-            <RenameFile
+              <RenameFile
                 showModal={showRenameDialog}
                 selectedItem={selectedItem}
                 props={props}
@@ -368,10 +369,10 @@ function FileManagerApp(props) {
                       )}
                       <div>
                         <Tooltip title="Click to Refresh" placement="bottom">
-                        <IconButton className="w-64 h-64" onClick={() => OnRefresh()}>
-                          <Icon >refresh</Icon>
-                        </IconButton>
-                      </Tooltip>
+                          <IconButton className="w-64 h-64" onClick={() => OnRefresh()}>
+                            <Icon >refresh</Icon>
+                          </IconButton>
+                        </Tooltip>
                       </div>
                     </div>
                   </span>
@@ -445,14 +446,18 @@ function FileManagerApp(props) {
       leftSidebarHeader={<MainSidebarHeader />}
       leftSidebarContent={<MainSidebarContent />}
       rightSidebarHeader={
-        ((containerFlag && isFolder && Object.values(files).length !== 0) ||
-          targetMeta === "") && <DetailSidebarHeader pageLayout={pageLayout} setSelectedItem={(p)=>{setSelectedItem(p)}} showRenameDialog={(p)=>{setShowRenameDialog(p)}}/>
+        // ((containerFlag && isFolder && Object.values(files).length !== 0) ||
+        //   targetMeta === "") &&
+        selectedFile && <DetailSidebarHeader pageLayout={pageLayout} isContainer={containerFlag === true || containerFlag === undefined || id === null ? true : false}
+          setSelectedItem={(p) => { setSelectedItem(p) }} showRenameDialog={(p) => { setShowRenameDialog(p) }} />
       }
       rightSidebarContent={
-        ((containerFlag && isFolder && Object.values(files).length !== 0) ||
-          targetMeta === "") && (
+        // ((containerFlag && isFolder && Object.values(files).length !== 0) ||
+        //   targetMeta === "") && 
+        selectedFile && (
           <DetailSidebarContent
             pageLayout={pageLayout}
+            isContainer={containerFlag === true || containerFlag === undefined || id === null ? true : false}
             setPrompt={(p) => setPrompt(p)}
             editContent={editContent}
             setEditContent={(p) => setEditContent(p)}

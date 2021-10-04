@@ -6,6 +6,8 @@ import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import * as Actions from './store/actions';
 import './FileList.css'
 import 'fix-date'
+import { Link } from 'react-router-dom';
+import JobData from './JobData';
 
 function MyJobsFileList(props) {
     const dispatch = useDispatch();
@@ -15,6 +17,7 @@ function MyJobsFileList(props) {
     const [dataSpinner, setDataSpinner] = useState(true);
     var onloadSpinner = false;
     var files = Object.values(files1);
+    var path = window.location.pathname;
     var totalRecords;
 
 
@@ -30,7 +33,7 @@ function MyJobsFileList(props) {
         }
         files = files[1]
         onloadSpinner = true;
-        if (selectedId === undefined && files.length > 0) {
+        if (selectedId === undefined && files.length > 0 && path.endsWith('my-jobs/') === true) {
             dispatch(Actions.setSelectedItem(files[0].id));
         }
 
@@ -138,10 +141,10 @@ function MyJobsFileList(props) {
 
     })
 
-    useEffect(()=>{
+    useEffect(() => {
         if (document.getElementsByClassName("jobRows").length > 0)
             document.getElementsByClassName("jobRows")[0].click()
-    },[page])
+    }, [page])
 
     const handleChangePage = (event, newPage) => {
         setSpinnerFlag(true)
@@ -247,9 +250,9 @@ function MyJobsFileList(props) {
         );
 
     if (spinnerFlag === false && dataSpinner === false && files.length > 0) {
+      if(path.endsWith('my-jobs/') === true)
         return (
             <div>
-
                 <FuseAnimate animation="transition.slideUpIn" delay={100}>
                     <TableContainer className='overflowContentJob' component={Paper}>
                         <Table stickyHeader className='webkitSticky' aria-label="a dense table">
@@ -315,7 +318,7 @@ function MyJobsFileList(props) {
                                                 onClick={() => onRowClick(row.id)}
                                             >
                                                 <TableCell>
-                                                    {row.id}
+                                                    {<Link style={{color: "#1565C0"}} to={row.id}>{row.id}</Link>}
                                                 </TableCell >
                                                 <TableCell >
                                                     {row.job_definition.replace('net.science/', "")}
@@ -372,6 +375,10 @@ function MyJobsFileList(props) {
 
             </div>
         );
+
+        else{
+            return <JobData></JobData>;
+        }
     }
 
     else if (files.length === 0 && onloadSpinner) {
