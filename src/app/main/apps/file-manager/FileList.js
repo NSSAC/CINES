@@ -553,7 +553,7 @@ function FileList(props) {
                                             </Menu>
                                         </div>
                                     </TableCell>
-                                    <TableCell>Name{searchResults.some(result => result.name !== searchResults[0].name) && ((sortByName) ?
+                                    <TableCell>Name{searchResults.some(result => result.name !== searchResults[0].name) ? ((sortByName) ?
 
                                         <Tooltip title="Sort by Name" placement="bottom">
                                             <IconButton aria-label="arrow_upward" onClick={() => toggleSorting('asc', 'sortByName')}>
@@ -566,7 +566,12 @@ function FileList(props) {
                                             <IconButton aria-label="arrow_downward" onClick={() => toggleSorting('desc', 'sortByName')}>
                                                 <Icon className={sortNameFlag ? "" : "sort-arrow"}>arrow_downward</Icon></IconButton>
                                         </Tooltip>
-                                    )}</TableCell>
+                                    ) :
+                                     <Tooltip title="Sort by Name" placement="bottom">
+                                            <IconButton style={{visibility:'hidden'}} aria-label="arrow_downward" onClick={() => toggleSorting('desc', 'sortByName')}>
+                                                <Icon className={sortNameFlag ? "" : "sort-arrow"}>arrow_downward</Icon></IconButton>
+                                        </Tooltip>
+                                    }</TableCell>
                                     <TableCell className="hidden sm:table-cell">Type{searchResults.some(result => result.type !== searchResults[0].type) && ((sortByType) ?
 
                                         <Tooltip title="Sort by Type" placement="bottom">

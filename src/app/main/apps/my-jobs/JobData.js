@@ -88,12 +88,12 @@ function JobData() {
 
                 <div className='m-10'>
                     <Typography variant="h5">Output</Typography>
-                    <Typography><span style={{ fontWeight: '700' }}>Output file-</span>: {selectedItem.output_container ? <span style={navigateStyle} onClick={() => navigateFile(selectedItem.output_container + '/' + selectedItem.output_name)}>{selectedItem.output_container + '/' + selectedItem.output_name}</span> : 'none'}</Typography>
+                    <Typography><span style={{ fontWeight: '700' }}>Output file</span>: {selectedItem.output_container ? <span style={navigateStyle} onClick={() => navigateFile(selectedItem.output_container + '/' + selectedItem.output_name)}>{selectedItem.output_container + '/' + selectedItem.output_name}</span> : 'none'}</Typography>
                     <Typography><span style={{ fontWeight: '700' }}>Output data</span>: {selectedItem.output ? <span>{String(selectedItem.output.output)}</span> : 'none'}</Typography>
-                    {selectedItem.stdout && <Typography><span style={{ fontWeight: '700' }}>Std out-</span>: {<span onClick={() => openoutputDialog()}>
+                    {selectedItem.stdout && <Typography><span style={{ fontWeight: '700' }}>Std out</span>: {<span onClick={() => openoutputDialog()}>
                     <button style={hereButton} className="cursor-pointer">Click here</button>
                     </span>}</Typography>}
-                    {selectedItem.stderr && <Typography><span style={{ fontWeight: '700' }}>Std error-</span>: {<span onClick={() => openErrorDialog()}>
+                    {selectedItem.stderr && <Typography><span style={{ fontWeight: '700' }}>Std error</span>: {<span onClick={() => openErrorDialog()}>
                     <button style={hereButton} className="cursor-pointer">Click here</button>
                     </span>}</Typography>}
                 </div>
@@ -116,9 +116,9 @@ function JobData() {
                     {selectedItem.input_files.map((data, index) => {
                         return (
                             <div>
-                                {data.name && <Typography><span style={{ fontWeight: '700' }}>File-</span>: {data.name}</Typography>}
-                                {data.id && <Typography><span style={{ fontWeight: '700' }}>Id-</span>: {data.id}</Typography>}
-                                {data.type && <Typography><span style={{ fontWeight: '700' }}>Type-</span>: {data.type}</Typography>}
+                                {data.name && <Typography><span style={{ fontWeight: '700' }}>File</span>: {data.name}</Typography>}
+                                {data.id && <Typography><span style={{ fontWeight: '700' }}>Id</span>: {data.id}</Typography>}
+                                {data.type && <Typography><span style={{ fontWeight: '700' }}>Type</span>: {data.type}</Typography>}
                             </div>
                         )
                     })}
@@ -130,7 +130,7 @@ function JobData() {
                         inputPar(data)
                         return (
                             <div>
-                                <Typography><span style={{ fontWeight: '700' }}>{data[0]}-</span>: {x}</Typography>
+                                <Typography><span style={{ fontWeight: '700' }}>{data[0]}</span>: {x}</Typography>
                             </div>
                         )
                     })}

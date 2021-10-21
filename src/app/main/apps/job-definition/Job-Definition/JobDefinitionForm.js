@@ -123,7 +123,7 @@ function JobDefinitionForm(props) {
           if (props.resubmit){
             obj["value"] = props.resubmit.inputData.input[obj.name];
             if (outputFiles === undefined) 
-              localStorage.setItem('formLastPath',props.resubmit.inputData.input[obj.name])
+              localStorage.setItem('formLastPath',props.resubmit.inputData.input[obj.name].substr(0, props.resubmit.inputData.input[obj.name].lastIndexOf("\/")) + '/')
           }
           else
             obj["value"] = "";
@@ -168,7 +168,7 @@ function JobDefinitionForm(props) {
 
       }
       if (outputFiles !== undefined) {
-        props.resubmit && localStorage.setItem('formLastPath',props.resubmit.inputData.output_container)
+        props.resubmit && localStorage.setItem('formLastPath',props.resubmit.inputData.output_container + '/')
         let outputContainer = {
           id: 200,
           formLabel: "output_container",
@@ -333,7 +333,8 @@ function JobDefinitionForm(props) {
         </Typography>
         <span className="h4">
           &nbsp;{response !== "" ? response.description : null}
-          {response.output_files && response.output_files.type !== 'folder' && (typeof (response.output_files.type) === 'string' ? ` This task outputs a file of type ${response.output_files.type} in your chosen location ` : ` This task outputs a file of type ${Object.values(response.output_files.type)[0]} in your chosen location `)}
+          {response.output_files && response.output_files.type !== 'folder' && (typeof (response.output_files.type) === 'string' ? ` This task outputs a file of type ${response.output_files.type} in your chosen location` : ` This task outputs a file depending on selected ${Object.values(response.output_files.type)[0].split(/[/ ]+/).pop()} in your chosen location`)}
+          {response.output_files && !response.output_schema && <span>.</span>} 
           {response.output_files && response.output_files.contents && ` This task outputs files of type ${(response.output_files.contents.map(a => a.type)).toString()} in your chosen location. `}
           {response.output_files && response.output_schema && response.output_schema.properties && ` along with output data attached to the job. Click `}
           {!response.output_files && response.output_schema && response.output_schema.properties && ` This task outputs data attached to the job. Click `}

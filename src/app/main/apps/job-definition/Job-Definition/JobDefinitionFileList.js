@@ -278,13 +278,13 @@ function JobDefinitionFileList(props) {
                             <Typography>Description</Typography>
                             <span style={{ fontWeight: "700" }}>
                               {row.description}
-                              {row.output_files && row.output_files.type !== 'folder' && (typeof (row.output_files.type) === 'string' ? ` This task outputs a file of type ${row.output_files.type} in your chosen location ` : ` This task outputs a file of type ${Object.values(row.output_files.type)[0]} in your chosen location `)}
+                              {/* {row.output_files && row.output_files.type !== 'folder' && (typeof (row.output_files.type) === 'string' ? ` This task outputs a file of type ${row.output_files.type} in your chosen location ` : ` This task outputs a file of type ${Object.values(row.output_files.type)[0]} in your chosen location `)}
                               {row.output_files && row.output_files.contents && ` This task outputs files of type ${(row.output_files.contents.map(a => a.type)).toString()} in your chosen location. `}
                               {row.output_files && row.output_schema && row.output_schema.properties && ` along with output data attached to the job. Click `}
-                              {!row.output_files && row.output_schema && row.output_schema.properties && ` This task outputs data attached to the job. Click `}
+                              {!row.output_files && row.output_schema && row.output_schema.properties && ` This task outputs data attached to the job. Click `} */}
                             </span>
-                            {row.output_schema && row.output_schema.properties && <button className='cursor-pointer' style={hereButton} onClick={() => openDialog(['Output schema', row.output_schema])}> here </button>}
-                            <span style={{ fontWeight: "700" }}>{row.output_schema && row.output_schema.properties && ' to see the schema of the output.'} </span>
+                            {/* {row.output_schema && row.output_schema.properties && <button className='cursor-pointer' style={hereButton} onClick={() => openDialog(['Output schema', row.output_schema])}> here </button>}
+                            <span style={{ fontWeight: "700" }}>{row.output_schema && row.output_schema.properties && ' to see the schema of the output.'} </span> */}
                           </Grid>
                         </Grid>
                         <Grid xs={3} sm={2} style={{ paddingTop: "15px" }}>
