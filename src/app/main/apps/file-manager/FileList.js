@@ -532,14 +532,14 @@ function FileList(props) {
                                                 open={Boolean(anchorEl)}
                                                 onClose={handleCloseMenu}
                                             >
-                                                <MenuItem onClick={handleDeleteAll} disabled={!token || (selected.some(selectedItem => token && tokenData.sub !== selectedItem.owner_id) || (tokenData.roles && tokenData.roles.indexOf('superadmin') !== -1))}>
+                                                <MenuItem onClick={handleDeleteAll} disabled={tokenData.roles && tokenData.roles.indexOf('superadmin') !== -1 ? false : !token || (selected.some(selectedItem => token && tokenData.sub !== selectedItem.owner_id))}>
                                                     <IconButton className='py-0 pl-0' style={{ pointerEvents: 'none' }}>
                                                         <Icon>delete</Icon>
                                                         {deleteAll && <DeleteMultiple selectedCount={selectedCount} selectedItems={selected} setDeleteAll={(p) => setDeleteAll(p)}></DeleteMultiple>}
                                                     </IconButton>   
                                                     Delete
                                                 </MenuItem>
-                                                <MenuItem style={{ height: '36px' }} onClick={() => handleMoveAll()} disabled={!token || (selected.some(selectedItem => token && tokenData.teams.filter(value => selectedItem.writeACL.includes(value)).length === 0 && tokenData.sub !== selectedItem.owner_id) || (tokenData.roles && tokenData.roles.indexOf('superadmin') !== -1))}>
+                                                <MenuItem style={{ height: '36px' }} onClick={() => handleMoveAll()} disabled={tokenData.roles && tokenData.roles.indexOf('superadmin') !== -1 ? false : !token || (selected.some(selectedItem => token && tokenData.sub !== selectedItem.owner_id))}>
                                                     <IconButton className='py-0 pl-0' style={{ pointerEvents: 'none' }}>
                                                         <Icon >compare_arrows</Icon>
                                                     </IconButton>
