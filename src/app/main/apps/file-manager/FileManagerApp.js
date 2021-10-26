@@ -147,12 +147,12 @@ function FileManagerApp(props) {
     setSearchbool(false)
   }
 
-  async function getMetadata(targetMeta) {
+   function getMetadata(targetMeta) {
     var axios = require("axios");
     var config = FMInstance.metaDataConfig(targetMeta)
 
     addData();
-    function addData() {
+    async function addData() {
       const request = axios(config);
       request.then((response) => {
         let metaData = response.data.writeACL;
@@ -184,7 +184,9 @@ function FileManagerApp(props) {
       })
         .catch((error) => {
           if (error.response && error.response.status === 404) {
-            setContainerFlag("error-404");
+              setContainerFlag("error-404");
+              setIsFolder(false);
+              dispatch(Actions.setSelectedItem(null))
           }
           else if (error.response) {
             setContainerFlag("error-unknown");
