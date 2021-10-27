@@ -16,8 +16,8 @@ import { SelectFormsy, TextFieldFormsy } from '@fuse/components/formsy';
 
 import Toaster from '../../../Toaster.js';
 import { Input } from '../../SelectFile'
-
 import '../../SelectFile.css'
+
 const Contagion_dynamics = (props) => {
     const jobData = useSelector(
         ({ JobDefinitionApp }) => JobDefinitionApp.selectedjobid
