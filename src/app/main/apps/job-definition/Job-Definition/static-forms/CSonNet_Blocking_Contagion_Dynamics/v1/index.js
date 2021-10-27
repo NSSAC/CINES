@@ -1,4 +1,3 @@
-import { Input } from '../../SelectFile'
 import { Icon } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
@@ -15,7 +14,9 @@ import { FusePageSimple } from '@fuse';
 /* eslint-disable */
 import { SelectFormsy, TextFieldFormsy } from '@fuse/components/formsy';
 
-import Toaster from '../../../Toaster.js';'
+import Toaster from '../../../Toaster.js';
+import { Input } from '../../SelectFile'
+
 import '../../SelectFile.css'
 const Contagion_dynamics = (props) => {
     const jobData = useSelector(
