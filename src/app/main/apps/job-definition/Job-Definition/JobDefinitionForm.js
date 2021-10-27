@@ -1,20 +1,18 @@
-import {
-  Button,
-  Typography,
-  Grid,
-  LinearProgress,
-} from "@material-ui/core";
-import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import "./JobDefinitionForm.css";
-import { Input } from "app/main/apps/job-definition/Job-Definition/Input";
-import Toaster from "./Toaster";
+import { Button, Grid, LinearProgress, Typography } from "@material-ui/core";
 import Formsy from "formsy-react";
-import { useHistory } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import * as Actions from "./store/actions";
 import { JobService } from "node-sciduct";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
+
+import { Input } from "app/main/apps/job-definition/Job-Definition/Input";
+
 import MetadataInfoDialog from "../../my-jobs/MetadataDialog";
+import * as Actions from "./store/actions";
+import Toaster from "./Toaster";
+
+import "./JobDefinitionForm.css";
 
 function JobDefinitionForm(props) {
   const jobData = useSelector(
