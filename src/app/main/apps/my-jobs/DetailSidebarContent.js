@@ -104,7 +104,25 @@ function DetailSidebarContent(props) {
     return null;
   }
 
-
+ const renderOutput = () => {
+   console.log(1)
+  if (selectedItem.output_container) {
+    if (selectedItem.state === 'Completed') {
+      return (<td
+        style={navigateStyle}
+        onClick={() => navigateFile(selectedItem.output_container + '/' + selectedItem.output_name)}
+      >
+        {selectedItem.output_container + '/' + selectedItem.output_name}
+      </td>)
+    }
+    else {
+      return (<td style={{wordBreak: 'break-all'}}>{String(selectedItem.output_container + '/' + selectedItem.output_name)}</td>)
+    }
+  }
+  else {
+    return (<td>none</td>)
+  }
+}
 
   function convertDate(dateX) {
     let t = new Date(dateX)
@@ -179,19 +197,10 @@ function DetailSidebarContent(props) {
                 {
                   <tr>
                     <th> Output file(s)</th>
-                    {selectedItem.output_container ? (
-                      <td
-                        style={navigateStyle}
-                        onClick={() => navigateFile(selectedItem.output_container + '/' + selectedItem.output_name)}
-                      >
-                        {selectedItem.output_container + '/' + selectedItem.output_name}
-                      </td>
-                    ) : (
-                      <td>none</td>
-                    )}
+                    {renderOutput()}
                   </tr>
                 }
-                 {
+                {
                   <tr>
                     <th> Output data</th>
                     {selectedItem.output ? (
@@ -202,7 +211,7 @@ function DetailSidebarContent(props) {
                   </tr>
                 }
 
-{selectedItem.stdout ? (
+                {selectedItem.stdout ? (
                   <tr className="state">
                     <th> Std out</th>
                     {selectedItem.stdout ? (
