@@ -1,24 +1,22 @@
-/* eslint-disable */
-import {
-    SelectFormsy,
-    TextFieldFormsy
-} from '@fuse/components/formsy';
+import { Input } from '../../SelectFile'
+import { Icon } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
 import MenuItem from '@material-ui/core/MenuItem';
 import Typography from '@material-ui/core/Typography';
 import Formsy from 'formsy-react';
-import React, { useEffect, useState } from 'react';
-import { Link, useHistory } from 'react-router-dom';
-import Grid from '@material-ui/core/Grid';
-import { FusePageSimple } from '@fuse';
-import { Icon } from '@material-ui/core';
-import ReactTooltip from 'react-tooltip';
-import { Input } from './SelectFile.js'
-import './SelectFile.css'
-import Toaster from '../Toaster.js';
-import { useDispatch, useSelector } from "react-redux";
 import { JobService } from 'node-sciduct';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useHistory } from 'react-router-dom';
+import ReactTooltip from 'react-tooltip';
 
+import { FusePageSimple } from '@fuse';
+/* eslint-disable */
+import { SelectFormsy, TextFieldFormsy } from '@fuse/components/formsy';
+
+import Toaster from '../../../Toaster.js';'
+import '../../SelectFile.css'
 const Contagion_dynamics = (props) => {
     const jobData = useSelector(
         ({ JobDefinitionApp }) => JobDefinitionApp.selectedjobid
