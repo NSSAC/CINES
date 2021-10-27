@@ -13,6 +13,20 @@
     height: auto;
 }
 
+.overflowContentJob {
+  overflow: visible;
+}
+
+.webkitSticky {
+  position: -webkit-sticky !important;
+}
+
+.sidebarStyle {
+  min-width: 320px;
+  max-width: 515px;
+}
+
+
 .chips{
     display: inline-block;
   background: grey;
@@ -27,4 +41,14 @@
 .MuiGrid-spacing-xs-1{
   width: 100% !important;
   margin: auto !important;
+}
+
+@media only screen and (max-width: 1279px) {
+  .sidebarStyle {
+    width: 320px;
+  }
+
+  .overflowContentJob {
+    overflow: auto;
+  }
 }

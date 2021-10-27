@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -12,11 +12,11 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Icon } from "@material-ui/core";
 import { TextFieldFormsy } from "@fuse/components/formsy";
 import Formsy from "formsy-react";
-import axios from "axios";
 import { useDispatch } from "react-redux";
 import DialogContentText from '@material-ui/core/DialogContentText';
 import { toast, ToastContainer } from "material-react-toastify";
 import ReactDOM from 'react-dom';
+import { FileService } from "node-sciduct";
 
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -60,6 +60,7 @@ export const CreateFolder = ({
   const [name, setName] = useState("");
   // eslint-disable-next-line 
   const classes = useStyles();
+  const ref = useRef()
   const onCancle = () => {
     setName("");
     handleClose();
@@ -67,7 +68,7 @@ export const CreateFolder = ({
   };
 
   function inputChangedHandler(event) {
-    setName(event.target.value);
+    setName(event.target.value.trim());
   }
   function disableButton() {
     setIsFormValid(false);
@@ -79,25 +80,19 @@ export const CreateFolder = ({
 
   function onSubmit() {
 
-    const userToken = localStorage.getItem("id_token");
     let target = window.location.pathname;
     if (dialogTargetPath) {
       target = dialogTargetPath;
     }
     let targetPath = target.replace("/apps/files", "");
-
-    return axios({
-      method: "post",
-      url: `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file${targetPath}`,
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: userToken,
-      },
-      data: {
-        name: name,
-        type: "folder",
-      },
-    }).then(
+    const url = `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/`
+    const token = localStorage.getItem('id_token');
+    const fileServiceInstance = new FileService(url, token)
+    let metadata = {
+      "name": name,
+      "type": 'folder'
+  }
+  return fileServiceInstance.create(targetPath,metadata).then(
       (res) => {
         setSuccess(true)
         setSuccess(false)
@@ -115,10 +110,10 @@ export const CreateFolder = ({
           setError(false)
         }, 1000);
        
-        if (error.response.data.message === "File already exists") {
+        if (error.response && error.response.message === "File already exists") {
           setErrorMsg("Folder already exists");
         } else if (
-          error.response.data.message ===
+          error.response && error.response.message ===
           "data.type should be equal to one of the allowed values"
         ) {
           setErrorMsg("Failed (unsupported folder type) ");
@@ -149,6 +144,11 @@ export const CreateFolder = ({
     }
   }
 
+  useEffect(()=>{
+    setTimeout(() => {
+      ref.current && ref.current.focus()
+    }, 1000);
+  })
 
   return (
     <React.Fragment>
@@ -188,6 +188,7 @@ export const CreateFolder = ({
             className="flex flex-col justify-center"
           >
             <TextFieldFormsy
+              inputRef={ref}
               className={classes.inputsize}
               type="text"
               name="name"
@@ -197,7 +198,7 @@ export const CreateFolder = ({
               onChange={(event) => inputChangedHandler(event)}
               validations={{
                 isPositiveInt: function (values, value) {
-                  return RegExp(/^[^-\s]/).test(value);
+									return RegExp(/^([0-9]|[a-zA-Z]|[._\-\s])+$/).test(value) && value.trim() !== '';
                 },
               }}
               validationError="This is not a valid value"

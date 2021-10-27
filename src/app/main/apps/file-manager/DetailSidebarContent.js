@@ -18,6 +18,8 @@ import './Confirm-alert.css'
 import { ToastContainer, toast } from 'material-react-toastify';
 import 'material-react-toastify/dist/ReactToastify.css';
 import ReactDOM from 'react-dom';
+import FMInstance from './FileManagerService'
+
 
 const useStyles = makeStyles({
     table: {
@@ -58,6 +60,8 @@ function DetailSidebarContent(props) {
     var currName = localStorage.getItem("tempName")
     var canWrite = false;
     var modifiedUsermeta = "";
+    var checked = localStorage.getItem('checked')
+    var selectedCount = localStorage.getItem('selectedCount')
 
     useEffect(() => {
         if (document.getElementsByClassName("jsoneditor-mode-form").length > 0) {
@@ -96,7 +100,6 @@ function DetailSidebarContent(props) {
                 ],
                 closeOnClickOutside: false
             }))
-            props.pageLayout.current.toggleRightSidebar()
         }
     }
 
@@ -149,6 +152,10 @@ function DetailSidebarContent(props) {
     function OnCancelClick() {
         props.setPrompt(false)
         props.setEditContent(true)
+        setTimeout(() => {
+        props.pageLayout.current && props.pageLayout.current.toggleRightSidebar()
+        }, 1000);
+
     }
 
     function OnConfirm() {
@@ -232,16 +239,7 @@ function DetailSidebarContent(props) {
         var axios = require('axios');
 
         if (data.length > 0) {
-            var config = {
-                method: 'patch',
-                /* eslint-disable-next-line */
-                url: `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file${path}` + `${selectedItem.name}`,
-                headers: {
-                    'Content-Type': 'application/json-patch+json',
-                    'Authorization': token
-                },
-                data: data
-            };
+            var config = FMInstance.editUsermetaConfig(path, selectedItem.name, data)
 
             axios(config)
                 .then((response) => {
@@ -286,6 +284,7 @@ function DetailSidebarContent(props) {
           } 
     }
 
+    if(checked !== 'true')
     return (
         <FuseAnimate animation="transition.slideUpIn" delay={200}>
             <div className="file-details p-16 sm:p-24">
@@ -364,6 +363,7 @@ function DetailSidebarContent(props) {
                             tree: {
                                 backgroundColor: '#F7F7F7',
                                 paddingRight: '10px',
+                                marginLeft: '-15px'
                             },
                             label: {
                                 color: 'black',
@@ -372,11 +372,11 @@ function DetailSidebarContent(props) {
                                 
                             }
                         }} 
-                         labelRenderer={([key]) => <div style={{whiteSpace: 'nowrap'}}>{key}</div>}
-                        valueRenderer={(raw) => <div>{raw}</div>}
+                        //  labelRenderer={([key]) => <div style={{whiteSpace: 'nowrap'}}>{key}</div>}
+                        // valueRenderer={(raw) => <div>{raw}</div>}
                         />
                         <div><Typography variant="h6" style={{ display: "inline-flex" }}>USER META</Typography>
-                            {canWrite && props.editContent && <Tooltip title="Edit" placement="top">
+                            {canWrite && props.editContent && props.isContainer && <Tooltip title="Edit" placement="top">
                                 <IconButton onClick={OnEditClick}>
                                     <Icon>edit</Icon>
                                 </IconButton>
@@ -403,7 +403,7 @@ function DetailSidebarContent(props) {
                                 fontWeight: 'bold'
                             }
                         }} />}
-                        {!props.editContent && <Editor htmlElementProps={styleEditor} mode={Editor.modes.form} value={selectedItem.usermeta} name={selectedItem.name} search={true} allowedModes={[Editor.modes.form, Editor.modes.tree]} history={true} limitDragging={true} enableSort={false} enableTransform={false} onModeChange={OnModeChange} onChange={handleUsermetaChange} />}
+                        {!props.editContent && <Editor htmlElementProps={styleEditor} mode={Editor.modes.tree} value={selectedItem.usermeta} name={selectedItem.name} search={true} allowedModes={[Editor.modes.tree, Editor.modes.form]} history={true} limitDragging={true} enableSort={false} enableTransform={false} onModeChange={OnModeChange} onChange={handleUsermetaChange} />}
                         {/* </div> */}
                     </div>
                 )}
@@ -487,6 +487,10 @@ function DetailSidebarContent(props) {
             </div>
         </FuseAnimate>
     );
+
+    else return (
+        <Typography style={{padding: '12px', fontSize: '16px', fontWeight:'600'}}>{selectedCount} item(s) selected</Typography>
+    )
 }
 
 export default DetailSidebarContent;

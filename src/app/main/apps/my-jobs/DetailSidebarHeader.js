@@ -41,7 +41,7 @@ function DetailSidebarHeader(props)
       }
 
       function onRerun(item) {
-        var target = window.location.pathname.replace('my-jobs','job-definition') + item.job_definition.split('@')[0];
+        var target = window.location.pathname.replace(`my-jobs/${item.id}`,'job-definition/').replace('my-jobs','job-definition') + item.job_definition.split('@')[0];
         props.history.push({
           pathname: target,
           state: { inputData: item }

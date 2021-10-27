@@ -2,6 +2,7 @@ import React, {useImperativeHandle, useState} from 'react';
 import {Hidden, Drawer} from '@material-ui/core';
 import clsx from 'clsx';
 import FusePageSimpleSidebarContent from './FusePageSimpleSidebarContent';
+import ResizePanel from "react-resize-panel";
 
 function FusePageSimpleSidebar(props, ref)
 {
@@ -52,7 +53,9 @@ function FusePageSimpleSidebar(props, ref)
                             paper: clsx(classes.sidebar, props.variant, props.position === 'left' ? classes.leftSidebar : classes.rightSidebar)
                         }}
                     >
+                    <ResizePanel direction="w"  handleClass="customHandle" borderClass="customResizeBorder">
                         <FusePageSimpleSidebarContent {...props}/>
+                    </ResizePanel>
                     </Drawer>
                 </Hidden>
             )}

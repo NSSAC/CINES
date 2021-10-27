@@ -7,16 +7,20 @@ import { Vega } from 'react-vega';
 import Download from './Download';
 import './Preview.css'
 import {FuseScrollbars} from '@fuse';
+import FMInstance from './FileManagerService'
+import { useDispatch } from 'react-redux';
+import * as Actions from './store/actions';
+import Preview_config from "./PreviewConfig";
 
 function Preview(props) {
   var extentionType = props.type;
+  const dispatch = useDispatch();
   const [data, setData] = useState("");
   const [load, setLoad] = useState(false);
   const [error, setError] = useState(false);
   const [downloadFlag, setDownloadFlag] = useState(false);
   const [errormsg, setErrormsg] = useState("");
   const [previewmsg, setPreviewmsg] = useState("");
-  var token = localStorage.getItem('id_token')
   const [selectedTab, setSelectedTab] = useState(0);
 
   const hereButton = {
@@ -29,46 +33,29 @@ function Preview(props) {
   const textStyle = {
     paddingTop: '10px',
     paddingLeft: '10px',
-    whiteSpace: 'break-spaces'
+    whiteSpace: 'break-spaces',
+    overflowWrap: 'break-word'
   }
+
+  useEffect(() => {
+    var path = window.location.pathname
+    var pathEnd = path.charAt(path.length - 1)
+    if (pathEnd === '/')
+      path = path.slice(0, -1)
+    path = path.split("/")
+    path.pop()
+    var folderPath = path.join('/').replace('/apps/files', '') + '/'
+    dispatch(Actions.getFiles(folderPath, "GET_FILES"));
+    dispatch(Actions.setSelectedItem(props.fileId));
+  }, [dispatch, props.fileId])
+
 
   function DownloadFile(issue) {
     setDownloadFlag(true)
     setPreviewmsg(issue)
   }
 
-  if (typeof (token) === "string" && (props.type === "pdf" || props.type === "png" || props.type === "jpeg" || props.type === "jpg" || props.type === "excel" || props.type === "mp3" || props.type === "mp4")) {
-    var config = {
-      method: 'get',
-      url: `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file/${props.fileId}`,
-      headers: {
-        'Accept': 'application/octet-stream',
-        'Authorization': token
-      },
-      responseType: 'arraybuffer'
-    };
-  }
-
-  else if (typeof (token) == "string") {
-    config = {
-      method: 'get',
-      url: `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file/${props.fileId}`,
-      headers: {
-        'Accept': 'application/octet-stream',
-        'Authorization': token
-      },
-    };
-  }
-
-  else if (typeof (token) == "object") {
-    config = {
-      method: 'get',
-      url: `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file/${props.fileId}`,
-      headers: {
-        'Accept': 'application/octet-stream'
-      }
-    };
-  }
+  var config = FMInstance.previewConfig(props.fileId, props.type)
 
   function HandleError() {
     setError(true)
@@ -159,12 +146,12 @@ function Preview(props) {
       </div>
     );
 
-    else if (props.size === '0' || props.size === "undefined")
+  else if (props.size === '0' || props.size === "undefined")
     return (
-        <div className="flex flex-1 flex-col items-center justify-center">
-          <Typography className="text-20 mt-16" color="textPrimary">The file is empty or might be corrupted.</Typography>
-        </div>
-      );
+      <div className="flex flex-1 flex-col items-center justify-center">
+        <Typography className="text-20 mt-16" color="textPrimary">The file is empty or might be corrupted.</Typography>
+      </div>
+    );
 
   else if (props.size > 7350000)
     return (
@@ -173,12 +160,12 @@ function Preview(props) {
       </div>
     );
 
-  else if ((extentionType === 'text' || extentionType === 'txt') || (extentionType.includes('snap')) || (extentionType === 'PNGraph')  || (extentionType === 'PUNGraph')  || (extentionType === 'PNEANet') || (extentionType === 'csonnet_simulation') || (extentionType === 'csonnet_data_analysis') ) {
+  else if (Preview_config.textPreview.indexOf(extentionType) !== -1 || extentionType.includes('snap')) {
     if (typeof (data) === 'object')
       return (<div style={textStyle}>{JSON.stringify(data, null, 2)}</div>);
     else
-      return ( <FuseScrollbars><div style={textStyle}>{data}</div></FuseScrollbars>);
-      // return (<iframe src={`data:text/plain,${data}#view=fit`} width="100%" height="100%" frameborder='0' ></iframe>);
+      return (<FuseScrollbars><div style={textStyle}>{data}</div></FuseScrollbars>);
+    // return (<iframe src={`data:text/plain,${data}#view=fit`} width="100%" height="100%" frameborder='0' ></iframe>);
   }
   else if ((extentionType === 'pdf')) {
     var pdfData = Buffer.from(data, 'binary').toString('base64')
@@ -237,46 +224,6 @@ function Preview(props) {
     );
   }
 
-//   else if ((extentionType === 'snap_graph') || (extentionType === 'snap_TIntPrV')) {
-//     allTextLines = data.split(/\r\n|\n/).filter(item => !item.includes('#'))
-//    var desc = data.split(/\r\n|\n/).filter(item => item.includes('#'))
-//    lines = [];
-
-//    for (i = 0; i < allTextLines.length; i++) {
-//      dataCsv = allTextLines[i].replace(/\s+/g, " ").replace(/\t/g, ' ');;
-//      dataCsv = dataCsv.split(" ");
-
-//      tarr = [];
-//      for (j = 0; j < 2; j++) {
-//        tarr.push(dataCsv[j]);
-//      }
-//      lines.push(tarr);
-
-//      outputData = lines;
-//    }
-//    return (
-//      <div style={{ overflow: 'auto' }}>
-//        { desc.map((a1, k) => {
-//          return (<div style={textStyle}>{a1}</div>);
-//        })
-//        }
-//        <FuseAnimate>
-//          <Table>
-//            <TableBody>
-//              {outputData.map((e1, k) => {
-//                return (
-//                  <TableRow key={k}>
-//                    {e1.map((e2, j) => (<TableCell key={j}>{e2}</TableCell>))}
-//                  </TableRow>
-//                )
-//              })}
-//            </TableBody>
-//          </Table>
-//        </FuseAnimate>
-//      </div>
-//    );
-//  }
-
   else if ((extentionType === 'csv')) {
     allTextLines = data.split(/\r\n|\n/);
     headers = allTextLines[0].split(',');
@@ -318,7 +265,7 @@ function Preview(props) {
     );
   }
 
-  else if ((extentionType === 'json' || extentionType === 'geographical_region' || extentionType === 'epihiperDiseaseModel' || extentionType === 'epihiperInitialization' || extentionType === 'epihiperIntervention' || extentionType === 'epihiperTraits')) {
+  else if (Preview_config.jsonPreview.indexOf(extentionType) !== -1) {
     if (typeof (data) === "object")
       return (
         <FuseAnimate animation="transition.slideUpIn" delay={200}>
@@ -352,7 +299,7 @@ function Preview(props) {
                 fontWeight: 'bold'
               },
             }} />}
-            {selectedTab === 1 && <pre>{JSON.stringify(data, null,2)}</pre>}
+            {selectedTab === 1 && <pre>{JSON.stringify(data, null, 2)}</pre>}
           </div>
 
         </FuseAnimate>
@@ -398,16 +345,16 @@ function Preview(props) {
       marginTop: "20px"
     }
     var imgData = Buffer.from(data, 'binary').toString('base64')
-      return (
-        <img alt='img' onError={() => HandleError()} src={`data:image/png;base64,${imgData}`} style={styles} />
-      );
+    return (
+      <img alt='img' onError={() => HandleError()} src={`data:image/png;base64,${imgData}`} style={styles} />
+    );
   }
 
   else if (extentionType === 'svg') {
-      return (
-        <iframe title='extentionType' src={`data:image/svg+xml,${encodeURIComponent(data)}#view=fit`} width="100%" height="100%" ></iframe>
-          // <object id="svg-object" data={doc.documentElement} type="image/svg+xml"></object>
-          )
+    return (
+      <iframe title='extentionType' src={`data:image/svg+xml,${encodeURIComponent(data)}#view=fit`} width="100%" height="100%" ></iframe>
+      // <object id="svg-object" data={doc.documentElement} type="image/svg+xml"></object>
+    )
   }
 
   else if ((extentionType === 'mp4')) {
@@ -416,11 +363,11 @@ function Preview(props) {
       marginTop: "20px"
     }
     var videoData = Buffer.from(data, 'binary').toString('base64');
-      return (
-        <video style={styles} controls>
-          <source onError={() => HandleError()} src={`data:video/mp4;base64,${videoData}`}></source>
-        </video>
-      );
+    return (
+      <video style={styles} controls>
+        <source onError={() => HandleError()} src={`data:video/mp4;base64,${videoData}`}></source>
+      </video>
+    );
   }
 
   else if ((extentionType === 'mp3')) {

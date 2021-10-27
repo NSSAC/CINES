@@ -1,39 +1,12 @@
 import React, {useState, useEffect} from 'react';
 import 'react-responsive-modal/styles.css';
 import { Modal } from 'react-responsive-modal';
+import FMInstance from './FileManagerService'
 
 function Download(props){
   const [error, setError] = useState(false);
   const [isLarge, setIsLarge] = useState(false);
   const [errormsg, setErrormsg] = useState("");
-  var token=localStorage.getItem('id_token')
-
-        var axios = require('axios')
-
-        if(typeof(token) === "string") {
-        var config = {
-          method: 'get',
-          url: `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file/${props.fileId}`,
-          headers: { 
-            'Accept': 'application/octet-stream',
-            'Authorization': token
-          },
-          responseType: 'blob' 
-
-       };
-    }
-
-    else if(typeof(token) === "object") {
-       config = {
-        method: 'get',
-        url: `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file/${props.fileId}`,
-        headers: { 
-          'Accept': 'application/octet-stream'
-        },
-        responseType: 'blob' 
-     }
-
-  }
 
   useEffect(() => {
     InsertData() 
@@ -47,13 +20,13 @@ function Download(props){
   },[]) 
 
  function InsertData() {
-      var request = axios(config)
      if (props.size > 5324860){
        setTimeout(() => {
           setIsLarge(true)
        }, 1000);
      }
-       request.then((response) => {
+     var axios = require('axios');
+       axios(FMInstance.downloadConfig(props.fileId)).then((response) => {
       var ResponseData = response.data 
       DownloadData(ResponseData);
    }).catch(err => {
@@ -70,12 +43,25 @@ function Download(props){
  } 
  
   function DownLoadFile(dataX, type){
-      var blob = new Blob([dataX], {type: type});
+    var blob = new Blob([dataX], {type: type});
+    if (window.navigator && window.navigator.msSaveOrOpenBlob) { 
+      window.navigator.msSaveOrOpenBlob(blob, props.name);
+    }else if (navigator.userAgent.match('CriOS')) { //Chrome iOS
+      var reader = new FileReader();
+      reader.onloadend = function () {window.open(reader.result);};
+      reader.readAsDataURL(blob);
+    } else if (navigator.userAgent.match(/iPad/i) || navigator.userAgent.match(/iPhone/i)) { //Safari & Opera iOS
+      var url = window.URL.createObjectURL(blob);
+      window.location.href = url;
+    } else { 
       const downloadLink = document.createElement('a');
       downloadLink.href = URL.createObjectURL(blob);
+      downloadLink.target = '_blank';
+      downloadLink.download = props.name;
       document.body.appendChild(downloadLink);
       downloadLink.setAttribute('download', props.name);
       downloadLink.click();
+    }
    }
 
   function DownloadData(data) {

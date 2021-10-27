@@ -13,6 +13,8 @@ import * as Actions from "./store/actions";
 import "./JobDefinitionFileList.css";
 import { withRouter } from "react-router-dom";
 import JobDefinitionForm from "./JobDefinitionForm";
+import { SpaTwoTone } from "@material-ui/icons";
+import MetadataInfoDialog from "../../my-jobs/MetadataDialog";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -33,6 +35,9 @@ function JobDefinitionFileList(props) {
   const [spinnerFlag, setSpinnerFlag] = useState(true);
   const [selectedFlag, setSelectedFlag] = useState(true);
   const [searchString, setPreviousString] = useState("");
+  const [showDialog, setshowDialog] = useState(false);
+  const [standardOut, setStandardOut] = useState("");
+  const [headerTitle, setHeaderTitle] = useState("");
   var lengthOfRow;
   const dispatch = useDispatch();
   const jobDefinitionData = useSelector(
@@ -44,13 +49,13 @@ function JobDefinitionFileList(props) {
   var path = window.location.pathname;
   var pathArray = window.location.pathname.split("/");
   var pathArrayEnd = pathArray.slice(-1)[0];
-  var onloadSpinner =false
+  var onloadSpinner = false
   var jobDefinitionList = Object.values(jobDefinitionData);
   var totalRecords = "";
   const [selectedId, setSelectedId] = useState();
   if (jobDefinitionList.length !== 0) {
-    onloadSpinner =true;
-    if(jobDefinitionList[2]['content-range'] !== undefined){
+    onloadSpinner = true;
+    if (jobDefinitionList[2]['content-range'] !== undefined) {
       totalRecords = jobDefinitionList[2]["content-range"].split("/")[1];
     }
 
@@ -72,10 +77,15 @@ function JobDefinitionFileList(props) {
 
     });
 
-    if (Object.keys(selectedItem).length === 0 && searchResult.length > 0 && (path.endsWith('job-definition/') === true)) {
-      dispatch(Actions.setSelectedItem(searchResult[0].id));
-    }
   }
+
+  const hereButton = {
+    fontFamily: 'Muli,Roboto,"Helvetica",Arial,sans-serif',
+    fontSize: '15px',
+    fontWeight: '500',
+    color: 'deepskyblue'
+  }
+
   const classes = useStyles();
   useEffect(() => {
     setSpinnerFlag(false)
@@ -104,7 +114,7 @@ function JobDefinitionFileList(props) {
         document.getElementsByClassName('jobBody')[0].scrollTop = document.getElementsByClassName('jobBody')[0].scrollHeight; setSpinnerFlag(false)
       }, 10);
     }
-  },[page])
+  }, [page])
 
   const handleChangePage = (event, newPage) => {
     setSpinnerFlag(true);
@@ -119,7 +129,8 @@ function JobDefinitionFileList(props) {
   };
 
 
-  const onSelectClick = (row) => {
+  const onSelectClick = (row, e) => {
+    e.stopPropagation()
     localStorage.setItem("selectedJobDefinition", JSON.stringify(row));
     var target = window.location.pathname + row.id;
     props.history.push(target);
@@ -139,6 +150,17 @@ function JobDefinitionFileList(props) {
     selectedId = selectedId;
     dispatch(Actions.setSelectedItem(selectedId));
   }
+
+  const openDialog = (data) => {
+    setshowDialog(true);
+    setStandardOut(data[1]);
+    setHeaderTitle(data[0]);
+  }
+
+  const handleClose = () => {
+    setshowDialog(false);
+  };
+
 
   function moduleIsAvailable() {
     try {
@@ -162,30 +184,30 @@ function JobDefinitionFileList(props) {
     }
 
     if (jobDefinitionList.length === 0)
-    return (
-      <div className="flex flex-1 flex-col items-center justify-center mt-40">
-        <Typography className="text-20 mt-16" color="textPrimary">
-          Loading Form
-      </Typography>
-        <LinearProgress className="w-xs" color="secondary" />
-      </div>
-    );
-  else {
+      return (
+        <div className="flex flex-1 flex-col items-center justify-center mt-40">
+          <Typography className="text-20 mt-16" color="textPrimary">
+            Loading Form
+          </Typography>
+          <LinearProgress className="w-xs" color="secondary" />
+        </div>
+      );
+    else {
       return formExists ? (
         <StaticJobDefinitionForm resubmit={props.location.state}></StaticJobDefinitionForm>
       ) : (
-          <JobDefinitionForm
-            state={selectedJobDefinition} resubmit={props.location.state}
-          ></JobDefinitionForm>
-        );
-   }  
+        <JobDefinitionForm
+          state={selectedJobDefinition} resubmit={props.location.state}
+        ></JobDefinitionForm>
+      );
+    }
   }
   if (spinnerFlag === true)
     return (
       <div className="flex flex-1 flex-col items-center justify-center mt-40">
         <Typography className="text-20 mt-16" color="textPrimary">
           Loading
-      </Typography>
+        </Typography>
         <LinearProgress className="w-xs" color="secondary" />
       </div>
     );
@@ -196,6 +218,13 @@ function JobDefinitionFileList(props) {
   )
     return (
       <div>
+        <MetadataInfoDialog
+          opendialog={showDialog}
+          closedialog={handleClose}
+          standardout={standardOut}
+          headertitle={headerTitle}
+        ></MetadataInfoDialog>
+
         <FuseAnimate animation="transition.slideUpIn" delay={300}>
           {jobDefinitionList.length > 0 ? (
             <React.Fragment>
@@ -220,46 +249,54 @@ function JobDefinitionFileList(props) {
                         container
                         spacing={1}
                       >
-                        <Grid item xs={3} style={{ paddingLeft: "15px" }}>
-                          <Typography>Name</Typography>
-                          <Typography
-                            style={{ fontWeight: "700" , wordBreak:"break-word"}}
-                          >  
-                            {row.id}
-                          </Typography>
+                        <Grid container xs={9} sm={10}>
+                          <Grid item xs={4} style={{ padding: "5px" }}>
+                            <Typography>Name</Typography>
+                            <Typography
+                              style={{ fontWeight: "700", wordBreak: "break-word" }}
+                            >
+                              {row.id}
+                            </Typography>
+                          </Grid>
+                          <Grid item xs={4} style={{ padding: "5px" }}>
+                            <Typography>Created By</Typography>
+                            <Typography style={{ fontWeight: "700" }}>
+                              {row.created_by}
+                            </Typography>
+                          </Grid>
+                          <Grid item xs={4} style={{ padding: "5px" }}>
+                            <Typography>Last Updated</Typography>
+                            <Typography style={{ fontWeight: "700" }}>
+                              {
+                                row.update_date
+                                  .replace(/T|Z/g, "  ")
+                                  .split(".")[0]
+                              }
+                            </Typography>
+                          </Grid>
+                          <Grid item xs={12} style={{ padding: "5px" }}>
+                            <Typography>Description</Typography>
+                            <span style={{ fontWeight: "700" }}>
+                              {row.description}
+                              {/* {row.output_files && row.output_files.type !== 'folder' && (typeof (row.output_files.type) === 'string' ? ` This task outputs a file of type ${row.output_files.type} in your chosen location ` : ` This task outputs a file of type ${Object.values(row.output_files.type)[0]} in your chosen location `)}
+                              {row.output_files && row.output_files.contents && ` This task outputs files of type ${(row.output_files.contents.map(a => a.type)).toString()} in your chosen location. `}
+                              {row.output_files && row.output_schema && row.output_schema.properties && ` along with output data attached to the job. Click `}
+                              {!row.output_files && row.output_schema && row.output_schema.properties && ` This task outputs data attached to the job. Click `} */}
+                            </span>
+                            {/* {row.output_schema && row.output_schema.properties && <button className='cursor-pointer' style={hereButton} onClick={() => openDialog(['Output schema', row.output_schema])}> here </button>}
+                            <span style={{ fontWeight: "700" }}>{row.output_schema && row.output_schema.properties && ' to see the schema of the output.'} </span> */}
+                          </Grid>
                         </Grid>
-                        <Grid item xs={3} style={{ paddingLeft: "15px" }}>
-                          <Typography>Created By</Typography>
-                          <Typography style={{ fontWeight: "700" }}>
-                            {row.created_by}
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={3} style={{ paddingLeft: "15px" }}>
-                          <Typography>Last Updated</Typography>
-                          <Typography style={{ fontWeight: "700" }}>
-                            {
-                              row.update_date
-                                .replace(/T|Z/g, "  ")
-                                .split(".")[0]
-                            }
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={3} style={{ paddingTop: "15px" }}>
+                        <Grid xs={3} sm={2} style={{ paddingTop: "15px" }}>
                           <Button
                             variant="contained"
                             ////size="small"
                             //color="primary"
                             className={classes.button}
-                            onClick={() => onSelectClick(row)}
+                            onClick={(e) => onSelectClick(row, e)}
                           >
                             Select
                           </Button>
-                        </Grid>
-                        <Grid item xs={10} style={{ paddingLeft: "15px" }}>
-                          <Typography>Description</Typography>
-                          <Typography style={{ fontWeight: "700" }}>
-                            {row.description}
-                          </Typography>
                         </Grid>
 
                       </Grid>
@@ -269,8 +306,8 @@ function JobDefinitionFileList(props) {
               })}
             </React.Fragment>
           ) : (
-              <LinearProgress className="w-xs" color="secondary" />
-            )}
+            <LinearProgress className="w-xs" color="secondary" />
+          )}
         </FuseAnimate>
 
         {props.search === "" ? (
@@ -302,39 +339,39 @@ function JobDefinitionFileList(props) {
             <span className={"count-info"}>Page - {page + 1}</span>
           </div>
         ) : (
-            <div>
-              <Button
-                disabled={searchPage * searchRowperPage + 1 === 1}
-                className={"next-button"}
-                color="primary"
-                variant="contained"
-                onClick={searchFetchPreviousSetData}
-              >
-                Previous
+          <div>
+            <Button
+              disabled={searchPage * searchRowperPage + 1 === 1}
+              className={"next-button"}
+              color="primary"
+              variant="contained"
+              onClick={searchFetchPreviousSetData}
+            >
+              Previous
             </Button>
-              <span className={"count-info"}>
-                Items {searchPage * searchRowperPage + 1}-
+            <span className={"count-info"}>
+              Items {searchPage * searchRowperPage + 1}-
               {searchPage * searchRowperPage + lengthOfRow} /
               {searchResult.length}
-              </span>
-              <Button
-                disabled={
-                  searchPage * searchRowperPage + lengthOfRow ===
-                  searchResult.length
-                }
-                color="primary"
-                className={"next-button"}
-                variant="contained"
-                onClick={searchHandleChangePage}
-              >
-                Next
+            </span>
+            <Button
+              disabled={
+                searchPage * searchRowperPage + lengthOfRow ===
+                searchResult.length
+              }
+              color="primary"
+              className={"next-button"}
+              variant="contained"
+              onClick={searchHandleChangePage}
+            >
+              Next
             </Button>
-              <span className={"count-info"}>Page - {searchPage + 1}</span>
-            </div>
-          )}
+            <span className={"count-info"}>Page - {searchPage + 1}</span>
+          </div>
+        )}
       </div>
     );
-  else if ( jobDefinitionList.length === 0  && onloadSpinner) {
+  else if (jobDefinitionList.length === 0 && onloadSpinner) {
     return (
       <div className="flex flex-1 flex-col items-center justify-center mt-20">
         <Typography className="text-18 mt-16" color="textPrimary">

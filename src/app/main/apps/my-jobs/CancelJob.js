@@ -2,24 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { ToastContainer, toast } from 'material-react-toastify';
 import 'material-react-toastify/dist/ReactToastify.css';
 import ReactDOM from 'react-dom';
+import { JobService } from 'node-sciduct';
 
 function CancelJob(props) {
-    var token = localStorage.getItem('id_token')
     const [error, setError] = useState(false);
     const [success, setSuccess] = useState(false);
     const [cancelId, setCancelId] = useState("");
     const [errorMsg, setErrorMsg] = useState();
-    var axios = require('axios')
+    const url = `${process.env.REACT_APP_SCIDUCT_JOB_SERVICE}/`
+    const token = localStorage.getItem('id_token');
+    const jobServiceInstance = new JobService(url, token)
 
-    var config = {
-        method: 'post',
-        url: `${process.env.REACT_APP_SCIDUCT_JOB_SERVICE}/job_instance`,
-        headers: {
-            'Content-type': 'application/jsonrequest',
-            'Authorization': token
-        },
-        data: { "jsonrpc": "2.0", "id": 1, "method": "cancelJob", "params": [props.id] }
-    }
     useEffect(() => {
         CancelData()
         // eslint-disable-next-line
@@ -27,8 +20,7 @@ function CancelJob(props) {
 
     function CancelData() {
         setCancelId(props.id)
-        var request = axios(config)
-        request.then(response => {
+        jobServiceInstance.cancelJobInstance(props.id).then(response => {
             setSuccess(true)
             localStorage.setItem("cancelledJob", props.id)
             setTimeout(() => {

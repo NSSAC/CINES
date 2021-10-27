@@ -6,6 +6,8 @@ import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import * as Actions from './store/actions';
 import './FileList.css'
 import 'fix-date'
+import { Link } from 'react-router-dom';
+import JobData from './JobData';
 
 function MyJobsFileList(props) {
     const dispatch = useDispatch();
@@ -15,6 +17,7 @@ function MyJobsFileList(props) {
     const [dataSpinner, setDataSpinner] = useState(true);
     var onloadSpinner = false;
     var files = Object.values(files1);
+    var path = window.location.pathname;
     var totalRecords;
 
 
@@ -30,7 +33,7 @@ function MyJobsFileList(props) {
         }
         files = files[1]
         onloadSpinner = true;
-        if (selectedId === undefined && files.length > 0) {
+        if (selectedId === undefined && files.length > 0 && path.endsWith('my-jobs/') === true) {
             dispatch(Actions.setSelectedItem(files[0].id));
         }
 
@@ -67,19 +70,21 @@ function MyJobsFileList(props) {
     var type;
     var rowLength = 10;
 
-    const infoIcon ={
+    const infoIcon = {
         right: '0',
         backgroundColor: 'whitesmoke',
         position: 'sticky',
         width: '100px'
-      }
+    }
 
     useEffect(() => {
         if (files.length > 0 && sortCount === false) {
             if (document.getElementsByClassName("jobRows").length > 0)
                 document.getElementsByClassName("jobRows")[0].click()
-            if (page === 1)
+            if (page === 1) {
                 document.getElementsByClassName('jobBody')[0].scrollTop = document.getElementsByClassName('jobBody')[0].scrollHeight;
+                document.getElementsByClassName("jobRows")[0].click()
+            }
         }
     }, [files1])
 
@@ -121,7 +126,7 @@ function MyJobsFileList(props) {
             const timer_jobList = setInterval(() => {
                 if (changeState || !cancelledState) {
                     props.setChangeState(props.changeState + 1);
-                     cancelledState && setSortCount(true)
+                    cancelledState && setSortCount(true)
                 }
                 setTimeout(() => {
                     setSortCount(false);
@@ -135,6 +140,11 @@ function MyJobsFileList(props) {
         }
 
     })
+
+    useEffect(() => {
+        if (document.getElementsByClassName("jobRows").length > 0)
+            document.getElementsByClassName("jobRows")[0].click()
+    }, [page])
 
     const handleChangePage = (event, newPage) => {
         setSpinnerFlag(true)
@@ -223,7 +233,6 @@ function MyJobsFileList(props) {
         setPage(currentPage)
         if (currentPage === 0)
             props.setInitialPage(true)
-
     }
     function onRowClick(selectedId) {
         setSelectedFlag(false)
@@ -241,12 +250,12 @@ function MyJobsFileList(props) {
         );
 
     if (spinnerFlag === false && dataSpinner === false && files.length > 0) {
+      if(path.endsWith('my-jobs/') === true)
         return (
             <div>
-
                 <FuseAnimate animation="transition.slideUpIn" delay={100}>
-                    <TableContainer component={Paper}>
-                        <Table aria-label="a dense table">
+                    <TableContainer className='overflowContentJob' component={Paper}>
+                        <Table stickyHeader className='webkitSticky' aria-label="a dense table">
 
                             <TableHead>
                                 <TableRow style={{ whiteSpace: 'nowrap' }}>
@@ -309,10 +318,10 @@ function MyJobsFileList(props) {
                                                 onClick={() => onRowClick(row.id)}
                                             >
                                                 <TableCell>
-                                                    {row.id}
+                                                    {<Link style={{color: "#1565C0"}} to={row.id}>{row.id}</Link>}
                                                 </TableCell >
                                                 <TableCell >
-                                                    {row.job_definition.replace('net.science/',"")}
+                                                    {row.job_definition.replace('net.science/', "")}
                                                 </TableCell>
                                                 <TableCell  >
                                                     {row.state}
@@ -366,6 +375,10 @@ function MyJobsFileList(props) {
 
             </div>
         );
+
+        else{
+            return <JobData></JobData>;
+        }
     }
 
     else if (files.length === 0 && onloadSpinner) {

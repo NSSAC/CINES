@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Fab, Icon, IconButton, Typography, Tooltip } from "@material-ui/core";
 import { FuseAnimate, FusePageSimple } from "@fuse";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import withReducer from "app/store/withReducer";
 import * as Actions from "./store/actions";
 import reducer from "./store/reducers";
@@ -20,11 +20,14 @@ function MyJobsApp(props) {
   const [showDialog, setshowDialog] = useState(false);
   const pageLayout = useRef(null);
   const [flag, setFilterFlag] = useState(false);
+  const [renderFlag, setRenderFlag] = useState(0);
   const [initialPage, setInitialPage] = useState(true);
-          /* eslint-disable-next-line */
+  /* eslint-disable-next-line */
   const [onload, setOnLoad] = useState(false);
   const [changeState, setChangeState] = useState(0);
   const history = useHistory();
+  var path = window.location.pathname;
+  var selectedItem = useSelector(({ myJobsApp }) => myJobsApp.selectedjobid);
 
   useEffect(() => {
     setOnLoad(true);
@@ -41,26 +44,29 @@ function MyJobsApp(props) {
     sessionStorage.removeItem("preJobTypeValue");
   }, [dispatch]);
 
-  useEffect(()=>{
+  useEffect(() => {
     var sortOrder = JSON.parse(sessionStorage.getItem("sortOrder"))
     var sortType = JSON.parse(sessionStorage.getItem("type"))
-    if(initialPage === true && changeState > 0)
-     dispatch(Actions.getFiles(10, 0, sortOrder, sortType, true));
-          /* eslint-disable-next-line */
+    if (initialPage === true && changeState > 0)
+      dispatch(Actions.getFiles(10, 0, sortOrder, sortType, true));
+    /* eslint-disable-next-line */
   }, [changeState])
 
-  useEffect(()=>{
-    return () => {dispatch(Actions.clearData());}
-                //  dispatch(Actions.clearSelectedItem());}
-        /* eslint-disable-next-line */
-  },[props.history])
+  useEffect(() => {
+    return () => { dispatch(Actions.clearData()); }
+    /* eslint-disable-next-line */
+  }, [props.history])
 
   function showFileUploadDialog() {
     setshowDialog(true);
   }
 
-  function navigateHome() {
-    history.push("/home/");
+  function navigateTo(path) {
+    if(path === 'home')
+     history.push("/home/");
+     else
+     history.push("/apps/my-jobs/");
+
   }
 
   function handleClose() {
@@ -74,7 +80,7 @@ function MyJobsApp(props) {
         root: "bg-red",
         header: "header",
         sidebarHeader: "header",
-        rightSidebar: "w-320",
+        rightSidebar: "w-auto sidebarStyle",
         contentWrapper: "jobBody"
       }}
       header={
@@ -85,6 +91,8 @@ function MyJobsApp(props) {
                 showModal={showDialog}
                 props={props}
                 handleClose={handleClose}
+                renderFlag={renderFlag}
+                setRenderFlag={(p) => { setRenderFlag(p) }}
               />
             </div>
           }
@@ -95,67 +103,77 @@ function MyJobsApp(props) {
                 <Icon
                   className="text-18 cursor-pointer"
                   color="action"
-                  onClick={navigateHome}
+                  onClick={()=>navigateTo('home')}
                 >
                   home
                 </Icon>
-                <Icon className="text-16" color="action">
+                <Icon className="text-16 cursor-pointer" color="action">
                   chevron_right
                 </Icon>
-                <Typography style={{ width: "100px" }} color="textSecondary">
+                <Typography className='cursor-pointer' color="textSecondary" onClick={()=>navigateTo('jobs')}>
                   My Jobs
                 </Typography>
+                {path.endsWith('my-jobs/') !== true &&
+                  <>
+                    <Icon className="text-16" color="action">
+                      chevron_right
+                    </Icon>
+                    <Typography color="textSecondary">
+                      {selectedItem.id}
+                    </Typography>
+                  </>
+                }
               </div>
             </div>
 
-            <div>
+            {path.endsWith('my-jobs/') === true && <div>
               {sessionStorage.getItem("preJobTypeValue") &&
-              JSON.parse(sessionStorage.getItem("preJobTypeValue")).length !==
+                JSON.parse(sessionStorage.getItem("preJobTypeValue")).length !==
                 0 ? (
                 <span> Job Type:</span>
               ) : null}
               {sessionStorage.getItem("preJobTypeValue") &&
-              JSON.parse(sessionStorage.getItem("preJobTypeValue")).length !== 0
+                JSON.parse(sessionStorage.getItem("preJobTypeValue")).length !== 0
                 ? JSON.parse(sessionStorage.getItem("preJobTypeValue")).map(
-                    (data, index) => {
-                      return (
-                        <span key={index} className="chips">
-                          {" "}
-                          {decodeURIComponent(data
-                            .replace("eq(job_definition,re:", "")
-                            .replace(")","")).replace("net.science/","")}
-                        </span>
-                      );
-                    }
-                  )
+                  (data, index) => {
+                    return (
+                      <span key={index} className="chips">
+                        {" "}
+                        {decodeURIComponent(data
+                          .replace("eq(job_definition,re:", "")
+                          .replace(")", "")).replace("net.science/", "")}
+                      </span>
+                    );
+                  }
+                )
                 : null}
 
               {sessionStorage.getItem("preStateValue") &&
-              JSON.parse(sessionStorage.getItem("preStateValue")).length !==
+                JSON.parse(sessionStorage.getItem("preStateValue")).length !==
                 0 ? (
                 <span style={{ marginLeft: "4px" }}> Status:</span>
               ) : null}
               {sessionStorage.getItem("preStateValue") &&
-              JSON.parse(sessionStorage.getItem("preStateValue")).length !== 0
+                JSON.parse(sessionStorage.getItem("preStateValue")).length !== 0
                 ? JSON.parse(sessionStorage.getItem("preStateValue")).map(
-                    (data, index) => {
-                      return (
-                        <span key={index} className="chips">
-                          {data}
-                        </span>
-                      );
-                    }
-                  )
+                  (data, index) => {
+                    return (
+                      <span key={index} className="chips">
+                        {data}
+                      </span>
+                    );
+                  }
+                )
                 : null}
-            </div>
+            </div>}
 
-            <FuseAnimate animation="transition.expandIn" delay={200}>
+            {path.endsWith('my-jobs/') === true && <FuseAnimate animation="transition.expandIn" delay={200}>
               <Tooltip title="Filter" placement="bottom">
                 <IconButton aria-label="search" onClick={showFileUploadDialog}>
                   <Icon>filter_list</Icon>
                 </IconButton>
               </Tooltip>
-            </FuseAnimate>
+            </FuseAnimate>}
           </div>
 
           <div className="flex flex-1 items-end">
@@ -178,7 +196,7 @@ function MyJobsApp(props) {
       content={
         <MyJobsFileList
           changeState={changeState}
-          setInitialPage={(p)=>{setInitialPage(p)}}
+          setInitialPage={(p) => { setInitialPage(p) }}
           setChangeState={(p) => setChangeState(p)}
           flag={flag}
           pageLayout={pageLayout}
@@ -187,8 +205,8 @@ function MyJobsApp(props) {
       leftSidebarVariant="temporary"
       leftSidebarHeader={<MainSidebarHeader />}
       leftSidebarContent={<MainSidebarContent />}
-      rightSidebarHeader={<DetailSidebarHeader pageLayout={pageLayout} history={history}/>}
-      rightSidebarContent={<DetailSidebarContent/>}
+      rightSidebarHeader={path.endsWith('my-jobs/') === true && <DetailSidebarHeader pageLayout={pageLayout} history={history} />}
+      rightSidebarContent={path.endsWith('my-jobs/') === true && <DetailSidebarContent />}
       ref={pageLayout}
       innerScroll
     />

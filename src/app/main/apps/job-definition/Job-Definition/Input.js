@@ -289,7 +289,7 @@ export const Input = (props) => {
 			inputElement = (
 				<div className="selectedFile">
 					<label className="my-32 ">
-						{props.formData[1].formLabel}<span style={{ color: 'red' }}>&nbsp;*</span>-
+						{props.formData[1].formLabel}{props.formData[1].required !== false && <span style={{ color: 'red' }}>&nbsp;*</span>}-
 						   {props.formData[1].outputFlag ?
 							<Button onClick={showFolderManagerDialog} style={selectButtonStyle}>
 								&nbsp;Select path
@@ -297,6 +297,16 @@ export const Input = (props) => {
 							<Button onClick={showFileManagerDialog} style={selectButtonStyle}>
 								&nbsp;Select file
 									</Button>}
+						{props.formData[1].required === false ? <TextFieldFormsy
+							id={props.formData[1].formLabel}
+							className="my-16 hidden"
+							type="text"
+							name={props.formData[0]}
+							style={{ width: '18px' }}
+							value={props.formData[1].value}
+							label={props.formData[0]}
+							onBlur={props.changed}
+						/> :
 						<TextFieldFormsy
 							id={props.formData[1].formLabel}
 							className="my-16 hidden"
@@ -307,10 +317,10 @@ export const Input = (props) => {
 							label={props.formData[0]}
 							onBlur={props.changed}
 							required
-						/>
+						/>}
 					</label>
-					{props.formData[1].outputFlag ? <div className="folderPath">{folderChosenPath === '' ? 'No folder specified' : <b onBlur={props.changed} >{folderChosenPath}</b>}</div>
-						: <div className="folderPath">{fileChosen === '' ? 'No file chosen' : <b onBlur={props.changed} >{fileChosen}</b>}</div>}
+					{props.formData[1].outputFlag ? <div className={`folderPath ${folderChosenPath === '' ? '' : 'pathBreak'}`}>{folderChosenPath === '' ? 'No folder specified' : <b onBlur={props.changed} >{folderChosenPath}</b>}</div>
+						: <div className={`folderPath ${fileChosen === '' ? '' : 'pathBreak'}`}>{fileChosen === '' ? 'No file chosen' : <b onBlur={props.changed} >{fileChosen}</b>}</div>}
 				</div>
 			);
 	}
@@ -342,7 +352,7 @@ export const Input = (props) => {
 			}}
 			header={
 				<div>
-					{props.formData[1].type === undefined && <FMPopup
+					{showFMDialog && <FMPopup
 						showModal={showFMDialog}
 						setShowModal={(p) => setShowFMDialog(p)}
 						handleFMClose={handleFMClose}

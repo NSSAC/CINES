@@ -10,7 +10,13 @@ import moment from 'moment';
 import filesize from 'filesize';
 import Preview from './Preview'
 import instance from 'app/services/sciductService/sciductService.js'
-
+import Checkbox from "@material-ui/core/Checkbox";
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
+import DeleteMultiple from './DeleteMultiple';
+import { confirmAlert } from 'react-confirm-alert';
+import { MoveMultiple } from './MoveMultiple';
+import './FileManager.css'
 
 const useStyles = makeStyles({
     typeIcon: {
@@ -72,7 +78,10 @@ function FileList(props) {
     const selectedItem = useSelector(({ fileManagerApp }) => files[fileManagerApp.selectedItemId]);
     const classes = useStyles();
     const [spinnerFlag, setSpinnerFlag] = useState(true);
+    var tokenData = null
     var token = localStorage.getItem('id_token');
+    if (token)
+        tokenData = instance.getTokenData()
     const [sortByName, setSortByName] = useState(false);
     const [sortNameFlag, setSortNameFlag] = useState(false);
     const [sortByDate, setSortByDate] = useState(false);
@@ -83,21 +92,68 @@ function FileList(props) {
     const [sortTypeFlag, setSortTypeFlag] = useState(false);
     const [sortByOwner, setSortByOwner] = useState(false);
     const [sortOwnerFlag, setSortOwnerFlag] = useState(false);
-    const [searchResults, setSearchResults] = useState({});
+    const [searchResults, setSearchResults] = useState([]);
+    const [selected, setSelected] = useState([]);
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const [deleteAll, setDeleteAll] = useState(false);
+    const [moveAll, setMoveAll] = useState(false);
+    const [selectedCount, setSelectedCount] = useState(0);
+
+    const handleCheckboxClick = (event, node, row) => {
+        event !== null && event.stopPropagation();
+        const selectedIndex = selected.indexOf(node);
+        let newSelected = [];
+
+        if(row){
+           newSelected.push(node)
+           setSelectedCount(1)
+        }
+       else{
+        if (selectedIndex === -1) {
+            setSelectedCount(selectedCount + 1)
+            newSelected = newSelected.concat(selected, node);
+        } else if (selectedIndex === 0) {
+            newSelected = newSelected.concat(selected.slice(1));
+            setSelectedCount(selectedCount - 1)
+        } else if (selectedIndex === selected.length - 1) {
+            newSelected = newSelected.concat(selected.slice(0, -1));
+            setSelectedCount(selectedCount - 1)
+        } else if (selectedIndex > 0) {
+            setSelectedCount(selectedCount - 1)
+            newSelected = newSelected.concat(
+                selected.slice(0, selectedIndex),
+                selected.slice(selectedIndex + 1)
+            );
+        }}
+        setSelected(newSelected);
+        if(newSelected.length === 1)
+        dispatch(Actions.setSelectedItem(newSelected[0].id));
+         
+    };
+
+    const handleAllCheckboxClick = (event, modifiedData) => {
+        if (event.target.checked) {
+            setSelected(modifiedData.map(n => n))
+            setSelectedCount(modifiedData.length)
+        }
+        else {
+            setSelected([selectedItem])
+            setSelectedCount(1)
+        }
+    }
 
     function populateFiles(obj) {
         sessionStorage.removeItem('sortedFiles')
 
-        if(obj === 'files'){
+        if (obj === 'files') {
             setSearchResults(Object.values(files).slice().sort(function (firstUser, secondUser) {
                 if (firstUser.update_date < secondUser.update_date) return 1;
                 if (firstUser.update_date > secondUser.update_date) return -1;
                 return 0;
             }))
-         clearSort()
-         props.setSearchbool(false)
+            clearSort()
         }
-        else{
+        else {
             setSearchResults(searchResults)
         }
     }
@@ -124,6 +180,8 @@ function FileList(props) {
         }
     }
 
+    const isSelected1 = node => selected.indexOf(node) !== -1
+
     const infoIcon = {
         right: '0',
         backgroundColor: '#eeeeee',
@@ -140,6 +198,14 @@ function FileList(props) {
         color: '#1565C0'
     }
 
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleCloseMenu = () => {
+        setAnchorEl(null);
+    };
+
     const toggleSorting = (sortType, toggleArrow) => {
         if (toggleArrow === 'sortByName') {
             setSortNameFlag(true)
@@ -153,14 +219,14 @@ function FileList(props) {
             setSortByType(false)
             setSortByOwner(false)
 
-            sortType === 'asc' ? setSearchResults(Object.values(files).slice().sort(function (firstUser, secondUser) {
-                if (firstUser.name.toLowerCase() < secondUser.name.toLowerCase()) return 1;
-                if (firstUser.name.toLowerCase() > secondUser.name.toLowerCase()) return -1;
+            sortType === 'asc' ? setSearchResults(searchResults.slice().sort(function (firstUser, secondUser) {
+                if (firstUser.name < secondUser.name) return 1;
+                if (firstUser.name > secondUser.name) return -1;
                 return 0;
             })) :
-                setSearchResults(Object.values(files).slice().sort(function (firstUser, secondUser) {
-                    if (firstUser.name.toLowerCase() > secondUser.name.toLowerCase()) return 1;
-                    if (firstUser.name.toLowerCase() < secondUser.name.toLowerCase()) return -1;
+                setSearchResults(searchResults.slice().sort(function (firstUser, secondUser) {
+                    if (firstUser.name > secondUser.name) return 1;
+                    if (firstUser.name < secondUser.name) return -1;
                     return 0;
                 }));
         }
@@ -177,12 +243,12 @@ function FileList(props) {
             setSortByType(false)
             setSortByOwner(false)
 
-            sortType === 'asc' ? setSearchResults(Object.values(files).slice().sort(function (firstUser, secondUser) {
+            sortType === 'asc' ? setSearchResults(searchResults.slice().sort(function (firstUser, secondUser) {
                 if (firstUser.update_date < secondUser.update_date) return 1;
                 if (firstUser.update_date > secondUser.update_date) return -1;
                 return 0;
             })) :
-                setSearchResults(Object.values(files).slice().sort(function (firstUser, secondUser) {
+                setSearchResults(searchResults.slice().sort(function (firstUser, secondUser) {
                     if (firstUser.update_date > secondUser.update_date) return 1;
                     if (firstUser.update_date < secondUser.update_date) return -1;
                     return 0;
@@ -202,27 +268,27 @@ function FileList(props) {
             setSortByOwner(false)
 
             sortType === 'asc' ?
-             setSearchResults(Object.values(files).slice().sort(function (firstUser, secondUser) {
-                if(firstUser.size === undefined){
-                    firstUser.size= null
-                }
-                if(secondUser.size === undefined){
-                    secondUser.size= null
-                }
-
-                if (firstUser.size < secondUser.size) return 1;
-                if (firstUser.size > secondUser.size) return -1;
-                return 0;
-             
-            }))
-
-:
-                setSearchResults(Object.values(files).slice().sort(function (firstUser, secondUser) {
-                    if(firstUser.size === undefined){
-                        firstUser.size= null
+                setSearchResults(searchResults.slice().sort(function (firstUser, secondUser) {
+                    if (firstUser.size === undefined) {
+                        firstUser.size = null
                     }
-                    if(secondUser.size === undefined){
-                        secondUser.size= null
+                    if (secondUser.size === undefined) {
+                        secondUser.size = null
+                    }
+
+                    if (firstUser.size < secondUser.size) return 1;
+                    if (firstUser.size > secondUser.size) return -1;
+                    return 0;
+
+                }))
+
+                :
+                setSearchResults(searchResults.slice().sort(function (firstUser, secondUser) {
+                    if (firstUser.size === undefined) {
+                        firstUser.size = null
+                    }
+                    if (secondUser.size === undefined) {
+                        secondUser.size = null
                     }
                     if (firstUser.size > secondUser.size) return 1;
                     if (firstUser.size < secondUser.size) return -1;
@@ -242,14 +308,14 @@ function FileList(props) {
             setSortByType(!sortByType)
             setSortByOwner(false)
 
-            sortType === 'asc' ? setSearchResults(Object.values(files).slice().sort(function (firstUser, secondUser) {
-                if (firstUser.type.toLowerCase() < secondUser.type.toLowerCase()) return 1;
-                if (firstUser.type.toLowerCase() > secondUser.type.toLowerCase()) return -1;
+            sortType === 'asc' ? setSearchResults(searchResults.slice().sort(function (firstUser, secondUser) {
+                if (firstUser.type < secondUser.type) return 1;
+                if (firstUser.type > secondUser.type) return -1;
                 return 0;
             })) :
-                setSearchResults(Object.values(files).slice().sort(function (firstUser, secondUser) {
-                    if (firstUser.type.toLowerCase() > secondUser.type.toLowerCase()) return 1;
-                    if (firstUser.type.toLowerCase() < secondUser.type.toLowerCase()) return -1;
+                setSearchResults(searchResults.slice().sort(function (firstUser, secondUser) {
+                    if (firstUser.type > secondUser.type) return 1;
+                    if (firstUser.type < secondUser.type) return -1;
                     return 0;
                 }));
         }
@@ -266,12 +332,12 @@ function FileList(props) {
             setSortByType(false)
             setSortByOwner(!sortByOwner)
 
-            sortType === 'asc' ? setSearchResults(Object.values(files).slice().sort(function (firstUser, secondUser) {
+            sortType === 'asc' ? setSearchResults(searchResults.slice().sort(function (firstUser, secondUser) {
                 if (firstUser.owner_id < secondUser.owner_id) return 1;
                 if (firstUser.owner_id > secondUser.owner_id) return -1;
                 return 0;
             })) :
-                setSearchResults(Object.values(files).slice().sort(function (firstUser, secondUser) {
+                setSearchResults(searchResults.slice().sort(function (firstUser, secondUser) {
                     if (firstUser.owner_id > secondUser.owner_id) return 1;
                     if (firstUser.owner_id < secondUser.owner_id) return -1;
                     return 0;
@@ -279,13 +345,20 @@ function FileList(props) {
         }
     }
 
+    useEffect(() => {
+        localStorage.setItem('selectedCount', selectedCount)
+        selectedCount < 2 ? localStorage.setItem('checked', false) : localStorage.setItem('checked', true)
+        selectedItem && dispatch(Actions.setSelectedItem(selectedItem))
+        selectedItem && dispatch(Actions.setSelectedItem(selectedItem.id))
+                // eslint-disable-next-line
+    }, [selectedCount])
 
     useEffect(() => {
-        if(sessionStorage.getItem('sortedFiles') === 'true')
-        populateFiles('search')
+        if (sessionStorage.getItem('sortedFiles') === 'true')
+            populateFiles('search')
         else
-        populateFiles('files')
-        
+            populateFiles('files')
+
         setTimeout(() => {
             setSpinnerFlag(false)
         }, 5000);
@@ -293,20 +366,56 @@ function FileList(props) {
         if (document.getElementsByClassName('FileWrapper').length > 0)
             document.getElementsByClassName('FileWrapper')[0].scrollTo(0, 0)
 
-          // eslint-disable-next-line
+        // eslint-disable-next-line
     }, [files])
 
-    useEffect(()=>{
-       populateFiles('search')
-         // eslint-disable-next-line
+    useEffect(() => {
+        populateFiles('search')
+        if (document.getElementsByClassName("fileRows").length > 0)
+            document.getElementsByClassName("fileRows")[0].click()
+        // eslint-disable-next-line
     }, [props.search])
 
-    useEffect(()=>{
+    useEffect(() => {
         if (searchResults.length > 0) {
             if (document.getElementsByClassName("fileRows").length > 0)
                 document.getElementsByClassName("fileRows")[0].click()
+             setSelected([searchResults[0]])
+             setSelectedCount(1)
         }
-    },[searchResults])
+        localStorage.setItem('checked', false)
+
+        if (document.getElementsByClassName('FileWrapper').length > 0)
+            document.getElementsByClassName('FileWrapper')[0].scrollTo(0, 0)
+    }, [searchResults])
+
+    const handleDeleteAll = () => {
+        setAnchorEl(null)
+        confirmAlert({
+            title: 'Confirm',
+            message: `Are you sure you want to delete ${selectedCount} item(s)?`,
+            buttons: [
+                {
+                    label: 'No',
+                    onClick: (null)
+                },
+                {
+                    label: 'Yes',
+                    onClick: () => setDeleteAll(true)
+                }
+            ],
+            closeOnClickOutside: false
+        })
+    }
+
+    const handleMoveAll = () => {
+        setMoveAll(true)
+        setAnchorEl(false)
+    }
+
+    const closeMoveDialog = () => {
+        setMoveAll(false)
+    }
 
     function onClickHandler(node, canLink) {
         return function (evt) {
@@ -366,6 +475,10 @@ function FileList(props) {
                     props.history.push(target);
                 }
             dispatch(Actions.setSelectedItem(node.id));
+            selectedCount === 1 && handleCheckboxClick(evt,node,'row')
+            setTimeout(() => {
+                document.getElementsByClassName("sidebarScroll").length > 0 && document.getElementsByClassName("sidebarScroll")[2].scrollTo(0, 0)
+            }, 0);
         }
     }
 
@@ -376,125 +489,202 @@ function FileList(props) {
 
     if ((props.containerFlag && props.isFolder) || props.targetMeta === '') {
         props.setPreview(true);
-        if (Object.values(files).length > 0 && searchResults.length > 0)
-            return (
-                <FuseAnimate animation="transition.slideUpIn" delay={300}>
-                    <Table className='fileTableStyle'>
-                        <TableHead style={{ whiteSpace: 'nowrap' }}>
-                            <TableRow>
-                                <TableCell className="max-w-64 w-64 p-0 text-center"> </TableCell>
-                                <TableCell>Name{(sortByName) ?
-
-                                    <Tooltip title="Sort by Name" placement="bottom">
-                                        <IconButton aria-label="arrow_upward" onClick={() => toggleSorting('asc', 'sortByName')}>
-                                            <Icon >arrow_upward</Icon>
-                                        </IconButton>
-                                    </Tooltip>
-
-                                    :
-                                    <Tooltip title="Sort by Name" placement="bottom">
-                                        <IconButton aria-label="arrow_downward" onClick={() => toggleSorting('desc', 'sortByName')}>
-                                            <Icon className={sortNameFlag ? "" : "sort-arrow"}>arrow_downward</Icon></IconButton>
-                                    </Tooltip>
-                                }</TableCell>
-                                <TableCell className="hidden sm:table-cell">Type{(sortByType) ?
-
-                                    <Tooltip title="Sort by Type" placement="bottom">
-                                        <IconButton aria-label="arrow_upward" onClick={() => toggleSorting('asc', 'sortByType')}>
-                                            <Icon >arrow_upward</Icon>
-                                        </IconButton>
-                                    </Tooltip>
-
-                                    :
-                                    <Tooltip title="Sort by Type" placement="bottom">
-                                        <IconButton aria-label="arrow_downward" onClick={() => toggleSorting('desc', 'sortByType')}>
-                                            <Icon className={sortTypeFlag ? "" : "sort-arrow"}>arrow_downward</Icon></IconButton>
-                                    </Tooltip>
-                                }</TableCell>
-                                <TableCell className="hidden sm:table-cell">Owner{(sortByOwner) ?
-
-                                    <Tooltip title="Sort by Owner" placement="bottom">
-                                        <IconButton aria-label="arrow_upward" onClick={() => toggleSorting('asc', 'sortByOwner')}>
-                                            <Icon >arrow_upward</Icon>
-                                        </IconButton>
-                                    </Tooltip>
-
-                                    :
-                                    <Tooltip title="Sort by Owner" placement="bottom">
-                                        <IconButton aria-label="arrow_downward" onClick={() => toggleSorting('desc', 'sortByOwner')}>
-                                            <Icon className={sortOwnerFlag ? "" : "sort-arrow"}>arrow_downward</Icon></IconButton>
-                                    </Tooltip>
-                                }</TableCell>
-                                <TableCell className="text-center hidden sm:table-cell">Size{(sortBySize) ?
-
-                                    <Tooltip title="Sort by Size" placement="bottom">
-                                        <IconButton aria-label="arrow_upward" onClick={() => toggleSorting('asc', 'sortBySize')}>
-                                            <Icon >arrow_upward</Icon>
-                                        </IconButton>
-                                    </Tooltip>
-
-                                    :
-                                    <Tooltip title="Sort by Size" placement="bottom">
-                                        <IconButton aria-label="arrow_downward" onClick={() => toggleSorting('desc', 'sortBySize')}>
-                                            <Icon className={sortSizeFlag ? "" : "sort-arrow"}>arrow_downward</Icon></IconButton>
-                                    </Tooltip>
-                                }</TableCell>
-                                <TableCell className="hidden sm:table-cell">Modified{(sortByDate) ?
-
-                                    <Tooltip title="Sort by Date" placement="bottom">
-                                        <IconButton aria-label="arrow_upward" onClick={() => toggleSorting('asc', 'sortByDate')}>
-                                            <Icon >arrow_upward</Icon>
-                                        </IconButton>
-                                    </Tooltip>
-
-                                    :
-                                    <Tooltip title="Sort by Date" placement="bottom">
-                                        <IconButton aria-label="arrow_downward" onClick={() => toggleSorting('desc', 'sortByDate')}>
-                                            <Icon className={sortDateFlag ? "" : "sort-arrow"}>arrow_downward</Icon></IconButton>
-                                    </Tooltip>
-                                }</TableCell>
-                            </TableRow>
-                        </TableHead>
-
-                        <TableBody>
-                            {searchResults.filter((data) => {
+        var modifiedData = searchResults.filter((data) => {
             if (data.name !== "" && (props.search === "" || (data.name.toLowerCase().includes(props.search.toLowerCase()) || data.type.toLowerCase().includes(props.search.toLowerCase()) || data.owner_id.toLowerCase().includes(props.search.toLowerCase())))) return data;
             else return null;
-          }).map((node) => {
-                                return (
-                                    <TableRow
-                                        key={node.id}
-                                        hover
-                                        onClick={onClickHandler(node, node.isContainer)}
-                                        selected={node.id === selectedItemId}
-                                        className="cursor-pointer fileRows"
-                                    >
-                                        <TableCell className="max-w-64 w-64 p-0 text-center">
-                                            <Icon className={clsx(classes.typeIcon, node.type)} />
-                                        </TableCell>
-                                        <TableCell >{window.innerWidth < 1224 ? <Link style={tableStyle} title={node.name} to={node.name}>{node.name}</Link> :
-                                            <Link style={{ color: '#1565C0' }} title={node.name} to={node.name}>{node.name}</Link>}</TableCell>
-                                        <TableCell className="hidden sm:table-cell">{node.type}</TableCell>
-                                        <TableCell className="hidden sm:table-cell">{node.owner_id}</TableCell>
-                                        <TableCell className="text-center hidden sm:table-cell">{(!node.size && (node.size !== 0)) ? '-' : filesize(node.size)}</TableCell>
-                                        <TableCell className="hidden sm:table-cell wordBreak">{moment.utc(node.update_date).local().fromNow()}</TableCell>
-                                        <Hidden lgUp>
-                                            <TableCell style={infoIcon}>
-                                                <IconButton
-                                                    onClick={(ev) => props.pageLayout.current.toggleRightSidebar()}
-                                                    aria-label="open right sidebar"
-                                                >
-                                                    <Icon>info</Icon>
-                                                </IconButton>
-                                            </TableCell>
-                                        </Hidden>
-                                    </TableRow>
-                                );
+        })
+        if (Object.values(files).length > 0 && modifiedData.length > 0)
+            return (
+                <React.Fragment>
+                    <FuseAnimate animation="transition.slideUpIn" delay={300}>
+                        <Table stickyHeader className='fileTableStyle webkitSticky'>
+                            <TableHead style={{ whiteSpace: 'nowrap' }}>
+                                <TableRow>
+                                    <TableCell padding="checkbox">
+                                        <div className='flex flex-col items-center justify-between'>
+                                        <Tooltip title={`${modifiedData.length === selected.length ? 'Deselect All' : 'Select All'}`} placement="bottom">
+                                            <Checkbox size='small'
+                                                onClick={event =>
+                                                    handleAllCheckboxClick(event, modifiedData)
+                                                }
+                                                className="selectCheckbox"
+                                                checked={modifiedData.length === selected.length}
+                                            />
+                                        </Tooltip>
+                                            {/* {selected.length > 0 && <span className="badge badge-light subcategory-count-badge">{selectedCount}</span>} */}
+                                        </div>
+                                    </TableCell>
+                                    <TableCell className="max-w-64 w-64 p-0 text-center">
+                                        {selected.length > 0 &&
+                                            <React.Fragment>
+                                                <Tooltip title="Selected items menu" placement="bottom">
+                                                    <IconButton size='medium' onClick={event => handleClick(event)}>
+                                                        <Icon >menu</Icon>
+                                                    </IconButton>
+                                                </Tooltip>
+                                                {selected.length > 0 && <span className="badge badge-light subcategory-count-badge">{selectedCount}</span>}
+                                            </React.Fragment>}
+                                        <div>
+                                            <Menu
+                                                id="simple-menu"
+                                                anchorEl={anchorEl}
+                                                keepMounted
+                                                open={Boolean(anchorEl)}
+                                                onClose={handleCloseMenu}
+                                            >
+                                                <MenuItem onClick={handleDeleteAll} disabled={tokenData.roles && tokenData.roles.indexOf('superadmin') !== -1 ? false : !token || (selected.some(selectedItem => token && tokenData.sub !== selectedItem.owner_id))}>
+                                                    <IconButton className='py-0 pl-0' style={{ pointerEvents: 'none' }}>
+                                                        <Icon>delete</Icon>
+                                                        {deleteAll && <DeleteMultiple selectedCount={selectedCount} selectedItems={selected} setDeleteAll={(p) => setDeleteAll(p)}></DeleteMultiple>}
+                                                    </IconButton>   
+                                                    Delete
+                                                </MenuItem>
+                                                <MenuItem style={{ height: '36px' }} onClick={() => handleMoveAll()} disabled={tokenData.roles && tokenData.roles.indexOf('superadmin') !== -1 ? false : !token || (selected.some(selectedItem => token && tokenData.sub !== selectedItem.owner_id))}>
+                                                    <IconButton className='py-0 pl-0' style={{ pointerEvents: 'none' }}>
+                                                        <Icon >compare_arrows</Icon>
+                                                    </IconButton>
+                                                    Move
+                                                </MenuItem>
+                                                {moveAll && <MoveMultiple
+                                                    selectedCount={selectedCount} selectedItems={selected} setMoveAll={(p) => setMoveAll(p)}
+                                                    showModal={moveAll}
+                                                    handleClose={closeMoveDialog}
+                                                />}
+                                            </Menu>
+                                        </div>
+                                    </TableCell>
+                                    <TableCell>Name{searchResults.some(result => result.name !== searchResults[0].name) ? ((sortByName) ?
 
-                            })}
-                        </TableBody>
-                    </Table>
-                </FuseAnimate>
+                                        <Tooltip title="Sort by Name" placement="bottom">
+                                            <IconButton aria-label="arrow_upward" onClick={() => toggleSorting('asc', 'sortByName')}>
+                                                <Icon >arrow_upward</Icon>
+                                            </IconButton>
+                                        </Tooltip>
+
+                                        :
+                                        <Tooltip title="Sort by Name" placement="bottom">
+                                            <IconButton aria-label="arrow_downward" onClick={() => toggleSorting('desc', 'sortByName')}>
+                                                <Icon className={sortNameFlag ? "" : "sort-arrow"}>arrow_downward</Icon></IconButton>
+                                        </Tooltip>
+                                    ) :
+                                     <Tooltip title="Sort by Name" placement="bottom">
+                                            <IconButton style={{visibility:'hidden'}} aria-label="arrow_downward" onClick={() => toggleSorting('desc', 'sortByName')}>
+                                                <Icon className={sortNameFlag ? "" : "sort-arrow"}>arrow_downward</Icon></IconButton>
+                                        </Tooltip>
+                                    }</TableCell>
+                                    <TableCell className="hidden sm:table-cell">Type{searchResults.some(result => result.type !== searchResults[0].type) && ((sortByType) ?
+
+                                        <Tooltip title="Sort by Type" placement="bottom">
+                                            <IconButton aria-label="arrow_upward" onClick={() => toggleSorting('asc', 'sortByType')}>
+                                                <Icon >arrow_upward</Icon>
+                                            </IconButton>
+                                        </Tooltip>
+
+                                        :
+                                        <Tooltip title="Sort by Type" placement="bottom">
+                                            <IconButton aria-label="arrow_downward" onClick={() => toggleSorting('desc', 'sortByType')}>
+                                                <Icon className={sortTypeFlag ? "" : "sort-arrow"}>arrow_downward</Icon></IconButton>
+                                        </Tooltip>
+                                    )}</TableCell>
+                                    <TableCell className="hidden sm:table-cell">Owner{searchResults.some(result => result.owner_id !== searchResults[0].owner_id) && ((sortByOwner) ?
+
+                                        <Tooltip title="Sort by Owner" placement="bottom">
+                                            <IconButton aria-label="arrow_upward" onClick={() => toggleSorting('asc', 'sortByOwner')}>
+                                                <Icon >arrow_upward</Icon>
+                                            </IconButton>
+                                        </Tooltip>
+
+                                        :
+                                        <Tooltip title="Sort by Owner" placement="bottom">
+                                            <IconButton aria-label="arrow_downward" onClick={() => toggleSorting('desc', 'sortByOwner')}>
+                                                <Icon className={sortOwnerFlag ? "" : "sort-arrow"}>arrow_downward</Icon></IconButton>
+                                        </Tooltip>
+                                    )}</TableCell>
+                                    <TableCell className="text-center hidden sm:table-cell">Size{searchResults.some(result => result.size !== searchResults[0].size) && ((sortBySize) ?
+
+                                        <Tooltip title="Sort by Size" placement="bottom">
+                                            <IconButton aria-label="arrow_upward" onClick={() => toggleSorting('asc', 'sortBySize')}>
+                                                <Icon >arrow_upward</Icon>
+                                            </IconButton>
+                                        </Tooltip>
+
+                                        :
+                                        <Tooltip title="Sort by Size" placement="bottom">
+                                            <IconButton aria-label="arrow_downward" onClick={() => toggleSorting('desc', 'sortBySize')}>
+                                                <Icon className={sortSizeFlag ? "" : "sort-arrow"}>arrow_downward</Icon></IconButton>
+                                        </Tooltip>
+                                    )}</TableCell>
+                                    <TableCell className="hidden sm:table-cell">Modified{searchResults.some(result => result.update_date !== searchResults[0].update_date) && ((sortByDate) ?
+
+                                        <Tooltip title="Sort by Date" placement="bottom">
+                                            <IconButton aria-label="arrow_upward" onClick={() => toggleSorting('asc', 'sortByDate')}>
+                                                <Icon >arrow_upward</Icon>
+                                            </IconButton>
+                                        </Tooltip>
+
+                                        :
+                                        <Tooltip title="Sort by Date" placement="bottom">
+                                            <IconButton aria-label="arrow_downward" onClick={() => toggleSorting('desc', 'sortByDate')}>
+                                                <Icon className={sortDateFlag ? "" : "sort-arrow"}>arrow_downward</Icon></IconButton>
+                                        </Tooltip>
+                                    )}</TableCell>
+                                    <Hidden lgUp><TableCell style={infoIcon}></TableCell></Hidden>
+                                </TableRow>
+                            </TableHead>
+
+                            <TableBody>
+                                {searchResults.filter((data) => {
+                                    if (data.name !== "" && (props.search === "" || (data.name.toLowerCase().includes(props.search.toLowerCase()) || data.type.toLowerCase().includes(props.search.toLowerCase()) || data.owner_id.toLowerCase().includes(props.search.toLowerCase())))) return data;
+                                    else return null;
+                                }).map((node) => {
+                                    const isSelected = isSelected1(node);
+                                    return (
+                                        <TableRow
+                                            role="checkbox"
+                                            aria-checked={node.id === selectedItemId}
+                                            key={node.id}
+                                            hover
+                                            onClick={onClickHandler(node, node.isContainer)}
+                                            selected={node.id === selectedItemId}
+                                            className="cursor-pointer fileRows"
+                                        >
+                                            <TableCell className="selectCheckbox" padding="checkbox">
+                                                <Checkbox size='small'
+                                                    onClick={event =>
+                                                        handleCheckboxClick(event, node)
+                                                    }
+                                                    className="selectCheckbox"
+                                                    checked={isSelected}
+                                                />
+                                            </TableCell>
+                                            <TableCell className="max-w-64 w-64 p-0 text-center">
+                                                <Icon className={clsx(classes.typeIcon, node.type)} />
+                                            </TableCell>
+                                            <TableCell >{window.innerWidth < 1224 ? <Link style={tableStyle} title={node.name} to={node.name}>{node.name}</Link> :
+                                                <Link style={{ color: '#1565C0' }} title={node.name} to={node.name}>{node.name}</Link>}
+                                            </TableCell>
+                                            <TableCell className="hidden sm:table-cell wordBreak">{node.type}</TableCell>
+                                            <TableCell className="hidden sm:table-cell wordBreak">{node.owner_id}</TableCell>
+                                            <TableCell className="text-center hidden sm:table-cell wordBreak">{(!node.size && (node.size !== 0)) ? '-' : filesize(node.size)}</TableCell>
+                                            <TableCell className="hidden sm:table-cell wordBreak">{moment.utc(node.update_date).local().fromNow()}</TableCell>
+                                            <Hidden lgUp>
+                                                <TableCell style={infoIcon}>
+                                                    <IconButton
+                                                        onClick={(ev) => props.pageLayout.current.toggleRightSidebar()}
+                                                        aria-label="open right sidebar"
+                                                    >
+                                                        <Icon>info</Icon>
+                                                    </IconButton>
+                                                </TableCell>
+                                            </Hidden>
+                                        </TableRow>
+                                    );
+
+                                })}
+                            </TableBody>
+                        </Table>
+                    </FuseAnimate>
+                </React.Fragment>
             );
 
         else if (spinnerFlag === true) {
@@ -531,7 +721,10 @@ function FileList(props) {
                 )
         }
 
-        else if (searchResults.length === 0 && props.search !== '')
+        else if (searchResults.filter((data) => {
+            if (data.name !== "" && (props.search === "" || (data.name.toLowerCase().includes(props.search.toLowerCase()) || data.type.toLowerCase().includes(props.search.toLowerCase()) || data.owner_id.toLowerCase().includes(props.search.toLowerCase())))) return data;
+            else return null;
+        }).length === 0 && props.search !== '')
             return (
                 <div className="flex flex-1 flex-col items-center justify-center mt-20">
                     <Typography className="text-18 mt-16" color="textPrimary">No match found for "{props.search}". Please try finding something else.</Typography>

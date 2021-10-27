@@ -31,8 +31,12 @@ import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import FILEUPLOAD_CONFI from "./FileManagerAppConfig"
 import './FileManager.css'
+import FMInstance from './FileManagerService'
+import { RenameFile } from "./RenameFile";
 
 function FileManagerApp(props) {
+  const files = useSelector(({ fileManagerApp }) => fileManagerApp.files);
+  const selectedFile = useSelector(({ fileManagerApp }) => files[fileManagerApp.selectedItemId]);
   const [searchbool, setSearchbool] = useState(false);
   const [search, setSearch] = useState("");
   const [editContent, setEditContent] = useState(true);
@@ -40,16 +44,17 @@ function FileManagerApp(props) {
   const [preview, setPreview] = useState(true);
   const [showDialog, setshowDialog] = useState(false);
   const [showCreateDialog, setShowCreateDialog] = useState(false);
+  const [showRenameDialog, setShowRenameDialog] = useState(false);
   const [checkFlag, setcheckFlag] = useState(false);
   const [prompt, setPrompt] = useState(true);
   const [isFolder, setIsFolder] = useState(false);
+  const [selectedItem, setSelectedItem] = useState({});
   const [containerFlag, setContainerFlag] = useState("");
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [fileTypeArray, setFileTypeArray] = useState([]);
   const history = useHistory();
   // eslint-disable-next-line
   const [ignored, forceUpdate] = useReducer(x => x + 1, 0);
-  const files = useSelector(({ fileManagerApp }) => fileManagerApp.files);
   var path = window.location.pathname;
   var pathEnd = path.charAt(path.length - 1);
   var token = localStorage.getItem("id_token");
@@ -113,6 +118,10 @@ function FileManagerApp(props) {
     setShowCreateDialog(false);
   }
 
+  function closeRenameFolderDialog() {
+    setShowRenameDialog(false);
+  }
+
   function hideSearch() {
     setSearchbool(false);
     setSearch("");
@@ -130,61 +139,54 @@ function FileManagerApp(props) {
     document.removeEventListener("keydown", escFunction, false);
   }
 
-  async function getMetadata(targetMeta) {
+  function OnRefresh() {
+    if (targetPath.charAt(targetPath.length - 1) !== "/")
+      targetPath = targetPath + "/";
+    dispatch(Actions.getFiles(targetPath, "GET_FILES"));
+    setSearch('')
+    setSearchbool(false)
+  }
+
+   function getMetadata(targetMeta) {
     var axios = require("axios");
-    if (typeof token === "string") {
-      var config = {
-        method: "get",
-        url: `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file${targetMeta}`,
-        headers: {
-          Accept: "*/*",
-          Authorization: token,
-        },
-      };
-    } else {
-      config = {
-        method: "get",
-        url: `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file${targetMeta}`,
-        headers: {
-          Accept: "*/*",
-        },
-      };
-    }
+    var config = FMInstance.metaDataConfig(targetMeta)
+
     addData();
-    function addData() {
+    async function addData() {
       const request = axios(config);
-      request
-        .then((response) => {
-          let metaData = response.data.writeACL;
-          let readPermission = response.data.readACL;
-          let ownerId = response.data.owner_id;
-          let type = response.data.type;
-          let isContainer = response.data.isContainer;
-          setContainerFlag(isContainer);
-          if (isContainer === true) {
-            if (pathEnd !== "/") {
-              targetPath = targetPath + "/";
-              window.history.replaceState(
-                null,
-                null,
-                props.location.pathname + "/"
-              );
-              dispatch(Actions.getFiles(targetPath, "GET_FILES"));
-            }
-            setIsFolder(true);
-          } else {
-            localStorage.setItem("nodeType", response.data.type);
-            localStorage.setItem("nodeId", response.data.id);
-            localStorage.setItem("nodeSize", response.data.size);
-            localStorage.setItem("nodeName", response.data.name);
-            forceUpdate();
+      request.then((response) => {
+        let metaData = response.data.writeACL;
+        let readPermission = response.data.readACL;
+        let ownerId = response.data.owner_id;
+        let type = response.data.type;
+        let isContainer = response.data.isContainer;
+        setContainerFlag(isContainer);
+        if (isContainer === true || targetMeta === '') {
+          if (pathEnd !== "/") {
+            targetPath = targetPath + "/";
+            window.history.replaceState(
+              null,
+              null,
+              props.location.pathname + "/"
+            );
           }
-          if (metaData !== undefined)
-            checkPermission(metaData, ownerId, type, readPermission);
-        })
+          dispatch(Actions.getFiles(targetPath, "GET_FILES"));
+          setIsFolder(true);
+        } else {
+          localStorage.setItem("nodeType", response.data.type);
+          localStorage.setItem("nodeId", response.data.id);
+          localStorage.setItem("nodeSize", response.data.size);
+          localStorage.setItem("nodeName", response.data.name);
+          forceUpdate();
+        }
+        if (metaData !== undefined)
+          checkPermission(metaData, ownerId, type, readPermission);
+      })
         .catch((error) => {
           if (error.response && error.response.status === 404) {
-            setContainerFlag("error-404");
+              setContainerFlag("error-404");
+              setIsFolder(false);
+              dispatch(Actions.setSelectedItem(null))
           }
           else if (error.response) {
             setContainerFlag("error-unknown");
@@ -225,11 +227,11 @@ function FileManagerApp(props) {
   };
 
   useEffect(() => {
-    dispatch(Actions.getFiles(targetPath, "GET_FILES"));
+    getMetadata(targetMeta);
     setIsFolder(true);
     setcheckFlag(false);
-    getMetadata(targetMeta);
     setSearch("");
+    localStorage.removeItem('moveDestPath')
     // eslint-disable-next-line
   }, [dispatch, props, props.location, props.history]);
 
@@ -250,10 +252,11 @@ function FileManagerApp(props) {
     <FusePageSimple
       classes={{
         root: "bg-red",
+        content: 'overflowContentFiles',
         header: "h-auto min-h-128 sm:h-auto sm:min-h-140",
         sidebarHeader: "h-auto min-h-128 sm:h-auto sm:min-h-140 sidebarHeader1",
         sidebarContent: "sidebarWrapper",
-        rightSidebar: "w-320",
+        rightSidebar: "sidebarStyle",
         contentWrapper: "FileWrapper",
       }}
       header={
@@ -278,7 +281,7 @@ function FileManagerApp(props) {
                     </Icon>
                     <Typography color="textSecondary">File Manager</Typography>
                   </div>
-                  <Typography variant="h6">File Manager</Typography>
+                  {/* <Typography variant="h6">File Manager</Typography> */}
                 </div>
               </div>
             </div>
@@ -296,6 +299,14 @@ function FileManagerApp(props) {
                 props={props}
                 handleClose={closeCreateFolderDialog}
                 allFilesType={fileTypeArray}
+              />
+            </div>
+            <div>
+              <RenameFile
+                showModal={showRenameDialog}
+                selectedItem={selectedItem}
+                props={props}
+                handleClose={closeRenameFolderDialog}
               />
             </div>
 
@@ -358,6 +369,13 @@ function FileManagerApp(props) {
                           </div>
                         </ClickAwayListener>
                       )}
+                      <div>
+                        <Tooltip title="Click to Refresh" placement="bottom">
+                          <IconButton className="w-64 h-64" onClick={() => OnRefresh()}>
+                            <Icon >refresh</Icon>
+                          </IconButton>
+                        </Tooltip>
+                      </div>
                     </div>
                   </span>
                 </FuseAnimate>
@@ -415,7 +433,6 @@ function FileManagerApp(props) {
             setEditContent={(p) => setEditContent(p)}
             search={search}
             setPreview={(p) => setPreview(p)}
-            setSearchbool={(p) => setSearchbool(p)}
           />
         ) : (
           <Preview
@@ -431,14 +448,18 @@ function FileManagerApp(props) {
       leftSidebarHeader={<MainSidebarHeader />}
       leftSidebarContent={<MainSidebarContent />}
       rightSidebarHeader={
-        ((containerFlag && isFolder && Object.values(files).length !== 0) ||
-          targetMeta === "") && <DetailSidebarHeader pageLayout={pageLayout} setSearch={(p) => setSearch(p)}/>
+        // ((containerFlag && isFolder && Object.values(files).length !== 0) ||
+        //   targetMeta === "") &&
+        selectedFile && <DetailSidebarHeader pageLayout={pageLayout} isContainer={containerFlag === true || containerFlag === undefined || id === null ? true : false}
+          setSelectedItem={(p) => { setSelectedItem(p) }} showRenameDialog={(p) => { setShowRenameDialog(p) }} />
       }
       rightSidebarContent={
-        ((containerFlag && isFolder && Object.values(files).length !== 0) ||
-          targetMeta === "") && (
+        // ((containerFlag && isFolder && Object.values(files).length !== 0) ||
+        //   targetMeta === "") && 
+        selectedFile && (
           <DetailSidebarContent
             pageLayout={pageLayout}
+            isContainer={containerFlag === true || containerFlag === undefined || id === null ? true : false}
             setPrompt={(p) => setPrompt(p)}
             editContent={editContent}
             setEditContent={(p) => setEditContent(p)}

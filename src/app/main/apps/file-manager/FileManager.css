@@ -1,5 +1,24 @@
 .FileWrapper {
-    overflow: auto;
+  overflow: auto;
+}
+
+.sidebarStyle {
+  min-width: 320px;
+  max-width: 515px;
+  width: auto;
+}
+
+.subcategory-count-badge {
+  top: 11px;
+  font-size: 12px !important;
+  background: #61dafb;
+  right: 7px;
+  color: black !important;
+  position: absolute;
+  border-radius: 50% !important;
+  padding: 0px 6px !important;
+  width: auto;
+  height: auto;
 }
 
 /* .contentStyle {
@@ -7,26 +26,50 @@
     overflow-y: auto;
 } */
 
+.hideRoot {
+  display: none;
+}
+
+.webkitSticky {
+  position: -webkit-sticky !important;
+}
+
+
+.overflowContentFiles {
+  /* overflow-x: auto; */
+  overflow: visible;
+}
+
 .sidebarHeader1 {
-    overflow: hidden;
+  overflow: hidden;
 }
 
 .sidebarWrapper {
-    overflow: auto;
+  overflow: auto;
 }
 
-  .sort-arrow{
-    opacity: 0.1;
-  }
-  .sort-arrow:hover{
-    opacity: .5;
+.sort-arrow {
+  opacity: 0.1;
+}
+
+.sort-arrow:hover {
+  opacity: .5;
+}
+
+.fileTableStyle {
+  word-break: break-all;
+}
+
+.wordBreak {
+  word-break: keep-all;
+}
+
+@media only screen and (max-width: 1279px) {
+  .sidebarStyle {
+    width: 320px;
   }
 
-  .fileTableStyle {
-    word-break: break-all;
+  .overflowContentFiles {
+    overflow: auto;
   }
-
-  .wordBreak {
-    word-break: keep-all;
-  }
-
+}
