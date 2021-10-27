@@ -123,7 +123,7 @@ function JobDefinitionForm(props) {
           if (props.resubmit){
             obj["value"] = props.resubmit.inputData.input[obj.name];
             if (outputFiles === undefined) 
-              localStorage.setItem('formLastPath',props.resubmit.inputData.input[obj.name].substr(0, props.resubmit.inputData.input[obj.name].lastIndexOf("\/")) + '/')
+              localStorage.setItem('formLastPath',props.resubmit.inputData.input[obj.name].substr(0, props.resubmit.inputData.input[obj.name].lastIndexOf("/")) + '/')
           }
           else
             obj["value"] = "";
