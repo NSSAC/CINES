@@ -35,9 +35,11 @@ function Breadcrumb({props,className, styles, path})
         <div className={className} style={styles} >
             {arr.map((path, i) => (   
                 <div key={i}  className="flex items-center"> 
-                     <div  onClick={() => onclickRoute(i)} className="cursor-pointer" style={arr.length - 1 !== i?ellipsis:null} title={path} >{path} </div>
+                     <div  onClick={() => onclickRoute(i)} className="cursor-pointer" style={arr.length - 1 !== i?ellipsis:null} title={path} >{(i===0)?"File Manager":path} </div>
                       {arr.length - 1 !== i && (
-                        <Icon>chevron_right</Icon>
+                        <Icon className="text-16" color="action">
+                            chevron_right
+                      </Icon>
                     )}
                 </div>))}
         </div>

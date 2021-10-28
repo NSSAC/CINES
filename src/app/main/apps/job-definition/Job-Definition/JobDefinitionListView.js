@@ -80,14 +80,13 @@ function JobDefinitionListView(props) {
                     <div className="flex items-center justify-between">
                         <div className="flex flex-col" style={{ flexGrow: "1" }}>
                             <div className="flex items-center mb-16">
-                                <Icon className="text-18 cursor-pointer" color="action" onClick={navigateHome}>home</Icon>
-                                <Icon className="text-16" color="action">chevron_right</Icon>
-                                <Typography style={{ width: '100px' }} color="textSecondary">Job Definition</Typography>
+                                <Icon className="text-18" className="cursor-pointer" color="action" onClick={navigateHome}>home</Icon>
+                                <Icon className="text-17" color="action">chevron_right</Icon>
+                                <Typography className="w-max" color="textSecondary">Job Definition</Typography>
                             </div>
-                            {/* <Typography variant="h6">Job Definition</Typography> */}
                         </div>
 
-{(
+                        {(
                             <FuseAnimate animation="transition.expandIn" delay={200}>
                                 <span>
                                     <div className={clsx("flex", props.className)}>

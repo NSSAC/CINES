@@ -100,6 +100,7 @@ function MyJobsApp(props) {
           <div className="flex items-center justify-between">
             <div className="flex flex-col" style={{ flexGrow: "1" }}>
               <div className="flex items-center mb-16">
+  
                 <Icon
                   className="text-18 cursor-pointer"
                   color="action"
@@ -107,10 +108,11 @@ function MyJobsApp(props) {
                 >
                   home
                 </Icon>
-                <Icon className="text-16 cursor-pointer" color="action">
+
+                <Icon className="text-16  cursor-pointer" color="action">
                   chevron_right
                 </Icon>
-                <Typography className='cursor-pointer' color="textSecondary" onClick={()=>navigateTo('jobs')}>
+                <Typography className="cursor-pointer" color="textSecondary" onClick={()=>navigateTo('jobs')}>
                   My Jobs
                 </Typography>
                 {path.endsWith('my-jobs/') !== true &&
@@ -118,7 +120,7 @@ function MyJobsApp(props) {
                     <Icon className="text-16" color="action">
                       chevron_right
                     </Icon>
-                    <Typography color="textSecondary">
+                    <Typography className='' color="textPrimary">
                       {selectedItem.id}
                     </Typography>
                   </>

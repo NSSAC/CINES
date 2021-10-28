@@ -8,7 +8,7 @@ import * as Actions from './store/actions';
 import reducer from './store/reducers';
 import MainSidebarHeader from './MainSidebarHeader';
 import MainSidebarContent from './MainSidebarContent';
-import { useHistory, Redirect } from "react-router-dom";
+import { useHistory, Redirect, Link } from "react-router-dom";
 import JobDefinitionForm from "./JobDefinitionForm"
 
 function JobDefinitionView(props) {
@@ -124,16 +124,16 @@ function JobDefinitionView(props) {
                 <div className="flex flex-col flex-1 p-8 sm:p-12 relative">
                     <div className="flex items-center justify-between">
                         <div className="flex flex-col" style={{ flexGrow: "1" }}>
-                            <div className="flex items-center mb-16">
-                                <Icon className="text-18 cursor-pointer" color="action" onClick={navigateHome}>home</Icon>
+                            <div className="flex items-center mb-16 ">
+                                <Link to="/"><Icon className="text-18 cursor-pointer" color="action">home</Icon></Link>
                                 <Icon className="text-16" color="action">chevron_right</Icon>
-                                <Typography className="w-max" color="textSecondary">Job Definition</Typography>
+                                <Typography className="w-max" color="textSecondary">Input</Typography>
                                 <Icon className="text-16" color="action">chevron_right</Icon>
                                 <Typography className="w-max" color="textSecondary">{props.module}</Typography>
        
                             {job_definition && job_definition.id && (
-                                <div className="w-max flex-1 text-right text-orange-400">
-                                    <span title={`This job is defined the ${job_definition.namespace} namespace`}>{job_definition.namespace}</span>
+                                <div className="w-max flex-1 text-right text-orange-400 text-sm">
+                                    <span className="" title={`This job is defined the ${job_definition.namespace} namespace`}>{job_definition.namespace}</span>
                                     <span className="ml-2" title={`Container Version ${job_definition.version}`}>v{job_definition.version}</span>
                                 </div>                                
                             )}

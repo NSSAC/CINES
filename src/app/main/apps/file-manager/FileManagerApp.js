@@ -254,33 +254,38 @@ function FileManagerApp(props) {
       classes={{
         root: "bg-red",
         content: 'overflowContentFiles',
-        header: "h-auto min-h-128 sm:h-auto sm:min-h-140",
-        sidebarHeader: "h-auto min-h-128 sm:h-auto sm:min-h-140 sidebarHeader1",
+        header: "h-auto min-h-84 overflow ",
+        sidebarHeader: "h-auto min-h-84 overflow sidebarHeader1",
         sidebarContent: "sidebarWrapper",
         rightSidebar: "sidebarStyle",
         contentWrapper: "FileWrapper",
       }}
       header={
         <div
-          className="flex flex-col flex-1 p-8 sm:p-12 relative"
+          className="flex flex-col flex-1 p-8"
           style={{ width: "100%" }}
         >
           <div className="flex items-center justify-between">
             <div style={{ minWidth: "40%" }}>
               <div className="flex flex-1 items-center justify-between ">
-                <div className="flex flex-col">
-                  <div className="flex items-center mb-16">
+                <div className="flex flex-col align-middle">
+                  <div className="flex items-center mb-16 align-middle">
                     <Icon
-                      className="text-18  cursor-pointer"
+                      className="text-18 cursor-pointer"
                       color="action"
                       onClick={navigateHome}
                     >
                       home
                     </Icon>
-                    <Icon className="text-16" color="action">
+                    <Icon className="text-18" color="action">
                       chevron_right
                     </Icon>
-                    <Typography color="textSecondary">File Manager</Typography>
+                    <Breadcrumb
+                    props={props}
+                    path={targetPath}
+                    className="flex"
+                    styles={style}
+                  />
                   </div>
                   {/* <Typography variant="h6">File Manager</Typography> */}
                 </div>
@@ -370,6 +375,18 @@ function FileManagerApp(props) {
                           </div>
                         </ClickAwayListener>
                       )}
+                                  {checkFlag && containerFlag && (
+                      <div>
+
+                        <Tooltip title="Create folder OR Upload file" aria-label="add">
+                          <IconButton className="w-64 h-64" onClick={handleClick}>
+                            <Icon>
+                              add
+                            </Icon>
+                          </IconButton>
+                        </Tooltip>
+                      </div>
+                    )}
                       <div>
                         <Tooltip title="Click to Refresh" placement="bottom">
                           <IconButton className="w-64 h-64" onClick={() => OnRefresh()}>
@@ -381,40 +398,6 @@ function FileManagerApp(props) {
                   </span>
                 </FuseAnimate>
               )}
-          </div>
-          <div className="flex flex-1 items-end">
-            {checkFlag && containerFlag && (
-              <FuseAnimate
-                className="hidden md:flex flex-col"
-                animation="transition.expandIn"
-                delay={600}
-              >
-                <Tooltip title="Create folder OR Upload file" aria-label="add">
-                  <Fab
-                    color="secondary"
-                    aria-label="add"
-                    size="medium"
-                    className="flex flex-col absolute bottom-0 d-none d-sm-block  left-0 ml-16 -mb-12 z-999"
-                  >
-                    <Icon className="flex flex-col" onClick={handleClick}>
-                      add
-                    </Icon>
-                  </Fab>
-                </Tooltip>
-              </FuseAnimate>
-            )}
-            <FuseAnimate delay={200}>
-              <div>
-                {
-                  <Breadcrumb
-                    props={props}
-                    path={targetPath}
-                    className="flex pl-72 text-16 sm:text-16"
-                    styles={style}
-                  />
-                }
-              </div>
-            </FuseAnimate>
           </div>
         </div>
       }

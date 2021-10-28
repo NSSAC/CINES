@@ -47,7 +47,7 @@ function Breadcrumb(props) {
                 <div key={i} className="flex items-center">
                     <div onClick={() => onclickRoute(i)} className="cursor-pointer" style={breadcrumb_Array.length - 1 !== i ? ellipsis : {color: '#61dafb'}} title={path} >{path} </div>
                     {breadcrumb_Array.length - 1 !== i && (
-                        <Icon>chevron_right</Icon>
+                        <Icon className="text-16">chevron_right</Icon>
                     )}
                 </div>))}
         </div>

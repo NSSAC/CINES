@@ -553,7 +553,7 @@ module.exports = {
             },
             fontSize          : {
                 xs   : '1.2rem',     // 12px
-                sm   : '2.4rem',     // 24px
+                sm   : '1.4rem',     // 24px
                 base : '1.6rem',     // 16px
                 lg   : '1.8rem',     // 18px
                 xl   : '2rem',       // 20px

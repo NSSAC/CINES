@@ -108,46 +108,45 @@ function DetailSidebarHeader(props) {
   }
 
   return (
-    <div className="flex flex-col justify-between h-full p-4 sm:p-12">
-      <div className="toolbar flex align-center justify-end h-48">
-        {canDelete && <FuseAnimate animation="transition.expandIn" delay={200}>
+    <div className="flex flex-col justify-evenly h-full pt-8">
+      <div className="toolbar align-center items-center text-center h-48">
+        {canDelete && (
           <Tooltip title="Rename file/folder" placement="top">
-            <IconButton disabled={checked === 'true'} id="editBtn" onClick={() => editFilename(selectedItem)}>
+            <IconButton className="w-64 h-64" disabled={checked === 'true'} id="editBtn" onClick={() => editFilename(selectedItem)}>
               <Icon fontSize='small'>edit</Icon>
             </IconButton>
           </Tooltip>
-        </FuseAnimate>}
-        {canDelete && props.isContainer && <FuseAnimate animation="transition.expandIn" delay={200}>
+        )}
+        {canDelete && props.isContainer && (
           <Tooltip title="Click to Delete" placement="bottom">
-            <IconButton disabled={checked === 'true'} onClick={() => OnDelete(selectedItem)}>
+            <IconButton className="w-64 h-64" disabled={checked === 'true'} onClick={() => OnDelete(selectedItem)}>
               <Icon >delete</Icon>
               {(delete_id === selectedItem.id) && deleteFile ? <DeleteFile pageLayout={props.pageLayout} setDeleteFile={(p) => setDeleteFile(p)} name={selectedItem.name} size={selectedItem.size} fileId={selectedItem.id} type={selectedItem.type}></DeleteFile> : null}
             </IconButton>
           </Tooltip>
-        </FuseAnimate>}
-        {isFile && canRead && <FuseAnimate animation="transition.expandIn" delay={200}>
+       )}
+        {isFile && canRead && (
           <Tooltip title="Click to Download" placement="bottom">
-            <IconButton disabled={checked === 'true'} onClick={() => setDownload(true)}>
+            <IconButton className="w-64 h-64" disabled={checked === 'true'} onClick={() => setDownload(true)}>
               <Icon>cloud_download</Icon>
               {download ? <Download setDownload={(p) => setDownload(p)} name={selectedItem.name} size={selectedItem.size} fileId={selectedItem.id} type={selectedItem.type}></Download> : null}
             </IconButton>
           </Tooltip>
-        </FuseAnimate>}
+        )}
       </div>
 
       {checked !== 'true' && <div>
         <FuseAnimate delay={200}>
           <Tooltip title={selectedItem.name} placement="bottom">
-            <Typography variant="subtitle1" className="mb-8">
-              <span style={tableStyle}>{selectedItem.name}</span></Typography>
+            <div className="w-full text-center m-0 p-2">
+
+              <Typography variant="subtitle2" className="p-0 mr-0 m-0 mt-10">
+                <span>{selectedItem.name}</span>
+              </Typography>
+            </div>
           </Tooltip>
         </FuseAnimate>
-        <FuseAnimate delay={300}>
-          <Typography variant="caption" className="">
-            <span>Updated</span>
-            <span>: {moment.utc(selectedItem.update_date).local().fromNow()}</span>
-          </Typography>
-        </FuseAnimate>
+
       </div>}
     </div>
   );
