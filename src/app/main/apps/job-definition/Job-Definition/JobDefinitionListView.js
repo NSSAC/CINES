@@ -6,22 +6,18 @@ import withReducer from 'app/store/withReducer';
 import * as Actions from './store/actions';
 import reducer from './store/reducers';
 import JobDefinitionFileList from './JobDefinitionFileList';
-// import DetailSidebarHeader from './DetailSidebarHeader';
-// import DetailSidebarContent from './DetailSidebarContent';
 import MainSidebarHeader from './MainSidebarHeader';
 import MainSidebarContent from './MainSidebarContent';
 import clsx from 'clsx';
 import { useHistory } from "react-router-dom";
 
-function JobDefinitionApp(props) {
+function JobDefinitionListView(props) {
 
     const dispatch = useDispatch();
     const pageLayout = useRef(null);
     const [searchbool, setSearchbool] = useState(false);
     const [search, setSearch] = useState("");
     const history = useHistory();
-    // const [preview, setPreview] = useState(true);
-    var path = window.location.pathname
 
     useEffect(() => {
         let start = 0
@@ -94,7 +90,7 @@ function JobDefinitionApp(props) {
 {(
                             <FuseAnimate animation="transition.expandIn" delay={200}>
                                 <span>
-                                {path.endsWith('job-definition/') && <div className={clsx("flex", props.className)}>
+                                    <div className={clsx("flex", props.className)}>
                                         <Tooltip title="Click to search" placement="bottom">
                                             <div onClick={showSearch}>
                                                 <IconButton className="w-64 h-64"><Icon>search</Icon></IconButton>    </div>
@@ -122,7 +118,7 @@ function JobDefinitionApp(props) {
                                                 </div>
                                             </ClickAwayListener>
                                         )}
-                                    </div>}
+                                    </div>
                                 </span>
                             </FuseAnimate>
                         )}
@@ -131,7 +127,7 @@ function JobDefinitionApp(props) {
                 </div>
             }
             content={
-                <JobDefinitionFileList pageLayout={pageLayout} search={search} />
+                <JobDefinitionFileList pageLayout={pageLayout} search={search} {...props} />
             }
             leftSidebarVariant="temporary"
 
@@ -148,4 +144,4 @@ function JobDefinitionApp(props) {
     )
 }
 
-export default withReducer('JobDefinitionApp', reducer)(JobDefinitionApp);
+export default withReducer('JobDefinitionApp', reducer)(JobDefinitionListView);

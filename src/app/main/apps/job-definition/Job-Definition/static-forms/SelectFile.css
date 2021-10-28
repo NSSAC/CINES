@@ -189,9 +189,10 @@ input[type=submit]:hover {
 }
 
 @media only screen and (min-width: 601px) {
-    .content1 {
-        border-top: 2px solid black;
-        border-bottom: 2px solid black;
+    .content1 {   
+        border-bottom-width: 1px;
+        border-color: rgba(0, 0, 0, 0.12);   
+        padding: 8px;
         padding-left: 8px;
         padding-right: 8px;
         width: 100%;

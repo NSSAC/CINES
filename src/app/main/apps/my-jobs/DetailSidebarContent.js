@@ -105,7 +105,6 @@ function DetailSidebarContent(props) {
   }
 
  const renderOutput = () => {
-   console.log(1)
   if (selectedItem.output_container) {
     if (selectedItem.state === 'Completed') {
       return (<td

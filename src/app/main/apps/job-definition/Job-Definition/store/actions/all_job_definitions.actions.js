@@ -1,13 +1,13 @@
-export const GET_FILES = "[FILE MANAGER APP] GET FILES";
+export const GET_ALL_JOB_DEFINITIONS = "[JOBSERVICE] GET ALL JOB DEFINITIONS";
+export const CLEAR_ALL_JOB_DEFINITIONS = '[JOBSERVICE] CLEAR ALL JOB DEFINITIONS'
+
 var token = localStorage.getItem("id_token");
 let arr = [];
-
-export const CLEAR = 'CLEAR'
 
 export function clearData(){
   return (dispatch) =>
       dispatch({
-        type: CLEAR,
+        type: CLEAR_ALL_JOB_DEFINITIONS,
         payload: [],
       })
     };
@@ -21,9 +21,7 @@ arr=[];
       method: 'get',
       url: url,
       headers: {
-
         'Accept': 'application/json',
-
         'Authorization': token
       }
     };
@@ -35,7 +33,7 @@ arr=[];
         arr.push(...response.data)
       }
       dispatch({
-        type: GET_FILES,
+        type: GET_ALL_JOB_DEFINITIONS,
         payload: arr,
         totalFiles: response.headers,
       });

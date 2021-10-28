@@ -6,23 +6,23 @@ import React, { useEffect, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
 import { FusePageSimple, SelectFormsy, TextFieldFormsy } from '@fuse';
-import { Input } from './SelectFile.js'
+import { Input } from '../../SelectFile.js'
 import { Icon, LinearProgress, MenuItem } from '@material-ui/core';
-import Toaster from "../Toaster";
-import Deterministic_threshold from './CSonNet/deterministic_threshold.js';
-import SIR from './CSonNet/SIR/SIR.js';
+import Toaster from "../../../Toaster";
+import Deterministic_threshold from '../../CSonNet/deterministic_threshold.js';
+import SIR from '../../CSonNet/SIR/SIR.js';
 // import SIS from './CSonNet/SIS/SIS.js';
 // import ICM from './CSonNet/ICM.js';
 // import LTM from './CSonNet/LTM.js';
 // import PTM from './CSonNet/PTM.js';
-import SEIR from './CSonNet/SEIR/SEIR.js';
-import { modelJSON } from './Schemas/CSonNet_modelDefinition'
+import SEIR from '../../CSonNet/SEIR/SEIR.js';
+import { modelJSON } from '../../Schemas/CSonNet_modelDefinition'
 import ReactTooltip from 'react-tooltip';
 import { useDispatch, useSelector } from "react-redux";
-import * as Actions from "../store/actions";
+import * as Actions from "../../../store/actions";
 import { JobService } from 'node-sciduct';
 
-const CSonNet_Contagion_Simulation = (props) => {
+const CSonNet_Contagion_Simulation_v1 = (props) => {
     const jobData = useSelector(
         ({ JobDefinitionApp }) => JobDefinitionApp.selectedjobid
       );
@@ -395,13 +395,10 @@ const CSonNet_Contagion_Simulation = (props) => {
                                 {isToasterFlag ? (
                                     <Toaster errorMsg={errorMsg} success={success} id="CSonNet Contagion Simulation"></Toaster>
                                 ) : null}
-                                <Typography className="h2"><b>CSonNet Contagion Simulation</b></Typography>
-                                <Typography className="h4" style={descStyle}>&nbsp;{modelJSON['description']}
-                                {`. This task outputs a file of type ${jobData.output_files.type} in your chosen location `}
-                                </Typography>
                                 <Formsy
                                     onValid={enableButton}
                                     onInvalid={disableButton}
+                                    // className="p-8 flex border-b border-gray-600"
                                     className="content1"
                                 >
                                     <div className='columnStyle'>
@@ -735,4 +732,4 @@ const CSonNet_Contagion_Simulation = (props) => {
         );
     else return null
 }
-export default CSonNet_Contagion_Simulation;
+export default CSonNet_Contagion_Simulation_v1;

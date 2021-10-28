@@ -1,6 +1,7 @@
 import React, { useEffect, useReducer, useRef } from "react";
 import {
   ClickAwayListener,
+  Hidden,
   Tooltip,
   Typography,
   Icon,
@@ -450,8 +451,8 @@ function FileManagerApp(props) {
       rightSidebarHeader={
         // ((containerFlag && isFolder && Object.values(files).length !== 0) ||
         //   targetMeta === "") &&
-        selectedFile && <DetailSidebarHeader pageLayout={pageLayout} isContainer={containerFlag === true || containerFlag === undefined || id === null ? true : false}
-          setSelectedItem={(p) => { setSelectedItem(p) }} showRenameDialog={(p) => { setShowRenameDialog(p) }} />
+        selectedFile && <Hidden smDown><DetailSidebarHeader pageLayout={pageLayout} isContainer={containerFlag === true || containerFlag === undefined || id === null ? true : false}
+          setSelectedItem={(p) => { setSelectedItem(p) }} showRenameDialog={(p) => { setShowRenameDialog(p) }} /></Hidden>
       }
       rightSidebarContent={
         // ((containerFlag && isFolder && Object.values(files).length !== 0) ||

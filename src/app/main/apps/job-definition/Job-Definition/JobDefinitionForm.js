@@ -44,22 +44,26 @@ function JobDefinitionForm(props) {
   };
 
   const childGrid = {
-    borderRight: "1px solid black",
-    paddingLeft: "20px",
+    // border: "1px solid rgba(0, 0, 0, 0.12);"
+    
+    // borderRight: "1px solid black",
+    // paddingLeft: "20px",
   };
 
-  const outputGrid = {
-    borderRight: "1px solid black",
-    paddingLeft: "20px",
-    borderTop: "2px solid black",
-  };
+  const outputGrid={}
+  // const outputGrid={border: "1px solid gray", margin: "4px", paddingLeft: "20px"}
+  // const outputGrid = {
+  //   borderRight: "1px solid black",
+  //   paddingLeft: "20px",
+  //   borderTop: "2px solid black",
+  // };
 
-  const hereButton = {
-    fontFamily: 'Muli,Roboto,"Helvetica",Arial,sans-serif',
-    fontSize: '15px',
-    fontWeight: '500',
-    color: 'deepskyblue'
-  }
+  // const hereButton = {
+  //   fontFamily: 'Muli,Roboto,"Helvetica",Arial,sans-serif',
+  //   fontSize: '15px',
+  //   fontWeight: '500',
+  //   color: 'deepskyblue'
+  // }
 
   const history = useHistory();
 
@@ -91,11 +95,11 @@ function JobDefinitionForm(props) {
     // eslint-disable-next-line
   }, [jobData.id]);
 
-  const openDialog = (data) => {
-    setshowDialog(true);
-    setStandardOut(data[1]);
-    setHeaderTitle(data[0]);
-  }
+  // const openDialog = (data) => {
+  //   setshowDialog(true);
+  //   setStandardOut(data[1]);
+  //   setHeaderTitle(data[0]);
+  // }
 
   const handleClose = () => {
     setshowDialog(false);
@@ -217,9 +221,7 @@ function JobDefinitionForm(props) {
       input: {},
 
       job_definition: jobDefinition,
-      pragmas: {
-        account: "ARCS:bii_nssac",
-      },
+      pragmas: {},
     };
     for (let key in formElementsArray) {
       if (
@@ -326,27 +328,15 @@ function JobDefinitionForm(props) {
         {isToasterFlag ? (
           <Toaster errorMsg={errorMsg} success={success} id={response.id}></Toaster>
         ) : null}
-        <Typography className="h2">
-          &nbsp;{response !== "" ? <b>{response.id}</b> : null}
-        </Typography>
-        <span className="h4">
-          &nbsp;{response !== "" ? response.description : null}
-          {response.output_files && response.output_files.type !== 'folder' && (typeof (response.output_files.type) === 'string' ? ` This task outputs a file of type ${response.output_files.type} in your chosen location` : ` This task outputs a file depending on selected ${Object.values(response.output_files.type)[0].split(/[/ ]+/).pop()} in your chosen location`)}
-          {response.output_files && !response.output_schema && <span>.</span>} 
-          {response.output_files && response.output_files.contents && ` This task outputs files of type ${(response.output_files.contents.map(a => a.type)).toString()} in your chosen location. `}
-          {response.output_files && response.output_schema && response.output_schema.properties && ` along with output data attached to the job. Click `}
-          {!response.output_files && response.output_schema && response.output_schema.properties && ` This task outputs data attached to the job. Click `}
-        </span>
-        {response.output_schema && response.output_schema.properties && <button className='cursor-pointer' style={hereButton} onClick={() => openDialog(['Output schema', response.output_schema])}> here </button>}
-        <span>{response.output_schema && response.output_schema.properties && ' to see the schema of the output.'} </span>
-        <div>
+
+        <div className="p-8">
           {Object.entries(formElementsArray).length !== 0 ? (
             <Formsy
               onValid={enableButton}
               onInvalid={disableButton}
               className="flex flex-col justify-center"
             >
-              <Grid style={parentGrid} container spacing={3}>
+              <Grid className="p-4 border-b border-gray-600" container spacing={3}>
                 {Object.entries(formElementsArray).map((formElement) =>
                   formElement[1].id < 200 ? (
                     <Grid key={formElement[1].id} style={childGrid} item container xs={12} sm={6}>

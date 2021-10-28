@@ -34,10 +34,10 @@ function ToolbarLayout2(props)
     return (
         <ThemeProvider theme={toolbarTheme}>
             <AppBar id="fuse-toolbar" className="flex relative z-10" color="default" style={{backgroundColor: toolbarTheme.palette.background.default}}>
-            <Hidden lgUp>
+            <Hidden mdUp>
                 <Toolbar className="  container  p-0 ">
                     {config.navbar.display && (
-                        <Hidden lgUp>
+                        <Hidden mdUp>
                             <NavbarMobileToggleButton className="w-64 h-64 p-0"/>
                             <div className={classes.separator}/>
                         </Hidden>

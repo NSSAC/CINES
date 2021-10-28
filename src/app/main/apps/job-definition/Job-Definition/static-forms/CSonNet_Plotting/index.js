@@ -16,17 +16,17 @@ import Grid from '@material-ui/core/Grid';
 import { FusePageSimple } from '@fuse';
 import { Icon } from '@material-ui/core';
 import ReactTooltip from 'react-tooltip';
-import PlotTypes from './CSonNet_plot/plotTypes.js';
-import LegendSection from './CSonNet_plot/legendSection.js';
-import TitleSection from './CSonNet_plot/titleSection.js';
-import XAxisSection from './CSonNet_plot/xAxisSection.js';
-import YAxisSection from './CSonNet_plot/yAxisSection.js';
-import TickSection from './CSonNet_plot/tickSection.js';
-import { Input } from './SelectFile.js'
-import './SelectFile.css'
-import Toaster from '../Toaster.js';
+import PlotTypes from '../CSonNet_plot/plotTypes.js';
+import LegendSection from '../CSonNet_plot/legendSection.js';
+import TitleSection from '../CSonNet_plot/titleSection.js';
+import XAxisSection from '../CSonNet_plot/xAxisSection.js';
+import YAxisSection from '../CSonNet_plot/yAxisSection.js';
+import TickSection from '../CSonNet_plot/tickSection.js';
+import { Input } from '../SelectFile.js'
+import '../SelectFile.css'
+import Toaster from '../../Toaster.js';
 import { useDispatch, useSelector } from "react-redux";
-import * as Actions from "../store/actions";
+import * as Actions from "../../store/actions";
 import { JobService } from 'node-sciduct';
 
 const CSonNet_plot = (props) => {

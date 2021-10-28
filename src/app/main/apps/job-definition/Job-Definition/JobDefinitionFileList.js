@@ -41,7 +41,7 @@ function JobDefinitionFileList(props) {
   var lengthOfRow;
   const dispatch = useDispatch();
   const jobDefinitionData = useSelector(
-    ({ JobDefinitionApp }) => JobDefinitionApp.jobdefinition
+    ({ JobDefinitionApp }) => JobDefinitionApp.all_job_definitions
   );
   const selectedItem = useSelector(
     ({ JobDefinitionApp }) => JobDefinitionApp.selectedjobid
@@ -164,7 +164,7 @@ function JobDefinitionFileList(props) {
 
   function moduleIsAvailable() {
     try {
-      require.resolve(`./static-forms/${pathArrayEnd}`);
+      require.resolve(`./static-forms/${pathArrayEnd}/`);
       return true;
     } catch (e) {
       return false;
@@ -179,7 +179,7 @@ function JobDefinitionFileList(props) {
     var formExists = moduleIsAvailable();
     if (formExists) {
       StaticJobDefinitionForm = React.lazy(() =>
-        import(`./static-forms/${pathArrayEnd}`)
+        import(`./static-forms/${pathArrayEnd}/`)
       );
     }
 
@@ -194,10 +194,10 @@ function JobDefinitionFileList(props) {
       );
     else {
       return formExists ? (
-        <StaticJobDefinitionForm resubmit={props.location.state}></StaticJobDefinitionForm>
+        <StaticJobDefinitionForm resubmit={props.location.state} {...props}></StaticJobDefinitionForm>
       ) : (
         <JobDefinitionForm
-          state={selectedJobDefinition} resubmit={props.location.state}
+          state={selectedJobDefinition} resubmit={props.location.state} {...props}
         ></JobDefinitionForm>
       );
     }
@@ -249,7 +249,7 @@ function JobDefinitionFileList(props) {
                         container
                         spacing={1}
                       >
-                        <Grid container xs={9} sm={10}>
+                        <Grid container item xs={9} sm={10}>
                           <Grid item xs={4} style={{ padding: "5px" }}>
                             <Typography>Name</Typography>
                             <Typography
@@ -259,10 +259,10 @@ function JobDefinitionFileList(props) {
                             </Typography>
                           </Grid>
                           <Grid item xs={4} style={{ padding: "5px" }}>
-                            <Typography>Created By</Typography>
+                            {/* <Typography>Created By</Typography>
                             <Typography style={{ fontWeight: "700" }}>
                               {row.created_by}
-                            </Typography>
+                            </Typography> */}
                           </Grid>
                           <Grid item xs={4} style={{ padding: "5px" }}>
                             <Typography>Last Updated</Typography>

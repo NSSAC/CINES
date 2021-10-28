@@ -1,11 +1,13 @@
-import {combineReducers} from 'redux';
-import jobdefinition from './jobdefinition.reducer';
-import selectedjobid from './selectedjobid';
+import { combineReducers } from 'redux';
+
+import all_job_definitions from './all_job_definitions.reducer';
+import job_definition from './job_definition.reducer';
+import selectedjobid from './selectedjobid.reducer';
 
 const reducer = combineReducers({
-    jobdefinition,
+    all_job_definitions,
     selectedjobid,
-    
+    job_definition    
 });
 
 export default reducer;

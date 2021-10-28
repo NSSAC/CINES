@@ -48,13 +48,13 @@ function NavbarWrapperLayout2(props)
         <React.Fragment>
             <ThemeProvider theme={navbarTheme}>
 
-                <Hidden mdDown>
+                <Hidden smDown>
                     <Paper className={classes.navbar} square={true}>
                         <NavbarLayout2/>
                     </Paper>
                 </Hidden>
 
-                <Hidden lgUp>
+                <Hidden mdUp>
                     <Drawer
                         anchor="left"
                         variant="temporary"
@@ -73,7 +73,7 @@ function NavbarWrapperLayout2(props)
             </ThemeProvider>
 
             {config.navbar.display && !config.toolbar.display && (
-                <Hidden lgUp>
+                <Hidden mdUp>
                     <NavbarMobileToggleFab/>
                 </Hidden>
             )}

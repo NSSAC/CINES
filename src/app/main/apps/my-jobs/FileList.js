@@ -283,7 +283,7 @@ function FileList(props) {
                                                 {/* <TableCell  >
                                                     {row.update_date}
                                                 </TableCell> */}
-                                                <Hidden lgUp>
+                                                <Hidden mdUp>
                                                     <TableCell>
                                                         <IconButton
                                                             onClick={(ev) => props.pageLayout.current.toggleRightSidebar()}
