@@ -34,7 +34,6 @@
   position: -webkit-sticky !important;
 }
 
-
 .overflowContentFiles {
   /* overflow-x: auto; */
   overflow: visible;
@@ -53,7 +52,7 @@
 }
 
 .sort-arrow:hover {
-  opacity: .5;
+  opacity: 0.5;
 }
 
 .fileTableStyle {
@@ -72,4 +71,13 @@
   .overflowContentFiles {
     overflow: auto;
   }
+}
+
+.MuiButtonBase-root.MuiChip-root.MuiChip-outlined.MuiChip-sizeSmall.MuiChip-colorDefault.MuiChip-deletable.MuiChip-deletableColorDefault.MuiChip-outlinedDefault.css-1hh13yt-MuiButtonBase-root-MuiChip-root {
+  margin-right: 2px;
+  margin-bottom: 2px;
+}
+
+.person_icon {
+  font-size: 16px !important;
 }
