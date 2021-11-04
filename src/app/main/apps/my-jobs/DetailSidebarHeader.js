@@ -1,10 +1,13 @@
+import { Icon, IconButton, Tooltip } from '@material-ui/core';
 import React, { useState } from 'react';
-import {Icon, IconButton, Tooltip} from '@material-ui/core';
-import {FuseAnimate} from '@fuse';
-import {useSelector} from 'react-redux';
 import { confirmAlert } from 'react-confirm-alert';
-import "../file-manager/Confirm-alert.css";
+import { useSelector } from 'react-redux';
+
+import { FuseAnimate } from '@fuse';
+
 import CancelJob from './CancelJob';
+
+import "../file-manager/Confirm-alert.css";
 
 function DetailSidebarHeader(props)
 {
@@ -41,9 +44,12 @@ function DetailSidebarHeader(props)
       }
 
       function onRerun(item) {
-        var target = window.location.pathname.replace(`my-jobs/${item.id}`,'job-definition/').replace('my-jobs','job-definition') + item.job_definition.split('@')[0];
+        var parts = item.job_definition.split("@")
+        
+        var target = window.location.pathname.replace(`my-jobs/${item.id}`,'job-definition/').replace('my-jobs','job-definition') + parts[0];
         props.history.push({
           pathname: target,
+          search: "?version=" + parts[1],
           state: { inputData: item }
       });
         localStorage.setItem('resubmitJob',JSON.stringify(item))

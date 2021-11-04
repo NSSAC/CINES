@@ -7,17 +7,18 @@ export const modelJSON = {
                 "1"
             ],
             "default_state": "0",
+            "blocking_states": ["2"],
             "rules": [
                 {
                     "input": {
-                        "deterministic_progressive_node_threshold_value": {
+                        "deterministic_progressive_blocking_node_threshold_value": {
                             "type": "integer",
                             "data_sources": [
                                 "fixed"
                             ],
                             "network_element": "node",
                             "label": "Node threshold value",
-                            "description": "Deterministic progressive node threshold value",
+                            "description": "Deterministic progressive blocking node threshold value",
                             "minimum": 0
                         }
                     },
@@ -28,7 +29,7 @@ export const modelJSON = {
                         "cause": [
                             "1"
                         ],
-                        "rule": "deterministic_progressive_node_threshold"
+                        "rule": "deterministic_progressive_blocking_node_threshold"
                     }
                 }
             ]

@@ -1,15 +1,16 @@
+import { Icon, Typography } from '@material-ui/core';
 import React, { useEffect, useRef, useState } from 'react';
-import { Icon, Typography} from '@material-ui/core';
-import { FusePageSimple } from '@fuse';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, Redirect, useHistory } from "react-router-dom";
 
-import { useDispatch,useSelector } from 'react-redux';
+import { FusePageSimple } from '@fuse';
 import withReducer from 'app/store/withReducer';
+
+import JobDefinitionForm from "./JobDefinitionForm"
+import MainSidebarContent from './MainSidebarContent';
+import MainSidebarHeader from './MainSidebarHeader';
 import * as Actions from './store/actions';
 import reducer from './store/reducers';
-import MainSidebarHeader from './MainSidebarHeader';
-import MainSidebarContent from './MainSidebarContent';
-import { useHistory, Redirect, Link } from "react-router-dom";
-import JobDefinitionForm from "./JobDefinitionForm"
 
 function JobDefinitionView(props) {
 
@@ -78,7 +79,7 @@ function JobDefinitionView(props) {
                         out.push(<React.Fragment key={3}><span>The type of output of this task is dependent on the '</span><span className="text-orange-400">{t}</span><span>' option provided as input.</span></React.Fragment>)
                     }
                 }else{
-                    out.push(<span>This task outputs a file of type <span className="text-orange-400" >{of.type}</span> to a chosen location.</span>)
+                    out.push(<span key={4}>This task outputs a file of type <span className="text-orange-400" >{of.type}</span> to a chosen location.</span>)
                 }
                 
             }

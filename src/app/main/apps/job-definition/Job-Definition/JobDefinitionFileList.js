@@ -1,20 +1,19 @@
-/* eslint-disable */
-import React, { useState, useEffect } from "react";
-import {
-  Typography,
-  LinearProgress,
-  Button,
-} from "@material-ui/core";
-import { makeStyles } from "@material-ui/styles";
-import { FuseAnimate } from "@fuse";
-import { useDispatch, useSelector } from "react-redux";
+import { Button, LinearProgress, Typography } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
-import * as Actions from "./store/actions";
-import "./JobDefinitionFileList.css";
-import { withRouter } from "react-router-dom";
-import JobDefinitionForm from "./JobDefinitionForm";
 import { SpaTwoTone } from "@material-ui/icons";
+import { makeStyles } from "@material-ui/styles";
+/* eslint-disable */
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { withRouter } from "react-router-dom";
+
+import { FuseAnimate } from "@fuse";
+
 import MetadataInfoDialog from "../../my-jobs/MetadataDialog";
+import JobDefinitionForm from "./JobDefinitionForm";
+import * as Actions from "./store/actions";
+
+import "./JobDefinitionFileList.css";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -287,7 +286,7 @@ function JobDefinitionFileList(props) {
                             <span style={{ fontWeight: "700" }}>{row.output_schema && row.output_schema.properties && ' to see the schema of the output.'} </span> */}
                           </Grid>
                         </Grid>
-                        <Grid xs={3} sm={2} style={{ paddingTop: "15px" }}>
+                        <Grid item xs={3} sm={2} style={{ paddingTop: "15px" }}>
                           <Button
                             variant="contained"
                             ////size="small"

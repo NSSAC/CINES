@@ -1,4 +1,4 @@
-import React from 'react';
+import { Icon, MenuItem } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -6,7 +6,6 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
-import { useState, useRef} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -14,17 +13,20 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
-import { FuseAnimate } from '@fuse';
-import { Icon, MenuItem } from '@material-ui/core';
-import axios from 'axios';
-import { useDispatch } from 'react-redux';
 import DeleteIcon from '@material-ui/icons/Delete';
-import MenuTableCell from "./MenuTableCell";
-import FILEUPLOAD_CONFIG from "./FileUploadconfig";
-import * as Actions from '../store/actions';
-import './FileUpload.css'
+import axios from 'axios';
 import { FileService } from 'node-sciduct';
+import React from 'react';
+import { useRef, useState } from 'react';
+import { useDispatch } from 'react-redux';
 
+import { FuseAnimate } from '@fuse';
+
+import * as Actions from '../store/actions';
+import FILEUPLOAD_CONFIG from "./FileUploadconfig";
+import MenuTableCell from "./MenuTableCell";
+
+import './FileUpload.css'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -196,7 +198,6 @@ export const FileUpload = ({ allFilesType,fileTypes, setUploadFile, dialogTarget
 
     })
     initialUploadFile.forEach((element ,index) => {
-
       let fileName = element.fileName;
       let type = element.type;
 

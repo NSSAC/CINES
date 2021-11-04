@@ -65,7 +65,7 @@ const Deterministic_threshold = (props) => {
                             autoComplete="off"
                             required
                         />
-                        {description(modelJSON.models.threshold_model.rules[0].input.deterministic_progressive_node_threshold_value.description)}
+                        {description(modelJSON.models.threshold_model.rules[0].input.deterministic_progressive_blocking_node_threshold_value.description)}
                     </Grid>
                     <ReactTooltip clickable={true} isCapture = {true} scrollHide = {true} className='toolTip' place='top' effect='solid' />
                 </div>

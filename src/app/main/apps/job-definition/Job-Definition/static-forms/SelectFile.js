@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { Button, Icon} from '@material-ui/core';
-import './SelectFile.css';
+import { Button, Icon } from '@material-ui/core';
+import React, { useEffect, useState } from 'react';
+import ReactTooltip from 'react-tooltip';
+
+import { FusePageSimple } from '@fuse';
+import { TextFieldFormsy } from '@fuse/components/formsy';
+
 import FMPopup from '../file-manager-dialog/FileManagerDialog.js';
 import FolderPopup from '../file-manager-dialog/FolderManagerDialog.js';
-import {
-	TextFieldFormsy
-} from '@fuse/components/formsy';
-import { FusePageSimple } from '@fuse';
-import ReactTooltip from 'react-tooltip';
+
+import './SelectFile.css';
 
 export const Input = (props) => {
 
@@ -37,7 +38,7 @@ export const Input = (props) => {
 	let inputElement = (
 		<div className="selectedFile">
 		<label className="my-32">
-				{props.formData[1].formLabel}<span style={{color:'red'}}>&nbsp;*</span>-
+				{props.formData[1].formLabel}{props.required!==false && (<span style={{color:'red'}}>&nbsp;*</span>)}-
                    {props.formData[1].outputFlag ?
 					<Button onClick={showFolderManagerDialog} style={selectButtonStyle}>
 						&nbsp;Select path
@@ -53,8 +54,8 @@ export const Input = (props) => {
 					style={{ width: '18px' }}
 					value={props.formData[1].value}
 					label={props.formData[0]}
-					onChange={props.changed}
-					required
+					onChange={ props.changed }
+					required={ props.required }
 				/>
 			</label>
 			{props.formData[1].outputFlag ? <div className={`folderPath ${props.formData[1].value === '' ? '' : 'pathBreak'}`}>{props.formData[1].value === '' ? 'No folder specified' : <b onChange={props.changed} >{props.formData[1].value}</b>}</div>
@@ -78,6 +79,26 @@ export const Input = (props) => {
 		setShowFolderDialog(false);
 	}
 
+	function chooseFile(f){
+		setFileChosen(f)
+		setFileChosenPath(f)
+		if (props.changed){
+			props.changed({target: {value: f}})
+		}
+		
+	}
+
+	function chooseFolder(f){
+		setFolderChosenPath(f)
+		if (props.changed){
+			props.changed({target: {value: f}})
+		}
+	}
+
+	// function chooseFolder(f){
+	// 	setFileChosenPath(p)
+	// 	props.changed(evt)
+	// }
 
 	useEffect(() => {
 		if (fileChosen || folderChosenPath) {
@@ -98,8 +119,8 @@ export const Input = (props) => {
 						setShowModal={(p) => setShowFMDialog(p)}
 						handleFMClose={handleFMClose}
 						fileChosenPath={fileChosenPath}
-						setFileChosen={(p) => setFileChosen(p)}
-						setFileChosenPath={(p) => setFileChosenPath(p)}
+						setFileChosen={chooseFile}
+						setFileChosenPath={ chooseFile }
 						fileTypes={props.formData[1].types}
 						props={props}
 					/>}
@@ -108,7 +129,7 @@ export const Input = (props) => {
 						showModal={showFolderDialog}
 						handleFMClose={handleFolderClose}
 						folderPath={folderChosenPath}
-						setFolderPath={(p) => setFolderChosenPath(p)}
+						setFolderPath={chooseFolder}
 						fileTypes={props.formData[1].types}
 						props={props}
 					/>}

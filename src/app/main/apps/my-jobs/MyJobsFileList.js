@@ -1,13 +1,16 @@
+import { Button, Hidden, Icon, IconButton, LinearProgress, Paper, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TableRow, Tooltip, Typography } from '@material-ui/core';
 /* eslint-disable */
-import React, { useState, useEffect } from 'react';
-import { Typography, LinearProgress, Hidden, Button, Icon, TableFooter, Tooltip, IconButton, Table, TableBody, TableCell, TableHead, TableRow, Paper, TableContainer } from '@material-ui/core';
-import { FuseAnimate } from '@fuse';
+import React, { useEffect, useState } from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
+import { Link } from 'react-router-dom';
+
+import { FuseAnimate } from '@fuse';
+
+import JobData from './JobData';
 import * as Actions from './store/actions';
+
 import './FileList.css'
 import 'fix-date'
-import { Link } from 'react-router-dom';
-import JobData from './JobData';
 
 function MyJobsFileList(props) {
     const dispatch = useDispatch();
@@ -56,8 +59,10 @@ function MyJobsFileList(props) {
     const [page, setPage] = React.useState(0);
     const [sortById, setsortById] = useState(false);
     const [sortByjobdef, setsortByjobdef] = useState(false);
+    const [sortByOutputName, setSortByOutputName] = useState(false)
     const [sortIdFlag, setSortIdFlag] = useState(false);
     const [sortByjobdefFlag, setSortByjobdefFlag] = useState(false);
+    const [sortByOutputNameFlag,setSortByOutputNameFlag] = useState(false);
     const [sortBystateFlag, setSortBystateFlag] = useState(false);
     const [sortByCreationDdateFlag, setSortByCreationDdateFlag] = useState(true);
     const [sortByCreationDdate, setsortByCreationDdate] = useState(false)
@@ -160,22 +165,40 @@ function MyJobsFileList(props) {
         if (toggleArrow === 'sortByjobdef') {
             setSortIdFlag(false)
             setSortByjobdefFlag(true)
+            setSortByOutputNameFlag(false)
             setSortBystateFlag(false)
             setSortByCreationDdateFlag(false)
 
             setsortByCreationDdate(false)
             setsortById(false)
             setsortBystate(false)
+            setSortByOutputName(false)
             setsortByjobdef(!sortByjobdef)
             sortOrder = sortByjobdef
+        }
+        else if (toggleArrow === 'sortByOutputName') {
+            setSortIdFlag(false)
+            setSortByjobdefFlag(false)
+            setSortByOutputNameFlag(true)
+            setSortBystateFlag(false)
+            setSortByCreationDdateFlag(false)
+
+            setsortByCreationDdate(false)
+            setsortById(false)
+            setsortBystate(false)
+            setSortByOutputName(!sortByOutputName)
+            setsortByjobdef(false)
+            sortOrder = sortByOutputName
         }
         else if (toggleArrow === 'sortBystate') {
             setSortIdFlag(false)
             setSortByjobdefFlag(false)
+            setSortByOutputNameFlag(false)
             setSortBystateFlag(true)
             setSortByCreationDdateFlag(false)
 
             setsortByjobdef(false)
+            setSortByOutputName(false)
             setsortByCreationDdate(false)
             setsortById(false)
             setsortBystate(!sortBystate)
@@ -184,10 +207,12 @@ function MyJobsFileList(props) {
         else if (toggleArrow === 'sortByCreationDdate') {
             setSortIdFlag(false)
             setSortByjobdefFlag(false)
+            setSortByOutputNameFlag(false)
             setSortBystateFlag(false)
             setSortByCreationDdateFlag(true)
 
             setsortByjobdef(false)
+            setSortByOutputName(false)
             setsortById(false)
             setsortBystate(false)
             setsortByCreationDdate(!sortByCreationDdate)
@@ -196,10 +221,12 @@ function MyJobsFileList(props) {
 
         else if (toggleArrow === 'sortById') {
             setSortByjobdefFlag(false)
+            setSortByOutputNameFlag(false)
             setSortBystateFlag(false)
             setSortByCreationDdateFlag(false)
             setSortIdFlag(true)
             setsortByjobdef(false)
+            setSortByOutputName(false)
             setsortByCreationDdate(false)
             setsortBystate(false)
             setsortById(!sortById)
@@ -283,6 +310,15 @@ function MyJobsFileList(props) {
                                             <IconButton aria-label="arrow_downward" onClick={() => toggleSorting('job_definition', 'sortByjobdef')}> <Icon className={sortByjobdefFlag ? "" : "sort-arrow"}>arrow_downward</Icon></IconButton>
                                         </Tooltip>
                                     }</TableCell>
+                                    <TableCell >Output {(sortByOutputName) ?
+                                        <Tooltip title="Sort by output name" placement="bottom">
+                                            <IconButton aria-label="arrow_upward" onClick={() => toggleSorting('output_name', 'sortByOutputName')}> <Icon>arrow_upward</Icon></IconButton>
+                                        </Tooltip>
+                                        :
+                                        <Tooltip title="Sort by output name" placement="bottom">
+                                            <IconButton aria-label="arrow_downward" onClick={() => toggleSorting('output_name', 'sortByOutputName')}> <Icon className={sortByOutputNameFlag ? "" : "sort-arrow"}>arrow_downward</Icon></IconButton>
+                                        </Tooltip>
+                                    }</TableCell>
                                     <TableCell  >Status {(sortBystate) ?
                                         <Tooltip title="Sort by status" placement="bottom">
                                             <IconButton aria-label="arrow_upward" onClick={() => toggleSorting('state', 'sortBystate')}> <Icon>arrow_upward</Icon></IconButton>
@@ -322,6 +358,9 @@ function MyJobsFileList(props) {
                                                 </TableCell >
                                                 <TableCell >
                                                     {row.job_definition.replace('net.science/', "")}
+                                                </TableCell>
+                                                <TableCell  >
+                                                    {row.output_name}
                                                 </TableCell>
                                                 <TableCell  >
                                                     {row.state}

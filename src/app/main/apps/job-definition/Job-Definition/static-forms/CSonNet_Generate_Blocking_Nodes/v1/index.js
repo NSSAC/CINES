@@ -16,12 +16,10 @@ import { SelectFormsy, TextFieldFormsy } from '@fuse/components/formsy';
 
 import Toaster from '../../../Toaster.js';
 import { Input } from '../../SelectFile'
+
 import '../../SelectFile.css'
 
-const Contagion_dynamics = (props) => {
-    const jobData = useSelector(
-        ({ JobDefinitionApp }) => JobDefinitionApp.selectedjobid
-    );
+const CSonNet_Generate_Blocking_Nodes = (props) => {
     const [modelJSON, setModelJSON] = useState({});
     const [isFormValid, setIsFormValid] = useState(false);
     const [success, setSuccess] = useState();
@@ -30,6 +28,7 @@ const Contagion_dynamics = (props) => {
     const [inputFields, setInputFields] = useState([]);
     const [errorMsg, setErrorMsg] = useState();
     const [dynamicProps, setDynamicProps] = useState({})
+    const [staticProps, setStaticProps] = useState({})
     const history = useHistory();
     const dispatch = useDispatch()
 
@@ -39,14 +38,15 @@ const Contagion_dynamics = (props) => {
     };
 
     function disableButton() {
+        console.log("Disable Button form invalid")
         setIsFormValid(false);
     }
-
 
     const onFormCancel = () => {
     };
 
     function enableButton() {
+        console.log(`enableBut() existsFlag: ${existsFlag}`)
         if (existsFlag)
             setIsFormValid(true);
         else
@@ -58,51 +58,48 @@ const Contagion_dynamics = (props) => {
         setIsToasterFlag(false);
         // let pathEnd = 'net.science/Contagion_dynamics'
         // setIsToasterFlag(false);
-        // if (jobData.id && !jobData.id.includes(pathEnd) || Object.keys(jobData).length === 0)
+        // if (props.job_definition.id && !props.job_definition.id.includes(pathEnd) || Object.keys(props.job_definition).length === 0)
         // dispatch(Actions.setSelectedItem(pathEnd));
-        // if (Object.keys(jobData).length !== 0 && jobData.id.includes(pathEnd)) {
-        //         if (jobData) {
+        // if (Object.keys(props.job_definition).length !== 0 && props.job_definition.id.includes(pathEnd)) {
+        //         if (props.job_definition) {
         setDynamicProps({
-            blocking_class: { id: 101, value: '' },
-            Output_name: { value: (props.resubmit && props.resubmit.inputData.state !== "Completed") ? props.resubmit.inputData.output_name : '' },
-            Graph: ['Graph', {
-                formLabel: 'Graph',
-                id: 0,
-                name: 'Graph',
-                outputFlag: false,
-                required: true,
-                types: ['PUNGraph', 'PNGraph', 'PNEANet'],
-                value: props.resubmit ? props.resubmit.inputData.input["csonnet_data_analysis"] : ""
-            }],
-            inputFile_Graph: ['Simulation output file', {
+            blocking_class: { id: 101, value: '', required: true },
+            blocking_method: {id: 102, value: '', required: true},
+            random_seed: {id: 103, value: '0', required: true},
+            number_blocking_nodes: {id: 104, value: '', required: true},
+            blocking_state: {id: 105, value: '', required: true},
+            inactive_state: {id: 105, value: '', required: true},
+            output_name: { value: (props.resubmit && props.resubmit.inputData.state !== "Completed") ? props.resubmit.inputData.output_name : '' },
+            csonnet_simulation: ['Simulation output file', {
                 formLabel: 'Simulation output file',
                 id: 1,
                 name: 'Simulation output file',
                 outputFlag: false,
                 required: true,
-                types: ['csonnet_simulation'],
+                types: ['csonnet_simulation_container'],
                 value: props.resubmit ? props.resubmit.inputData.input["csonnet_data_analysis"] : ""
             }],
-            outputPath: ['outputPath', {
+            output_path: ['output_path', {
                 description: "Select the path from File manager where the output file is to be stored.",
-                formLabel: "output_container",
+                formLabel: "Output Container",
                 id: 200,
                 outputFlag: true,
-                types: ["folder", "epihiper_multicell_analysis", "epihiperOutput"],
+                types: ["folder"],
                 value: props.resubmit ? props.resubmit.inputData.output_container : ""
             }]
         })
+
+
+
         props.resubmit && localStorage.setItem('formLastPath', props.resubmit.inputData.output_container)
-        //  setModelJSON(jobData.input_schema)
-        // }
-        // }
-        // eslint-disable-next-line
+         setModelJSON(props.job_definition.input_schema)
+
     }, []);
 
-    useEffect(() => {
-        inputFields.length == 0 && props.resubmit && props.resubmit.inputData.input.text_sections.legend_section.legend_items && setInputFields(props.resubmit.inputData.input.text_sections.legend_section.legend_items)
-        // dynamicProps.triples && inputFields.length && setInputFields(dynamicProps.triples.value)
-    }, [dynamicProps])
+    // useEffect(() => {
+    //     inputFields.length == 0 && props.resubmit && props.resubmit.inputData.input.text_sections.legend_section.legend_items && setInputFields(props.resubmit.inputData.input.text_sections.legend_section.legend_items)
+    //     // dynamicProps.triples && inputFields.length && setInputFields(dynamicProps.triples.value)
+    // }, [dynamicProps])
 
 
     const description = (desc) =>
@@ -125,24 +122,35 @@ const Contagion_dynamics = (props) => {
     }
 
     const createSubmissionData = () => {
-        const requestJson = {}
+        console.log("Random Seed: ", dynamicProps.random_seed)
+        const random_seed = (dynamicProps.random_seed.value === "0")?(Math.floor(Math.random() * 1000)):parseInt(dynamicProps.random_seed.value)
+        let requestJson = {
+            "csonnet_simulation": dynamicProps.csonnet_simulation[1].value,
+            "blocking_class": dynamicProps.blocking_class.value,
+            "blocking_method": dynamicProps.blocking_method.value,
+            "random_seed": random_seed,
+            "blocking_node_state": dynamicProps.blocking_state.value,
+            "inactive_state": dynamicProps.inactive_state.value,
+            "number_blocking_nodes": parseInt(dynamicProps.number_blocking_nodes.value),
+            "blocking_type": "node"
+
+        }
         populateBody(requestJson)
     }
 
     function populateBody(submitJSON) {
         setIsToasterFlag(true);
         var path = window.location.pathname.replace("/apps/job-definition/", "");
-        var jobDefinition = path;
+        var jobDefinition = `${props.job_definition.namespace}/${props.jobdef}@${props.version}`;
         var requestJson = {
             input: submitJSON,
             job_definition: jobDefinition,
-            pragmas: {
-                account: "ARCS:bii_nssac",
-            },
-            output_container: dynamicProps.outputPath[1].value,
-            output_name: dynamicProps.Output_name.value
+            pragmas: {},
+            output_container: dynamicProps.output_path[1].value,
+            output_name: dynamicProps.output_name.value
         };
 
+        console.log("Form Data: ", requestJson)
         onFormSubmit(requestJson)
 
     }
@@ -182,18 +190,20 @@ const Contagion_dynamics = (props) => {
     }
 
     useEffect(() => {
-        var count = 0;
-        Object.entries(dynamicProps).map((formElement) => {
-            if (formElement[1].id > 100 && formElement[1].id < 105) {
-                if (formElement[1].value === 'true')
-                    count++;
-            }
-            return null;
-        })
-        if (count === 0)
-            setExistsFlag(false)
-        else
-            setExistsFlag(true)
+        // var count = 0;
+        // Object.entries(dynamicProps).map((formElement) => {
+        //     console.log("formElement: ", formElement[1].id, formElement[1].value)
+        //     if (formElement[1].id > 100 && formElement[1].id < 105) {
+        //         if (formElement[1].value === 'true')
+        //             count++;
+        //     }
+        //     return null;
+        // })
+        // console.log("Count: ", count)
+        // if (count === 0)
+            // setExistsFlag(false)
+        // else
+             setExistsFlag(true)
 
         ReactTooltip.rebuild();
     })
@@ -215,21 +225,26 @@ const Contagion_dynamics = (props) => {
                             {isToasterFlag ? (
                                 <Toaster errorMsg={errorMsg} success={success} id="CSonNet Blocking Contagion Dynamics"></Toaster>
                             ) : null}
-                            <Typography className="h2"><b>CSonNet Blocking Contagion Dynamics</b></Typography>
-                            <Typography className="h4" style={{ whiteSpace: "break-spaces" }}>&nbsp;{modelJSON.description}
-                                {/* {`. This task outputs files of type ${(jobData.output_files.contents.map(a => a.name)).toString()} in your chosen location. `} */}
-                            </Typography>
                             <div>
                                 <Formsy
                                     onValid={enableButton}
                                     onInvalid={disableButton}
                                     className="content1"
-
                                 >
                                     <div className='columnStyle'>
                                         <Grid style={childGrid} item container xs={12}>
 
                                             <div style={{ width: '100%' }} className='descPlot'>
+                                                <div className="pl-20">
+                                                    <Input
+                                                        key='Simulation output file'
+                                                        name="output_path"
+                                                        formData={dynamicProps.csonnet_simulation}
+                                                        elementType={dynamicProps.csonnet_simulation.types}
+                                                        value=""
+                                                        changed={(event) => inputChangedHandler(event, 'output_path')}
+                                                    />
+                                                </div>
                                                 <SelectFormsy
                                                     className="my-12 mt-16 inputStyle-plot"
                                                     name="blocking_class"
@@ -238,7 +253,7 @@ const Contagion_dynamics = (props) => {
                                                     onChange={(event) => inputChangedHandler(event, 'blocking_class')}
                                                 >
                                                     <MenuItem key='global' value='global'>global</MenuItem>
-                                                    <MenuItem key='local' value='local'>local</MenuItem>
+                                                    {/* <MenuItem key='local' value='local'>local</MenuItem> */}
                                                 </SelectFormsy>
                                                 {description(null)}
                                                 {dynamicProps.blocking_class.value !== '' && <React.Fragment>
@@ -247,31 +262,14 @@ const Contagion_dynamics = (props) => {
                                                         name="blocking_method"
                                                         label={["Blocking Method", <span key={1} style={{ color: 'red' }}>{'*'}</span>]}
                                                         value=""
-                                                    // onChange={(event) => inputChangedHandler(event, 'output_filetype')}
+                                                        onChange={(event) => inputChangedHandler(event, 'blocking_method')}
                                                     >
-                                                        {dynamicProps.blocking_class.value === 'global' && <MenuItem key='random_heuristic' value='random_heuristic'>random heuristic</MenuItem>}
-                                                        {dynamicProps.blocking_class.value === 'global' && <MenuItem key='high_degree_heuristic' value='high_degree_heuristic'>high degree heuristic</MenuItem>}
-                                                        {dynamicProps.blocking_class.value === 'local' && <MenuItem key='covering_method' value='covering_method'>covering method</MenuItem>}
+                                                        {dynamicProps.blocking_class.value === 'global' && <MenuItem key='RandomNodes' value='randomNodes'>Random Nodes</MenuItem>}
+                                                        {dynamicProps.blocking_class.value === 'global' && <MenuItem key='HighDegreeNodes' value='highDegreeNodes'>High Degree Nodes</MenuItem>}
+
+                                                        {/* {dynamicProps.blocking_class.value === 'local' && <MenuItem key='Covering' value='Covering'>Covering</MenuItem>} */}
                                                     </SelectFormsy>
                                                     {description(null)}
-                                                    <div className="pl-20 w-full">
-                                                        <Input
-                                                            key='Graph'
-                                                            formData={dynamicProps.Graph}
-                                                            elementType={dynamicProps.Graph.types}
-                                                            value=""
-                                                        // changed={(event) => inputChangedHandler(event, 'OutputPath')}
-                                                        />
-                                                    </div>
-                                                    <div className="pl-20">
-                                                        <Input
-                                                            key='Simulation output file'
-                                                            formData={dynamicProps.inputFile_Graph}
-                                                            elementType={dynamicProps.inputFile_Graph.types}
-                                                            value=""
-                                                        // changed={(event) => inputChangedHandler(event, 'OutputPath')}
-                                                        />
-                                                    </div>
                                                 </React.Fragment>}
                                             </div>
                                         </Grid>
@@ -281,11 +279,28 @@ const Contagion_dynamics = (props) => {
                                             <TextFieldFormsy
                                                 className="my-12 mt-16 inputStyle-plot"
                                                 type="text"
-                                                name='blocking_nodes'
+                                                name='random_seed'
+                                                value="0"
+                                                style={{ width: '18px' }}
+                                                label="Random Seed"
+                                                onBlur={(event) => inputChangedHandler(event, 'random_seed')}
+                                                validations={{
+                                                    gte0: function (_values, value) {
+                                                        return parseInt(value)>=0
+                                                    }
+                                                }}
+                                                validationError="This is not a valid value"
+                                                autoComplete="off"
+                                                required
+                                            />
+                                            <TextFieldFormsy
+                                                className="my-12 mt-16 inputStyle-plot"
+                                                type="text"
+                                                name='number_blocking_nodes'
                                                 style={{ width: '18px' }}
                                                 label="Number of blocking nodes"
                                                 value=""
-                                                // onBlur={(event) => inputChangedHandler(event, 'line_width')}
+                                                onBlur={(event) => inputChangedHandler(event, 'number_blocking_nodes')}
                                                 validations={{
                                                     isPositiveInt: function (_values, value) {
                                                         return RegExp(/^(?:[+]?(?:[0-9]\d*))$/).test(value) && !RegExp(/^0+$/).test(value)
@@ -299,17 +314,25 @@ const Contagion_dynamics = (props) => {
                                             <TextFieldFormsy
                                                 className="my-12 mt-16 inputStyle-plot"
                                                 type="text"
-                                                name='Model state'
+                                                name='blocking_state'
                                                 style={{ width: '18px' }}
                                                 value=""
-                                                label="Model state"
-                                                // onBlur={(event) => inputChangedHandler(event, 'Output_name')}
+                                                label="Blocking State"
+                                                onBlur={(event) => inputChangedHandler(event, 'blocking_state')}
                                                 autoComplete="off"
-                                                validations={{
-                                                    isPositiveInt: function (values, value) {
-                                                        return RegExp(/^([0-9]|[a-zA-Z]|[._\-\s])+$/).test(value);
-                                                    },
-                                                }}
+                                                validationError="This is not a valid value"
+                                                required
+                                            />
+                                            {description(null)}
+                                            <TextFieldFormsy
+                                                className="my-12 mt-16 inputStyle-plot"
+                                                type="text"
+                                                name='inactive_state'
+                                                style={{ width: '18px' }}
+                                                value=""
+                                                label="Inactive State"
+                                                onBlur={(event) => inputChangedHandler(event, 'inactive_state')}
+                                                autoComplete="off"
                                                 validationError="This is not a valid value"
                                                 required
                                             />
@@ -318,20 +341,21 @@ const Contagion_dynamics = (props) => {
                                             <div className="pl-20">
                                                 <Input
                                                     key='output_path'
-                                                    formData={dynamicProps.outputPath}
-                                                    elementType={dynamicProps.outputPath.types}
+                                                    name="output_path"
+                                                    formData={dynamicProps.output_path}
+                                                    elementType={dynamicProps.output_path.types}
                                                     value=""
-                                                // changed={(event) => inputChangedHandler(event, 'OutputPath')}
+                                                    changed={(event) => inputChangedHandler(event, 'output_path')}
                                                 />
                                             </div>
                                             <TextFieldFormsy
                                                 className="mb-12 inputStyle-plot"
                                                 type="text"
-                                                name='Output Name'
+                                                name='output_name'
                                                 style={{ width: '18px' }}
                                                 value=""
                                                 label="Output Name"
-                                                // onBlur={(event) => inputChangedHandler(event, 'Output_name')}
+                                                onBlur={(event) => inputChangedHandler(event, 'output_name')}
                                                 autoComplete="off"
                                                 validations={{
                                                     isPositiveInt: function (values, value) {
@@ -389,4 +413,4 @@ const Contagion_dynamics = (props) => {
     else return null;
 }
 
-export default Contagion_dynamics;
+export default CSonNet_Generate_Blocking_Nodes;

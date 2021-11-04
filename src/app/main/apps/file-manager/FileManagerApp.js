@@ -269,7 +269,7 @@ function FileManagerApp(props) {
             <div style={{ minWidth: "40%" }}>
               <div className="flex flex-1 items-center justify-between ">
                 <div className="flex flex-col align-middle">
-                  <div className="flex items-center mb-16 align-middle">
+                  <div className="flex items-center mb-16 align-middle" style={{"marginTop": "30px"}}>
                     <Icon
                       className="text-18 cursor-pointer"
                       color="action"

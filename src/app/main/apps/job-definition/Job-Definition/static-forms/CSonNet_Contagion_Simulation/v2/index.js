@@ -1,31 +1,42 @@
+import { Icon, LinearProgress, MenuItem } from '@material-ui/core';
 /* eslint-disable */
 import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Formsy from 'formsy-react';
+import { JobService } from 'node-sciduct';
 import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useHistory } from 'react-router-dom';
-import Grid from '@material-ui/core/Grid';
+import ReactTooltip from 'react-tooltip';
+
 import { FusePageSimple, SelectFormsy, TextFieldFormsy } from '@fuse';
-import { Input } from '../../SelectFile.js'
-import { Icon, LinearProgress, MenuItem } from '@material-ui/core';
+import withReducer from 'app/store/withReducer';
+
+import * as JobAppActions from "../../../store/actions";
 import Toaster from "../../../Toaster";
 import Deterministic_threshold from '../../CSonNet/deterministic_threshold.js';
-import SIR from '../../CSonNet/SIR/SIR.js';
 // import SIS from './CSonNet/SIS/SIS.js';
 // import ICM from './CSonNet/ICM.js';
 // import LTM from './CSonNet/LTM.js';
 // import PTM from './CSonNet/PTM.js';
 import SEIR from '../../CSonNet/SEIR/SEIR.js';
+import SIR from '../../CSonNet/SIR/SIR.js';
 import { modelJSON } from '../../Schemas/CSonNet_modelDefinition'
-import ReactTooltip from 'react-tooltip';
-import { useDispatch, useSelector } from "react-redux";
-import * as Actions from "../../../store/actions";
-import { JobService } from 'node-sciduct';
+import { Input } from '../../SelectFile.js'
+import * as Actions from "../store/actions";
+import reducer from '../store/reducers';
 
 const CSonNet_Contagion_Simulation = (props) => {
+    const dispatch = useDispatch()
     const jobData = useSelector(
         ({ JobDefinitionApp }) => JobDefinitionApp.selectedjobid
-      );
+    );
+
+    const input_file_meta = useSelector(
+        // (SimForm) =>{console.log("SimForm: ", SimForm); return SimForm.input_file}
+        ({ SimForm }) => SimForm.input_file
+    );
 
     const [isFormValid, setIsFormValid] = useState(false);
     const [isToasterFlag, setIsToasterFlag] = useState(false);
@@ -36,10 +47,12 @@ const CSonNet_Contagion_Simulation = (props) => {
     const [errorMsg, setErrorMsg] = useState();
     const [spinnerFlag, setSpinnerFlag] = useState(true);
     const [onSubmit, setOnSubmit] = useState()
+    const [selectedInputFile, onSelectInputFile] = useState()
+    const [enableBlocking, setEnableBlocking] = useState(false)
     const history = useHistory();
-    const dispatch = useDispatch()
 
-    console.log("CCS2 props: ", props)
+    var count = 1;
+
     const childGrid = {
         paddingLeft: '8px',
         alignSelf: 'center'
@@ -49,59 +62,127 @@ const CSonNet_Contagion_Simulation = (props) => {
         whiteSpace: "break-spaces",
     }
 
+    function setInitialState(state) {
+        const dp = {
+            Behaviour: { id: 101, value: state && state.input && state.input.dynamic_inputs ? state.input.dynamic_inputs['Behaviour_model'] : "" },
+            SIR_Submodel: { id: 201, value: state && state.input && state.input.dynamic_inputs ? state.input.dynamic_inputs['SIR_Submodel'] : "" },
+            SIS_Submodel: { id: 202, value: state && state.input && state.input.dynamic_inputs ? state.input.dynamic_inputs['SIS_Submodel'] : "" },
+            SEIR_Submodel: { id: 203, value: state && state.input && state.input.dynamic_inputs ? state.input.dynamic_inputs['SEIR_Submodel'] : "" },
+            threshold: { id: 301, value: state && state.input && String(state.input.dynamic_inputs.threshold) !== 'undefined' ? state.input.dynamic_inputs['threshold'] : "" },
+            Edge_probability: { id: 302, value: state && state.input && String(state.input.dynamic_inputs.Edge_probability) !== 'undefined' ? state.input.dynamic_inputs['Edge_probability'] : "" },
+            Infectious_probability_transition: { id: 303, value: state && state.input && String(state.input.dynamic_inputs.Infectious_probability_transition) !== 'undefined' ? state.input.dynamic_inputs['Infectious_probability_transition'] : "" },
+            Infectious_duration: { id: 304, value: state && state.input && String(state.input.dynamic_inputs.Infectious_duration) !== 'undefined' ? state.input.dynamic_inputs['Infectious_duration'] : "" },
+            Exposed_duration: { id: 305, value: state && state.input && String(state.input.dynamic_inputs.Exposed_duration) !== 'undefined' ? state.input.dynamic_inputs['Exposed_duration'] : "" },
+            Exposed_probability_transition: { id: 306, value: state && state.input && String(state.input.dynamic_inputs.Exposed_probability_transition) !== 'undefined' ? state.input.dynamic_inputs['Exposed_probability_transition'] : "" },
+            blocking_state: {id: 307, value: state && state.input && state.input.dynamic_inputs['blocking_state']?state.input.dynamic_inputs['blocking_state']:""},
+            input_file: [jobData.input_files[0].name, {
+                formLabel: jobData.input_files[0].name,
+                key: "input_file",
+                id: 0,
+                name: jobData.input_files[0].name,
+                outputFlag: false,
+                required: true,
+                types: jobData.input_files[0].types,
+                value: state && state.input ? state.input["input_file"] : ""
+            }],
+            blocking_nodes: [jobData.input_files[1].name, {
+                key: "blocking_nodes",
+                formLabel: jobData.input_files[1].name,
+                id: 1,
+                name: jobData.input_files[1].name,
+                outputFlag: false,
+                types: jobData.input_files[1].types,
+                required: false,
+                value: state && state.input ? state.input["blocking_nodes"] : ""
+            }]
+        }
+
+        setDynamicProps(dp)
+
+        setStaticProps({
+            Seed: { value: state && state.input ? state.input['random_number_seed'] : "" },
+            Iterations: { value: state && state.input ? state.input['iterations'] : "" },
+            TimeSteps: { value: state && state.input ? state.input['time_steps'] : "" },
+            InitialConditions: state && state.input ? state.input['initial_states_method'] : [{ type: 'random', number_nodes: "", state: "" }],
+            default_state: { value: state && state.input ? state.input['default_state'] : "" },
+            Output_name: { value: (state && state.state !== "Completed") ? state.output_name : "" },
+            outputPath: ['outputPath', {
+                description: "Select the path from File manager where the output file is to be stored.",
+                formLabel: "Output Container",
+                required: true,
+                id: 200,
+                outputFlag: true,
+                types: ["folder", "epihiper_multicell_analysis", "epihiperOutput"],
+                value: state && state.input ? state.output_container : "",
+            }]
+        })
+    }
+
+    //get the metadata for input_file (formerly Graph)
+    useEffect(() => {
+        if (dynamicProps && dynamicProps.input_file && dynamicProps.input_file[1] && dynamicProps.input_file[1].value) {
+            if (!input_file_meta || !input_file_meta.id || (dynamicProps.input_file[1].value != input_file_meta.full_path)) {
+                dispatch(Actions.getFileMeta(dynamicProps.input_file[1].value))
+            } else {
+                console.log(`${dynamicProps.input_file[1].value} == ${input_file_meta.full_path}`)
+            }
+        }
+    }, [dispatch, dynamicProps])
+
     useEffect(() => {
         // let pathEnd = 'net.science/CSonNet_Contagion_Simulation'
         let pathEnd = `${props.namespace}/${props.module}`
         setIsToasterFlag(false);
         if (jobData.id && !jobData.id.includes(pathEnd) || Object.keys(jobData).length === 0)
-          dispatch(Actions.setSelectedItem(pathEnd));
+            dispatch(JobAppActions.setSelectedItem(pathEnd));
         if (Object.keys(jobData).length !== 0 && jobData.id.includes(pathEnd)) {
-                setSpinnerFlag(false)
-                if (jobData) {
-                     setDynamicProps({
-                        Behaviour: { id: 101, value: props.resubmit && props.resubmit.inputData.input.dynamic_inputs ? props.resubmit.inputData.input.dynamic_inputs['Behaviour_model'] : "" },
-                        SIR_Submodel: { id: 201, value: props.resubmit && props.resubmit.inputData.input.dynamic_inputs ? props.resubmit.inputData.input.dynamic_inputs['SIR_Submodel'] : "" },
-                        SIS_Submodel: { id: 202, value: props.resubmit && props.resubmit.inputData.input.dynamic_inputs ? props.resubmit.inputData.input.dynamic_inputs['SIS_Submodel'] : "" },
-                        SEIR_Submodel: { id: 203, value: props.resubmit && props.resubmit.inputData.input.dynamic_inputs ? props.resubmit.inputData.input.dynamic_inputs['SEIR_Submodel'] : "" },
-                        threshold: { id: 301, value: props.resubmit && String(props.resubmit.inputData.input.dynamic_inputs.threshold) !== 'undefined' ? props.resubmit.inputData.input.dynamic_inputs['threshold'] : "" },
-                        Edge_probability: { id: 302, value: props.resubmit && String(props.resubmit.inputData.input.dynamic_inputs.Edge_probability) !== 'undefined' ? props.resubmit.inputData.input.dynamic_inputs['Edge_probability'] : "" },
-                        Infectious_probability_transition: { id: 303, value: props.resubmit && String(props.resubmit.inputData.input.dynamic_inputs.Infectious_probability_transition) !== 'undefined'? props.resubmit.inputData.input.dynamic_inputs['Infectious_probability_transition'] : "" },
-                        Infectious_duration: { id: 304, value: props.resubmit && String(props.resubmit.inputData.input.dynamic_inputs.Infectious_duration) !== 'undefined'? props.resubmit.inputData.input.dynamic_inputs['Infectious_duration'] : "" },
-                        Exposed_duration: { id: 305, value: props.resubmit && String(props.resubmit.inputData.input.dynamic_inputs.Exposed_duration) !== 'undefined'? props.resubmit.inputData.input.dynamic_inputs['Exposed_duration'] : "" },
-                        Exposed_probability_transition: { id: 306, value: props.resubmit && String(props.resubmit.inputData.input.dynamic_inputs.Exposed_probability_transition) !== 'undefined'? props.resubmit.inputData.input.dynamic_inputs['Exposed_probability_transition'] : "" },
-                        inputFile_Graph: [jobData.input_files[0].name, {
+            setSpinnerFlag(false)
+            if (jobData) {
+                if (input_file_meta && input_file_meta.provenance && input_file_meta.provenance.input) {
+                    setInitialState({
+                        ...input_file_meta.provenance,
+                        input_file: [jobData.input_files[0].name, {
                             formLabel: jobData.input_files[0].name,
                             id: 0,
                             name: jobData.input_files[0].name,
                             outputFlag: false,
                             required: true,
                             types: jobData.input_files[0].types,
-                            value: props.resubmit ? props.resubmit.inputData.input["Graph"] : ""
+                            value: dynamicProps.input_files && (dynamicProps.input_files.length > 0) & dynamicProps.input_files[1].value
                         }]
                     })
-                    setStaticProps({
-                        Seed: { value: props.resubmit ? props.resubmit.inputData.input['random_number_seed'] : "" },
-                        Iterations: { value: props.resubmit ? props.resubmit.inputData.input['iterations'] : "" },
-                        TimeSteps: { value: props.resubmit ? props.resubmit.inputData.input['time_steps'] : "" },
-                        InitialConditions: props.resubmit ? props.resubmit.inputData.input['initial_states_method'] : [{ type: 'random', number_nodes: "", state: "" }],
-                        default_state: { value: props.resubmit ? props.resubmit.inputData.input['default_state'] : "" },
-                        Output_name: { value: (props.resubmit && props.resubmit.inputData.state !== "Completed") ? props.resubmit.inputData.output_name : "" },
-                        outputPath: ['outputPath', {
-                            description: "Select the path from File manager where the output file is to be stored.",
-                            formLabel: "Output Container",
-                            id: 200,
-                            outputFlag: true,
-                            types: ["folder", "epihiper_multicell_analysis", "epihiperOutput"],
-                            value: props.resubmit ? props.resubmit.inputData.output_container : "",
-                        }]
-                    })
-                    props.resubmit && localStorage.setItem('formLastPath',props.resubmit.inputData.output_container  + '/')
-                    setInputSchema(jobData.input_schema)
-
+                } else {
+                    setInitialState((props.resubmit && props.resubmit.inputData) ? props.resubmit.inputData : {})
                 }
+
+                props.resubmit && localStorage.setItem('formLastPath', props.resubmit.inputData.output_container + '/')
+                setInputSchema(jobData.input_schema)
             }
+        }
         // eslint-disable-next-line
     }, [jobData.id]);
+
+
+    useEffect(() => {
+        if (jobData && input_file_meta) {
+            if (input_file_meta.type === "csonnet_simulation_container") {
+                if (input_file_meta.provenance && input_file_meta.provenance.input){
+                    setInitialState({
+                        input: {
+                            ...input_file_meta.provenance.input,
+                        },
+                        output_container: (staticProps.outputPath && staticProps.outputPath[1]) ? staticProps.outputPath[1].value : ""
+                    })
+                }
+
+                setEnableBlocking(true)
+            } else {
+                setEnableBlocking(false)
+            }
+        } else {
+            setEnableBlocking(false)
+        }
+    }, [input_file_meta,jobData])
 
     function disableButton() {
         setIsFormValid(false);
@@ -112,7 +193,7 @@ const CSonNet_Contagion_Simulation = (props) => {
 
     function populatesubmitJSON() {
         let submitJSON = {
-            "Graph": dynamicProps.inputFile_Graph[1].value,
+            "input_file": dynamicProps.input_file[1].value,
             "states_that_affect_neighbors": [],
             "iterations": parseInt(staticProps.Iterations.value),
             "time_steps": parseInt(staticProps.TimeSteps.value),
@@ -122,6 +203,12 @@ const CSonNet_Contagion_Simulation = (props) => {
             'decorations': [],
             "dynamic_inputs": {}
         }
+
+        if (dynamicProps.blocking_nodes && dynamicProps.blocking_nodes[1].value){
+            submitJSON.blocking_nodes = dynamicProps.blocking_nodes[1].value
+            submitJSON.blocking_states = dynamicProps.blocking_state.value
+        }
+
         let tempRules = {}
 
         switch (dynamicProps.Behaviour.value) {
@@ -130,7 +217,7 @@ const CSonNet_Contagion_Simulation = (props) => {
                 submitJSON.states = modelJSON['models']['threshold_model']['states'];
                 // submitJSON.default_state = modelJSON['models']['threshold_model']['default_state'];
                 tempRules = modelJSON['models']['threshold_model']['rules'][0]['rule'];
-                tempRules['deterministic_progressive_node_threshold_value'] = parseInt(dynamicProps.threshold.value);
+                tempRules['deterministic_progressive_blocking_node_threshold_value'] = parseInt(dynamicProps.threshold.value);
                 submitJSON.dynamic_inputs.threshold = parseInt(dynamicProps.threshold.value);
                 submitJSON.rules = []
                 submitJSON.rules[0] = tempRules;
@@ -258,9 +345,6 @@ const CSonNet_Contagion_Simulation = (props) => {
         var requestJson = {
             input: submitJSON,
             job_definition: jobDefinition,
-            pragmas: {
-                account: "ARCS:bii_nssac",
-            },
             output_container: staticProps.outputPath[1].value,
             output_name: staticProps.Output_name.value
         };
@@ -275,6 +359,8 @@ const CSonNet_Contagion_Simulation = (props) => {
         const url = `${process.env.REACT_APP_SCIDUCT_JOB_SERVICE}/`
         const token = localStorage.getItem('id_token');
         const jobServiceInstance = new JobService(url, token)
+        // console.log("DO SUBMIT HERE: ",requestJson.job_definition, requestJson.input, requestJson.pragmas, requestJson.output_name, requestJson.output_container)
+        // return;
         jobServiceInstance.createJobInstance(requestJson.job_definition, requestJson.input, requestJson.pragmas, requestJson.output_name, requestJson.output_container).then(res => {
             setIsToasterFlag(true)
             setSuccess(true)
@@ -295,7 +381,6 @@ const CSonNet_Contagion_Simulation = (props) => {
         )
 
     }
-
 
     function enableButton() {
         setIsFormValid(true);
@@ -320,9 +405,17 @@ const CSonNet_Contagion_Simulation = (props) => {
         const updatedJobSubmissionForm = {
             ...dynamicProps
         };
-        const updatedFormElement = {
-            ...dynamicProps[obj]
-        };
+
+        var updatedFormElement;
+
+        if (dynamicProps[obj] instanceof Array){
+             updatedFormElement=[dynamicProps[obj][0],{...dynamicProps[obj][1]}]
+        }else{
+             updatedFormElement = {
+                ...dynamicProps[obj]
+            };
+        }
+
 
         if (obj === 'Behaviour') {
             Object.entries(updatedJobSubmissionForm).map((formElement) => {
@@ -339,7 +432,13 @@ const CSonNet_Contagion_Simulation = (props) => {
 
         }
 
-        updatedFormElement.value = event.target.value;
+        if (updatedFormElement instanceof Array){
+            updatedFormElement[1].value = event.target.value
+        }else{
+            updatedFormElement.value = event.target.value;
+        }
+        
+
         updatedJobSubmissionForm[obj] = updatedFormElement;
         setDynamicProps({ ...updatedJobSubmissionForm })
 
@@ -380,6 +479,8 @@ const CSonNet_Contagion_Simulation = (props) => {
         ReactTooltip.rebuild();
     })
 
+    // console.log("Before render input_file_meta: ", input_file_meta)
+
     if (!(Object.keys(inputSchema).length === 0 && inputSchema.constructor === Object))
         return (
             <FusePageSimple
@@ -392,7 +493,7 @@ const CSonNet_Contagion_Simulation = (props) => {
                 }
                 content={
                     <div className="flex">
-                        <ReactTooltip clickable={true} isCapture = {true} scrollHide = {true} className='toolTip' place='top' effect='solid' />
+                        <ReactTooltip clickable={true} isCapture={true} scrollHide={true} className='toolTip' place='top' effect='solid' />
                         <div className="content">
                             <div className='flex flex-col' >
                                 {isToasterFlag ? (
@@ -405,16 +506,25 @@ const CSonNet_Contagion_Simulation = (props) => {
                                 >
                                     <div className='columnStyle'>
                                         <div className='borderStyle '>
-                                            <h3><b>Network</b></h3>
+                                            <h3><b>Input</b></h3>
+                                            <p>Input may either be a Graph or a previous simulation.</p>
                                             <Grid style={childGrid} item container xs={12}>
                                                 <Input
-                                                    key='Graph'
-                                                    formData={dynamicProps.inputFile_Graph}
-                                                    elementType={dynamicProps.inputFile_Graph.types}
-                                                    value={dynamicProps.inputFile_Graph.value}
-                                                    changed={(event) => dynamicChangedHandler(event, 'inputFile_Graph')}
+                                                    formData={dynamicProps.input_file}
+                                                    elementType={dynamicProps.input_file.types}
+                                                    value={dynamicProps.input_file.value}
+                                                    changed={(event) => dynamicChangedHandler(event, 'input_file')}
+                                                // changed={(evt)=>{console.log("Input File Changed")}}
+
                                                 />
+                                                {input_file_meta && input_file_meta.type && (input_file_meta.type === "csonnet_simulation_container") && (
+                                                    <Grid item xs={12}>
+                                                        Graph {JSON.stringify(input_file_meta.provenance.input_files[0].stored_name)}
+                                                    </Grid>
+                                                )}
+
                                             </Grid>
+
                                         </div>
                                         <div className='borderStyle'>
                                             <h3><b>Dynamics Model</b></h3>
@@ -524,83 +634,121 @@ const CSonNet_Contagion_Simulation = (props) => {
                                                     {description(inputSchema.properties.time_steps.description)}
                                                 </Grid>
                                             </div>
-                                            <div style={{ marginLeft: '26px' }}>
-                                                <h4 className='mt-16'><b>Initial Conditions</b></h4>
-                                                <Grid style={childGrid} item container xs={12} >
-                                                    <TextFieldFormsy
-                                                        className="my-12 inputStyle1"
-                                                        type="text"
-                                                        name='Number nodes'
-                                                        style={{ width: '18px' }}
-                                                        value={String(staticProps.InitialConditions[0].number_nodes)}
-                                                        onBlur={(event) => ICChangedHandler(event, 'number_nodes')}
-                                                        label="Number Nodes"
-                                                        validations={{
-                                                            isPositiveInt: function (values, value) {
-                                                                return RegExp(/^(?:[+]?(?:[0-9]\d*))$/).test(value) && !RegExp(/^0+$/).test(value)
-                                                            }
-                                                        }}
-                                                        validationError="This is not a valid value"
-                                                        autoComplete="off"
-                                                        required
-                                                    />
-                                                </Grid>
-                                                <Grid style={childGrid} item container xs={12} >
-                                                    {dynamicProps.Behaviour.value === 'Threshold Model' && <SelectFormsy
-                                                        className="my-12 inputStyle1 model"
-                                                        name="state"
-                                                        label={["State", <span key={1} style={{ color: 'red' }}>{'*'}</span>]}
-                                                        value={modelJSON.models.threshold_model.states.indexOf(staticProps.InitialConditions[0].state) !== -1?staticProps.InitialConditions[0].state:""}
-                                                        onChange={(event) => ICChangedHandler(event, 'state')}
-                                                        required
-                                                    >
-                                                        {modelJSON.models.threshold_model.states.map((item) => {
-                                                            return (
-                                                                <MenuItem key={item} value={item}>
-                                                                    {item}
-                                                                </MenuItem>
-                                                            );
-                                                        })}
-                                                    </SelectFormsy>}
+                                            {enableBlocking && (
+                                                <div style={{ marginLeft: '26px' }}>
+                                                    <h4 className='mt-16'><b>Blocking Nodes</b></h4>
+                                            
+                                                    <Grid style={childGrid} item container xs={12} >
+                                                        <Input
+                                                            formData={dynamicProps.blocking_nodes}
+                                                            // elementType={dynamicProps.blocking_nodes[1].types}
+                                                            // value={dynamicProps.blocking_nodes[1].value}
+                                                            required={dynamicProps.blocking_nodes[1].required}
+                                                            changed={(event) => dynamicChangedHandler(event, 'blocking_nodes')}
+                                                        />
+                                                    </Grid>
 
-                                                    {dynamicProps.Behaviour.value === 'SEIR Model' && <SelectFormsy
-                                                        className="my-12 inputStyle1 model"
-                                                        name="state"
-                                                        label={["State", <span key={1} style={{ color: 'red' }}>{'*'}</span>]}
-                                                        value={modelJSON.models.SEIR.submodels['fixed exposed fixed infectious'].states.indexOf(staticProps.InitialConditions[0].state) !== -1?staticProps.InitialConditions[0].state:""}
-                                                        onChange={(event) => ICChangedHandler(event, 'state')}
-                                                        required
-                                                    >
-                                                        {modelJSON.models.SEIR.submodels['fixed exposed fixed infectious'].states.map((item) => {
-                                                            return (
-                                                                <MenuItem key={item} value={item}>
-                                                                    {item}
-                                                                </MenuItem>
-                                                            );
-                                                        })}
-                                                    </SelectFormsy>}
+                                                    {dynamicProps && dynamicProps.blocking_nodes && dynamicProps.blocking_nodes[1].value && (<Grid style={childGrid} item container xs={12} >
+                                                        <SelectFormsy
+                                                            className="my-12 inputStyle1 model"
+                                                            name="Blocking State"
+                                                            label={["Blocking State", <span key={1} style={{ color: 'red' }}>{'*'}</span>]}
+                                                            value={dynamicProps.blocking_state.value}
+                                                            onChange={(event) => dynamicChangedHandler(event, 'blocking_state')}
+                                                            required={true}
 
-                                                    {dynamicProps.Behaviour.value === 'SIR Model' && <SelectFormsy
-                                                        className="my-12 inputStyle1 model"
-                                                        name="state"
-                                                        label={["State", <span key={1} style={{ color: 'red' }}>{'*'}</span>]}
-                                                        value={modelJSON.models.SIR.submodels['fixed infectious'].states.indexOf(staticProps.InitialConditions[0].state) !== -1?staticProps.InitialConditions[0].state:""}
-                                                        onChange={(event) => ICChangedHandler(event, 'state')}
-                                                        required
-                                                    >
-                                                        {modelJSON.models.SIR.submodels['fixed infectious'].states.map((item) => {
-                                                            return (
-                                                                <MenuItem key={item} value={item}>
-                                                                    {item}
-                                                                </MenuItem>
-                                                            );
-                                                        })}
-                                                    </SelectFormsy>}
+                                                        >
+                                                            {modelJSON.models["threshold_model"].blocking_states.map((item) => {
+                                                                return (
+                                                                    <MenuItem key={item} value={item}>
+                                                                        {item}
+                                                                    </MenuItem>
+                                                                );
+                                                            })}
+                                                        </SelectFormsy>
+                                                    </Grid>)}
 
-                                                    {dynamicProps.Behaviour.value !== '' && description(inputSchema.properties.initial_states_method.items.oneOf[0].properties.state.description)}
-                                                </Grid>
-                                            </div>
-                                            {dynamicProps.Behaviour.value !== '' && <div style={{ marginLeft: '26px' }}>
+                                                </div>
+                                            )}
+                                            {!enableBlocking && (
+                                                <div style={{ marginLeft: '26px' }}>
+                                                    <h4 className='mt-16'><b>Initial Conditions</b></h4>
+                                                    <Grid style={childGrid} item container xs={12} >
+                                                        <TextFieldFormsy
+                                                            className="my-12 inputStyle1"
+                                                            type="text"
+                                                            name='Number nodes'
+                                                            style={{ width: '18px' }}
+                                                            value={String(staticProps.InitialConditions[0].number_nodes)}
+                                                            onBlur={(event) => ICChangedHandler(event, 'number_nodes')}
+                                                            label="Number Nodes"
+                                                            validations={{
+                                                                isPositiveInt: function (values, value) {
+                                                                    return RegExp(/^(?:[+]?(?:[0-9]\d*))$/).test(value) && !RegExp(/^0+$/).test(value)
+                                                                }
+                                                            }}
+                                                            validationError="This is not a valid value"
+                                                            autoComplete="off"
+                                                            required
+                                                        />
+                                                    </Grid>
+                                                    <Grid style={childGrid} item container xs={12} >
+                                                        {dynamicProps.Behaviour.value === 'Threshold Model' && <SelectFormsy
+                                                            className="my-12 inputStyle1 model"
+                                                            name="state"
+                                                            label={["State", <span key={1} style={{ color: 'red' }}>{'*'}</span>]}
+                                                            value={modelJSON.models.threshold_model.states.indexOf(staticProps.InitialConditions[0].state) !== -1 ? staticProps.InitialConditions[0].state : ""}
+                                                            onChange={(event) => ICChangedHandler(event, 'state')}
+                                                            required
+                                                        >
+                                                            {modelJSON.models.threshold_model.states.map((item) => {
+                                                                return (
+                                                                    <MenuItem key={item} value={item}>
+                                                                        {item}
+                                                                    </MenuItem>
+                                                                );
+                                                            })}
+                                                        </SelectFormsy>}
+
+                                                        {dynamicProps.Behaviour.value === 'SEIR Model' && <SelectFormsy
+                                                            className="my-12 inputStyle1 model"
+                                                            name="state"
+                                                            label={["State", <span key={1} style={{ color: 'red' }}>{'*'}</span>]}
+                                                            value={modelJSON.models.SEIR.submodels['fixed exposed fixed infectious'].states.indexOf(staticProps.InitialConditions[0].state) !== -1 ? staticProps.InitialConditions[0].state : ""}
+                                                            onChange={(event) => ICChangedHandler(event, 'state')}
+                                                            required
+                                                        >
+                                                            {modelJSON.models.SEIR.submodels['fixed exposed fixed infectious'].states.map((item) => {
+                                                                return (
+                                                                    <MenuItem key={item} value={item}>
+                                                                        {item}
+                                                                    </MenuItem>
+                                                                );
+                                                            })}
+                                                        </SelectFormsy>}
+
+                                                        {dynamicProps.Behaviour.value === 'SIR Model' && <SelectFormsy
+                                                            className="my-12 inputStyle1 model"
+                                                            name="state"
+                                                            label={["State", <span key={1} style={{ color: 'red' }}>{'*'}</span>]}
+                                                            value={modelJSON.models.SIR.submodels['fixed infectious'].states.indexOf(staticProps.InitialConditions[0].state) !== -1 ? staticProps.InitialConditions[0].state : ""}
+                                                            onChange={(event) => ICChangedHandler(event, 'state')}
+                                                            required
+                                                        >
+                                                            {modelJSON.models.SIR.submodels['fixed infectious'].states.map((item) => {
+                                                                return (
+                                                                    <MenuItem key={item} value={item}>
+                                                                        {item}
+                                                                    </MenuItem>
+                                                                );
+                                                            })}
+                                                        </SelectFormsy>}
+
+                                                        {dynamicProps.Behaviour.value !== '' && description(inputSchema.properties.initial_states_method.items.oneOf[0].properties.state.description)}
+                                                    </Grid>
+                                                </div>
+                                            )}
+                                            {!enableBlocking && dynamicProps.Behaviour.value !== '' && <div style={{ marginLeft: '26px' }}>
                                                 <h4 className='my-16'><b>Initial Conditions (default)</b></h4>
                                                 <Grid style={childGrid} item container xs={12} >
                                                     {dynamicProps.Behaviour.value === 'Threshold Model' && <SelectFormsy
@@ -680,11 +828,11 @@ const CSonNet_Contagion_Simulation = (props) => {
                                             </Grid>
                                             <Grid style={childGrid} item container xs={12}>
                                                 <Input
-                                                    key='output_path'
                                                     formData={staticProps.outputPath}
                                                     elementType={staticProps.outputPath.types}
                                                     value={staticProps.outputPath.value}
-                                                    changed={(event) => staticChangedHandler(event, 'OutputPath')}
+                                                    changed={(event) => { staticChangedHandler(event, 'outputPath') }}
+                                                    required
                                                 />
                                             </Grid>
                                         </div>
@@ -701,9 +849,9 @@ const CSonNet_Contagion_Simulation = (props) => {
                                         className="w-30 ml-8 mt-32 mb-80"
                                         aria-label="LOG IN"
                                         onClick={populatesubmitJSON}
-                                        disabled={!isFormValid || success }                                    >
+                                        disabled={!isFormValid || success}                                    >
                                         Submit
-							</Button>
+                                    </Button>
                                     {props.resubmit ? <Link to="/apps/my-jobs/" style={{ color: 'transparent' }}>
                                         <Button
                                             variant="contained"
@@ -712,7 +860,7 @@ const CSonNet_Contagion_Simulation = (props) => {
                                             className="w-30 mx-8 mt-32 mb-80"
                                         >
                                             Cancel
-								</Button>
+                                        </Button>
                                     </Link> :
                                         <Link to="/apps/job-definition/" style={{ color: 'transparent' }}>
                                             <Button
@@ -722,7 +870,7 @@ const CSonNet_Contagion_Simulation = (props) => {
                                                 className="w-30 mx-8 mt-32 mb-80"
                                             >
                                                 Cancel
-                            </Button>
+                                            </Button>
                                         </Link>}
                                 </div>
                             </div>
@@ -734,4 +882,6 @@ const CSonNet_Contagion_Simulation = (props) => {
         );
     else return null
 }
-export default CSonNet_Contagion_Simulation;
+
+export default withReducer('SimForm', reducer)(CSonNet_Contagion_Simulation)
+// export default CSonNet_Contagion_Simulation
