@@ -2,11 +2,11 @@ import { Icon } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import MenuItem from '@material-ui/core/MenuItem';
-import Typography from '@material-ui/core/Typography';
+// import Typography from '@material-ui/core/Typography';
 import Formsy from 'formsy-react';
 import { JobService } from 'node-sciduct';
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { Link, useHistory } from 'react-router-dom';
 import ReactTooltip from 'react-tooltip';
 

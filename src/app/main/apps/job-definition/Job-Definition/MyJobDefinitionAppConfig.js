@@ -13,7 +13,7 @@ const generate_static_form_route = (name,options) => {
             if (!options.namespaces){
                 return <Redirect to="/pages/errors/error-400"/>
             }
-            var matches = options.namespaces.indexOf(namespace);
+
             if (options.namespaces.indexOf(namespace)<0){
                 return <Redirect to="/pages/errors/error-400"/>
             }

@@ -8,7 +8,6 @@ function CSonNet_Contagion_Simulation(props){
         "<1.2.10": "v1",
         ">=1.2.10": "v2"
     }
-    console.log("CGS Main props: ", props)
     return <VersionedInputForm versions={versions} module="CSonNet_Contagion_Simulation" {...props} />
 }
 

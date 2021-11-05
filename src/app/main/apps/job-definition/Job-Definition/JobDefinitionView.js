@@ -1,7 +1,7 @@
 import { Icon, Typography } from '@material-ui/core';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, Redirect, useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 import { FusePageSimple } from '@fuse';
 import withReducer from 'app/store/withReducer';
@@ -53,13 +53,9 @@ function JobDefinitionView(props) {
     }
 
     if (props.version==="default" && job_definition && (job_definition.version === job_definition.default_version)){
-        return <Redirect to={`/apps/job-definition/${props.namespace}/${props.module}?version=${job_definition.version}`}/>
+        history.replace(`/apps/job-definition/${props.namespace}/${props.module}?version=${job_definition.version}`)
     }else if (job_definition && job_definition.switch_version){
-        return <Redirect to={`/apps/job-definition/${props.namespace}/${props.module}?version=${job_definition.switch_version}`}/>
-    }
-
-    function navigateHome() {
-        history.push('/home/')
+        history.replace(`/apps/job-definition/${props.namespace}/${props.module}?version=${job_definition.switch_version}`)
     }
 
     function describeOutput(jd){

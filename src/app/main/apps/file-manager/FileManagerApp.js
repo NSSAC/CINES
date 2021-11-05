@@ -1,39 +1,33 @@
-import React, { useEffect, useReducer, useRef } from "react";
-import {
-  ClickAwayListener,
-  Hidden,
-  Tooltip,
-  Typography,
-  Icon,
-  IconButton,
-  Input,
-  Fab,
-} from "@material-ui/core";
-import { FuseAnimate, FusePageSimple } from "@fuse";
-import { useDispatch, useSelector } from "react-redux";
-import withReducer from "app/store/withReducer";
-import * as Actions from "./store/actions";
-import reducer from "./store/reducers";
-import FileList from "./FileList";
-import DetailSidebarHeader from "./DetailSidebarHeader";
-import DetailSidebarContent from "./DetailSidebarContent";
-import MainSidebarHeader from "./MainSidebarHeader";
-import MainSidebarContent from "./MainSidebarContent";
-import Breadcrumb from "./Breadcrumb";
-import { useState } from "react";
+import { ClickAwayListener, Hidden, Icon, IconButton, Input, Tooltip } from "@material-ui/core";
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
+import axios from "axios";
 import clsx from "clsx";
+import React, { useEffect, useReducer, useRef } from "react";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
+
+import { FuseAnimate, FusePageSimple } from "@fuse";
 import { CreateFolder } from "app/main/apps/file-manager/FileUpload/CreateFolderDialog";
 import { FileUpload } from "app/main/apps/file-manager/FileUpload/FileUploadDialog";
 import sciductService from "app/services/sciductService/sciductService.js";
-import Preview from "./Preview";
-import { useHistory } from "react-router-dom";
-import axios from "axios";
-import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
+import withReducer from "app/store/withReducer";
+
+import Breadcrumb from "./Breadcrumb";
+import DetailSidebarContent from "./DetailSidebarContent";
+import DetailSidebarHeader from "./DetailSidebarHeader";
+import FileList from "./FileList";
 import FILEUPLOAD_CONFI from "./FileManagerAppConfig"
-import './FileManager.css'
 import FMInstance from './FileManagerService'
+import MainSidebarContent from "./MainSidebarContent";
+import MainSidebarHeader from "./MainSidebarHeader";
+import Preview from "./Preview";
 import { RenameFile } from "./RenameFile";
+import * as Actions from "./store/actions";
+import reducer from "./store/reducers";
+
+import './FileManager.css'
 
 function FileManagerApp(props) {
   const files = useSelector(({ fileManagerApp }) => fileManagerApp.files);

@@ -1,12 +1,15 @@
 import { Icon, IconButton, Tooltip, Typography } from '@material-ui/core';
-import moment from 'moment';
+// import moment from 'moment';
 import React, { useState } from 'react';
 import { confirmAlert } from 'react-confirm-alert';
 import { useSelector } from "react-redux";
+
 import { FuseAnimate } from '@fuse';
 import instance from 'app/services/sciductService/sciductService.js'
+
 import DeleteFile from './DeleteFile'
 import Download from './Download'
+
 import './Confirm-alert.css'
 import 'react-responsive-modal/styles.css';
 
@@ -22,13 +25,13 @@ function DetailSidebarHeader(props) {
   var isFile = true;
   var checked = localStorage.getItem('checked')
 
-  const tableStyle = {
-    overflow: 'hidden',
-    maxWidth: '280px',
-    textOverflow: 'ellipsis',
-    display: 'block',
-    whiteSpace: 'nowrap'
-  }
+  // const tableStyle = {
+  //   overflow: 'hidden',
+  //   maxWidth: '280px',
+  //   textOverflow: 'ellipsis',
+  //   display: 'block',
+  //   whiteSpace: 'nowrap'
+  // }
 
   if (!selectedItem) {
     return null;

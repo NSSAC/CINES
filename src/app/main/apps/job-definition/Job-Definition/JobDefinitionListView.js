@@ -1,15 +1,17 @@
+import { ClickAwayListener, Icon, IconButton, Input, Tooltip, Typography } from '@material-ui/core';
+import clsx from 'clsx';
 import React, { useEffect, useRef, useState } from 'react';
-import { Icon, IconButton, Typography, Tooltip ,ClickAwayListener,Input} from '@material-ui/core';
-import { FuseAnimate, FusePageSimple } from '@fuse';
 import { useDispatch } from 'react-redux';
+import { useHistory } from "react-router-dom";
+
+import { FuseAnimate, FusePageSimple } from '@fuse';
 import withReducer from 'app/store/withReducer';
+
+import JobDefinitionFileList from './JobDefinitionFileList';
+import MainSidebarContent from './MainSidebarContent';
+import MainSidebarHeader from './MainSidebarHeader';
 import * as Actions from './store/actions';
 import reducer from './store/reducers';
-import JobDefinitionFileList from './JobDefinitionFileList';
-import MainSidebarHeader from './MainSidebarHeader';
-import MainSidebarContent from './MainSidebarContent';
-import clsx from 'clsx';
-import { useHistory } from "react-router-dom";
 
 function JobDefinitionListView(props) {
 
@@ -80,7 +82,7 @@ function JobDefinitionListView(props) {
                     <div className="flex items-center justify-between">
                         <div className="flex flex-col" style={{ flexGrow: "1" }}>
                             <div className="flex items-center mb-16">
-                                <Icon className="text-18" className="cursor-pointer" color="action" onClick={navigateHome}>home</Icon>
+                                <Icon className="text-18 cursor-pointer" color="action" onClick={navigateHome}>home</Icon>
                                 <Icon className="text-17" color="action">chevron_right</Icon>
                                 <Typography className="w-max" color="textSecondary">Job Definition</Typography>
                             </div>

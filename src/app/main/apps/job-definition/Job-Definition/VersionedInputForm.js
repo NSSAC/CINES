@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Redirect } from 'react-router-dom';
+import { Redirect, useHistory } from 'react-router-dom';
 import semver  from 'semver';
 
 import withReducer from 'app/store/withReducer';
@@ -7,7 +7,8 @@ import withReducer from 'app/store/withReducer';
 import reducer from './store/reducers';
 
 function VersionedInputForm(props) {
-
+    const history = useHistory()
+    
     const [VForm, setVForm] = useState(false);
     const [formVersion,setFormVersion] = useState(false)
 
@@ -37,9 +38,8 @@ function VersionedInputForm(props) {
 
 
     if (job_definition && job_definition.failed){
-        return <Redirect to={`${props.location.pathname}?version=default`} />
+        history.replace(`${props.location.pathname}?version=default`)
     }else if (formVersion && VForm && job_definition){
-        console.log("VersionInputForm props: ", props)
         return (
             <VForm { ...props } job_definition={job_definition} />  
         )

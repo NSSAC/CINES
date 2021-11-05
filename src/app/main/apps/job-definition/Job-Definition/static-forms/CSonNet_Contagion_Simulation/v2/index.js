@@ -1,4 +1,4 @@
-import { Icon, LinearProgress, MenuItem } from '@material-ui/core';
+import { Icon, MenuItem } from '@material-ui/core';
 /* eslint-disable */
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
@@ -68,13 +68,13 @@ const CSonNet_Contagion_Simulation = (props) => {
             SIR_Submodel: { id: 201, value: state && state.input && state.input.dynamic_inputs ? state.input.dynamic_inputs['SIR_Submodel'] : "" },
             SIS_Submodel: { id: 202, value: state && state.input && state.input.dynamic_inputs ? state.input.dynamic_inputs['SIS_Submodel'] : "" },
             SEIR_Submodel: { id: 203, value: state && state.input && state.input.dynamic_inputs ? state.input.dynamic_inputs['SEIR_Submodel'] : "" },
-            threshold: { id: 301, value: state && state.input && String(state.input.dynamic_inputs.threshold) !== 'undefined' ? state.input.dynamic_inputs['threshold'] : "" },
-            Edge_probability: { id: 302, value: state && state.input && String(state.input.dynamic_inputs.Edge_probability) !== 'undefined' ? state.input.dynamic_inputs['Edge_probability'] : "" },
-            Infectious_probability_transition: { id: 303, value: state && state.input && String(state.input.dynamic_inputs.Infectious_probability_transition) !== 'undefined' ? state.input.dynamic_inputs['Infectious_probability_transition'] : "" },
-            Infectious_duration: { id: 304, value: state && state.input && String(state.input.dynamic_inputs.Infectious_duration) !== 'undefined' ? state.input.dynamic_inputs['Infectious_duration'] : "" },
-            Exposed_duration: { id: 305, value: state && state.input && String(state.input.dynamic_inputs.Exposed_duration) !== 'undefined' ? state.input.dynamic_inputs['Exposed_duration'] : "" },
-            Exposed_probability_transition: { id: 306, value: state && state.input && String(state.input.dynamic_inputs.Exposed_probability_transition) !== 'undefined' ? state.input.dynamic_inputs['Exposed_probability_transition'] : "" },
-            blocking_state: {id: 307, value: state && state.input && state.input.dynamic_inputs['blocking_state']?state.input.dynamic_inputs['blocking_state']:""},
+            threshold: { id: 301, value: state && state.input && state.input.dynamic_inputs && String(state.input.dynamic_inputs.threshold) !== 'undefined' ? state.input.dynamic_inputs['threshold'] : "" },
+            Edge_probability: { id: 302, value: state && state.input && state.input.dynamic_inputs && String(state.input.dynamic_inputs.Edge_probability) !== 'undefined' ? state.input.dynamic_inputs['Edge_probability'] : "" },
+            Infectious_probability_transition: { id: 303, value: state && state.input && state.input.dynamic_inputs && String(state.input.dynamic_inputs.Infectious_probability_transition) !== 'undefined' ? state.input.dynamic_inputs['Infectious_probability_transition'] : "" },
+            Infectious_duration: { id: 304, value: state && state.input && state.input.dynamic_inputs && String(state.input.dynamic_inputs.Infectious_duration) !== 'undefined' ? state.input.dynamic_inputs['Infectious_duration'] : "" },
+            Exposed_duration: { id: 305, value: state && state.input && state.input.dynamic_inputs && String(state.input.dynamic_inputs.Exposed_duration) !== 'undefined' ? state.input.dynamic_inputs['Exposed_duration'] : "" },
+            Exposed_probability_transition: { id: 306, value: state && state.input && state.input.dynamic_inputs && String(state.input.dynamic_inputs.Exposed_probability_transition) !== 'undefined' ? state.input.dynamic_inputs['Exposed_probability_transition'] : "" },
+            blocking_state: {id: 307, value: state && state.input && state.input.dynamic_inputs && state.input.dynamic_inputs['blocking_state']?state.input.dynamic_inputs['blocking_state']:""},
             input_file: [jobData.input_files[0].name, {
                 formLabel: jobData.input_files[0].name,
                 key: "input_file",
@@ -679,7 +679,7 @@ const CSonNet_Contagion_Simulation = (props) => {
                                                             type="text"
                                                             name='Number nodes'
                                                             style={{ width: '18px' }}
-                                                            value={String(staticProps.InitialConditions[0].number_nodes)}
+                                                            value={staticProps && staticProps.InitialConditions && String(staticProps.InitialConditions[0].number_nodes)}
                                                             onBlur={(event) => ICChangedHandler(event, 'number_nodes')}
                                                             label="Number Nodes"
                                                             validations={{
