@@ -16,6 +16,7 @@ const SIR = (props) => {
         alignSelf: 'center'
     };
 
+        // console.log(`SIR:`,props)
         return (
             <FusePageSimple
                 classes={{

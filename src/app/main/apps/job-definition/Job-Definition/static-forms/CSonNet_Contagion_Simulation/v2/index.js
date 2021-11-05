@@ -583,17 +583,17 @@ const CSonNet_Contagion_Simulation = (props) => {
                                             </Grid>
                                             {dynamicProps.Behaviour.value === 'Threshold Model' && <Deterministic_threshold changed={dynamicChangedHandler} modelJSON={modelJSON} threshold_property="deterministic_progressive_blocking_node_threshold_value"
                                                 dynamicProps={dynamicProps}></Deterministic_threshold>}
-                                            {dynamicProps.Behaviour.value === 'SEIR Model' && <SEIR changed={dynamicChangedHandler}
+                                            {dynamicProps.Behaviour.value === 'SEIR Model' && <SEIR modelJSON={modelJSON} changed={dynamicChangedHandler}
                                                 dynamicProps={dynamicProps}></SEIR>}
-                                            {dynamicProps.Behaviour.value === 'SIR Model' && <SIR changed={dynamicChangedHandler}
+                                            {dynamicProps.Behaviour.value === 'SIR Model' && <SIR modelJSON={modelJSON} changed={dynamicChangedHandler}
                                                 dynamicProps={dynamicProps}></SIR>}
-                                            {dynamicProps.Behaviour.value === 'SIS Model' && <SIS changed={dynamicChangedHandler}
+                                            {dynamicProps.Behaviour.value === 'SIS Model' && <SIS modelJSON={modelJSON} changed={dynamicChangedHandler}
                                                 dynamicProps={dynamicProps}></SIS>}
-                                            {dynamicProps.Behaviour.value === 'Independent Cascade Model' && <ICM changed={dynamicChangedHandler}
+                                            {dynamicProps.Behaviour.value === 'Independent Cascade Model' && <ICM modelJSON={modelJSON} changed={dynamicChangedHandler}
                                                 dynamicProps={dynamicProps}></ICM>}
-                                            {dynamicProps.Behaviour.value === 'Linear Threshold Model' && <LTM changed={dynamicChangedHandler}
+                                            {dynamicProps.Behaviour.value === 'Linear Threshold Model' && <LTM modelJSON={modelJSON} changed={dynamicChangedHandler}
                                                 dynamicProps={dynamicProps}></LTM>}
-                                            {dynamicProps.Behaviour.value === 'Probabilistic Threshold Model' && <PTM changed={dynamicChangedHandler}
+                                            {dynamicProps.Behaviour.value === 'Probabilistic Threshold Model' && <PTM modelJSON={modelJSON} changed={dynamicChangedHandler}
                                                 dynamicProps={dynamicProps}></PTM>}
                                         </div>
                                     </div>
