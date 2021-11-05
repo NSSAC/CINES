@@ -356,8 +356,29 @@ function MyJobsFileList(props) {
                                                 <TableCell>
                                                     {<Link style={{color: "#1565C0"}} to={row.id}>{row.id}</Link>}
                                                 </TableCell >
-                                                <TableCell >
-                                                    {row.job_definition.replace('net.science/', "")}
+                                                <TableCell className="" >
+                                                 {(()=>{
+                                                        console.log("row.job_definition: ", row.job_definition)
+                                                        var parts = row.job_definition.split("@")
+                                                        const full_jd = parts[0]
+                                                        const version = parts[1]
+                                                        var nameparts = full_jd.split("/")
+                                                        const jd = nameparts.pop();
+                                                        const namespace = nameparts.map(encodeURIComponent).join("/")  
+                                                        return (
+                                                            <React.Fragment>
+
+                                                                <div className="text-xs">
+                                                                    <span>{namespace}</span><span className="ml-4">v{version}</span>
+                                                                </div>
+                                                                <div className="text-base font-semibold" >
+                                                                    {/* {jd.replace(/([^[\p{L}\d]+|(?<=[\p{Ll}\d])(?=\p{Lu})|(?<=\p{Lu})(?=\p{Lu}[\p{Ll}\d])|(?<=[\p{L}\d])(?=\p{Lu}[\p{Ll}\d]))/gu, ' ')} */}
+                                                                    {jd.replace(/_/gu,' ')}
+                                                                </div>
+                                                            </React.Fragment>
+                                                            
+                                                        )
+                                                    })()}
                                                 </TableCell>
                                                 <TableCell  >
                                                     {row.output_name}

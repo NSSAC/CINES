@@ -1,11 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { Typography, LinearProgress, Hidden, Button, Icon, TableFooter, Tooltip, IconButton, TablePagination, Table, TableBody, TableCell, TableHead, TableRow, Paper, TableContainer } from '@material-ui/core';
+import { Button, Hidden, Icon, IconButton, LinearProgress, Paper, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TablePagination, TableRow, Tooltip, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
-import { FuseAnimate } from '@fuse';
-import { useDispatch, useSelector } from 'react-redux';
 import clsx from 'clsx';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { FuseAnimate } from '@fuse';
+
 import * as Actions from './store/actions';
+
 import './FileList.css'
+
 const useStyles = makeStyles({
     typeIcon: {
         '&.folder:before': {
@@ -271,11 +275,30 @@ function FileList(props) {
                                                     {row.id}
                                                 </TableCell >
                                                 <TableCell >
-                                                    {row.job_definition}
+                                                    {()=>{
+                                                        var parts = row.job_definition.split("@")
+                                                        const full_jd = parts[0]
+                                                        const version = parts[1]
+                                                        var nameparts = full_jd.split("/")
+                                                        const jd = nameparts.pop();
+                                                        const namespace = nameparts.map(encodeURIComponent).join("/")  
+                                                        return (
+                                                            <React.Fragment>
+
+                                                                <div>
+                                                                    <span>{namespace}</span><span>{version}</span>
+                                                                </div>
+                                                                <div>
+                                                                    {jd}
+                                                                </div>
+                                                            </React.Fragment>
+                                                            
+                                                        )
+                                                    }}
                                                 </TableCell>
                                                 <TableCell  >
-                                                    {row.state}
-                                                </TableCell>
+                                                    STATE {row.state}
+                                                </TableCell> 
 
                                                 <TableCell  >
                                                     {row.creation_date.replace(/T|Z/g, '  ').split(".")[0]}

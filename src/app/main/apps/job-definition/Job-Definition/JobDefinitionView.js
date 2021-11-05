@@ -140,7 +140,7 @@ function JobDefinitionView(props) {
                         </div>
                     </div>
                     <div className="mt-4 ml-0">
-                        <Typography className="ml-0 uppercase" variant="h5">{props.module.replace(/_/g," ")}</Typography>
+                        <Typography className="ml-0" variant="h5">{props.module.replace(/_/g," ")}</Typography>
                     </div>
                     <div className="mt-4 ml-0">
                         {job_definition && job_definition.description && (

@@ -1,16 +1,14 @@
-import React, { useState } from "react";
-import { Typography, Divider } from "@material-ui/core";
+import { Divider, Typography } from "@material-ui/core";
+import { Tab, Tabs } from "@material-ui/core";
+import { ListAlt as FileIcon, InfoOutlined as MetadataIcon } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/styles";
-import { FuseAnimate } from "@fuse";
-import { useSelector } from "react-redux";
 import clsx from "clsx";
-import { Tabs, Tab } from "@material-ui/core";
-import MetadataInfoDialog from "app/main/apps/my-jobs/MetadataDialog";
-import {
-  ListAlt as FileIcon,
-  InfoOutlined as MetadataIcon,
-} from "@material-ui/icons";
+import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
+
+import { FuseAnimate } from "@fuse";
+import MetadataInfoDialog from "app/main/apps/my-jobs/MetadataDialog";
 
 const useStyles = makeStyles({
   table: {
@@ -169,11 +167,6 @@ function DetailSidebarContent(props) {
           className="w-full mb-32"
         >
           <Tab
-            icon={<FileIcon alt="File Info" />}
-            className="min-w-0"
-            title="Output"
-          />
-          <Tab
             className="min-w-0"
             icon={<MetadataIcon alt="Metadata" />}
             title="Metadata"
@@ -184,7 +177,7 @@ function DetailSidebarContent(props) {
             title="Input File Information"
           />
         </Tabs>
-        {selectedTab === 0 && (
+        {selectedTab === 5 && (
           <React.Fragment>
             {
               <div>
@@ -242,15 +235,97 @@ function DetailSidebarContent(props) {
           </React.Fragment>
         )}
 
-        {selectedTab === 1 && (
+        {selectedTab === 0 && (
           <React.Fragment>
-            {
-              <div>
-                <Typography variant="h6">INFORMATION</Typography>
-              </div>
-            }
             <table className={clsx(classes.table, "w-full, text-left")}>
               <tbody>
+                {selectedItem.created_by ? (
+                  <tr className="state">
+                    <th>Created by</th>
+                    {selectedItem.created_by ? (
+                      <td style={{ wordBreak: 'break-all' }}> {selectedItem.created_by} </td>
+                    ) : (
+                      <td>-</td>
+                    )}
+                  </tr>
+                ) : null}
+                <tr>
+                  <td colspan={2} className="border-b border-gray-800 w-full"><Typography variant="h7">OUTPUTS</Typography></td>
+                </tr>
+                {
+                  <tr>
+                    <th> Output file(s)</th>
+                    {renderOutput()}
+                  </tr>
+                }
+                {
+                  <tr>
+                    <th> Output data</th>
+                    {selectedItem.output ? (
+                      <td>{String(selectedItem.output.output)}</td>
+                    ) : (
+                      <td>none</td>
+                    )}
+                  </tr>
+                }
+
+                {selectedItem.stdout ? (
+                  <tr className="state">
+                    <th> Std out</th>
+                    {selectedItem.stdout ? (
+                      <td onClick={openoutputDialog}>
+                        {/* eslint-disable-next-line */}
+                        <a style={{ color: '#1565C0' }} className="cursor-pointer">Click here</a>
+                      </td>
+                    ) : (
+                      <td>-</td>
+                    )}
+                  </tr>
+                ) : null}
+
+                {selectedItem.stderr ? (
+                  <tr className="state">
+                    <th> Std error</th>
+                    {selectedItem.stderr ? (
+                      <td onClick={openErrorDialog}>
+                        {/* eslint-disable-next-line */}
+                        <a style={{ color: '#1565C0' }} className="cursor-pointer">Click here</a>
+                      </td>
+                    ) : (
+                      <td>-</td>
+                    )}
+                  </tr>
+                ) : null}
+
+                {selectedItem.exit_code ? (
+                  <tr className="state">
+                    <th>Exit code</th>
+                    {selectedItem.exit_code ? (
+                      <td style={{ wordBreak: 'break-all' }}> {selectedItem.exit_code} </td>
+                    ) : (
+                      <td>-</td>
+                    )}
+                  </tr>
+                ) : null}
+
+                {selectedItem.status ? (
+                  <tr className="state">
+                    <th> Status</th>
+                    {selectedItem.status ? (
+                      <td onClick={() => openDialog(['Status', selectedItem.status])}>
+                        {/* eslint-disable-next-line */}
+                        <a style={{ color: '#1565C0' }} className="cursor-pointer">Click here</a>
+                      </td>
+                    ) : (
+                      <td>-</td>
+                    )}
+                  </tr>
+                ) : null}
+
+                <tr>
+                      <td colspan={2} className="border-b border-gray-800 w-full"><Typography variant="h7">TIMING</Typography></td>
+                </tr>
+  
                 {selectedItem.input && selectedItem.input.reconstitute ? (
                   <tr>
                     <th> Input</th>
@@ -316,27 +391,9 @@ function DetailSidebarContent(props) {
                   </tr>
                 ) : null}
 
-                {selectedItem.created_by ? (
-                  <tr className="state">
-                    <th>Created by</th>
-                    {selectedItem.created_by ? (
-                      <td style={{ wordBreak: 'break-all' }}> {selectedItem.created_by} </td>
-                    ) : (
-                      <td>-</td>
-                    )}
-                  </tr>
-                ) : null}
 
-                {selectedItem.exit_code ? (
-                  <tr className="state">
-                    <th>Exit code</th>
-                    {selectedItem.exit_code ? (
-                      <td style={{ wordBreak: 'break-all' }}> {selectedItem.exit_code} </td>
-                    ) : (
-                      <td>-</td>
-                    )}
-                  </tr>
-                ) : null}
+
+ 
 
                 {selectedItem.failure_type ? (
                   <tr className="state">
@@ -349,26 +406,12 @@ function DetailSidebarContent(props) {
                   </tr>
                 ) : null}
 
-                {selectedItem.status ? (
-                  <tr className="state">
-                    <th> Status</th>
-                    {selectedItem.status ? (
-                      <td onClick={() => openDialog(['Status', selectedItem.status])}>
-                        {/* eslint-disable-next-line */}
-                        <a style={{ color: '#1565C0' }} className="cursor-pointer">Click here</a>
-                      </td>
-                    ) : (
-                      <td>-</td>
-                    )}
-                  </tr>
-                ) : null}
-
               </tbody>
             </table>
           </React.Fragment>
         )}
 
-        {selectedTab === 2 && selectedItem.input_files && selectedItem.input && (
+        {selectedTab === 1 && selectedItem.input_files && selectedItem.input && (
           <React.Fragment>
             {selectedItem.input_files.length > 0 && <div>
               <Typography variant="h6">INPUT FILE</Typography>
