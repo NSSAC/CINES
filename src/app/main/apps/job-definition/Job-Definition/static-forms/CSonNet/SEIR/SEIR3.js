@@ -1,14 +1,11 @@
-/* eslint-disable */
-import {
-    TextFieldFormsy
-} from '@fuse/components/formsy';
-import React from 'react';
-import Grid from '@material-ui/core/Grid';
-import { FusePageSimple } from '@fuse';
 import { Icon } from '@material-ui/core';
-import { modelJSON } from '../../Schemas/CSonNet_modelDefinition';
+import Grid from '@material-ui/core/Grid';
+import React from 'react';
 import ReactTooltip from 'react-tooltip';
 
+import { FusePageSimple } from '@fuse';
+/* eslint-disable */
+import { TextFieldFormsy } from '@fuse/components/formsy';
 
 const SEIR3 = (props) => {
 
@@ -64,7 +61,7 @@ const SEIR3 = (props) => {
                             validationError="This is not a valid value"
                             required
                         />
-                        {description(modelJSON.models.SEIR.submodels['stochastic exposed fixed infectious'].rules[0].input.edge_probability_value.description)}
+                        {description(props.modelJSON.models.SEIR.submodels['stochastic exposed fixed infectious'].rules[0].input.edge_probability_value.description)}
                     </Grid>
                     <Grid style={childGrid} item container xs={12} >
                         {/* {data_source} */}
@@ -85,7 +82,7 @@ const SEIR3 = (props) => {
                             autoComplete="off"
                             required
                         />
-                        {description(modelJSON.models.SEIR.submodels['stochastic exposed fixed infectious'].rules[1].input.node_probability_auto_value.description)}
+                        {description(props.modelJSON.models.SEIR.submodels['stochastic exposed fixed infectious'].rules[1].input.node_probability_auto_value.description)}
                     </Grid>
                     <Grid style={childGrid} item container xs={12} >
                         {/* {data_source} */}
@@ -106,7 +103,7 @@ const SEIR3 = (props) => {
                             autoComplete="off"
                             required
                         />
-                        {description(modelJSON.models.SEIR.submodels['stochastic exposed fixed infectious'].rules[2].input.discrete_time_auto_value.description)}
+                        {description(props.modelJSON.models.SEIR.submodels['stochastic exposed fixed infectious'].rules[2].input.discrete_time_auto_value.description)}
                     </Grid>
                     <ReactTooltip clickable={true} isCapture = {true} scrollHide = {true} className='toolTip' place='top' effect='solid' />
                 </div>

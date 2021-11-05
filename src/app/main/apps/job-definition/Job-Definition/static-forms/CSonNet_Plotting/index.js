@@ -248,14 +248,11 @@ const CSonNet_plot = (props) => {
 
     function populateBody(submitJSON) {
         setIsToasterFlag(true);
-        var path = window.location.pathname.replace("/apps/job-definition/", "");
-        var jobDefinition = path;
+
         var requestJson = {
             input: submitJSON,
-            job_definition: jobDefinition,
-            pragmas: {
-                account: "ARCS:bii_nssac",
-            },
+            job_definition: `${jobData.id}@${jobData.version}`,
+            pragmas: {},
             output_container: dynamicProps.outputPath[1].value,
             output_name: dynamicProps.Output_name.value
         };
@@ -331,10 +328,7 @@ const CSonNet_plot = (props) => {
                         {isToasterFlag ? (
                                     <Toaster errorMsg={errorMsg} success={success} id="CSonNet Plotting"></Toaster>
                                 ) : null}
-                            <Typography className="h2"><b>CSonNet plot</b></Typography>
-                            <Typography className="h4" style={{ whiteSpace: "break-spaces" }}>&nbsp;{modelJSON.description}
-                            {`. This task outputs files of type ${(jobData.output_files.contents.map(a => a.name)).toString()} in your chosen location. `}
-                            </Typography>
+
                             <div>
                                 <Formsy
                                     onValid={enableButton}

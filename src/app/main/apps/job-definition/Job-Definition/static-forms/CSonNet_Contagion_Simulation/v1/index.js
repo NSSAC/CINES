@@ -1,26 +1,28 @@
+import modelJSON  from '../../Schemas/CSonNet_modelDefinition_v1';
+import { Icon, LinearProgress, MenuItem } from '@material-ui/core';
 /* eslint-disable */
 import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Formsy from 'formsy-react';
+import { JobService } from 'node-sciduct';
 import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useHistory } from 'react-router-dom';
-import Grid from '@material-ui/core/Grid';
+import ReactTooltip from 'react-tooltip';
+
 import { FusePageSimple, SelectFormsy, TextFieldFormsy } from '@fuse';
-import { Input } from '../../SelectFile.js'
-import { Icon, LinearProgress, MenuItem } from '@material-ui/core';
+
+import * as Actions from "../../../store/actions";
 import Toaster from "../../../Toaster";
 import Deterministic_threshold from '../../CSonNet/deterministic_threshold.js';
-import SIR from '../../CSonNet/SIR/SIR.js';
 // import SIS from './CSonNet/SIS/SIS.js';
 // import ICM from './CSonNet/ICM.js';
 // import LTM from './CSonNet/LTM.js';
 // import PTM from './CSonNet/PTM.js';
 import SEIR from '../../CSonNet/SEIR/SEIR.js';
-import { modelJSON } from '../../Schemas/CSonNet_modelDefinition'
-import ReactTooltip from 'react-tooltip';
-import { useDispatch, useSelector } from "react-redux";
-import * as Actions from "../../../store/actions";
-import { JobService } from 'node-sciduct';
+import SIR from '../../CSonNet/SIR/SIR.js';
+import { Input } from '../../SelectFile.js'
 
 const CSonNet_Contagion_Simulation_v1 = (props) => {
     const jobData = useSelector(
@@ -250,19 +252,17 @@ const CSonNet_Contagion_Simulation_v1 = (props) => {
 
     function populateBody(submitJSON) {
         setIsToasterFlag(true);
-        var path = window.location.pathname.replace("/apps/job-definition/", "");
-        var jobDefinition = path;
+        // var path = window.location.pathname.replace("/apps/job-definition/", "");
+        // var jobDefinition = path;
         var requestJson = {
             input: submitJSON,
-            job_definition: jobDefinition,
-            pragmas: {
-                account: "ARCS:bii_nssac",
-            },
+            job_definition: `${jobData.id}@${jobData.version}`,
+            pragmas: {},
             output_container: staticProps.outputPath[1].value,
             output_name: staticProps.Output_name.value
         };
 
-        console.log(requestJson)
+        console.log("V1 requestJSON: ", requestJson)
         onFormSubmit(requestJson)
 
     }
@@ -437,19 +437,19 @@ const CSonNet_Contagion_Simulation_v1 = (props) => {
 
                                                 </SelectFormsy>
                                             </Grid>
-                                            {dynamicProps.Behaviour.value === 'Threshold Model' && <Deterministic_threshold changed={dynamicChangedHandler}
+                                            {dynamicProps.Behaviour.value === 'Threshold Model' && <Deterministic_threshold  modelJSON={modelJSON} threshold_property="deterministic_progressive_node_threshold_value" changed={dynamicChangedHandler}
                                                 dynamicProps={dynamicProps}></Deterministic_threshold>}
-                                            {dynamicProps.Behaviour.value === 'SEIR Model' && <SEIR changed={dynamicChangedHandler}
+                                            {dynamicProps.Behaviour.value === 'SEIR Model' && <SEIR   modelJSON={modelJSON} changed={dynamicChangedHandler}
                                                 dynamicProps={dynamicProps}></SEIR>}
-                                            {dynamicProps.Behaviour.value === 'SIR Model' && <SIR changed={dynamicChangedHandler}
+                                            {dynamicProps.Behaviour.value === 'SIR Model' && <SIR  modelJSON={modelJSON} changed={dynamicChangedHandler}
                                                 dynamicProps={dynamicProps}></SIR>}
-                                            {dynamicProps.Behaviour.value === 'SIS Model' && <SIS changed={dynamicChangedHandler}
+                                            {dynamicProps.Behaviour.value === 'SIS Model' && <SIS  modelJSON={modelJSON} changed={dynamicChangedHandler}
                                                 dynamicProps={dynamicProps}></SIS>}
-                                            {dynamicProps.Behaviour.value === 'Independent Cascade Model' && <ICM changed={dynamicChangedHandler}
+                                            {dynamicProps.Behaviour.value === 'Independent Cascade Model' && <ICM  modelJSON={modelJSON} changed={dynamicChangedHandler}
                                                 dynamicProps={dynamicProps}></ICM>}
-                                            {dynamicProps.Behaviour.value === 'Linear Threshold Model' && <LTM changed={dynamicChangedHandler}
+                                            {dynamicProps.Behaviour.value === 'Linear Threshold Model' && <LTM  modelJSON={modelJSON} changed={dynamicChangedHandler}
                                                 dynamicProps={dynamicProps}></LTM>}
-                                            {dynamicProps.Behaviour.value === 'Probabilistic Threshold Model' && <PTM changed={dynamicChangedHandler}
+                                            {dynamicProps.Behaviour.value === 'Probabilistic Threshold Model' && <PTM  modelJSON={modelJSON} changed={dynamicChangedHandler}
                                                 dynamicProps={dynamicProps}></PTM>}
                                         </div>
                                     </div>

@@ -47,6 +47,10 @@ export const MyJobDefinitionAppConfig = {
             "namespaces": ["development","net.science"]
         }),
 
+        generate_static_form_route("CSonNet_Plotting",{
+            "namespaces": ["development","net.science"]
+        }),
+
         // {
         //     path: "/apps/jobdefs/",
         //     component: React.lazy(() => import('./JobLauncher'))

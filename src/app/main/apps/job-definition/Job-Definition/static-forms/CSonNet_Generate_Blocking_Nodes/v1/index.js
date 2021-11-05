@@ -62,14 +62,15 @@ const CSonNet_Generate_Blocking_Nodes = (props) => {
         // dispatch(Actions.setSelectedItem(pathEnd));
         // if (Object.keys(props.job_definition).length !== 0 && props.job_definition.id.includes(pathEnd)) {
         //         if (props.job_definition) {
+        console.log(`useEffect() setDynamicProps from resubmit`, props.resubmit)
         setDynamicProps({
-            blocking_class: { id: 101, value: '', required: true },
-            blocking_method: {id: 102, value: '', required: true},
-            random_seed: {id: 103, value: '0', required: true},
-            number_blocking_nodes: {id: 104, value: '', required: true},
-            blocking_state: {id: 105, value: '', required: true},
-            inactive_state: {id: 105, value: '', required: true},
-            output_name: { value: (props.resubmit && props.resubmit.inputData.state !== "Completed") ? props.resubmit.inputData.output_name : '' },
+            blocking_class: { id: 101, value: (props.resubmit && props.resubmit.inputData && props.resubmit.inputData.input && typeof props.resubmit.inputData.input.blocking_class !== 'undefined')?props.resubmit.inputData.input.blocking_class:"" , required: true },
+            blocking_method: {id: 102, value: (props.resubmit && props.resubmit.inputData && props.resubmit.inputData.input && typeof props.resubmit.inputData.input.blocking_method !== 'undefined')?props.resubmit.inputData.input.blocking_method:"", required: true},
+            random_seed: {id: 103, value: (props.resubmit && props.resubmit.inputData && props.resubmit.inputData.input && typeof props.resubmit.inputData.input.random_seed !== 'undefined')?props.resubmit.inputData.input.random_seed:0, required: true},
+            number_blocking_nodes: {id: 104, value: (props.resubmit && props.resubmit.inputData && props.resubmit.inputData.input && typeof props.resubmit.inputData.input.number_blocking_nodes !== 'undefined')?props.resubmit.inputData.input.number_blocking_nodes:1, required: true},
+            blocking_node_state: {id: 105, value: (props.resubmit && props.resubmit.inputData && props.resubmit.inputData.input)?props.resubmit.inputData.input.blocking_node_state:"", required: true},
+            inactive_state: {id: 105, value: (props.resubmit && props.resubmit.inputData && props.resubmit.inputData.input)?props.resubmit.inputData.input.inactive_state:"", required: true},
+            output_name: { value: (props.resubmit && props.resubmit.inputData && props.resubmit.inputData.input && props.resubmit.inputData.state !== "Completed") ? props.resubmit.inputData.output_name : '' },
             csonnet_simulation: ['Simulation output file', {
                 formLabel: 'Simulation output file',
                 id: 1,
@@ -87,20 +88,23 @@ const CSonNet_Generate_Blocking_Nodes = (props) => {
                 types: ["folder"],
                 value: props.resubmit ? props.resubmit.inputData.output_container : ""
             }]
-        })
+        },[props.resubmit])
 
 
-
+        console.log("DYNAMIC_PROPS: ", dynamicProps)
         props.resubmit && localStorage.setItem('formLastPath', props.resubmit.inputData.output_container)
          setModelJSON(props.job_definition.input_schema)
 
-    }, []);
+    }, [props]);
 
     // useEffect(() => {
     //     inputFields.length == 0 && props.resubmit && props.resubmit.inputData.input.text_sections.legend_section.legend_items && setInputFields(props.resubmit.inputData.input.text_sections.legend_section.legend_items)
     //     // dynamicProps.triples && inputFields.length && setInputFields(dynamicProps.triples.value)
     // }, [dynamicProps])
 
+    useEffect(()=>{
+        console.log("Dynamic Props Changed: ", dynamicProps)
+    }, [dynamicProps])
 
     const description = (desc) =>
         <span style={{ marginTop: '38px' }} data-tip={desc}>
@@ -129,7 +133,7 @@ const CSonNet_Generate_Blocking_Nodes = (props) => {
             "blocking_class": dynamicProps.blocking_class.value,
             "blocking_method": dynamicProps.blocking_method.value,
             "random_seed": random_seed,
-            "blocking_node_state": dynamicProps.blocking_state.value,
+            "blocking_node_state": dynamicProps.blocking_node_state.value,
             "inactive_state": dynamicProps.inactive_state.value,
             "number_blocking_nodes": parseInt(dynamicProps.number_blocking_nodes.value),
             "blocking_type": "node"
@@ -245,11 +249,12 @@ const CSonNet_Generate_Blocking_Nodes = (props) => {
                                                         changed={(event) => inputChangedHandler(event, 'output_path')}
                                                     />
                                                 </div>
+
                                                 <SelectFormsy
                                                     className="my-12 mt-16 inputStyle-plot"
                                                     name="blocking_class"
                                                     label={["Blocking Class", <span key={1} style={{ color: 'red' }}>{'*'}</span>]}
-                                                    value=""
+                                                    value={dynamicProps.blocking_class.value}
                                                     onChange={(event) => inputChangedHandler(event, 'blocking_class')}
                                                 >
                                                     <MenuItem key='global' value='global'>global</MenuItem>
@@ -261,7 +266,7 @@ const CSonNet_Generate_Blocking_Nodes = (props) => {
                                                         className="my-12 mt-16 inputStyle-plot"
                                                         name="blocking_method"
                                                         label={["Blocking Method", <span key={1} style={{ color: 'red' }}>{'*'}</span>]}
-                                                        value=""
+                                                        value={dynamicProps.blocking_method.value}
                                                         onChange={(event) => inputChangedHandler(event, 'blocking_method')}
                                                     >
                                                         {dynamicProps.blocking_class.value === 'global' && <MenuItem key='RandomNodes' value='randomNodes'>Random Nodes</MenuItem>}
@@ -280,7 +285,7 @@ const CSonNet_Generate_Blocking_Nodes = (props) => {
                                                 className="my-12 mt-16 inputStyle-plot"
                                                 type="text"
                                                 name='random_seed'
-                                                value="0"
+                                                value={(dynamicProps && dynamicProps.random_seed)?dynamicProps.random_seed.value:0}
                                                 style={{ width: '18px' }}
                                                 label="Random Seed"
                                                 onBlur={(event) => inputChangedHandler(event, 'random_seed')}
@@ -299,7 +304,7 @@ const CSonNet_Generate_Blocking_Nodes = (props) => {
                                                 name='number_blocking_nodes'
                                                 style={{ width: '18px' }}
                                                 label="Number of blocking nodes"
-                                                value=""
+                                                value={dynamicProps.number_blocking_nodes.value}
                                                 onBlur={(event) => inputChangedHandler(event, 'number_blocking_nodes')}
                                                 validations={{
                                                     isPositiveInt: function (_values, value) {
@@ -314,11 +319,11 @@ const CSonNet_Generate_Blocking_Nodes = (props) => {
                                             <TextFieldFormsy
                                                 className="my-12 mt-16 inputStyle-plot"
                                                 type="text"
-                                                name='blocking_state'
+                                                name='blocking_node_state'
                                                 style={{ width: '18px' }}
-                                                value=""
+                                                value={dynamicProps.blocking_node_state.value}
                                                 label="Blocking State"
-                                                onBlur={(event) => inputChangedHandler(event, 'blocking_state')}
+                                                onBlur={(event) => inputChangedHandler(event, 'blocking_node_state')}
                                                 autoComplete="off"
                                                 validationError="This is not a valid value"
                                                 required
@@ -329,7 +334,7 @@ const CSonNet_Generate_Blocking_Nodes = (props) => {
                                                 type="text"
                                                 name='inactive_state'
                                                 style={{ width: '18px' }}
-                                                value=""
+                                                value={dynamicProps.inactive_state.value}
                                                 label="Inactive State"
                                                 onBlur={(event) => inputChangedHandler(event, 'inactive_state')}
                                                 autoComplete="off"

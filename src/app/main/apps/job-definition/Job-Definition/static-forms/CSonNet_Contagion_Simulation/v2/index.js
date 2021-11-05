@@ -22,7 +22,8 @@ import Deterministic_threshold from '../../CSonNet/deterministic_threshold.js';
 // import PTM from './CSonNet/PTM.js';
 import SEIR from '../../CSonNet/SEIR/SEIR.js';
 import SIR from '../../CSonNet/SIR/SIR.js';
-import { modelJSON } from '../../Schemas/CSonNet_modelDefinition'
+import modelJSON from '../../Schemas/CSonNet_modelDefinition_v2';
+import foo from '../../Schemas/CSonNet_modelDefinition_v1'
 import { Input } from '../../SelectFile.js'
 import * as Actions from "../store/actions";
 import reducer from '../store/reducers';
@@ -47,7 +48,7 @@ const CSonNet_Contagion_Simulation = (props) => {
     const [errorMsg, setErrorMsg] = useState();
     const [spinnerFlag, setSpinnerFlag] = useState(true);
     const [onSubmit, setOnSubmit] = useState()
-    const [selectedInputFile, onSelectInputFile] = useState()
+    const [inputFileMessage, setInputFileMessage] = useState(false)
     const [enableBlocking, setEnableBlocking] = useState(false)
     const history = useHistory();
 
@@ -130,6 +131,7 @@ const CSonNet_Contagion_Simulation = (props) => {
     }, [dispatch, dynamicProps])
 
     useEffect(() => {
+        console.log("Use Effect #1 for setInitialState")
         // let pathEnd = 'net.science/CSonNet_Contagion_Simulation'
         let pathEnd = `${props.namespace}/${props.module}`
         setIsToasterFlag(false);
@@ -139,19 +141,22 @@ const CSonNet_Contagion_Simulation = (props) => {
             setSpinnerFlag(false)
             if (jobData) {
                 if (input_file_meta && input_file_meta.provenance && input_file_meta.provenance.input) {
-                    setInitialState({
-                        ...input_file_meta.provenance,
-                        input_file: [jobData.input_files[0].name, {
-                            formLabel: jobData.input_files[0].name,
-                            id: 0,
-                            name: jobData.input_files[0].name,
-                            outputFlag: false,
-                            required: true,
-                            types: jobData.input_files[0].types,
-                            value: dynamicProps.input_files && (dynamicProps.input_files.length > 0) & dynamicProps.input_files[1].value
-                        }]
-                    })
+                        const updatedState={
+                            ...input_file_meta.provenance,
+                            input_file: [jobData.input_files[0].name, {
+                                formLabel: jobData.input_files[0].name,
+                                id: 0,
+                                name: jobData.input_files[0].name,
+                                outputFlag: false,
+                                required: true,
+                                types: jobData.input_files[0].types,
+                                value: dynamicProps.input_files && (dynamicProps.input_files.length > 0) & dynamicProps.input_files[1].value
+                            }]
+                        }
+                    console.log("Calling setInitialState #1 : ", updatedState)
+                    setInitialState(updatedState)
                 } else {
+                    console.log("Set from else: ", props.resubmit )
                     setInitialState((props.resubmit && props.resubmit.inputData) ? props.resubmit.inputData : {})
                 }
 
@@ -162,20 +167,48 @@ const CSonNet_Contagion_Simulation = (props) => {
         // eslint-disable-next-line
     }, [jobData.id]);
 
+    function getInputFileFromProvenance(provenance,name){
+        var found;
+        if (provenance.input_files && provenance.input_files.length>0){
+            if (provenance.input_files.some((f)=>{
+                if (f.name===name){
+                    found=f
+                    return true
+                }
+            })){
+                return found
+            }
+        }
+         
+        return False
+    }
 
     useEffect(() => {
+        console.log("Use Effect #2 for setInitialState")
+
         if (jobData && input_file_meta) {
             if (input_file_meta.type === "csonnet_simulation_container") {
                 if (input_file_meta.provenance && input_file_meta.provenance.input){
-                    setInitialState({
-                        input: {
-                            ...input_file_meta.provenance.input,
-                        },
-                        output_container: (staticProps.outputPath && staticProps.outputPath[1]) ? staticProps.outputPath[1].value : ""
-                    })
-                }
+                    console.log("Calling setInitialState #1", input_file_meta.provenance)
+                    
+                    const pfile = getInputFileFromProvenance(input_file_meta.provenance,"input_file")
 
-                setEnableBlocking(true)
+                    if (pfile && pfile['type']!="csonnet_simulation_container"){
+                        setInitialState({
+                            input: {
+                                ...input_file_meta.provenance.input,
+                            },
+                            output_container: (staticProps.outputPath && staticProps.outputPath[1]) ? staticProps.outputPath[1].value : ""
+                        })
+                        setInputFileMessage(`Graph File: ${pfile.stored_name}`)
+                        setEnableBlocking(true)
+                    }else{
+                        setInputFileMessage("Choosing a simulation as input that was previously run with another simulation as input is currently prohibited.")
+                        setEnableBlocking(false)
+                    }
+                }else{
+                    setEnableBlocking(false)
+                }
             } else {
                 setEnableBlocking(false)
             }
@@ -340,11 +373,11 @@ const CSonNet_Contagion_Simulation = (props) => {
 
     function populateBody(submitJSON) {
         setIsToasterFlag(true);
-        var path = window.location.pathname.replace("/apps/job-definition/", "");
-        var jobDefinition = path;
+        // var path = window.location.pathname.replace("/apps/job-definition/", "");
+        // var jobDefinition = path;
         var requestJson = {
             input: submitJSON,
-            job_definition: jobDefinition,
+            job_definition: `${jobData.id}@${jobData.version}`,
             output_container: staticProps.outputPath[1].value,
             output_name: staticProps.Output_name.value
         };
@@ -379,7 +412,6 @@ const CSonNet_Contagion_Simulation = (props) => {
                 window.setTimeout(handlingError, 4000);
             }
         )
-
     }
 
     function enableButton() {
@@ -517,9 +549,9 @@ const CSonNet_Contagion_Simulation = (props) => {
                                                 // changed={(evt)=>{console.log("Input File Changed")}}
 
                                                 />
-                                                {input_file_meta && input_file_meta.type && (input_file_meta.type === "csonnet_simulation_container") && (
-                                                    <Grid item xs={12}>
-                                                        Graph {JSON.stringify(input_file_meta.provenance.input_files[0].stored_name)}
+                                                {input_file_meta && input_file_meta.type && (inputFileMessage) && (
+                                                    <Grid item xs={12} className="break-all overflow-none">
+                                                       {inputFileMessage}
                                                     </Grid>
                                                 )}
 
@@ -549,7 +581,7 @@ const CSonNet_Contagion_Simulation = (props) => {
 
                                                 </SelectFormsy>
                                             </Grid>
-                                            {dynamicProps.Behaviour.value === 'Threshold Model' && <Deterministic_threshold changed={dynamicChangedHandler}
+                                            {dynamicProps.Behaviour.value === 'Threshold Model' && <Deterministic_threshold changed={dynamicChangedHandler} modelJSON={modelJSON} threshold_property="deterministic_progressive_blocking_node_threshold_value"
                                                 dynamicProps={dynamicProps}></Deterministic_threshold>}
                                             {dynamicProps.Behaviour.value === 'SEIR Model' && <SEIR changed={dynamicChangedHandler}
                                                 dynamicProps={dynamicProps}></SEIR>}

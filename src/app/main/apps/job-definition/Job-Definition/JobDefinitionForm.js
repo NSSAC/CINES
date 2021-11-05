@@ -214,13 +214,12 @@ function JobDefinitionForm(props) {
 
   const createSubmissionData = async () => {
     setIsToasterFlag(true);
-    var path = window.location.pathname.replace("/apps/job-definition/", "");
-    var jobDefinition = path;
+
     var input = {};
+
     var requestJson = {
       input: {},
-
-      job_definition: jobDefinition,
+      job_definition: `${props.namespace}/${props.jobdef}@${props.version}`,
       pragmas: {},
     };
     for (let key in formElementsArray) {
@@ -256,10 +255,11 @@ function JobDefinitionForm(props) {
     }
     requestJson.input = input;
     // setJobSubmissionArray({ ...requestJson });
-    await onFormSubmit(requestJson);
+    // console.log("Submit Form: ", requestJson)
+    onFormSubmit(requestJson);
   };
 
-  function onFormSubmit(requestJson) {
+  async function onFormSubmit(requestJson) {
     setOnSubmit(true)
     const url = `${process.env.REACT_APP_SCIDUCT_JOB_SERVICE}/`
     const token = localStorage.getItem('id_token');

@@ -250,7 +250,7 @@ function DetailSidebarContent(props) {
                   </tr>
                 ) : null}
                 <tr>
-                  <td colspan={2} className="border-b border-gray-800 w-full"><Typography variant="h7">OUTPUTS</Typography></td>
+                  <td colSpan={2} className="border-b border-gray-800 w-full"><Typography>OUTPUTS</Typography></td>
                 </tr>
                 {
                   <tr>
@@ -323,7 +323,7 @@ function DetailSidebarContent(props) {
                 ) : null}
 
                 <tr>
-                      <td colspan={2} className="border-b border-gray-800 w-full"><Typography variant="h7">TIMING</Typography></td>
+                      <td colSpan={2} className="border-b border-gray-800 w-full"><Typography>TIMING</Typography></td>
                 </tr>
   
                 {selectedItem.input && selectedItem.input.reconstitute ? (

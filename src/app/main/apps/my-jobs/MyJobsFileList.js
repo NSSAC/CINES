@@ -358,7 +358,6 @@ function MyJobsFileList(props) {
                                                 </TableCell >
                                                 <TableCell className="" >
                                                  {(()=>{
-                                                        console.log("row.job_definition: ", row.job_definition)
                                                         var parts = row.job_definition.split("@")
                                                         const full_jd = parts[0]
                                                         const version = parts[1]

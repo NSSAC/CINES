@@ -1,15 +1,13 @@
-/* eslint-disable */
-import {
-    SelectFormsy,
-    TextFieldFormsy
-} from '@fuse/components/formsy';
-import React from 'react';
-import Grid from '@material-ui/core/Grid';
-import { FusePageSimple } from '@fuse';
-import ReactTooltip from 'react-tooltip';
 import { Icon } from '@material-ui/core';
-import { modelJSON } from '../Schemas/CSonNet_modelDefinition';
+import Grid from '@material-ui/core/Grid';
+import React from 'react';
+import ReactTooltip from 'react-tooltip';
 
+import { FusePageSimple } from '@fuse';
+/* eslint-disable */
+import { SelectFormsy, TextFieldFormsy } from '@fuse/components/formsy';
+
+import { modelJSON } from '../Schemas/CSonNet_modelDefinition_v2';
 
 const Deterministic_threshold = (props) => {
 
@@ -18,6 +16,8 @@ const Deterministic_threshold = (props) => {
         alignSelf: 'center'
     };
 
+
+    console.log("deterministic threshold props:",props)
     const data_source =
         <TextFieldFormsy
         className="dataSource"
@@ -65,7 +65,7 @@ const Deterministic_threshold = (props) => {
                             autoComplete="off"
                             required
                         />
-                        {description(modelJSON.models.threshold_model.rules[0].input.deterministic_progressive_blocking_node_threshold_value.description)}
+                        {description(props.modelJSON.models.threshold_model.rules[0].input[props.threshold_property].description)}
                     </Grid>
                     <ReactTooltip clickable={true} isCapture = {true} scrollHide = {true} className='toolTip' place='top' effect='solid' />
                 </div>

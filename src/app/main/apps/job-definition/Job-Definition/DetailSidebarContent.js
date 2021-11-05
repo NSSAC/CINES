@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
-import {withStyles, Typography } from '@material-ui/core';
-import { makeStyles } from '@material-ui/styles';
-import { FuseAnimate } from '@fuse';
-import { useSelector } from 'react-redux';
-import clsx from 'clsx';
-import { Tabs, Tab } from '@material-ui/core';
-import MetadataInfoDialog from 'app/main/apps/my-jobs/MetadataDialog'
-import { ListAlt as MetadataIcon } from "@material-ui/icons";
+import { Typography, withStyles } from '@material-ui/core';
+import { Tab, Tabs } from '@material-ui/core';
 import Tooltip from '@material-ui/core/Tooltip';
+import { ListAlt as MetadataIcon } from "@material-ui/icons";
+import { makeStyles } from '@material-ui/styles';
+import clsx from 'clsx';
+import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
+
+import { FuseAnimate } from '@fuse';
+import MetadataInfoDialog from 'app/main/apps/my-jobs/MetadataDialog'
 
 const useStyles = makeStyles({
     table: {

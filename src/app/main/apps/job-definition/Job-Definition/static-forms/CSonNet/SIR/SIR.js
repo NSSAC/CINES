@@ -1,11 +1,11 @@
-/* eslint-disable */
-import {
-    SelectFormsy,
-} from '@fuse/components/formsy';
-import React from 'react';
-import Grid from '@material-ui/core/Grid';
-import { FusePageSimple } from '@fuse';
 import { MenuItem } from '@material-ui/core';
+import Grid from '@material-ui/core/Grid';
+import React from 'react';
+
+import { FusePageSimple } from '@fuse';
+/* eslint-disable */
+import { SelectFormsy } from '@fuse/components/formsy';
+
 // import Submodel_SID from './Submodel_SID';
 import Submodel_FIP from './Submodel_FIP';
 
@@ -40,9 +40,9 @@ const SIR = (props) => {
                                                     {/* <MenuItem key='Stochastic infectious' value='stochastic infectious'>Stochastic infectious</MenuItem> */}
                                                 </SelectFormsy>
                                             </Grid>
-                                            {props.dynamicProps.SIR_Submodel.value === 'stochastic infectious' && <Submodel_SID changed={props.changed}
+                                            {props.dynamicProps.SIR_Submodel.value === 'stochastic infectious' && <Submodel_SID modelJSON={props.modelJSON} changed={props.changed}
                                                 dynamicProps={props.dynamicProps}></Submodel_SID>}
-                                                {props.dynamicProps.SIR_Submodel.value === 'fixed infectious' && <Submodel_FIP changed={props.changed}
+                                                {props.dynamicProps.SIR_Submodel.value === 'fixed infectious' && <Submodel_FIP modelJSON={props.modelJSON} changed={props.changed}
                                                 dynamicProps={props.dynamicProps}></Submodel_FIP>}
 
 
