@@ -25,6 +25,7 @@ const Deterministic_threshold = (props) => {
             value="Fixed"
             autoComplete="off"
             required
+            disabled={props.disabled}
             InputProps={{
                 readOnly: true,
             }}
@@ -61,6 +62,7 @@ const Deterministic_threshold = (props) => {
                             }}
                             validationError="This is not a valid value"
                             autoComplete="off"
+                            disabled={props.disabled}
                             required
                         />
                         {description(props.modelJSON.models.threshold_model.rules[0].input[props.threshold_property].description)}

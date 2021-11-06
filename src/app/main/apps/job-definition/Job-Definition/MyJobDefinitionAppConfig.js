@@ -1,7 +1,7 @@
 import queryString from "query-string"
 import React from 'react';
 import { Redirect } from 'react-router-dom';
-
+import JobDefinitionView from './JobDefinitionView';
 const generate_static_form_route = (name,options) => {
     options = options || {}
     var path = `/apps/job-definition/:namespace*/${name}`
@@ -20,7 +20,7 @@ const generate_static_form_route = (name,options) => {
             var params = queryString.parse(props.location.search)
 
             // var Comp = React.lazy(()=> import(`./static-forms/${name}/`))
-            var Comp = React.lazy(()=> import('./JobDefinitionView'))
+            var Comp = JobDefinitionView
             var jd = options.job_definition?options.job_definition:name
             return (
                 <Comp namespaces={options.namespaces} namespace={namespace} module={name} static_form={true} jobdef={jd} version={params.version||"default"}   {...props.match.params} {...props}/> 

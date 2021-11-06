@@ -325,8 +325,7 @@ function FileManagerApp(props) {
               </Menu>
             </div>
             {((containerFlag &&
-              isFolder &&
-              Object.values(files).length !== 0) ||
+              isFolder) ||
               targetMeta === "") && (
                 <FuseAnimate animation="transition.expandIn" delay={200}>
                   <span>

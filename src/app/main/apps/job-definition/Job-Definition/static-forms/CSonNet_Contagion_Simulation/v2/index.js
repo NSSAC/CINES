@@ -50,6 +50,7 @@ const CSonNet_Contagion_Simulation = (props) => {
     const [onSubmit, setOnSubmit] = useState()
     const [inputFileMessage, setInputFileMessage] = useState(false)
     const [enableBlocking, setEnableBlocking] = useState(false)
+    const [validInputFile,setValidInputFile] = useState(false)
     const history = useHistory();
 
     var count = 1;
@@ -123,6 +124,7 @@ const CSonNet_Contagion_Simulation = (props) => {
     useEffect(() => {
         if (dynamicProps && dynamicProps.input_file && dynamicProps.input_file[1] && dynamicProps.input_file[1].value) {
             if (!input_file_meta || !input_file_meta.id || (dynamicProps.input_file[1].value != input_file_meta.full_path)) {
+                console.log(`dispatch getFileMeta(${dynamicProps.input_file[1].value})`)
                 dispatch(Actions.getFileMeta(dynamicProps.input_file[1].value))
             } else {
                 console.log(`${dynamicProps.input_file[1].value} == ${input_file_meta.full_path}`)
@@ -132,12 +134,20 @@ const CSonNet_Contagion_Simulation = (props) => {
 
     useEffect(() => {
         console.log("Use Effect #1 for setInitialState")
+        console.log("resubmit: ", props.resubmit)
+        console.log("job_definition: ", props.job_definition)
+        console.log("jobData: ", jobData)
+        console.log("dynamicProps: ", dynamicProps)
+
         // let pathEnd = 'net.science/CSonNet_Contagion_Simulation'
         let pathEnd = `${props.namespace}/${props.module}`
         setIsToasterFlag(false);
-        if (jobData.id && !jobData.id.includes(pathEnd) || Object.keys(jobData).length === 0)
-            dispatch(JobAppActions.setSelectedItem(pathEnd));
-        if (Object.keys(jobData).length !== 0 && jobData.id.includes(pathEnd)) {
+        console.log("jobData.id: ", jobData.id, "Props version: ", `${props.namespace}/${props.module}@${props.version}`)
+        if ((!jobData || jobData.id && (jobData.id !== `${props.namespace}/${props.module}`)) || Object.keys(jobData).length === 0){
+            // dispatch(JobAppActions.setSelectedItem(pathEnd));
+            console.log(`Dispatch setSelectedItem: ${props.namespace}/${props.module}@${props.version}`)
+            dispatch(JobAppActions.setSelectedItem(`${props.namespace}/${props.module}@${props.version}`));
+        }else if (Object.keys(jobData).length !== 0 && jobData.id.includes(pathEnd)) {
             setSpinnerFlag(false)
             if (jobData) {
                 if (input_file_meta && input_file_meta.provenance && input_file_meta.provenance.input) {
@@ -157,7 +167,8 @@ const CSonNet_Contagion_Simulation = (props) => {
                     setInitialState(updatedState)
                 } else {
                     console.log("Set from else: ", props.resubmit )
-                    setInitialState((props.resubmit && props.resubmit.inputData) ? props.resubmit.inputData : {})
+                    setInitialState({})
+                    // setInitialState((props.resubmit && props.resubmit.inputData) ? props.resubmit.inputData : {})
                 }
 
                 props.resubmit && localStorage.setItem('formLastPath', props.resubmit.inputData.output_container + '/')
@@ -187,6 +198,7 @@ const CSonNet_Contagion_Simulation = (props) => {
         console.log("Use Effect #2 for setInitialState")
 
         if (jobData && input_file_meta) {
+            console.log("input_file_meta: ", input_file_meta)
             if (input_file_meta.type === "csonnet_simulation_container") {
                 if (input_file_meta.provenance && input_file_meta.provenance.input){
                     console.log("Calling setInitialState #1", input_file_meta.provenance)
@@ -201,21 +213,36 @@ const CSonNet_Contagion_Simulation = (props) => {
                             output_container: (staticProps.outputPath && staticProps.outputPath[1]) ? staticProps.outputPath[1].value : ""
                         })
                         setInputFileMessage(`Graph File: ${pfile.stored_name}`)
+                        console.log("setValidInputFile(true)")
+
+                        setValidInputFile(true)
                         setEnableBlocking(true)
                     }else{
-                        setInputFileMessage("Choosing a simulation as input that was previously run with another simulation as input is currently prohibited.")
+                        setInputFileMessage(<div className="text-red-600 text-base mt-0">
+                            Choosing a simulation as input that was previously run with another simulation as input is currently prohibited
+                        </div>)
+                        setValidInputFile(false)
                         setEnableBlocking(false)
+ 
                     }
                 }else{
                     setEnableBlocking(false)
                 }
-            } else {
+            } else if (input_file_meta.type) {
+                console.log("setValidInputFile(false) non-container")
+
+                setValidInputFile(true)
+                setEnableBlocking(false)
+            }else{
+                setValidInputFile(false)
                 setEnableBlocking(false)
             }
         } else {
+            console.log("setValidInputFile(false)")
+            setValidInputFile(false)
             setEnableBlocking(false)
         }
-    }, [input_file_meta,jobData])
+    }, [input_file_meta])
 
     function disableButton() {
         setIsFormValid(false);
@@ -512,7 +539,9 @@ const CSonNet_Contagion_Simulation = (props) => {
     })
 
     // console.log("Before render input_file_meta: ", input_file_meta)
-
+    console.log("Disabled?",enableBlocking || !validInputFile)
+    console.log("enableBlocking", enableBlocking)
+    console.log("ValidInputFile?",validInputFile)
     if (!(Object.keys(inputSchema).length === 0 && inputSchema.constructor === Object))
         return (
             <FusePageSimple
@@ -540,7 +569,7 @@ const CSonNet_Contagion_Simulation = (props) => {
                                         <div className='borderStyle '>
                                             <h3><b>Input</b></h3>
                                             <p>Input may either be a Graph or a previous simulation.</p>
-                                            <Grid style={childGrid} item container xs={12}>
+                                            <Grid item container xs={12} className="whitespace-normal">
                                                 <Input
                                                     formData={dynamicProps.input_file}
                                                     elementType={dynamicProps.input_file.types}
@@ -550,9 +579,7 @@ const CSonNet_Contagion_Simulation = (props) => {
 
                                                 />
                                                 {input_file_meta && input_file_meta.type && (inputFileMessage) && (
-                                                    <Grid item xs={12} className="break-all overflow-none">
-                                                       {inputFileMessage}
-                                                    </Grid>
+                                                       <React.Fragment>{inputFileMessage}</React.Fragment>
                                                 )}
 
                                             </Grid>
@@ -566,6 +593,7 @@ const CSonNet_Contagion_Simulation = (props) => {
                                                     name="Behaviour Model"
                                                     label={["Behaviour Model", <span key={1} style={{ color: 'red' }}>{'*'}</span>]}
                                                     value={dynamicProps.Behaviour.value}
+                                                    disabled={enableBlocking || !validInputFile}
                                                     onChange={(event) => dynamicChangedHandler(event, 'Behaviour')}
                                                     required
 
@@ -581,19 +609,19 @@ const CSonNet_Contagion_Simulation = (props) => {
 
                                                 </SelectFormsy>
                                             </Grid>
-                                            {dynamicProps.Behaviour.value === 'Threshold Model' && <Deterministic_threshold changed={dynamicChangedHandler} modelJSON={modelJSON} threshold_property="deterministic_progressive_blocking_node_threshold_value"
+                                            {dynamicProps.Behaviour.value === 'Threshold Model' && <Deterministic_threshold disabled={enableBlocking || !validInputFile} changed={dynamicChangedHandler} modelJSON={modelJSON} threshold_property="deterministic_progressive_blocking_node_threshold_value"
                                                 dynamicProps={dynamicProps}></Deterministic_threshold>}
-                                            {dynamicProps.Behaviour.value === 'SEIR Model' && <SEIR modelJSON={modelJSON} changed={dynamicChangedHandler}
+                                            {dynamicProps.Behaviour.value === 'SEIR Model' && <SEIR disabled={enableBlocking || !validInputFile} modelJSON={modelJSON} changed={dynamicChangedHandler}
                                                 dynamicProps={dynamicProps}></SEIR>}
-                                            {dynamicProps.Behaviour.value === 'SIR Model' && <SIR modelJSON={modelJSON} changed={dynamicChangedHandler}
+                                            {dynamicProps.Behaviour.value === 'SIR Model' && <SIR disabled={enableBlocking || !validInputFile} modelJSON={modelJSON} changed={dynamicChangedHandler}
                                                 dynamicProps={dynamicProps}></SIR>}
-                                            {dynamicProps.Behaviour.value === 'SIS Model' && <SIS modelJSON={modelJSON} changed={dynamicChangedHandler}
+                                            {dynamicProps.Behaviour.value === 'SIS Model' && <SIS disabled={enableBlocking || !validInputFile} modelJSON={modelJSON} changed={dynamicChangedHandler}
                                                 dynamicProps={dynamicProps}></SIS>}
-                                            {dynamicProps.Behaviour.value === 'Independent Cascade Model' && <ICM modelJSON={modelJSON} changed={dynamicChangedHandler}
+                                            {dynamicProps.Behaviour.value === 'Independent Cascade Model' && <ICM disabled={enableBlocking || !validInputFile} modelJSON={modelJSON} changed={dynamicChangedHandler}
                                                 dynamicProps={dynamicProps}></ICM>}
-                                            {dynamicProps.Behaviour.value === 'Linear Threshold Model' && <LTM modelJSON={modelJSON} changed={dynamicChangedHandler}
+                                            {dynamicProps.Behaviour.value === 'Linear Threshold Model' && <LTM disabled={enableBlocking || !validInputFile} modelJSON={modelJSON} changed={dynamicChangedHandler}
                                                 dynamicProps={dynamicProps}></LTM>}
-                                            {dynamicProps.Behaviour.value === 'Probabilistic Threshold Model' && <PTM modelJSON={modelJSON} changed={dynamicChangedHandler}
+                                            {dynamicProps.Behaviour.value === 'Probabilistic Threshold Model' && <PTM disabled={enableBlocking || !validInputFile} modelJSON={modelJSON} changed={dynamicChangedHandler}
                                                 dynamicProps={dynamicProps}></PTM>}
                                         </div>
                                     </div>
@@ -616,6 +644,7 @@ const CSonNet_Contagion_Simulation = (props) => {
                                                     }}
                                                     validationError="This is not a valid value"
                                                     autoComplete="off"
+                                                    disabled={!validInputFile}
                                                     required
                                                 />
                                                 {description(inputSchema.properties.random_number_seed.description)}
@@ -641,6 +670,7 @@ const CSonNet_Contagion_Simulation = (props) => {
                                                         }}
                                                         validationError="This is not a valid value"
                                                         autoComplete="off"
+                                                        disabled={!validInputFile}
                                                         required
                                                     />
                                                     {description(inputSchema.properties.iterations.description)}
@@ -661,6 +691,7 @@ const CSonNet_Contagion_Simulation = (props) => {
                                                         }}
                                                         validationError="This is not a valid value"
                                                         autoComplete="off"
+                                                        disabled={!validInputFile}
                                                         required
                                                     />
                                                     {description(inputSchema.properties.time_steps.description)}
@@ -688,6 +719,7 @@ const CSonNet_Contagion_Simulation = (props) => {
                                                             value={dynamicProps.blocking_state.value}
                                                             onChange={(event) => dynamicChangedHandler(event, 'blocking_state')}
                                                             required={true}
+                                                        
 
                                                         >
                                                             {modelJSON.models["threshold_model"].blocking_states.map((item) => {
@@ -722,6 +754,7 @@ const CSonNet_Contagion_Simulation = (props) => {
                                                             validationError="This is not a valid value"
                                                             autoComplete="off"
                                                             required
+                                                            disabled={!validInputFile}
                                                         />
                                                     </Grid>
                                                     <Grid style={childGrid} item container xs={12} >
@@ -729,6 +762,7 @@ const CSonNet_Contagion_Simulation = (props) => {
                                                             className="my-12 inputStyle1 model"
                                                             name="state"
                                                             label={["State", <span key={1} style={{ color: 'red' }}>{'*'}</span>]}
+                                                            disabled={!validInputFile}
                                                             value={modelJSON.models.threshold_model.states.indexOf(staticProps.InitialConditions[0].state) !== -1 ? staticProps.InitialConditions[0].state : ""}
                                                             onChange={(event) => ICChangedHandler(event, 'state')}
                                                             required
@@ -746,6 +780,7 @@ const CSonNet_Contagion_Simulation = (props) => {
                                                             className="my-12 inputStyle1 model"
                                                             name="state"
                                                             label={["State", <span key={1} style={{ color: 'red' }}>{'*'}</span>]}
+                                                            disabled={!validInputFile}
                                                             value={modelJSON.models.SEIR.submodels['fixed exposed fixed infectious'].states.indexOf(staticProps.InitialConditions[0].state) !== -1 ? staticProps.InitialConditions[0].state : ""}
                                                             onChange={(event) => ICChangedHandler(event, 'state')}
                                                             required
@@ -763,6 +798,7 @@ const CSonNet_Contagion_Simulation = (props) => {
                                                             className="my-12 inputStyle1 model"
                                                             name="state"
                                                             label={["State", <span key={1} style={{ color: 'red' }}>{'*'}</span>]}
+                                                            disabled={!validInputFile}
                                                             value={modelJSON.models.SIR.submodels['fixed infectious'].states.indexOf(staticProps.InitialConditions[0].state) !== -1 ? staticProps.InitialConditions[0].state : ""}
                                                             onChange={(event) => ICChangedHandler(event, 'state')}
                                                             required
@@ -790,6 +826,7 @@ const CSonNet_Contagion_Simulation = (props) => {
                                                         value={modelJSON.models.threshold_model.default_state}
                                                         onChange={(event) => staticChangedHandler(event, 'default_state')}
                                                         required
+                                                        disabled={!validInputFile}
                                                     >
                                                         {modelJSON.models.threshold_model.states.map((item) => {
                                                             return (
@@ -806,6 +843,7 @@ const CSonNet_Contagion_Simulation = (props) => {
                                                         value={modelJSON.models.SEIR.submodels['fixed exposed fixed infectious'].default_state}
                                                         onChange={(event) => staticChangedHandler(event, 'default_state')}
                                                         required
+                                                        disabled={!validInputFile}
                                                     >
                                                         {modelJSON.models.SEIR.submodels['fixed exposed fixed infectious'].states.map((item) => {
                                                             return (
@@ -822,6 +860,7 @@ const CSonNet_Contagion_Simulation = (props) => {
                                                         value={modelJSON.models.SIR.submodels['fixed infectious'].default_state}
                                                         onChange={(event) => staticChangedHandler(event, 'default_state')}
                                                         required
+                                                        disabled={!validInputFile}
                                                     >
                                                         {modelJSON.models.SIR.submodels['fixed infectious'].states.map((item) => {
                                                             return (
@@ -879,9 +918,9 @@ const CSonNet_Contagion_Simulation = (props) => {
                                         variant="contained"
                                         color="primary"
                                         className="w-30 ml-8 mt-32 mb-80"
-                                        aria-label="LOG IN"
+                                        aria-label="Submit"
                                         onClick={populatesubmitJSON}
-                                        disabled={!isFormValid || success}                                    >
+                                        disabled={!isFormValid || !validInputFile || success}                                    >
                                         Submit
                                     </Button>
                                     {props.resubmit ? <Link to="/apps/my-jobs/" style={{ color: 'transparent' }}>
