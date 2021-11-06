@@ -16,8 +16,6 @@ const Deterministic_threshold = (props) => {
         alignSelf: 'center'
     };
 
-
-    console.log("deterministic threshold props:",props)
     const data_source =
         <TextFieldFormsy
         className="dataSource"

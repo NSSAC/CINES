@@ -62,7 +62,7 @@ const CSonNet_Generate_Blocking_Nodes = (props) => {
         // dispatch(Actions.setSelectedItem(pathEnd));
         // if (Object.keys(props.job_definition).length !== 0 && props.job_definition.id.includes(pathEnd)) {
         //         if (props.job_definition) {
-        console.log(`useEffect() setDynamicProps from resubmit`, props.resubmit)
+        // console.log(`useEffect() setDynamicProps from resubmit`, props.resubmit)
         setDynamicProps({
             blocking_class: { id: 101, value: (props.resubmit && props.resubmit.inputData && props.resubmit.inputData.input && typeof props.resubmit.inputData.input.blocking_class !== 'undefined')?props.resubmit.inputData.input.blocking_class:"" , required: true },
             blocking_method: {id: 102, value: (props.resubmit && props.resubmit.inputData && props.resubmit.inputData.input && typeof props.resubmit.inputData.input.blocking_method !== 'undefined')?props.resubmit.inputData.input.blocking_method:"", required: true},
@@ -72,13 +72,13 @@ const CSonNet_Generate_Blocking_Nodes = (props) => {
             inactive_state: {id: 105, value: (props.resubmit && props.resubmit.inputData && props.resubmit.inputData.input)?props.resubmit.inputData.input.inactive_state:"", required: true},
             output_name: { value: (props.resubmit && props.resubmit.inputData && props.resubmit.inputData.input && props.resubmit.inputData.state !== "Completed") ? props.resubmit.inputData.output_name : '' },
             csonnet_simulation: ['Simulation output file', {
-                formLabel: 'Simulation output file',
+                formLabel: 'Simulation Output File',
                 id: 1,
                 name: 'Simulation output file',
                 outputFlag: false,
                 required: true,
                 types: ['csonnet_simulation_container'],
-                value: props.resubmit ? props.resubmit.inputData.input["csonnet_data_analysis"] : ""
+                value: props.resubmit ? props.resubmit.inputData.input["csonnet_simulation"] : ""
             }],
             output_path: ['output_path', {
                 description: "Select the path from File manager where the output file is to be stored.",
