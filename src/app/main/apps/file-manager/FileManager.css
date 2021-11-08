@@ -81,3 +81,7 @@
 .person_icon {
   font-size: 16px !important;
 }
+
+.MuiPaper-root {
+  background-color: #f7f7f7 !important;
+}

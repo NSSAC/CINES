@@ -137,20 +137,20 @@ function DetailSidebarContent(props) {
   useEffect(() => {
     if (selectedItem) {
       setSwitchChecked(selectedItem.public);
+      // [START] Dummy data to test chips
+      selectedItem.readACL = [
+        "Murali Rander",
+        "#NSSAC",
+        "Manvitha Akula",
+        "Sayantan Mondal",
+      ];
+      selectedItem.writeACL = ["Murali Rander"];
+      selectedItem.computeACL = ["Murali Rander", "#NSSAC"];
+      // [END]
+      setReadACLChipData(selectedItem.readACL);
+      setWriteACLChipData(selectedItem.writeACL);
+      setComputeACLChipData(selectedItem.computeACL);
     }
-    // [START] Dummy data to test chips
-    selectedItem.readACL = [
-      "Murali Rander",
-      "#NSSAC",
-      "Manvitha Akula",
-      "Sayantan Mondal",
-    ];
-    selectedItem.writeACL = ["Murali Rander"];
-    selectedItem.computeACL = ["Murali Rander", "#NSSAC"];
-    // [END]
-    setReadACLChipData(selectedItem.readACL);
-    setWriteACLChipData(selectedItem.writeACL);
-    setComputeACLChipData(selectedItem.computeACL);
   }, [selectedItem]);
 
   if (selectedItem) {
@@ -672,7 +672,10 @@ function DetailSidebarContent(props) {
                               size="small"
                               variant="outlined"
                               icon={icon}
-                              onDelete={handleReadACLChipDelete(data)}
+                              onDelete={
+                                tokenData.sub === selectedItem.owner_id &&
+                                handleReadACLChipDelete(data)
+                              }
                             />
                           );
                         })}
@@ -698,7 +701,10 @@ function DetailSidebarContent(props) {
                               size="small"
                               variant="outlined"
                               icon={icon}
-                              onDelete={handleWriteACLChipDelete(data)}
+                              onDelete={
+                                tokenData.sub === selectedItem.owner_id &&
+                                handleWriteACLChipDelete(data)
+                              }
                             />
                           );
                         })}
@@ -724,7 +730,10 @@ function DetailSidebarContent(props) {
                               size="small"
                               variant="outlined"
                               icon={icon}
-                              onDelete={handleComputeACLChipDelete(data)}
+                              onDelete={
+                                tokenData.sub === selectedItem.owner_id &&
+                                handleComputeACLChipDelete(data)
+                              }
                             />
                           );
                         })}
