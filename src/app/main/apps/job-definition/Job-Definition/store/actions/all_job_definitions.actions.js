@@ -1,9 +1,6 @@
 export const GET_ALL_JOB_DEFINITIONS = "[JOBSERVICE] GET ALL JOB DEFINITIONS";
 export const CLEAR_ALL_JOB_DEFINITIONS = '[JOBSERVICE] CLEAR ALL JOB DEFINITIONS'
 
-var token = localStorage.getItem("id_token");
-let arr = [];
-
 export function clearData(){
   return (dispatch) =>
       dispatch({
@@ -14,7 +11,8 @@ export function clearData(){
 
 
 export function getJobDefinitionFiles() {
-arr=[];
+  var token = localStorage.getItem("id_token");
+  var arr=[];
     var axios = require('axios');
     let url = `${process.env.REACT_APP_SCIDUCT_JOB_SERVICE}/job_definition?&eq(enabled,true)&limit(9999)`
     var config = {

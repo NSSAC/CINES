@@ -1,8 +1,9 @@
-var token = localStorage.getItem('id_token')
 
 class FileManagerService {
 
     getFilesConfig = (path) => {
+        var token = localStorage.getItem('id_token')
+
         if(typeof(token) == "string") {
             var config = {
               method: 'get',
@@ -28,6 +29,8 @@ class FileManagerService {
 
     metaDataConfig = (targetMeta) => {
         let config = {}
+        var token = localStorage.getItem('id_token')
+
         if (typeof token === "string") {
             config = {
                 method: "get",
@@ -50,6 +53,8 @@ class FileManagerService {
     }
 
     editUsermetaConfig = (path, name, data) => {
+        var token = localStorage.getItem('id_token')
+
         let config = {
             method: 'patch',
             /* eslint-disable-next-line */
@@ -65,6 +70,8 @@ class FileManagerService {
 
     downloadConfig = (id) => {
         let config = {}
+        var token = localStorage.getItem('id_token')
+
         if (typeof (token) === 'string') {
             config = {
                 method: 'get',
@@ -92,6 +99,8 @@ class FileManagerService {
 
     previewConfig = (id, type) => {
         let config = {}
+        var token = localStorage.getItem('id_token')
+
         if (typeof (token) === "string" && (type === "pdf" || type === "png" || type === "jpeg" || type === "jpg" || type === "excel" || type === "mp3" || type === "mp4")) {
             config = {
                 method: 'get',

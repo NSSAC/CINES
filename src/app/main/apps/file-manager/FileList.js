@@ -75,7 +75,11 @@ function FileList(props) {
     const dispatch = useDispatch();
     const files = useSelector(({ fileManagerApp }) => fileManagerApp.files);
     const selectedItemId = useSelector(({ fileManagerApp }) => fileManagerApp.selectedItemId);
+
+    //Why is this using a selector?  const selectedItem = files[fileManagerApp.selectedItemId]
     const selectedItem = useSelector(({ fileManagerApp }) => files[fileManagerApp.selectedItemId]);
+
+
     const classes = useStyles();
     const [spinnerFlag, setSpinnerFlag] = useState(true);
     var tokenData = null
