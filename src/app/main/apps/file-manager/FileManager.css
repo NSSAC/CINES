@@ -85,3 +85,22 @@
 .MuiPaper-root {
   background-color: #f7f7f7 !important;
 }
+
+.usersPermission {
+  padding: 10px;
+   border: 1px solid;
+   border-bottom: 0;
+}
+
+.usersPermission:last-child {
+  border-bottom: 1px solid;
+}
+
+.usersPermission:first-child {
+  margin-bottom: 10px;
+  border-bottom: 1px solid;
+}
+
+.labelChip {
+  font-size: 11px;
+}

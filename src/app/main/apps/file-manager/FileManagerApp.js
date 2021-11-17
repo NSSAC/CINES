@@ -33,6 +33,7 @@ import FILEUPLOAD_CONFI from "./FileManagerAppConfig"
 import './FileManager.css'
 import FMInstance from './FileManagerService'
 import { RenameFile } from "./RenameFile";
+import { ModifyPermissions } from "./ModifyPermissions";
 
 function FileManagerApp(props) {
   const [searchbool, setSearchbool] = useState(false);
@@ -43,6 +44,7 @@ function FileManagerApp(props) {
   const [showDialog, setshowDialog] = useState(false);
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [showRenameDialog, setShowRenameDialog] = useState(false);
+  const [showPermissionsDialog, setShowPermissionsDialog] = useState(false);
   const [checkFlag, setcheckFlag] = useState(false);
   const [prompt, setPrompt] = useState(true);
   const [isFolder, setIsFolder] = useState(false);
@@ -119,6 +121,13 @@ function FileManagerApp(props) {
 
   function closeRenameFolderDialog() {
     setShowRenameDialog(false);
+  }
+
+  function closePermissionsDialog() {
+    setShowPermissionsDialog(false);
+    setTimeout(() => {
+      OnRefresh()
+    }, 1000); 
   }
 
   function hideSearch() {
@@ -305,6 +314,12 @@ function FileManagerApp(props) {
                 props={props}
                 handleClose={closeRenameFolderDialog}
               />
+              <ModifyPermissions
+                showModal={showPermissionsDialog}
+                selectedVal={selectedItem}
+                props={props}
+                handleClose={closePermissionsDialog}
+              />
             </div>
 
             <div>
@@ -456,6 +471,7 @@ function FileManagerApp(props) {
             setPrompt={(p) => setPrompt(p)}
             editContent={editContent}
             setEditContent={(p) => setEditContent(p)}
+            showPermissionsDialog={(p) => { setShowPermissionsDialog(p) }}
           />
         )
       }

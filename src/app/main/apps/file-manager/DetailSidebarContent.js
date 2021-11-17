@@ -11,7 +11,7 @@ import { isEqual } from "lodash";
 import { FileService } from "node-sciduct";
 
 import { FuseAnimate } from "@fuse";
-import { Typography, Tabs, Tab, Icon, IconButton } from "@material-ui/core";
+import { Typography, Tabs, Tab, Icon, IconButton, Fab } from "@material-ui/core";
 import {
   InsertDriveFile as FileIcon,
   ListAlt as MetadataIcon,
@@ -102,6 +102,12 @@ function DetailSidebarContent(props) {
     whiteSpace: "nowrap",
   };
 
+  const add_icon = {
+    top: '186px',
+    margin: '0 15px 0 240px',
+    position: 'absolute'
+}
+
   var styleEditor = {
     style: {
       width: "fit-content",
@@ -138,20 +144,31 @@ function DetailSidebarContent(props) {
     if (selectedItem) {
       setSwitchChecked(selectedItem.public);
       // [START] Dummy data to test chips
-      selectedItem.readACL = [
-        "Murali Rander",
-        "#NSSAC",
-        "Manvitha Akula",
-        "Sayantan Mondal",
-      ];
-      selectedItem.writeACL = ["Murali Rander"];
-      selectedItem.computeACL = ["Murali Rander", "#NSSAC"];
+      // selectedItem.readACL = [
+      //   "Murali Rander",
+      //   "#NSSAC",
+      //   "Manvitha Akula",
+      //   "Sayantan Mondal",
+      // ];
+      // selectedItem.writeACL = ["Murali Rander"];
+      // selectedItem.computeACL = ["Murali Rander", "#NSSAC"];
       // [END]
-      setReadACLChipData(selectedItem.readACL);
-      setWriteACLChipData(selectedItem.writeACL);
-      setComputeACLChipData(selectedItem.computeACL);
+      var readACL = changeACLOrder(selectedItem.readACL)
+      var computeACL = changeACLOrder(selectedItem.computeACL)
+      var writeACL = changeACLOrder(selectedItem.writeACL)
+
+      setReadACLChipData(readACL);
+      setWriteACLChipData(computeACL);
+      setComputeACLChipData(writeACL);
     }
   }, [selectedItem]);
+
+  function changeACLOrder(ACL){
+    var filteredACL = ACL.filter(item => item !== "*");
+    var shiftedACL = filteredACL.unshift('*');
+    var returnACL = ACL.indexOf('*') !== -1 ? filteredACL : ACL;
+    return returnACL;
+  }
 
   if (selectedItem) {
     modifiedUsermeta = selectedItem.usermeta;
@@ -208,6 +225,10 @@ function DetailSidebarContent(props) {
     setMetaBool(true);
     dispatch(Actions.setSelectedItem(editItem));
   }
+
+  function addPermissions() {
+    props.showPermissionsDialog(true)
+}
 
   const diffInMeta = (obj1, obj2) => {
     if (metaBool && currName === selectedItem.name) {
@@ -653,6 +674,21 @@ function DetailSidebarContent(props) {
                       )}
                     </td>
                   </tr>
+                  <div  style={{ marginBottom:'13px'}}>
+                  <Tooltip title="Manage permissions" aria-label="add">
+                    <Fab
+                      style={add_icon}
+                      color="secondary"
+                      aria-label="add"
+                      size="small"
+                      className="flex flex-col absolute bottom-0 d-none d-sm-block  left-0 ml-16 -mb-12 z-999"
+                    >
+                      <Icon className="flex flex-col" onClick={addPermissions}>
+                        add
+                      </Icon>
+                    </Fab>
+                  </Tooltip>
+                  </div>
                   <tr className="readacl">
                     <th>Read ACL</th>
                     <td title={selectedItem.readACL.join(", ")}>
@@ -666,6 +702,7 @@ function DetailSidebarContent(props) {
                           }
                           return (
                             <Chip
+                              classes={{label:'labelChip'}}
                               label={
                                 data.startsWith("#") ? data.slice(1) : data
                               }
@@ -695,6 +732,7 @@ function DetailSidebarContent(props) {
                           }
                           return (
                             <Chip
+                            classes={{label:'labelChip'}}
                               label={
                                 data.startsWith("#") ? data.slice(1) : data
                               }
@@ -724,6 +762,7 @@ function DetailSidebarContent(props) {
                           }
                           return (
                             <Chip
+                            classes={{label:'labelChip'}}
                               label={
                                 data.startsWith("#") ? data.slice(1) : data
                               }
