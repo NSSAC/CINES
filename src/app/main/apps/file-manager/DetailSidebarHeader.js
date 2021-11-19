@@ -37,7 +37,7 @@ function DetailSidebarHeader(props) {
     return null;
   }
 
-  if (selectedItem.type === "folder" || selectedItem.type === "epihiperOutput" || selectedItem.type === "epihiper_multicell_analysis") {
+  if (selectedItem.type === "folder" || selectedItem.type === "epihiperOutput" || selectedItem.type === "epihiper_multicell_analysis" || selectedItem.type === "csonnet_simulation_container") {
     isFile = false;
   }
 

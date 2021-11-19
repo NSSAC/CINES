@@ -71,10 +71,10 @@ const CSonNet_Generate_Blocking_Nodes = (props) => {
             blocking_node_state: {id: 105, value: (props.resubmit && props.resubmit.inputData && props.resubmit.inputData.input)?props.resubmit.inputData.input.blocking_node_state:"", required: true},
             inactive_state: {id: 105, value: (props.resubmit && props.resubmit.inputData && props.resubmit.inputData.input)?props.resubmit.inputData.input.inactive_state:"", required: true},
             output_name: { value: (props.resubmit && props.resubmit.inputData && props.resubmit.inputData.input && props.resubmit.inputData.state !== "Completed") ? props.resubmit.inputData.output_name : '' },
-            csonnet_simulation: ['Simulation output file', {
-                formLabel: 'Simulation Output File',
+            csonnet_simulation: ['simulation_output', {
+                formLabel: 'simulation_output',
                 id: 1,
-                name: 'Simulation output file',
+                name: 'simulation_output',
                 outputFlag: false,
                 required: true,
                 types: ['csonnet_simulation_container'],
@@ -85,14 +85,15 @@ const CSonNet_Generate_Blocking_Nodes = (props) => {
                 formLabel: "Output Container",
                 id: 200,
                 outputFlag: true,
-                types: ["folder"],
+                required: true,
+                types: ["folder", "epihiper_multicell_analysis", "epihiperOutput", "csonnet_simulation_container"],
                 value: props.resubmit ? props.resubmit.inputData.output_container : ""
             }]
         },[props.resubmit])
 
 
         console.log("DYNAMIC_PROPS: ", dynamicProps)
-        props.resubmit && localStorage.setItem('formLastPath', props.resubmit.inputData.output_container)
+        props.resubmit && localStorage.setItem('formLastPath', props.resubmit.inputData.output_container + '/')
          setModelJSON(props.job_definition.input_schema)
 
     }, [props]);
@@ -241,12 +242,12 @@ const CSonNet_Generate_Blocking_Nodes = (props) => {
                                             <div style={{ width: '100%' }} className='descPlot'>
                                                 <div className="pl-20">
                                                     <Input
-                                                        key='Simulation output file'
-                                                        name="output_path"
+                                                        key='simulation_output'
+                                                        name="simulation_output"
                                                         formData={dynamicProps.csonnet_simulation}
                                                         elementType={dynamicProps.csonnet_simulation.types}
-                                                        value=""
-                                                        changed={(event) => inputChangedHandler(event, 'output_path')}
+                                                        value={dynamicProps.csonnet_simulation.value}
+                                                        changed={(event) => inputChangedHandler(event, 'simulation_output')}
                                                     />
                                                 </div>
 
@@ -256,6 +257,7 @@ const CSonNet_Generate_Blocking_Nodes = (props) => {
                                                     label={["Blocking Class", <span key={1} style={{ color: 'red' }}>{'*'}</span>]}
                                                     value={dynamicProps.blocking_class.value}
                                                     onChange={(event) => inputChangedHandler(event, 'blocking_class')}
+                                                    required
                                                 >
                                                     <MenuItem key='global' value='global'>global</MenuItem>
                                                     {/* <MenuItem key='local' value='local'>local</MenuItem> */}
@@ -268,6 +270,7 @@ const CSonNet_Generate_Blocking_Nodes = (props) => {
                                                         label={["Blocking Method", <span key={1} style={{ color: 'red' }}>{'*'}</span>]}
                                                         value={dynamicProps.blocking_method.value}
                                                         onChange={(event) => inputChangedHandler(event, 'blocking_method')}
+                                                        required
                                                     >
                                                         {dynamicProps.blocking_class.value === 'global' && <MenuItem key='RandomNodes' value='randomNodes'>Random Nodes</MenuItem>}
                                                         {dynamicProps.blocking_class.value === 'global' && <MenuItem key='HighDegreeNodes' value='highDegreeNodes'>High Degree Nodes</MenuItem>}
@@ -349,7 +352,7 @@ const CSonNet_Generate_Blocking_Nodes = (props) => {
                                                     name="output_path"
                                                     formData={dynamicProps.output_path}
                                                     elementType={dynamicProps.output_path.types}
-                                                    value=""
+                                                    value={dynamicProps.output_path.value}
                                                     changed={(event) => inputChangedHandler(event, 'output_path')}
                                                 />
                                             </div>
@@ -358,7 +361,7 @@ const CSonNet_Generate_Blocking_Nodes = (props) => {
                                                 type="text"
                                                 name='output_name'
                                                 style={{ width: '18px' }}
-                                                value=""
+                                                value={dynamicProps.output_name.value}
                                                 label="Output Name"
                                                 onBlur={(event) => inputChangedHandler(event, 'output_name')}
                                                 autoComplete="off"

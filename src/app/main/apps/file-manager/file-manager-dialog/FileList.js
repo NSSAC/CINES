@@ -19,6 +19,10 @@ const useStyles = makeStyles({
             content: "'folder'",
             color: '#FFB300'
         },
+        '&.csonnet_simulation_container:before': {
+            content: "'folder'",
+            color: '#FFB300'
+        },
         '&.pdf:before': {
             content: "'picture_as_pdf'",
             color: 'red'
@@ -85,7 +89,7 @@ function Filelist(props) {
         var reqType = false
         
         for (var f in props.fileTypes) {
-            if (data.type === props.fileTypes[f] || data.type === "folder" || data.type === "epihiperOutput" || data.type === "epihiper_multicell_analysis") {
+            if (data.type === props.fileTypes[f] || data.type === "folder" || data.type === "epihiperOutput" || data.type === "epihiper_multicell_analysis" || data.type === "csonnet_simulation_container") {
                 reqType = true;
                 break;
             }
@@ -121,7 +125,7 @@ function Filelist(props) {
         return function (evt) {
             if (evt.detail === 1)
                 if (evt.target && evt.target.getAttribute("to")) {
-                    if (node.type === "folder" || node.type === "epihiperOutput" || node.type === "epihiper_multicell_analysis") {
+                    if (node.type === "folder" || node.type === "epihiperOutput" || node.type === "epihiper_multicell_analysis" || node.type === "csonnet_simulation_container") {
                         props.setTargetPath(props.targetPath + evt.target.getAttribute("to") + "/")
                         setTimeout(() => {
                             props.setSearch("")
@@ -162,7 +166,7 @@ function Filelist(props) {
                                         <TableCell className="max-w-64 w-64 p-0 text-center">
                                             <Icon className={clsx(classes.typeIcon, node.type)} />
                                         </TableCell>
-                                        <TableCell title={node.name} style={nameStyle} >{node.type === "folder" || node.type === "epihiperOutput" || node.type === "epihiper_multicell_analysis" ? <Link style={{ color: '#61dafb' }} title={node.name} to={node.name}>{node.name}</Link> :
+                                        <TableCell title={node.name} style={nameStyle} >{node.type === "folder" || node.type === "epihiperOutput" || node.type === "epihiper_multicell_analysis" || node.type === "csonnet_simulation_container"  ? <Link style={{ color: '#61dafb' }} title={node.name} to={node.name}>{node.name}</Link> :
                                             node.name}</TableCell>
                                         <TableCell>{node.type}</TableCell>
                                         <TableCell>{node.owner_id}</TableCell>

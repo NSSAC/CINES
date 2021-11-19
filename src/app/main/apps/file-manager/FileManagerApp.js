@@ -248,8 +248,8 @@ function FileManagerApp(props) {
       classes={{
         root: "bg-red",
         content: 'overflowContentFiles',
-        header: "h-auto min-h-84 overflow ",
-        sidebarHeader: "h-auto min-h-84 overflow sidebarHeader1",
+        header: "h-auto min-h-112 overflow ",
+        sidebarHeader: "h-auto min-h-112 overflow sidebarHeader1",
         sidebarContent: "sidebarWrapper",
         rightSidebar: "sidebarStyle",
         contentWrapper: "FileWrapper",

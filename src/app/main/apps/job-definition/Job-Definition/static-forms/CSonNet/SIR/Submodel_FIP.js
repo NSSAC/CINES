@@ -59,6 +59,7 @@ const Submodel_SID = (props) => {
                                 },
                             }}
                             validationError="This is not a valid value"
+                            disabled={props.disabled}
                             required
                         />
                         {description(props.modelJSON.models.SIR.submodels['fixed infectious'].rules[0].input.edge_probability_value.description)}
@@ -80,6 +81,7 @@ const Submodel_SID = (props) => {
                             }}
                             validationError="This is not a valid value"
                             autoComplete="off"
+                            disabled={props.disabled}
                             required
                         />
                         {description(props.modelJSON.models.SIR.submodels['fixed infectious'].rules[1].input.discrete_time_auto_value.description)}

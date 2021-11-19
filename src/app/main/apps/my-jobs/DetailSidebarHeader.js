@@ -72,7 +72,7 @@ function DetailSidebarHeader(props)
         <div className="flex flex-col justify-between h-full p-4 sm:p-12">
              <div className="toolbar flex align-center justify-end h-48">
              { cancelJob?<CancelJob  pageLayout={props.pageLayout} id={selectedItem.id} setCancelJob={(p)=> setCancelJob(p)} ></CancelJob>:null}
-               {!stateFlag && <FuseAnimate animation="transition.expandIn" delay={200}>
+               {selectedItem.job_definition && !stateFlag && <FuseAnimate animation="transition.expandIn" delay={200}>
                   <Tooltip title="Cancel job" placement="bottom">
                     <IconButton onClick={()=>onCancel(selectedItem)} >
                         <Icon >cancel_presentation</Icon>
@@ -80,13 +80,13 @@ function DetailSidebarHeader(props)
                   </Tooltip>
                 </FuseAnimate>}
 
-                <FuseAnimate animation="transition.expandIn" delay={200}>
+                {selectedItem.job_definition && <FuseAnimate animation="transition.expandIn" delay={200}>
                   <Tooltip title="Resubmit job" placement="bottom">
                     <IconButton onClick={()=>onRerun(selectedItem)} >
                         <Icon >autorenew</Icon>
                     </IconButton>
                   </Tooltip>
-                </FuseAnimate>
+                </FuseAnimate>}
                 </div>
         </div>
     );

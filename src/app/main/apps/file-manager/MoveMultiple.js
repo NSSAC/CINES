@@ -149,7 +149,7 @@ export const MoveMultiple = ({
           handleFMClose={handleFolderClose}
           folderPath={destinationPath}
           setFolderPath={(p) => setDestinationPath(p)}
-          fileTypes={["folder", "epihiper_multicell_analysis", "epihiperOutput"]}
+          fileTypes={["folder", "epihiper_multicell_analysis", "epihiperOutput","csonnet_simulation_container"]}
           selectedItems = {selectedItems}
         />}
 

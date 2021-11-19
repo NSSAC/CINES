@@ -40,7 +40,7 @@ export const MyJobDefinitionAppConfig = {
     auth: ['user'],
     routes  : [
         generate_static_form_route("CSonNet_Generate_Blocking_Nodes",{
-            "namespaces": ["development"]
+            "namespaces": ["development","net.science"]
         }),
 
         generate_static_form_route("CSonNet_Contagion_Simulation",{

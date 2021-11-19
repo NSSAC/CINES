@@ -57,6 +57,7 @@ const XAxisSection = (props) => {
                     style={{marginBottom:'12px'}}
                     value={props.dynamicProps.x_scale.value}
                     onChange={(event) => props.inputChangedHandler(event, 'x_scale')}
+                    required
                 >
                     {props.modelJSON.properties.text_sections.properties.x_axis_section.properties.x_scale.enum.map((item) => {
                         return (

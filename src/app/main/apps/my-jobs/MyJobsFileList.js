@@ -380,7 +380,7 @@ function MyJobsFileList(props) {
                                                     })()}
                                                 </TableCell>
                                                 <TableCell  >
-                                                    {row.output_name}
+                                                    {row.output_name || <b>-</b>} 
                                                 </TableCell>
                                                 <TableCell  >
                                                     {row.state}

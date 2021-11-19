@@ -28,6 +28,10 @@ const useStyles = makeStyles({
             content: "'folder'",
             color: '#FFB300'
         },
+        '&.csonnet_simulation_container:before': {
+            content: "'folder'",
+            color: '#FFB300'
+        },
         '&.pdf:before': {
             content: "'picture_as_pdf'",
             color: 'red'

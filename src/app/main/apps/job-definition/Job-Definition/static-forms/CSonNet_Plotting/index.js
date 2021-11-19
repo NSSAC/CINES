@@ -125,7 +125,7 @@ const CSonNet_plot = (props) => {
                         formLabel: "output_container",
                         id: 200,
                         outputFlag: true,
-                        types: ["folder", "epihiper_multicell_analysis", "epihiperOutput"],
+                        types: ["folder", "epihiper_multicell_analysis", "epihiperOutput","csonnet_simulation_container"],
                         value: props.resubmit ? props.resubmit.inputData.output_container :""
                     }]
                  })
@@ -391,6 +391,7 @@ const CSonNet_plot = (props) => {
                                                     name="output_filetype"
                                                     label={["output_filetype", <span key={1} style={{ color: 'red' }}>{'*'}</span>]}
                                                     value={dynamicProps.output_filetype.value}
+                                                    required
                                                     onChange={(event) => inputChangedHandler(event, 'output_filetype')}
                                                 >
                                                     {modelJSON.properties.output_filetype.enum.map((item) => {

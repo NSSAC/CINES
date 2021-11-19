@@ -177,7 +177,7 @@ function JobDefinitionForm(props) {
           value: props.resubmit ? props.resubmit.inputData.output_container : "",
           description:
             "Select the path from File manager where the output file is to be stored.",
-          types: ["folder", "epihiper_multicell_analysis", "epihiperOutput"],
+          types: ["folder", "epihiper_multicell_analysis", "epihiperOutput","csonnet_simulation_container"],
           outputFlag: true,
         };
         let outputName = {

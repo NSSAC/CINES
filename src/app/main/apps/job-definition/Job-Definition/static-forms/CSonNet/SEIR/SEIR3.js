@@ -59,6 +59,7 @@ const SEIR3 = (props) => {
                                 },
                             }}
                             validationError="This is not a valid value"
+                            disabled={props.disabled}
                             required
                         />
                         {description(props.modelJSON.models.SEIR.submodels['stochastic exposed fixed infectious'].rules[0].input.edge_probability_value.description)}
@@ -80,6 +81,7 @@ const SEIR3 = (props) => {
                             }}
                             validationError="This is not a valid value"
                             autoComplete="off"
+                            disabled={props.disabled}
                             required
                         />
                         {description(props.modelJSON.models.SEIR.submodels['stochastic exposed fixed infectious'].rules[1].input.node_probability_auto_value.description)}
@@ -101,6 +103,7 @@ const SEIR3 = (props) => {
                             }}
                             validationError="This is not a valid value"
                             autoComplete="off"
+                            disabled={props.disabled}
                             required
                         />
                         {description(props.modelJSON.models.SEIR.submodels['stochastic exposed fixed infectious'].rules[2].input.discrete_time_auto_value.description)}
