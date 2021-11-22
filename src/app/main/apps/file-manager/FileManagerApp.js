@@ -29,9 +29,9 @@ import { useHistory } from "react-router-dom";
 import axios from "axios";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
-import FILEUPLOAD_CONFI from "./FileManagerAppConfig"
-import './FileManager.css'
-import FMInstance from './FileManagerService'
+import FILEUPLOAD_CONFI from "./FileManagerAppConfig";
+import "./FileManager.css";
+import FMInstance from "./FileManagerService";
 import { RenameFile } from "./RenameFile";
 import { ModifyPermissions } from "./ModifyPermissions";
 
@@ -54,7 +54,7 @@ function FileManagerApp(props) {
   const [fileTypeArray, setFileTypeArray] = useState([]);
   const history = useHistory();
   // eslint-disable-next-line
-  const [ignored, forceUpdate] = useReducer(x => x + 1, 0);
+  const [ignored, forceUpdate] = useReducer((x) => x + 1, 0);
   const files = useSelector(({ fileManagerApp }) => fileManagerApp.files);
   var path = window.location.pathname;
   var pathEnd = path.charAt(path.length - 1);
@@ -95,7 +95,9 @@ function FileManagerApp(props) {
       if (res.data) {
         var responseData = res.data;
         for (let i = 0; i < responseData.length; i++) {
-          if (!FILEUPLOAD_CONFI.fileTypeToBeRemoved.includes(responseData[i].id))
+          if (
+            !FILEUPLOAD_CONFI.fileTypeToBeRemoved.includes(responseData[i].id)
+          )
             fileTypeArray.push(responseData[i].id);
         }
         setFileTypeArray(fileTypeArray);
@@ -125,9 +127,9 @@ function FileManagerApp(props) {
 
   function closePermissionsDialog() {
     setShowPermissionsDialog(false);
-    setTimeout(() => {
-      OnRefresh()
-    }, 1000); 
+    // setTimeout(() => {
+    //   OnRefresh();
+    // }, 1000);
   }
 
   function hideSearch() {
@@ -148,53 +150,53 @@ function FileManagerApp(props) {
   }
 
   function OnRefresh() {
-    if (targetPath.charAt(targetPath.length-1) !== "/")
+    if (targetPath.charAt(targetPath.length - 1) !== "/")
       targetPath = targetPath + "/";
     dispatch(Actions.getFiles(targetPath, "GET_FILES"));
-    setSearch('')
-    setSearchbool(false)
+    setSearch("");
+    setSearchbool(false);
   }
 
   async function getMetadata(targetMeta) {
     var axios = require("axios");
-    var config = FMInstance.metaDataConfig(targetMeta)
+    var config = FMInstance.metaDataConfig(targetMeta);
 
     addData();
     function addData() {
       const request = axios(config);
-      request.then((response) => {
-        let metaData = response.data.writeACL;
-        let readPermission = response.data.readACL;
-        let ownerId = response.data.owner_id;
-        let type = response.data.type;
-        let isContainer = response.data.isContainer;
-        setContainerFlag(isContainer);
-        if (isContainer === true || targetMeta === '') {
-          if (pathEnd !== "/") {
-            targetPath = targetPath + "/";
-            window.history.replaceState(
-              null,
-              null,
-              props.location.pathname + "/"
-            );
+      request
+        .then((response) => {
+          let metaData = response.data.writeACL;
+          let readPermission = response.data.readACL;
+          let ownerId = response.data.owner_id;
+          let type = response.data.type;
+          let isContainer = response.data.isContainer;
+          setContainerFlag(isContainer);
+          if (isContainer === true || targetMeta === "") {
+            if (pathEnd !== "/") {
+              targetPath = targetPath + "/";
+              window.history.replaceState(
+                null,
+                null,
+                props.location.pathname + "/"
+              );
+            }
+            dispatch(Actions.getFiles(targetPath, "GET_FILES"));
+            setIsFolder(true);
+          } else {
+            localStorage.setItem("nodeType", response.data.type);
+            localStorage.setItem("nodeId", response.data.id);
+            localStorage.setItem("nodeSize", response.data.size);
+            localStorage.setItem("nodeName", response.data.name);
+            forceUpdate();
           }
-          dispatch(Actions.getFiles(targetPath, "GET_FILES"));
-          setIsFolder(true);
-        } else {
-          localStorage.setItem("nodeType", response.data.type);
-          localStorage.setItem("nodeId", response.data.id);
-          localStorage.setItem("nodeSize", response.data.size);
-          localStorage.setItem("nodeName", response.data.name);
-          forceUpdate();
-        }
-        if (metaData !== undefined)
-          checkPermission(metaData, ownerId, type, readPermission);
-      })
+          if (metaData !== undefined)
+            checkPermission(metaData, ownerId, type, readPermission);
+        })
         .catch((error) => {
           if (error.response && error.response.status === 404) {
             setContainerFlag("error-404");
-          }
-          else if (error.response) {
+          } else if (error.response) {
             setContainerFlag("error-unknown");
           }
         });
@@ -206,8 +208,9 @@ function FileManagerApp(props) {
     if (sciductService.getTokenData().sub === ownerId) {
       localStorage.setItem("readPermission", "true");
       setcheckFlag(true);
-    }
-    else if (sciductService.getTokenData().roles.indexOf('superadmin') !== -1) {
+    } else if (
+      sciductService.getTokenData().roles.indexOf("superadmin") !== -1
+    ) {
       localStorage.setItem("readPermission", "true");
       setcheckFlag(true);
     } else {
@@ -237,7 +240,7 @@ function FileManagerApp(props) {
     setIsFolder(true);
     setcheckFlag(false);
     setSearch("");
-    localStorage.removeItem('moveDestPath')
+    localStorage.removeItem("moveDestPath");
     // eslint-disable-next-line
   }, [dispatch, props, props.location, props.history]);
 
@@ -256,15 +259,15 @@ function FileManagerApp(props) {
   var readPermission = localStorage.getItem("readPermission");
   return (
     <FusePageSimple
-    classes={{
-      root: "bg-red",
-      content:'overflowContentFiles',
-      header: "h-auto min-h-128 sm:h-auto sm:min-h-140",
-      sidebarHeader: "h-auto min-h-128 sm:h-auto sm:min-h-140 sidebarHeader1",
-      sidebarContent: "sidebarWrapper",
-      rightSidebar: "sidebarStyle",
-      contentWrapper: "FileWrapper",
-    }}
+      classes={{
+        root: "bg-red",
+        content: "overflowContentFiles",
+        header: "h-auto min-h-128 sm:h-auto sm:min-h-140",
+        sidebarHeader: "h-auto min-h-128 sm:h-auto sm:min-h-140 sidebarHeader1",
+        sidebarContent: "sidebarWrapper",
+        rightSidebar: "sidebarStyle",
+        contentWrapper: "FileWrapper",
+      }}
       header={
         <div
           className="flex flex-col flex-1 p-8 sm:p-12 relative"
@@ -308,7 +311,7 @@ function FileManagerApp(props) {
               />
             </div>
             <div>
-            <RenameFile
+              <RenameFile
                 showModal={showRenameDialog}
                 selectedItem={selectedItem}
                 props={props}
@@ -340,58 +343,61 @@ function FileManagerApp(props) {
               isFolder &&
               Object.values(files).length !== 0) ||
               targetMeta === "") && (
-                <FuseAnimate animation="transition.expandIn" delay={200}>
-                  <span>
-                    <div className={clsx("flex", props.className)}>
-                      <Tooltip title="Click to search" placement="bottom">
-                        <div onClick={showSearch}>
-                          <IconButton className="w-64 h-64">
-                            <Icon>search</Icon>
-                          </IconButton>{" "}
-                        </div>
-                      </Tooltip>
-                      {searchbool && (
-                        <ClickAwayListener onClickAway={handleClickAway}>
-                          <div>
-                            <div className="flex items-end ">
-                              <Input
-                                placeholder="&nbsp;Search"
-                                className="flex flex-1 mb-8"
-                                value={search}
-                                inputProps={{
-                                  "aria-label": "Search",
-                                }}
-                                onChange={(event) =>
-                                  setSearch(event.target.value)
-                                }
-                                autoFocus
-                              />
-                              <Tooltip
-                                title="Click to clear and hide the search box"
-                                placement="bottom"
+              <FuseAnimate animation="transition.expandIn" delay={200}>
+                <span>
+                  <div className={clsx("flex", props.className)}>
+                    <Tooltip title="Click to search" placement="bottom">
+                      <div onClick={showSearch}>
+                        <IconButton className="w-64 h-64">
+                          <Icon>search</Icon>
+                        </IconButton>{" "}
+                      </div>
+                    </Tooltip>
+                    {searchbool && (
+                      <ClickAwayListener onClickAway={handleClickAway}>
+                        <div>
+                          <div className="flex items-end ">
+                            <Input
+                              placeholder="&nbsp;Search"
+                              className="flex flex-1 mb-8"
+                              value={search}
+                              inputProps={{
+                                "aria-label": "Search",
+                              }}
+                              onChange={(event) =>
+                                setSearch(event.target.value)
+                              }
+                              autoFocus
+                            />
+                            <Tooltip
+                              title="Click to clear and hide the search box"
+                              placement="bottom"
+                            >
+                              <IconButton
+                                onClick={hideSearch}
+                                className="mx-8 mt-8"
                               >
-                                <IconButton
-                                  onClick={hideSearch}
-                                  className="mx-8 mt-8"
-                                >
-                                  <Icon>close</Icon>
-                                </IconButton>
-                              </Tooltip>
-                            </div>
+                                <Icon>close</Icon>
+                              </IconButton>
+                            </Tooltip>
                           </div>
-                        </ClickAwayListener>
-                      )}
-                      <div>
-                        <Tooltip title="Click to Refresh" placement="bottom">
-                        <IconButton className="w-64 h-64" onClick={() => OnRefresh()}>
-                          <Icon >refresh</Icon>
+                        </div>
+                      </ClickAwayListener>
+                    )}
+                    <div>
+                      <Tooltip title="Click to Refresh" placement="bottom">
+                        <IconButton
+                          className="w-64 h-64"
+                          onClick={() => OnRefresh()}
+                        >
+                          <Icon>refresh</Icon>
                         </IconButton>
                       </Tooltip>
-                      </div>
                     </div>
-                  </span>
-                </FuseAnimate>
-              )}
+                  </div>
+                </span>
+              </FuseAnimate>
+            )}
           </div>
           <div className="flex flex-1 items-end">
             {checkFlag && containerFlag && (
@@ -431,9 +437,9 @@ function FileManagerApp(props) {
       }
       content={
         containerFlag === true ||
-          containerFlag === undefined ||
-          id === null ||
-          isFolder ? (
+        containerFlag === undefined ||
+        id === null ||
+        isFolder ? (
           <FileList
             isFolder={isFolder}
             containerFlag={containerFlag}
@@ -461,7 +467,17 @@ function FileManagerApp(props) {
       leftSidebarContent={<MainSidebarContent />}
       rightSidebarHeader={
         ((containerFlag && isFolder && Object.values(files).length !== 0) ||
-          targetMeta === "") && <DetailSidebarHeader pageLayout={pageLayout} setSelectedItem={(p)=>{setSelectedItem(p)}} showRenameDialog={(p)=>{setShowRenameDialog(p)}}/>
+          targetMeta === "") && (
+          <DetailSidebarHeader
+            pageLayout={pageLayout}
+            setSelectedItem={(p) => {
+              setSelectedItem(p);
+            }}
+            showRenameDialog={(p) => {
+              setShowRenameDialog(p);
+            }}
+          />
+        )
       }
       rightSidebarContent={
         ((containerFlag && isFolder && Object.values(files).length !== 0) ||
@@ -471,7 +487,10 @@ function FileManagerApp(props) {
             setPrompt={(p) => setPrompt(p)}
             editContent={editContent}
             setEditContent={(p) => setEditContent(p)}
-            showPermissionsDialog={(p) => { setShowPermissionsDialog(p) }}
+            showPermissionsDialog={(p) => {
+              setShowPermissionsDialog(p);
+            }}
+            targetPath={targetPath}
           />
         )
       }

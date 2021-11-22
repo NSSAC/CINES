@@ -11,7 +11,14 @@ import { isEqual } from "lodash";
 import { FileService } from "node-sciduct";
 
 import { FuseAnimate } from "@fuse";
-import { Typography, Tabs, Tab, Icon, IconButton, Fab } from "@material-ui/core";
+import {
+  Typography,
+  Tabs,
+  Tab,
+  Icon,
+  IconButton,
+  Fab,
+} from "@material-ui/core";
 import {
   InsertDriveFile as FileIcon,
   ListAlt as MetadataIcon,
@@ -60,6 +67,7 @@ const useStyles = makeStyles({
 });
 
 function DetailSidebarContent(props) {
+  var { targetPath } = props;
   const dispatch = useDispatch();
   const classes = useStyles();
   const [selectedTab, setSelectedTab] = useState(0);
@@ -103,10 +111,10 @@ function DetailSidebarContent(props) {
   };
 
   const add_icon = {
-    top: '186px',
-    margin: '0 15px 0 240px',
-    position: 'absolute'
-}
+    top: "185px",
+    margin: "0 15px 0 225px",
+    position: "absolute",
+  };
 
   var styleEditor = {
     style: {
@@ -143,30 +151,20 @@ function DetailSidebarContent(props) {
   useEffect(() => {
     if (selectedItem) {
       setSwitchChecked(selectedItem.public);
-      // [START] Dummy data to test chips
-      // selectedItem.readACL = [
-      //   "Murali Rander",
-      //   "#NSSAC",
-      //   "Manvitha Akula",
-      //   "Sayantan Mondal",
-      // ];
-      // selectedItem.writeACL = ["Murali Rander"];
-      // selectedItem.computeACL = ["Murali Rander", "#NSSAC"];
-      // [END]
-      var readACL = changeACLOrder(selectedItem.readACL)
-      var computeACL = changeACLOrder(selectedItem.computeACL)
-      var writeACL = changeACLOrder(selectedItem.writeACL)
+      var readACL = changeACLOrder(selectedItem.readACL);
+      var computeACL = changeACLOrder(selectedItem.computeACL);
+      var writeACL = changeACLOrder(selectedItem.writeACL);
 
       setReadACLChipData(readACL);
-      setWriteACLChipData(computeACL);
-      setComputeACLChipData(writeACL);
+      setWriteACLChipData(writeACL);
+      setComputeACLChipData(computeACL);
     }
   }, [selectedItem]);
 
-  function changeACLOrder(ACL){
-    var filteredACL = ACL.filter(item => item !== "*");
-    var shiftedACL = filteredACL.unshift('*');
-    var returnACL = ACL.indexOf('*') !== -1 ? filteredACL : ACL;
+  function changeACLOrder(ACL) {
+    var filteredACL = ACL.filter((item) => item !== "*").sort();
+    filteredACL.unshift("All users");
+    var returnACL = ACL.indexOf("*") !== -1 ? filteredACL : ACL.sort();
     return returnACL;
   }
 
@@ -227,8 +225,8 @@ function DetailSidebarContent(props) {
   }
 
   function addPermissions() {
-    props.showPermissionsDialog(true)
-}
+    props.showPermissionsDialog(true);
+  }
 
   const diffInMeta = (obj1, obj2) => {
     if (metaBool && currName === selectedItem.name) {
@@ -364,6 +362,12 @@ function DetailSidebarContent(props) {
     }
   };
 
+  function OnRefresh() {
+    if (targetPath.charAt(targetPath.length - 1) !== "/")
+      targetPath = targetPath + "/";
+    dispatch(Actions.getFiles(targetPath, "GET_FILES"));
+  }
+
   const handleReadACLChipDelete = (chipToDelete) => () => {
     setReadACLChipData((chips) =>
       chips.filter((chip) => chip !== chipToDelete)
@@ -374,6 +378,9 @@ function DetailSidebarContent(props) {
       chipToDelete,
       false
     );
+    setTimeout(() => {
+      OnRefresh();
+    }, 1000);
   };
 
   const handleWriteACLChipDelete = (chipToDelete) => () => {
@@ -386,6 +393,9 @@ function DetailSidebarContent(props) {
       chipToDelete,
       false
     );
+    setTimeout(() => {
+      OnRefresh();
+    }, 1000);
   };
 
   const handleComputeACLChipDelete = (chipToDelete) => () => {
@@ -398,6 +408,9 @@ function DetailSidebarContent(props) {
       chipToDelete,
       false
     );
+    setTimeout(() => {
+      OnRefresh();
+    }, 1000);
   };
 
   if (checked !== "true")
@@ -674,25 +687,47 @@ function DetailSidebarContent(props) {
                       )}
                     </td>
                   </tr>
-                  <div  style={{ marginBottom:'13px'}}>
-                  <Tooltip title="Manage permissions" aria-label="add">
-                    <Fab
-                      style={add_icon}
-                      color="secondary"
-                      aria-label="add"
-                      size="small"
-                      className="flex flex-col absolute bottom-0 d-none d-sm-block  left-0 ml-16 -mb-12 z-999"
-                    >
-                      <Icon className="flex flex-col" onClick={addPermissions}>
-                        add
-                      </Icon>
-                    </Fab>
-                  </Tooltip>
+                </tbody>
+              </table>
+
+              {tokenData.sub === selectedItem.owner_id ? (
+                <>
+                  <hr
+                    style={{
+                      borderTop: "1px solid #122230",
+                      borderBottom: "0px",
+                    }}
+                  />
+                  <div>
+                    <Tooltip title="Manage permissions" aria-label="add">
+                      <Fab
+                        style={add_icon}
+                        color="secondary"
+                        aria-label="add"
+                        size="small"
+                        className="flex flex-col absolute bottom-0 d-none d-sm-block  left-0 ml-16 -mb-12 z-999"
+                      >
+                        <Icon
+                          className="flex flex-col"
+                          onClick={addPermissions}
+                        >
+                          add
+                        </Icon>
+                      </Fab>
+                    </Tooltip>
                   </div>
+                  <br />
+                </>
+              ) : (
+                <></>
+              )}
+
+              <table className={clsx(classes.table, "w-full, text-left")}>
+                <tbody>
                   <tr className="readacl">
                     <th>Read ACL</th>
                     <td title={selectedItem.readACL.join(", ")}>
-                      <Paper elevation="0">
+                      <Paper elevation={0}>
                         {readACLchipData.map((data) => {
                           let icon;
                           if (data.startsWith("#")) {
@@ -702,7 +737,8 @@ function DetailSidebarContent(props) {
                           }
                           return (
                             <Chip
-                              classes={{label:'labelChip'}}
+                              key={data}
+                              classes={{ label: "labelChip" }}
                               label={
                                 data.startsWith("#") ? data.slice(1) : data
                               }
@@ -717,12 +753,14 @@ function DetailSidebarContent(props) {
                           );
                         })}
                       </Paper>
+                      {readACLchipData.length > 1 && <br />}
                     </td>
                   </tr>
+
                   <tr className="writeacl">
                     <th>Write ACL</th>
                     <td title={selectedItem.writeACL.join(", ")}>
-                      <Paper elevation="0">
+                      <Paper elevation={0}>
                         {writeACLchipData.map((data) => {
                           let icon;
                           if (data.startsWith("#")) {
@@ -732,7 +770,8 @@ function DetailSidebarContent(props) {
                           }
                           return (
                             <Chip
-                            classes={{label:'labelChip'}}
+                              key={data}
+                              classes={{ label: "labelChip" }}
                               label={
                                 data.startsWith("#") ? data.slice(1) : data
                               }
@@ -747,12 +786,13 @@ function DetailSidebarContent(props) {
                           );
                         })}
                       </Paper>
+                      {writeACLchipData.length > 1 && <br />}
                     </td>
                   </tr>
                   <tr className="computeacl">
                     <th>Compute ACL</th>
                     <td title={selectedItem.computeACL.join(", ")}>
-                      <Paper elevation="0">
+                      <Paper elevation={0}>
                         {computeACLchipData.map((data) => {
                           let icon;
                           if (data.startsWith("#")) {
@@ -762,7 +802,8 @@ function DetailSidebarContent(props) {
                           }
                           return (
                             <Chip
-                            classes={{label:'labelChip'}}
+                              key={data}
+                              classes={{ label: "labelChip" }}
                               label={
                                 data.startsWith("#") ? data.slice(1) : data
                               }

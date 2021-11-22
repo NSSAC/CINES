@@ -88,8 +88,8 @@
 
 .usersPermission {
   padding: 10px;
-   border: 1px solid;
-   border-bottom: 0;
+  border: 1px solid;
+  border-bottom: 0;
 }
 
 .usersPermission:last-child {
@@ -103,4 +103,12 @@
 
 .labelChip {
   font-size: 11px;
+}
+
+hr {
+  border: 1px dotted #122230;
+}
+
+.Mui-focused {
+  color: white !important;
 }
