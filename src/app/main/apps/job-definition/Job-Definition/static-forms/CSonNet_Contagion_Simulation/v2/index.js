@@ -133,6 +133,12 @@ const CSonNet_Contagion_Simulation = (props) => {
     }, [dispatch, dynamicProps])
 
     useEffect(() => {
+        return (
+          localStorage.removeItem('formLastPath')
+        )
+      }, [])
+
+    useEffect(() => {
         console.log("Use Effect #1 for setInitialState")
         console.log("resubmit: ", props.resubmit)
         console.log("job_definition: ", props.job_definition)
@@ -171,7 +177,7 @@ const CSonNet_Contagion_Simulation = (props) => {
                     // setInitialState((props.resubmit && props.resubmit.inputData) ? props.resubmit.inputData : {})
                 }
 
-                props.resubmit && localStorage.setItem('formLastPath', props.resubmit.inputData.output_container + '/')
+                // props.resubmit && localStorage.setItem('formLastPath', props.resubmit.inputData.output_container + '/')
                 setInputSchema(jobData.input_schema)
             }
         }

@@ -248,7 +248,7 @@ function FileManagerApp(props) {
       classes={{
         root: "bg-red",
         content: 'overflowContentFiles',
-        header: "h-auto min-h-112 overflow ",
+        header: "h-auto min-h-112 overflow header1",
         sidebarHeader: "h-auto min-h-112 overflow sidebarHeader1",
         sidebarContent: "sidebarWrapper",
         rightSidebar: "sidebarStyle",
@@ -259,11 +259,11 @@ function FileManagerApp(props) {
           className="flex flex-col flex-1 p-8"
           style={{ width: "100%" }}
         >
-          <div className="flex items-center justify-between">
-            <div style={{ minWidth: "40%" }}>
+          <div className=" h-100 flex items-center justify-between mob-header">
+            <div style={{ alignSelf: "start" }}>
               <div className="flex flex-1 items-center justify-between ">
                 <div className="flex flex-col align-middle">
-                  <div className="flex items-center mb-16 align-middle" style={{"marginTop": "30px"}}>
+                  <div className="flex items-center align-middle" style={{"padding": "22px 0"}}>
                     <Icon
                       className="text-18 cursor-pointer"
                       color="action"

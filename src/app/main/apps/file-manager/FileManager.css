@@ -21,6 +21,12 @@
   height: auto;
 }
 
+@media screen and (max-width:600px) {
+  .mob-header{
+    flex-direction: column-reverse;
+  }
+}
+
 /* .contentStyle {
     height: 50%;
     overflow-y: auto;
@@ -38,6 +44,10 @@
 .overflowContentFiles {
   /* overflow-x: auto; */
   overflow: visible;
+}
+
+.header1{
+  display: table;
 }
 
 .sidebarHeader1 {

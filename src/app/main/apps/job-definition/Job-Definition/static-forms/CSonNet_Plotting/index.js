@@ -41,6 +41,7 @@ const CSonNet_plot = (props) => {
     const [inputFields, setInputFields] = useState([]);
     const [errorMsg, setErrorMsg] = useState();
     const [dynamicProps, setDynamicProps] = useState({})
+    const [onSubmit, setOnSubmit] = useState()
     const history = useHistory();
     const dispatch = useDispatch()
 
@@ -67,8 +68,15 @@ const CSonNet_plot = (props) => {
     }
 
     useEffect(() => {
+        return (
+          localStorage.removeItem('formLastPath')
+        )
+      }, [])
+
+    useEffect(() => {
         setIsToasterFlag(false);
-        let pathEnd = 'net.science/CSonNet_Plotting'
+        // let pathEnd = 'net.science/CSonNet_Plotting'
+        let pathEnd = `${props.namespace}/${props.module}`
         setIsToasterFlag(false);
         if (jobData.id && !jobData.id.includes(pathEnd) || Object.keys(jobData).length === 0)
         dispatch(Actions.setSelectedItem(pathEnd));
@@ -261,7 +269,8 @@ const CSonNet_plot = (props) => {
 
     }
 
-    function onFormSubmit(requestJson) {
+    async function onFormSubmit(requestJson) {
+        setOnSubmit(true)
         const url = `${process.env.REACT_APP_SCIDUCT_JOB_SERVICE}/`
         const token = localStorage.getItem('id_token');
         const jobServiceInstance = new JobService(url, token)
@@ -274,7 +283,7 @@ const CSonNet_plot = (props) => {
 
         },
             (error) => {
-                window.setTimeout(handlingError, 4000);
+                // window.setTimeout(handlingError, 4000);
                 setSuccess(false)
                 if (error.response)
                     setErrorMsg(`${error.response.status}-${error.response.statusText} error occured. Please try again`)
@@ -289,6 +298,8 @@ const CSonNet_plot = (props) => {
 
     function handlingError() {
         setIsToasterFlag(false);
+        setSuccess();
+        setOnSubmit(false)
     }
 
     function delayNavigation() {
@@ -471,7 +482,7 @@ const CSonNet_plot = (props) => {
                                         className="w-30  mt-32 mb-80"
                                         aria-label="LOG IN"
                                         onClick={createSubmissionData}
-                                        disabled={!isFormValid || success}                                    >
+                                        disabled={!isFormValid || success || onSubmit}                                    >
                                         Submit
 							</Button>
                                     {props.resubmit ? <Link to="/apps/my-jobs/" style={{ color: 'transparent' }}>
