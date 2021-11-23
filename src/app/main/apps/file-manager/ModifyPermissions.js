@@ -201,11 +201,14 @@ export const ModifyPermissions = ({ showModal, handleClose, props }) => {
     selectedItem &&
       users.length === 0 &&
       users.push({
-        id: "*",
+        id: "All users",
         name: "All users",
-        readACL: selectedItem.readACL.indexOf("*") !== -1 ? true : false,
-        computeACL: selectedItem.computeACL.indexOf("*") !== -1 ? true : false,
-        writeACL: selectedItem.writeACL.indexOf("*") !== -1 ? true : false,
+        readACL:
+          selectedItem.readACL.indexOf("All users") !== -1 ? true : false,
+        computeACL:
+          selectedItem.computeACL.indexOf("All users") !== -1 ? true : false,
+        writeACL:
+          selectedItem.writeACL.indexOf("All users") !== -1 ? true : false,
       });
   }, [selectedItem, users]);
 
@@ -232,7 +235,7 @@ export const ModifyPermissions = ({ showModal, handleClose, props }) => {
             >
               {users.map((user, index) => (
                 <div className="usersPermission">
-                  {user.id !== "*" && (
+                  {user.id !== "All users" && (
                     <button
                       // className="btn btn-link mt-48"
                       type="button"
@@ -245,7 +248,7 @@ export const ModifyPermissions = ({ showModal, handleClose, props }) => {
                   )}
                   <h3>
                     <Fragment>
-                      {user.id === "*" ? (
+                      {user.id === "All users" ? (
                         <PersonIcon className="person_icon" />
                       ) : (
                         <PersonIcon className="person_icon" />

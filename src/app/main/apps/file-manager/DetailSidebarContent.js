@@ -162,9 +162,9 @@ function DetailSidebarContent(props) {
   }, [selectedItem]);
 
   function changeACLOrder(ACL) {
-    var filteredACL = ACL.filter((item) => item !== "*").sort();
+    var filteredACL = ACL.filter((item) => item !== "All users").sort();
     filteredACL.unshift("All users");
-    var returnACL = ACL.indexOf("*") !== -1 ? filteredACL : ACL.sort();
+    var returnACL = ACL.indexOf("All users") !== -1 ? filteredACL : ACL.sort();
     return returnACL;
   }
 
