@@ -11,6 +11,7 @@ import MainSidebarContent from './MainSidebarContent';
 import MainSidebarHeader from './MainSidebarHeader';
 import * as Actions from './store/actions';
 import reducer from './store/reducers';
+import './JobDefinition.css'
 
 function JobDefinitionView(props) {
 
@@ -123,7 +124,7 @@ function renderTask(a){
         <FusePageSimple
             classes={{
                 root: "bg-red",
-                header: "min-h-128 overflow h-auto",
+                header: "min-h-128 overflow h-auto jobDefHeader",
                 sidebarHeader: "h-128 min-h-128",
                 // content: "contentStyle",
                 // sidebarHeader: "h-96 min-h-96 sidebarHeader1",

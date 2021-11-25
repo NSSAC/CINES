@@ -67,7 +67,7 @@ function DetailSidebarHeader(props)
 
       checkstate()
 
-
+if((Object.values(files).length !== 0))
     return (
         <div className="flex flex-col justify-between h-full p-4 sm:p-12">
              <div className="toolbar flex align-center justify-end h-48">
@@ -90,6 +90,7 @@ function DetailSidebarHeader(props)
                 </div>
         </div>
     );
+    else return null;
 }
 
 export default React.memo(DetailSidebarHeader);
