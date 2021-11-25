@@ -173,11 +173,10 @@ const CSonNet_Contagion_Simulation = (props) => {
                     setInitialState(updatedState)
                 } else {
                     console.log("Set from else: ", props.resubmit )
-                    setInitialState({})
-                    // setInitialState((props.resubmit && props.resubmit.inputData) ? props.resubmit.inputData : {})
+                    setInitialState((props.resubmit && props.resubmit.inputData) ? props.resubmit.inputData : {})
                 }
 
-                // props.resubmit && localStorage.setItem('formLastPath', props.resubmit.inputData.output_container + '/')
+                props.resubmit && localStorage.setItem('formLastPath', props.resubmit.inputData.output_container + '/')
                 setInputSchema(jobData.input_schema)
             }
         }
@@ -213,9 +212,11 @@ const CSonNet_Contagion_Simulation = (props) => {
 
                     if (pfile && pfile['type']!="csonnet_simulation_container"){
                         setInitialState({
-                            input: {
-                                ...input_file_meta.provenance.input,
-                            },
+                            input: props.resubmit ? {
+                               ...input_file_meta.provenance.input, input_file: props.resubmit.inputData.input["input_file"]
+                            } : {
+                                ...input_file_meta.provenance.input
+                             },
                             output_container: (staticProps.outputPath && staticProps.outputPath[1]) ? staticProps.outputPath[1].value : ""
                         })
                         setInputFileMessage(`Graph File: ${pfile.stored_name}`)
