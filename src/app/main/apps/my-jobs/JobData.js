@@ -1,4 +1,5 @@
 import { Typography } from '@material-ui/core';
+import { lowerCase } from 'lodash-es';
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
@@ -29,7 +30,7 @@ function JobData() {
         color: '#1565C0'
       }
 
-      var navigateLabels = ['csonnet_data_analysis','csonnet_simulation','output_GraphType','input_file']
+      var navigateLabels = ['csonnet_data_analysis','csonnet_simulation','input_file']
       var clickHere = ['rules','initial_states_method','text_sections','plot_types']
 
     const openoutputDialog = () => {
@@ -54,7 +55,7 @@ function JobData() {
     }
 
     function inputPar(data) {
-        if ((data[0].includes('inputFile') || data[0].toLowerCase().includes('graph') || navigateLabels.indexOf(data[0]) !== -1)) {
+        if ((data[0].includes('inputFile') || data[0].toLowerCase().includes('graph') || navigateLabels.indexOf(data[0]) !== -1) && !data[0].toLowerCase().includes('type')) {
             x = (<span style={navigateStyle} onClick={() => navigateFile(data[1])}>{data[1]}</span>
             )
         } else if (clickHere.indexOf(data[0]) !== -1) {

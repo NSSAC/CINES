@@ -75,7 +75,7 @@ function JobDefinitionForm(props) {
 
   useEffect(() => {
     setIsToasterFlag(false);
-    if ((jobData.id && !jobData.id.includes(pathEnd)) || Object.keys(jobData).length === 0)
+    if ((jobData.id && !(jobData.id === (pathEnd))) || Object.keys(jobData).length === 0)
       dispatch(Actions.setSelectedItem(pathEnd));
     if (Object.keys(jobData).length !== 0 && jobData.id.includes(pathEnd)) {
       setSpinnerFlag(false);

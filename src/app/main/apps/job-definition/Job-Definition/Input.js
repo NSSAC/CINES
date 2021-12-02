@@ -71,7 +71,7 @@ export const Input = (props) => {
 						onBlur={props.changed}
 						validations={{
 							isPositiveInt: function (values, value) {
-								if (props.formData[0] === "SampleEdges" || props.formData[0] === "SampleNodes")
+								if (props.formData[0] === "SampleEdges" || props.formData[0] === "SampleNodes" || props.formData[0] === "NApprox")
 									return (RegExp(/^(?:[+]?(?:[0-9]\d*))$/).test(value) || RegExp(/^(?:[-]?(?:1))$/).test(value));
 								else
 									return RegExp(/^(?:[+]?(?:[0-9]\d*))$/).test(value);
@@ -94,7 +94,7 @@ export const Input = (props) => {
 						onBlur={props.changed}
 						validations={{
 							isPositiveInt: function (values, value) {
-								if (props.formData[0] === "SampleEdges" || props.formData[0] === "SampleNodes")
+								if (props.formData[0] === "SampleEdges" || props.formData[0] === "SampleNodes" || props.formData[0] === "NApprox")
 									return (RegExp(/^(?:[+]?(?:[0-9]\d*))$/).test(value) || RegExp(/^(?:[-]?(?:1))$/).test(value));
 								else
 									return RegExp(/^(?:[+]?(?:[0-9]\d*))$/).test(value);

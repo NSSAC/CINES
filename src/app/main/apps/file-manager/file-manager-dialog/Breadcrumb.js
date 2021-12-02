@@ -26,7 +26,9 @@ function Breadcrumb(props) {
             for (i = 1; i < breadcrumb_Array.length; i++) {
                 targetPath = targetPath + breadcrumb_Array[i] + '/'
             }
-            props.setTargetPath(targetPath)
+            setTimeout(() => {
+                props.setTargetPath(targetPath)
+            }, 1000);
         }
     }
 
