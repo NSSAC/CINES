@@ -12,6 +12,7 @@ import MainSidebarContent from './MainSidebarContent';
 import MainSidebarHeader from './MainSidebarHeader';
 import * as Actions from './store/actions';
 import reducer from './store/reducers';
+import './JobDefinition.css'
 
 function JobDefinitionListView(props) {
 
@@ -69,7 +70,7 @@ function JobDefinitionListView(props) {
         <FusePageSimple
             classes={{
                 root: "bg-red",
-                header: "h-128 min-h-128",
+                header: "h-128 min-h-128 jobDefHeader",
                 sidebarHeader: "h-128 min-h-128",
                 // content: "contentStyle",
                 // sidebarHeader: "h-96 min-h-96 sidebarHeader1",

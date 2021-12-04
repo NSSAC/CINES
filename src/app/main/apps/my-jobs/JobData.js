@@ -1,4 +1,5 @@
 import { Typography } from '@material-ui/core';
+import { lowerCase } from 'lodash-es';
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
@@ -29,6 +30,9 @@ function JobData() {
         color: '#1565C0'
       }
 
+      var navigateLabels = ['csonnet_data_analysis','csonnet_simulation','input_file']
+      var clickHere = ['rules','initial_states_method','text_sections','plot_types']
+
     const openoutputDialog = () => {
         setshowDialog(true);
         setStandardOut(selectedItem.stdout);
@@ -51,10 +55,10 @@ function JobData() {
     }
 
     function inputPar(data) {
-        if ((data[0].includes('inputFile') || data[0].toLowerCase().includes('graph') || data[0] === 'csonnet_data_analysis' || data[0] === 'csonnet_simulation') && data[0] !== 'output_GraphType') {
+        if ((data[0].includes('inputFile') || data[0].toLowerCase().includes('graph') || navigateLabels.indexOf(data[0]) !== -1) && !data[0].toLowerCase().includes('type')) {
             x = (<span style={navigateStyle} onClick={() => navigateFile(data[1])}>{data[1]}</span>
             )
-        } else if (data[0] === 'rules' || data[0] === 'initial_states_method' || data[0] === 'text_sections' || data[0] === 'plot_types') {
+        } else if (clickHere.indexOf(data[0]) !== -1) {
             x = (<span onClick={() => openDialog(data)}>
                 {/* eslint-disable-next-line */}
                 <a style={{ color: '#1565C0' }} className="cursor-pointer">Click here</a>

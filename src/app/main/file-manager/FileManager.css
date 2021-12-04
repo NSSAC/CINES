@@ -4,7 +4,7 @@
 
 .sidebarStyle {
   min-width: 320px;
-  max-width: 640px;
+  max-width: 500px;
   width: auto;
 }
 
@@ -19,6 +19,12 @@
   padding: 0px 6px !important;
   width: auto;
   height: auto;
+}
+
+@media screen and (max-width:600px) {
+  .mob-header{
+    flex-direction: column-reverse;
+  }
 }
 
 /* .contentStyle {
@@ -38,6 +44,10 @@
 .overflowContentFiles {
   /* overflow-x: auto; */
   overflow: visible;
+}
+
+.header1{
+  display: table;
 }
 
 .sidebarHeader1 {

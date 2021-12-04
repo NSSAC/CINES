@@ -69,6 +69,10 @@ function DetailSidebarContent(props) {
     textOverflow: 'ellipsis',
     overflow: 'hidden'
   }
+
+  var navigateLabels = ['csonnet_data_analysis','csonnet_simulation','input_file']
+  var clickHere = ['rules','initial_states_method','text_sections','plot_types']
+
   const openoutputDialog = () => {
     setshowDialog(true);
     setStandardOut(selectedItem.stdout);
@@ -456,11 +460,11 @@ function DetailSidebarContent(props) {
                         <tr>
                           <th title={data[0]} style={labelEllipsis}>{data[0]}:</th>
                           {(() => {
-                            if ((data[0].includes('inputFile') || data[0].toLowerCase().includes('graph') || data[0] === 'csonnet_data_analysis' || data[0] === 'csonnet_simulation') && data[0] !== 'output_GraphType') {
+                            if ((data[0].includes('inputFile') || data[0].toLowerCase().includes('graph') || navigateLabels.indexOf(data[0]) !== -1) && !data[0].toLowerCase().includes('type')) {
                               return (
                                 <td style={navigateStyle} onClick={() => navigateFile(data[1])}>{data[1]}</td>
                               )
-                            } else if (data[0] === 'rules' || data[0] === 'initial_states_method' || data[0] === 'text_sections' || data[0] === 'plot_types') {
+                            } else if (clickHere.indexOf(data[0]) !== -1) {
                               return (
                                 <td onClick={() => openDialog(data)}>
                                   {/* eslint-disable-next-line */}

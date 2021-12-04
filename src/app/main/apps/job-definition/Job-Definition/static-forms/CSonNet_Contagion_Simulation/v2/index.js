@@ -87,13 +87,13 @@ const CSonNet_Contagion_Simulation = (props) => {
                 types: jobData.input_files[0].types,
                 value: state && state.input ? state.input["input_file"] : ""
             }],
-            blocking_nodes: [jobData.input_files[1].name, {
+            blocking_nodes: [jobData.input_files[1].name || '', {
                 key: "blocking_nodes",
-                formLabel: jobData.input_files[1].name,
+                formLabel: jobData.input_files[1].name || '',
                 id: 1,
-                name: jobData.input_files[1].name,
+                name: jobData.input_files[1].name || '',
                 outputFlag: false,
-                types: jobData.input_files[1].types,
+                types: jobData.input_files[1].types || [],
                 required: false,
                 value: state && state.input ? state.input["blocking_nodes"] : ""
             }]
@@ -114,7 +114,7 @@ const CSonNet_Contagion_Simulation = (props) => {
                 required: true,
                 id: 200,
                 outputFlag: true,
-                types: ["folder", "epihiper_multicell_analysis", "epihiperOutput"],
+                types: ["folder", "epihiper_multicell_analysis", "epihiperOutput", "csonnet_simulation_container"],
                 value: state && state.input ? state.output_container : "",
             }]
         })
@@ -131,6 +131,12 @@ const CSonNet_Contagion_Simulation = (props) => {
             }
         }
     }, [dispatch, dynamicProps])
+
+    useEffect(() => {
+        return (
+          localStorage.removeItem('formLastPath')
+        )
+      }, [])
 
     useEffect(() => {
         console.log("Use Effect #1 for setInitialState")
@@ -167,8 +173,7 @@ const CSonNet_Contagion_Simulation = (props) => {
                     setInitialState(updatedState)
                 } else {
                     console.log("Set from else: ", props.resubmit )
-                    setInitialState({})
-                    // setInitialState((props.resubmit && props.resubmit.inputData) ? props.resubmit.inputData : {})
+                    setInitialState((props.resubmit && props.resubmit.inputData) ? props.resubmit.inputData : {})
                 }
 
                 props.resubmit && localStorage.setItem('formLastPath', props.resubmit.inputData.output_container + '/')
@@ -207,9 +212,11 @@ const CSonNet_Contagion_Simulation = (props) => {
 
                     if (pfile && pfile['type']!="csonnet_simulation_container"){
                         setInitialState({
-                            input: {
-                                ...input_file_meta.provenance.input,
-                            },
+                            input: props.resubmit ? {
+                               ...input_file_meta.provenance.input, input_file: props.resubmit.inputData.input["input_file"]
+                            } : {
+                                ...input_file_meta.provenance.input
+                             },
                             output_container: (staticProps.outputPath && staticProps.outputPath[1]) ? staticProps.outputPath[1].value : ""
                         })
                         setInputFileMessage(`Graph File: ${pfile.stored_name}`)
@@ -227,22 +234,31 @@ const CSonNet_Contagion_Simulation = (props) => {
                     }
                 }else{
                     setEnableBlocking(false)
+                    setInputFileMessage(false)
                 }
             } else if (input_file_meta.type) {
                 console.log("setValidInputFile(false) non-container")
-
+                setInputFileMessage(false)
                 setValidInputFile(true)
                 setEnableBlocking(false)
             }else{
                 setValidInputFile(false)
                 setEnableBlocking(false)
+                setInputFileMessage(false)
             }
         } else {
             console.log("setValidInputFile(false)")
             setValidInputFile(false)
             setEnableBlocking(false)
+            setInputFileMessage(false)
         }
     }, [input_file_meta])
+
+    useEffect(()=>{
+        return(()=>
+        dispatch(Actions.initializeInputForm())
+        )
+    },[])
 
     function disableButton() {
         setIsFormValid(false);
@@ -452,6 +468,7 @@ const CSonNet_Contagion_Simulation = (props) => {
     }
 
     function delayNavigation() {
+        dispatch(Actions.initializeInputForm())
         history.push('/apps/my-jobs/');
     }
 
@@ -576,7 +593,6 @@ const CSonNet_Contagion_Simulation = (props) => {
                                                     value={dynamicProps.input_file.value}
                                                     changed={(event) => dynamicChangedHandler(event, 'input_file')}
                                                 // changed={(evt)=>{console.log("Input File Changed")}}
-
                                                 />
                                                 {input_file_meta && input_file_meta.type && (inputFileMessage) && (
                                                        <React.Fragment>{inputFileMessage}</React.Fragment>

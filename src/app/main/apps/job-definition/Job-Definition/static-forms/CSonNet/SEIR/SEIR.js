@@ -34,6 +34,7 @@ const SEIR = (props) => {
                                                     label= {["Submodel", <span key={1} style={{color: 'red'}}>{'*'}</span>]}
                                                     value={props.dynamicProps.SEIR_Submodel.value}
                                                     onChange={(event) => props.changed(event, 'SEIR_Submodel')}
+                                                    disabled={props.disabled}
                                                     required
 
                                                 >
@@ -44,13 +45,13 @@ const SEIR = (props) => {
                                                     <MenuItem className="ModelMenu" key='SEIR4' value='SEIR4'>Stochastic exposed duration and stochastic infectious duration</MenuItem>
                                                 </SelectFormsy>
                                             </Grid>
-                                            {props.dynamicProps.SEIR_Submodel.value === 'SEIR1' && <SEIR1 modelJSON={props.modelJSON} changed={props.changed}
+                                            {props.dynamicProps.SEIR_Submodel.value === 'SEIR1' && <SEIR1 disabled={props.disabled} modelJSON={props.modelJSON} changed={props.changed}
                                                 dynamicProps={props.dynamicProps}></SEIR1>}
-                                                {props.dynamicProps.SEIR_Submodel.value === 'SEIR2' && <SEIR2 modelJSON={props.modelJSON} changed={props.changed}
+                                                {props.dynamicProps.SEIR_Submodel.value === 'SEIR2' && <SEIR2 disabled={props.disabled} modelJSON={props.modelJSON} changed={props.changed}
                                                 dynamicProps={props.dynamicProps}></SEIR2>}
-                                                {props.dynamicProps.SEIR_Submodel.value === 'SEIR3' && <SEIR3 modelJSON={props.modelJSON} changed={props.changed}
+                                                {props.dynamicProps.SEIR_Submodel.value === 'SEIR3' && <SEIR3 disabled={props.disabled} modelJSON={props.modelJSON} changed={props.changed}
                                                 dynamicProps={props.dynamicProps}></SEIR3>}
-                                                {props.dynamicProps.SEIR_Submodel.value === 'SEIR4' && <SEIR4 modelJSON={props.modelJSON} changed={props.changed}
+                                                {props.dynamicProps.SEIR_Submodel.value === 'SEIR4' && <SEIR4 disabled={props.disabled} modelJSON={props.modelJSON} changed={props.changed}
                                                 dynamicProps={props.dynamicProps}></SEIR4>}
 
 

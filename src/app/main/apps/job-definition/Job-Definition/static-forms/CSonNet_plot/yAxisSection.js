@@ -57,6 +57,7 @@ const YAxisSection = (props) => {
                     label={["y_scale", <span key={1} style={{color: 'red'}}>{'*'}</span>]}
                     value={props.dynamicProps.y_scale.value}
                     onChange={(event) => props.inputChangedHandler(event, 'y_scale')}
+                    required
                 >
                     {props.modelJSON.properties.text_sections.properties.y_axis_section.properties.y_scale.enum.map((item) => {
                         return (

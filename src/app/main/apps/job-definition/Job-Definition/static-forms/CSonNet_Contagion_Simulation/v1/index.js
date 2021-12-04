@@ -90,7 +90,7 @@ const CSonNet_Contagion_Simulation_v1 = (props) => {
                             formLabel: "Output Container",
                             id: 200,
                             outputFlag: true,
-                            types: ["folder", "epihiper_multicell_analysis", "epihiperOutput"],
+                            types: ["folder", "epihiper_multicell_analysis", "epihiperOutput", "csonnet_simulation_container"],
                             value: props.resubmit ? props.resubmit.inputData.output_container : "",
                         }]
                     })

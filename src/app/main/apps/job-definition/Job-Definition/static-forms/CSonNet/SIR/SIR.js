@@ -33,6 +33,7 @@ const SIR = (props) => {
                                                     label= {["Submodel", <span key={1} style={{color: 'red'}}>{'*'}</span>]}
                                                     value={props.dynamicProps.SIR_Submodel.value}
                                                     onChange={(event) => props.changed(event, 'SIR_Submodel')}
+                                                    disabled={props.disabled}
                                                     required
 
                                                 >
@@ -41,9 +42,9 @@ const SIR = (props) => {
                                                     {/* <MenuItem key='Stochastic infectious' value='stochastic infectious'>Stochastic infectious</MenuItem> */}
                                                 </SelectFormsy>
                                             </Grid>
-                                            {props.dynamicProps.SIR_Submodel.value === 'stochastic infectious' && <Submodel_SID modelJSON={props.modelJSON} changed={props.changed}
+                                            {props.dynamicProps.SIR_Submodel.value === 'stochastic infectious' && <Submodel_SID disabled={props.disabled} modelJSON={props.modelJSON} changed={props.changed}
                                                 dynamicProps={props.dynamicProps}></Submodel_SID>}
-                                                {props.dynamicProps.SIR_Submodel.value === 'fixed infectious' && <Submodel_FIP modelJSON={props.modelJSON} changed={props.changed}
+                                                {props.dynamicProps.SIR_Submodel.value === 'fixed infectious' && <Submodel_FIP disabled={props.disabled} modelJSON={props.modelJSON} changed={props.changed}
                                                 dynamicProps={props.dynamicProps}></Submodel_FIP>}
 
 

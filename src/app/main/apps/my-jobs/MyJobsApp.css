@@ -9,8 +9,14 @@
 
 .header {
   min-height: 120px;
-    flex: none;
-    height: auto;
+  flex: none;
+  height: auto;
+}
+
+.sidebarHeader {
+  min-height: 120px;
+  flex: none;
+  height: auto;
 }
 
 .overflowContentJob {
@@ -23,22 +29,22 @@
 
 .sidebarStyle {
   min-width: 320px;
-  max-width: 515px;
+  max-width: 500px;
 }
 
 
-.chips{
-    display: inline-block;
+.chips {
+  display: inline-block;
   background: grey;
   padding: 4px 12px;
   border-radius: 32px;
   font-size: 13px;
-  margin-left:5px;
+  margin-left: 5px;
   margin-top: 5px;
   word-break: break-word;
 }
 
-.MuiGrid-spacing-xs-1{
+.MuiGrid-spacing-xs-1 {
   width: 100% !important;
   margin: auto !important;
 }

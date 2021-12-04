@@ -79,7 +79,7 @@ function MyJobsApp(props) {
       classes={{
         root: "bg-red",
         header: "header",
-        sidebarHeader: "header",
+        sidebarHeader: "sidebarHeader",
         rightSidebar: "w-auto sidebarStyle",
         contentWrapper: "jobBody"
       }}

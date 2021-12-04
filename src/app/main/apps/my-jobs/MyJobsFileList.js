@@ -379,8 +379,8 @@ function MyJobsFileList(props) {
                                                         )
                                                     })()}
                                                 </TableCell>
-                                                <TableCell  >
-                                                    {row.output_name}
+                                                <TableCell style={{lineBreak:'anywhere'}}>
+                                                    {row.output_name || <b>-</b>} 
                                                 </TableCell>
                                                 <TableCell  >
                                                     {row.state}

@@ -75,7 +75,7 @@ function JobDefinitionForm(props) {
 
   useEffect(() => {
     setIsToasterFlag(false);
-    if ((jobData.id && !jobData.id.includes(pathEnd)) || Object.keys(jobData).length === 0)
+    if ((jobData.id && !(jobData.id === (pathEnd))) || Object.keys(jobData).length === 0)
       dispatch(Actions.setSelectedItem(pathEnd));
     if (Object.keys(jobData).length !== 0 && jobData.id.includes(pathEnd)) {
       setSpinnerFlag(false);
@@ -177,7 +177,7 @@ function JobDefinitionForm(props) {
           value: props.resubmit ? props.resubmit.inputData.output_container : "",
           description:
             "Select the path from File manager where the output file is to be stored.",
-          types: ["folder", "epihiper_multicell_analysis", "epihiperOutput"],
+          types: ["folder", "epihiper_multicell_analysis", "epihiperOutput","csonnet_simulation_container"],
           outputFlag: true,
         };
         let outputName = {
