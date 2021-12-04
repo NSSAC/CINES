@@ -1,7 +1,8 @@
-import React, {useEffect} from 'react';
-import {FuseSplashScreen} from '@fuse';
+import React, { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+
+import { FuseSplashScreen } from '@fuse';
 import * as userActions from 'app/auth/store/actions';
-import {useDispatch} from 'react-redux';
 import sciductService from 'app/services/sciductService';
 import * as FuseActions from 'app/store/actions/fuse';
 
@@ -17,7 +18,7 @@ function Callback(props)
             sciductService.getUserData().then(tokenData => {
                 dispatch(userActions.setUserDataSciDuct(tokenData));
                 dispatch(FuseActions.updateNavigationItem('filehome',{
-                    'url'  : "/apps/files" + tokenData.home_folder
+                    'url'  : "/files" + tokenData.home_folder
                 }))
             });
         });

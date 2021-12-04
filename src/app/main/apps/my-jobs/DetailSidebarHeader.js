@@ -7,7 +7,7 @@ import { FuseAnimate } from '@fuse';
 
 import CancelJob from './CancelJob';
 
-import "../file-manager/Confirm-alert.css";
+import "app/main/file-manager/Confirm-alert.css";
 
 function DetailSidebarHeader(props)
 {

@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Icon } from '@material-ui/core';
 import './Input.css';
-import FMPopup from './file-manager-dialog/FileManagerDialog.js';
-import FolderPopup from './file-manager-dialog/FolderManagerDialog.js';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Radio from '@material-ui/core/Radio';
+import SelectFileDialog from 'app/main/file-manager/dialogs/SelectFileDialog';
 
 import {
 	RadioGroupFormsy,
@@ -24,8 +23,6 @@ export const Input = (props) => {
 		padding: '6px',
 		color: 'black'
 	};
-
-
 
 	const [showFMDialog, setShowFMDialog] = useState(false);
 	const [showFolderDialog, setShowFolderDialog] = useState(false);
@@ -352,7 +349,7 @@ export const Input = (props) => {
 			}}
 			header={
 				<div>
-					{showFMDialog && <FMPopup
+					{/* {showFMDialog && <FMPopup
 						showModal={showFMDialog}
 						setShowModal={(p) => setShowFMDialog(p)}
 						handleFMClose={handleFMClose}
@@ -360,15 +357,44 @@ export const Input = (props) => {
 						setFileChosenPath={(p) => setFileChosenPath(p)}
 						fileTypes={props.formData[1].types}
 						props={props}
-					/>}
+					/>} */}
 
-					{showFolderDialog && <FolderPopup
+					{/* {showFolderDialog && <FolderPopup
 						showModal={showFolderDialog}
 						handleFMClose={handleFolderClose}
 						folderPath={folderChosenPath}
 						setFolderPath={(p) => setFolderChosenPath(p)}
 						fileTypes={props.formData[1].types}
 						props={props}
+					/>} */}
+
+					{showFMDialog && <SelectFileDialog
+						showModal={showFMDialog}
+						target={fileChosenPath}
+						handleFMClose={handleFMClose}
+						multiple={false} 
+						onSelect={(p)=>{
+							if (p && p[0]) {
+								setFileChosen(p[0])
+								setFileChosenPath(p[0])
+							}
+						}}
+						title="Select File"
+						fileTypes={props.formData[1].types}
+						requireWritePermissions={false}
+						props={props}
+					/>}
+
+
+					{showFolderDialog && <SelectFileDialog
+						showModal={showFolderDialog}
+						target={folderChosenPath}
+						handleFMClose={handleFolderClose}
+						multiple={false}
+						title="Select Output Location"
+						onSelect={(p)=>{if (p && p[0]) {setFolderChosenPath(p[0])}else{setFolderChosenPath("/")}}}
+						fileTypes={["folder"]}//{props.formData[1].types}
+						requireWritePermissions={true}
 					/>}
 				</div>
 			}

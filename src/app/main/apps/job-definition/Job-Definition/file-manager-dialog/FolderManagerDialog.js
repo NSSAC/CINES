@@ -9,7 +9,7 @@ import * as Actions from './store/actions';
 import reducer from './store/reducers';
 import clsx from 'clsx';
 import './FileManagerDialog.css'
-import { CreateFolder } from "app/main/apps/file-manager/FileUpload/CreateFolderDialog";
+import CreateFolder from "app/main/file-manager/dialogs/CreateFolderDialog"
 
 function FolderPopup({ showModal, handleFMClose, folderPath, setFolderPath, fileTypes })  {
 

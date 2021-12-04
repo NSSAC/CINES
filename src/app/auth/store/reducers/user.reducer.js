@@ -2,16 +2,12 @@ import * as Actions from '../actions';
 
 const initialState = {
     role: [],//guest
+    teams: [],
     data: {
-        'displayName': 'User',
+        'displayName': 'Guest',
         'photoURL'   : 'assets/images/avatars/default-avatar.png',
-        'email'      : 'User@cines.com',
-        shortcuts    : [
-            'calendar',
-            'mail',
-            'contacts',
-            'todo'
-        ]
+        'email'      : 'guest@net.science',
+        shortcuts    : [ ]
     }
 };
 

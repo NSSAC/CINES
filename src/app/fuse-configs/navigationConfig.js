@@ -62,7 +62,7 @@ const navigationConfig = [
             'type' : 'item',
             'icon' : 'folder',
             auth   : authRoles.onlyGuest,
-            'url'  : '/apps/files/resources/net.science'
+            'url'  : '/files/resources/net.science'
         },
         {
             'id'   : 'file-manager',
@@ -77,14 +77,14 @@ const navigationConfig = [
                     'title': 'User home',
                     'type' : 'item',
                     'icon' : 'home_work',
-                    'url'  : '/apps/files/home'
+                    'url'  : '/files/home'
                 },
                 {
                     'id'   : 'fileresources',
                     'title': 'Resources',
                     'type' : 'item',
                     'icon' : 'vignette',
-                    'url'  : '/apps/files/resources/net.science'
+                    'url'  : '/files/resources/net.science'
                 },
             ]
 

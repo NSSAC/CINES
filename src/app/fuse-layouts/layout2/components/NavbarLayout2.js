@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 import Logo from 'app/fuse-layouts/shared-components/Logo';
 import Navigation from 'app/fuse-layouts/shared-components/Navigation';
 import UserMenu from 'app/fuse-layouts/shared-components/UserMenu';
+// import UploadStatus from 'app/main/file-manager/UploadStatus';
 
 function NavbarLayout2()
 {
@@ -18,7 +19,7 @@ function NavbarLayout2()
 
             <div className="flex h-full items-center">
                 <Navigation className="w-full " layout="horizontal"/>
-
+                {/* <UploadStatus /> */}
                 {!user.role || user.role.length === 0 ? (
                         <React.Fragment>
                         </React.Fragment>

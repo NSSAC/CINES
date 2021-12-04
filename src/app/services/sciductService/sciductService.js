@@ -96,8 +96,13 @@ class SciDuctService {
         // Clear access token and ID token from local storage
         localStorage.removeItem('id_token');
         localStorage.removeItem('home_folder');
-        localStorage.clear();
+        localStorage.removeItem('loggedIn')
+        ;
+        // I don't think we should clear out local storage - DJM
+        // localStorage.clear();
+
         sessionStorage.clear();
+
         window.clearTimeout(timeOutHandle)
         const logout_url = encodeURIComponent(AUTH_CONFIG.logout_url)
         // console.log("Logout redirect url: ", logout_url)

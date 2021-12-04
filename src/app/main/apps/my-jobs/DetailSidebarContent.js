@@ -95,7 +95,7 @@ function DetailSidebarContent(props) {
   }
 
   function navigateFile(selectedItem) {
-    history.push("/apps/files" + selectedItem + "/");
+    history.push("/files" + selectedItem );
   }
 
   if ((files.payload && files.payload.length === 0) || !selectedItem || (Object.keys(selectedItem).length === 0 && selectedItem.constructor === Object)) {

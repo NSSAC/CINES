@@ -21,8 +21,8 @@ import * as Actions from "./store/actions";
 import reducer from "./store/reducers";
 import clsx from "clsx";
 import "./FileManagerDialog.css";
-import { FileUpload } from "app/main/apps/file-manager/FileUpload/FileUploadDialog";
-import { CreateFolder } from "app/main/apps/file-manager/FileUpload/CreateFolderDialog";
+import FileUpload from "app/main/file-manager/dialogs/FileUpload/FileUploadDialog";
+import CreateFolder from 'app/main/file-manager/dialogs/CreateFolderDialog'
 import sciductService from "app/services/sciductService";
 import { FileService } from "node-sciduct";
 

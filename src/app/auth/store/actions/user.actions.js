@@ -38,15 +38,15 @@ export function setUserDataSciDuct(tokenData)
 
     const roles = ["user"].concat(tokenData.roles||[]);
     const user = {
+        id: tokenData.sub,
         role: roles,
+        teams: tokenData.teams||[],
         from: 'sciduct',
         data: {
             displayName: `${tokenData.first_name} ${tokenData.last_name}`,
             lastName:`${tokenData.last_name}`,
             photoURL   : tokenData.picture,
             email      : tokenData.email,
-            roles      : roles,
-            teams:      tokenData.teams||[],
             settings   : (tokenData.usermeta && tokenData.usermeta.settings) ? tokenData.usermeta.settings : {},
             shortcuts  : (tokenData.usermeta && tokenData.usermeta.shortcuts) ? tokenData.usermeta.shortcuts : []
         }

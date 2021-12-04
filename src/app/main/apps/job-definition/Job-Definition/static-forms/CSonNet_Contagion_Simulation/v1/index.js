@@ -1,5 +1,5 @@
 import modelJSON  from '../../Schemas/CSonNet_modelDefinition_v1';
-import { Icon, LinearProgress, MenuItem } from '@material-ui/core';
+import { Icon, MenuItem } from '@material-ui/core';
 /* eslint-disable */
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';

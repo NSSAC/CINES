@@ -5,9 +5,9 @@ import ReactTooltip from 'react-tooltip';
 import { FusePageSimple } from '@fuse';
 import { TextFieldFormsy } from '@fuse/components/formsy';
 
-import FMPopup from '../file-manager-dialog/FileManagerDialog.js';
-import FolderPopup from '../file-manager-dialog/FolderManagerDialog.js';
-
+// import FMPopup from '../file-manager-dialog/FileManagerDialog.js';
+// import FolderPopup from '../file-manager-dialog/FolderManagerDialog.js';
+import SelectFileDialog from 'app/main/file-manager/dialogs/SelectFileDialog/'
 import './SelectFile.css';
 
 export const Input = (props) => {
@@ -80,18 +80,23 @@ export const Input = (props) => {
 	}
 
 	function chooseFile(f){
-		setFileChosen(f)
-		setFileChosenPath(f)
-		if (props.changed){
-			props.changed({target: {value: f}})
+		if (f && f[0]){
+
+			
+			setFileChosen(f[0])
+			setFileChosenPath(f[0])
+			if (props.changed){
+				props.changed({target: {value: f[0]}})
+			}
 		}
-		
 	}
 
 	function chooseFolder(f){
-		setFolderChosenPath(f)
-		if (props.changed){
-			props.changed({target: {value: f}})
+		if (f && f[0]){
+			setFolderChosenPath(f[0])
+			if (props.changed){
+				props.changed({target: {value: f[0]}})
+			}
 		}
 	}
 
@@ -114,7 +119,7 @@ export const Input = (props) => {
 			}}
 			header={
 				<div>
-					{showFMDialog && <FMPopup
+					{/* {showFMDialog && <FMPopup
 						showModal={showFMDialog}
 						setShowModal={(p) => setShowFMDialog(p)}
 						handleFMClose={handleFMClose}
@@ -123,15 +128,39 @@ export const Input = (props) => {
 						setFileChosenPath={ chooseFile }
 						fileTypes={props.formData[1].types}
 						props={props}
-					/>}
+					/>} */}
 
-					{showFolderDialog && <FolderPopup
+					{/* {showFolderDialog && <FolderPopup
 						showModal={showFolderDialog}
 						handleFMClose={handleFolderClose}
 						folderPath={folderChosenPath}
 						setFolderPath={chooseFolder}
 						fileTypes={props.formData[1].types}
 						props={props}
+					/>} */}
+
+					{showFMDialog && <SelectFileDialog
+						showModal={showFMDialog}
+						target={fileChosenPath}
+						handleFMClose={handleFMClose}
+						multiple={false} 
+						onSelect={chooseFile}
+						title="Select File"
+						fileTypes={props.formData[1].types}
+						requireWritePermissions={false}
+						props={props}
+					/>}
+
+
+					{showFolderDialog && <SelectFileDialog
+						showModal={showFolderDialog}
+						target={folderChosenPath}
+						handleFMClose={handleFolderClose}
+						multiple={false}
+						title="Select Output Location"
+						onSelect={chooseFolder}
+						fileTypes={["folder"]}//{props.formData[1].types}
+						requireWritePermissions={true}
 					/>}
 				</div>
 			}

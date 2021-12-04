@@ -3,7 +3,7 @@
 // import {MailAppConfig} from './mail/MailAppConfig';
 // import {TodoAppConfig} from './todo/TodoAppConfig';
 // import {ContactsAppConfig} from './contacts/ContactsAppConfig';
-import {FileManagerAppConfig} from './file-manager/FileManagerAppConfig';
+// import {FileManagerAppConfig} from './file-manager/FileManagerAppConfig';
 // import { MyJobsAppConfig } from './calendar/CalendarAppConfig';
 // import {ChatAppConfig} from "./chat/ChatAppConfig";
 // import {ECommerceAppConfig} from './e-commerce/ECommerceAppConfig';
@@ -17,7 +17,7 @@ export const appsConfigs = [
     // ProjectDashboardAppConfig,
     // MailAppConfig,
     // TodoAppConfig,
-    FileManagerAppConfig,
+    // FileManagerAppConfig,
     // ContactsAppConfig,
     // CalendarAppConfig,
     // ChatAppConfig,

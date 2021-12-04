@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
-import { FuseSplashScreen } from '@fuse';
 import { connect } from 'react-redux';
-import * as userActions from 'app/auth/store/actions';
 import { bindActionCreators } from 'redux';
-import * as Actions from 'app/store/actions';
+
+import { FuseSplashScreen } from '@fuse';
+import * as userActions from 'app/auth/store/actions';
 import sciductService from 'app/services/sciductService';
+import * as Actions from 'app/store/actions';
 import * as FuseActions from 'app/store/actions/fuse';
+
 class Auth extends Component {
 
     state = {
@@ -39,12 +41,13 @@ class Auth extends Component {
 
                 this.props.setUserDataSciDuct(tokenData);
 
-                resolve();
 
                 // This broadcasts the home dir to update the files menu
                 this.props.setHomeDir('filehome', {
-                    'url': "/apps/files" + tokenData.home_folder
+                    'url': "/files" + tokenData.home_folder
                 })
+
+                resolve();
                 //this.props.showMessage({message: 'Logging in with Sciduct'});
             })
         }

@@ -10,7 +10,7 @@ import { MyJobDefinitionAppConfig } from 'app/main/apps/job-definition/Job-Defin
 // import {LogoutConfig} from 'app/main/logout/LogoutConfig';
 import {CallbackConfig} from 'app/main/callback/CallbackConfig';
 import { CineStaticConfig } from 'app/main/cines-static/CineStaticConfig';
-
+import {FileManagerAppConfig} from 'app/main/file-manager/FileManagerAppConfig';
 // import { UserInterfaceConfig } from 'app/main/pages/pagesConfigs';
 // import {authRoleExamplesConfigs} from 'app/main/auth/authRoleExamplesConfigs';
 // import {UserInterfaceConfig} from 'app/main/user-interface/UserInterfaceConfig';
@@ -27,7 +27,8 @@ const routeConfigs = [
     // LogoutConfig,
     CallbackConfig,
     CineStaticConfig,
-    MyJobDefinitionAppConfig
+    MyJobDefinitionAppConfig,
+    FileManagerAppConfig
 ];
 
 const routes = [

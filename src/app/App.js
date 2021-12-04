@@ -14,6 +14,7 @@ import {StylesProvider, jssPreset, createGenerateClassName} from '@material-ui/s
 import {MuiPickersUtilsProvider} from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
 import IdleTimerComponent from './main/Idle-Timer/Idle-Timer';
+import {ToastContainer } from "material-react-toastify";
 
 const jss = create({
     ...jssPreset(),
@@ -39,6 +40,7 @@ const App = () => {
                                     <IdleTimerComponent/>
                                     <FuseTheme>
                                         <FuseLayout/>
+                                        <ToastContainer bodyStyle={{ fontSize: "14px" }} position="top-right" autoClose={3000} newestOnTop closeOnClick pauseOnFocusLost pauseOnHover />
                                     </FuseTheme>
                                 </FuseAuthorization>
                             </Router>
