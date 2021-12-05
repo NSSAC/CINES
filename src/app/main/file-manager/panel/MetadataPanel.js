@@ -25,7 +25,7 @@ function matchField(prop,field_config){
 }
 
 function groupProperties(file,field_config=[],group_config=[]){
-    const autometa = file.autometa
+    const autometa = file.autometa || {}
     var group_data={'default': []}
     Object.keys(autometa).forEach((prop)=>{
         const matched = matchField(prop,field_config)
@@ -54,7 +54,8 @@ function groupProperties(file,field_config=[],group_config=[]){
 
     group_config.forEach((grp)=>{
         const group_name = grp.group
-        const members = group_data[group_name]
+        const members = group_data[group_name] 
+        if (!members){return}
         if (grp.field_order){
             var undefinedMembers = members.filter((member)=>{
                 if (grp.field_order.indexOf(member.field)>=0){
@@ -107,10 +108,13 @@ function MetadataPanel(props) {
                 <tbody>{group_list.map((grp)=>{
                         const group_name = grp.group
                         const members = groups[group_name]
+                        if (!members || members.length<1){
+                            return null
+                        }
                         const label = (typeof grp.label !== "undefined")?grp.label:group_name
                         return (
                                 <React.Fragment key={group_name}><tr className={`p-8 ${label?'border-b border-gray-400 ':''} font-bold uppercase`}><td colSpan="2" className="pt-16 pl-4"><span>{(typeof grp.label !== "undefined")?grp.label:group_name}</span></td></tr>
-                                {members.filter((member)=>{
+                                {members && members.filter((member)=>{
                                     return typeof props.meta.autometa[member.field] !== 'undefined'
                                 }).map((member, idx)=>{
                                     const label = member.label

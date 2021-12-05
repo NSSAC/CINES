@@ -3,8 +3,8 @@ export default {
         { group: "default", "label": "", "field_order": ["numNodes", "numEdges", "edgeDirectionality", "sourceNodeIdColumn", "destinationNodeIdColumn", "isEdgeAttributed", "isNodeAttributed", "isWeaklyConnected"] },
         { group: "File Format", "field_order": ['sourceNodeIdColumn','destinationNodeIdColumn']},
         { group: "Node Degree" },
-        { group: "Strongly Connected Components","field_order": ["numSccComponents","sizeSmallestScc","numSccComponentsSmallestSize","fracSccComponentsSmallestSize", "sizeLargestScc","numSccComponentsLargestSize","fracSccComponentsLargestSize"]},
-        { group: "Weakly Connected Components","field_order": ["numWccComponents","sizeSmallestWcc","numWccComponentsSmallestSize","fracWccComponentsSmallestSize", "sizeLargestWcc","numWccComponentsLargestSize","fracWccComponentsLargestSize"]},
+        { group: "Strongly Connected Components","field_order": ["numSccComponents","sizeSmallestScc","numSccComponentsSmallestSize","fracSmallestScc", "sizeLargestScc","numSccComponentsLargestSize","fracLargestScc"]},
+        { group: "Weakly Connected Components","field_order": ["numWccComponents","sizeSmallestWcc","numWccComponentsSmallestSize","fracSmallestWcc", "sizeLargestWcc","numWccComponentsLargestSize","fracLargestWcc"]},
         { group: "Node In Degree" },
         { group: "Node Out Degree" },
         { group: "Kcore", "field_order": ["smallestKcore","numNodesSmallestKcore","fracNodesSmallestKcore","largestKcore","numNodesLargestKcore","fracNodesLargestKcore"] },
@@ -59,7 +59,7 @@ export default {
             "match": "(.*)NodeIdColumn",
             "group": "File Format",
             "label": (label,matches)=>{
-                return `${matches.matches[1]} Node ID Column`
+                return `${matches.matches[1]} ID Column`
             }
         },
         {
