@@ -1,25 +1,27 @@
-import React, { useState,useRef } from 'react';
-import {  ArrowDropDown,AspectRatio } from "@material-ui/icons";
-import {  Tab, Tabs, Select, MenuItem, Button,Menu,IconButton } from '@material-ui/core';
+import { Button, IconButton, Menu, MenuItem, Select, Tab, Tabs } from '@material-ui/core';
+import { ArrowDropDown, AspectRatio } from "@material-ui/icons";
 import cytoscape from "cytoscape";
-import cola from "cytoscape-cola";
-import euler from "cytoscape-euler";
-import dagre from "cytoscape-dagre";
 import avsdf from "cytoscape-avsdf";
+import cola from "cytoscape-cola";
 import cose from "cytoscape-cose-bilkent";
-import spread from "cytoscape-spread";
+import dagre from "cytoscape-dagre";
+import euler from "cytoscape-euler";
 import klay from "cytoscape-klay"
+import spread from "cytoscape-spread";
+import React, { useRef, useState } from 'react';
+import { GithubPicker as ColorPicker } from 'react-color';
 import CytoscapeComponent from 'react-cytoscapejs';
+import { useDispatch, useSelector } from "react-redux";
+
+import FileOverviewPanel from "app/main/file-manager/panel/FileOverviewPanel"
+// import PermissionsPanel from "app/main/file-manager/panel/PermissionsPanel"
+import MetadataPanel from "app/main/file-manager/panel/MetadataPanel"
+import ProvenancePanel from "app/main/file-manager/panel/ProvenancePanel"
+import withReducer from "app/store/withReducer";
+
+import { MAX_RAW_FILE_VIEW_SIZE } from "../../FileManagerAppConfig"
 import * as Actions from "./store/actions";
 import reducer from "./store/reducers";
-import { useDispatch, useSelector } from "react-redux";
-import withReducer from "app/store/withReducer";
-import { GithubPicker as ColorPicker } from 'react-color';
-import FileOverviewPanel from "app/main/file-manager/panel/FileOverviewPanel"
-import ProvenancePanel from "app/main/file-manager/panel/ProvenancePanel"
-// import PermissionsPanel from "app/main/file-manager/panel/PermissionsPanel"
-import MetadataPanel from "./NetworkMetadataPanel"
-import {MAX_RAW_FILE_VIEW_SIZE} from "../../FileManagerAppConfig"
 
 cytoscape.use(euler)
 cytoscape.use(cola)
@@ -500,35 +502,6 @@ function NetworkViewer(props) {
         setEdgeColorPickerEl(evt.currentTarget)
         setShowEdgeColorPicker(!showEdgeColorPicker)
     }
-
-    // function doSetCy(newcy){
-    //     if (cy !== newcy ){
-    //         return
-    //     }
-    //     setCy(newcy)
-    //     cy.on('tap', 'node', function(evt) {
-    //         console.log('on node')
-    //         const target = evt.target;
-    //         const node = target[0]._private.data;
-    //         console.log( 'tapped ' , node.name);
-      
-    //         cy.elements().difference(target.outgoers()).not(target).addClass('semitransp');
-    //         target.addClass('highlight').outgoers().addClass('highlight');
-      
-      
-    //     });
-
-    //     cy.on('click',function(evt){
-    //         console.log("click")
-    //         //select either edges or nodes to remove the styles
-    //         //var edges = cy.edges();
-    //         //var nodes = cy.nodes()
-    //         // edges.removeClass('semitransp');
-    //         // nodes.removeClass('semitransp');
-    //         //you can select all elements and remove the styles
-    //         cy.elements().removeClass('semitransp');      
-    //     })
-    // }
 
     return (
         <div ref={fullComponentRef} className="flex flex-col overflow-hidden h-full">
