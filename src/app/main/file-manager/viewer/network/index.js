@@ -1,4 +1,4 @@
-import { Button, IconButton, Menu, MenuItem, Select, Tab, Tabs } from '@material-ui/core';
+import { Button, Icon, IconButton, Menu, MenuItem, Select, Tab, Tabs } from '@material-ui/core';
 import { ArrowDropDown, AspectRatio } from "@material-ui/icons";
 import cytoscape from "cytoscape";
 import avsdf from "cytoscape-avsdf";
@@ -22,6 +22,7 @@ import withReducer from "app/store/withReducer";
 import { MAX_RAW_FILE_VIEW_SIZE } from "../../FileManagerAppConfig"
 import * as Actions from "./store/actions";
 import reducer from "./store/reducers";
+import { saveAs } from 'file-saver';
 
 cytoscape.use(euler)
 cytoscape.use(cola)
@@ -510,6 +511,12 @@ function NetworkViewer(props) {
         setShowEdgeColorPicker(!showEdgeColorPicker)
     }
 
+    function downloadImage(){
+        cy && cy.current && cy.current.png({full: true,output: "blob-promise"}).then((data)=>{
+            saveAs( data, `${props.meta.name}.png`)
+        })
+    }
+
     return (
         <div ref={fullComponentRef} className="flex flex-col overflow-hidden h-full">
             <div ref={tabBarRef}>
@@ -563,9 +570,11 @@ function NetworkViewer(props) {
             {selectedTab === 4 && (
                 <React.Fragment>
                     <div ref={toolbarRef} className={`${enableDynamicVisualization?'':'hidden'} text-right align-right p-0 overflow-hidden flex-none`}>
+                        <IconButton className="mr-4 ml-4" title="Download image as PNG file" onClick={downloadImage}><Icon>cloud_download</Icon></IconButton>
                         <IconButton className="mr-4 ml-4" onClick={()=>{ cy.current.fit() }}><AspectRatio /></IconButton>
                         <Button style={{background: nodeColor}} className="mr-4 ml-4" onClick={toggleNodeColorPicker} endIcon={<ArrowDropDown />}>Node Color</Button>
 
+                        
                         {showNodeColorPicker && (
                                   <Menu
                                   id="fade-menu"
