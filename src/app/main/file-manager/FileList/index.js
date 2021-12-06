@@ -24,7 +24,6 @@ import reducer from "./store/reducers";
 import FILEUPLOAD_CONFIG from "../FileManagerAppConfig";
 
 import '../FileManager.css'
-import { ToastContainer } from 'material-react-toastify';
 
 function FileList(props) {
     const dispatch = useDispatch();

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useRef } from "react";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -9,7 +9,6 @@ import { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { TextFieldFormsy } from "@fuse/components/formsy";
 import Formsy from "formsy-react";
-import { toast  } from "material-react-toastify";
 import * as Actions from "../store/actions";
 import reducer from "../store/reducers"
 import withReducer from "app/store/withReducer";
