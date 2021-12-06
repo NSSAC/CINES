@@ -551,7 +551,7 @@ function NetworkViewer(props) {
             </div>
             {selectedTab === 1 && <div className={`${enableFileView?'':'hidden'} p-4 overflow-auto flex-grow`}><pre>{raw_data}</pre></div>}
             {selectedTab === 0 && <div className="p-4 overflow-auto flex-grow"><FileOverviewPanel meta={props.meta}/></div>}
-            {selectedTab === 2 && <div className="p-4 overflow-auto flex-grow"><MetadataPanel meta={props.meta}/></div>}
+            {selectedTab === 2 && <div className="p-4 overflow-auto flex-grow"><MetadataPanel item container xs={12} sm={8} md={5} lg={3} meta={props.meta}/></div>}
             {selectedTab === 3 && <div className="p-4 overflow-auto flex-grow"><ProvenancePanel meta={props.meta}/></div>}
             {selectedTab === 4 && (
                 <React.Fragment>

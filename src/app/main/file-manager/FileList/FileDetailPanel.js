@@ -60,7 +60,7 @@ function FileDetailPanel(props) {
                     <FileInformationPanel {...props} />
                 )}
                 {selectedTab === 1 && (
-                    <MetadataPanel {...props} />
+                    <MetadataPanel {...props} singleColumn={true} />
                 )}          
                 {selectedTab === 2 && (
                     <ProvenancePanel {...props} />

@@ -1,6 +1,6 @@
 export default {
     group_config: [
-        { group: "default", "label": "", "field_order": ["numNodes", "numEdges", "edgeDirectionality", "sourceNodeIdColumn", "destinationNodeIdColumn", "isEdgeAttributed", "isNodeAttributed", "isWeaklyConnected"] },
+        { group: "default", "label": "General", "field_order": ["numNodes", "numEdges", "edgeDirectionality", "sourceNodeIdColumn", "destinationNodeIdColumn", "isEdgeAttributed", "isNodeAttributed", "isWeaklyConnected"] },
         { group: "File Format", "field_order": ['sourceNodeIdColumn','destinationNodeIdColumn']},
         { group: "Node Degree" },
         { group: "Strongly Connected Components","field_order": ["numSccComponents","sizeSmallestScc","numSccComponentsSmallestSize","fracSmallestScc", "sizeLargestScc","numSccComponentsLargestSize","fracLargestScc"]},
