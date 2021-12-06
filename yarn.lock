@@ -2441,10 +2441,10 @@ accepts@~1.3.4, accepts@~1.3.5, accepts@~1.3.7:
     mime-types "~2.1.24"
     negotiator "0.6.2"
 
-ace-builds@^1.4.12:
-  version "1.4.12"
-  resolved "https://registry.yarnpkg.com/ace-builds/-/ace-builds-1.4.12.tgz#888efa386e36f4345f40b5233fcc4fe4c588fae7"
-  integrity sha512-G+chJctFPiiLGvs3+/Mly3apXTcfgE45dT5yp12BcWZ1kUs+gm0qd3/fv4gsz6fVag4mM0moHVpjHDIgph6Psg==
+ace-builds@^1.4.13:
+  version "1.4.13"
+  resolved "https://registry.yarnpkg.com/ace-builds/-/ace-builds-1.4.13.tgz#186f42d3849ebcc6a48b93088a058489897514c1"
+  integrity sha512-SOLzdaQkY6ecPKYRDDg+MY1WoGgXA34cIvYJNNoBMGGUswHmlauU2Hy0UL96vW0Fs/LgFbMUjD+6vqzWTldIYQ==
 
 acorn-globals@^4.1.0, acorn-globals@^4.3.0:
   version "4.3.4"
@@ -7852,20 +7852,20 @@ jsoneditor-react@^3.0.1:
   dependencies:
     prop-types "^15.7.2"
 
-jsoneditor@^9.1.1:
-  version "9.1.9"
-  resolved "https://registry.yarnpkg.com/jsoneditor/-/jsoneditor-9.1.9.tgz#1a2143eb1365df69d584d2098e9280b33270f5c2"
-  integrity sha512-Vu33B2lAuj93yP32CJE8Cm62nFdluyj95kbakiGUHqwHSzObFil9muNG547q3Qy7d4q9ahckUDovEbDiN17a/A==
+jsoneditor@^9.5.7:
+  version "9.5.7"
+  resolved "https://registry.yarnpkg.com/jsoneditor/-/jsoneditor-9.5.7.tgz#b74d0c2cf64febe102b1b0a91d693f48d1f90917"
+  integrity sha512-RWI1YqIhb2XzLcnSHMta7LROItQg49FhSd7KNPWr81HyCj2pc0m25no4BpzygmxW9320r9PnYKJwZsqL2PpdrQ==
   dependencies:
-    ace-builds "^1.4.12"
+    ace-builds "^1.4.13"
     ajv "^6.12.6"
     javascript-natural-sort "^0.7.1"
     jmespath "^0.15.0"
     json-source-map "^0.6.1"
-    jsonrepair "^2.0.0"
+    jsonrepair "^2.2.1"
     mobius1-selectr "^2.4.13"
     picomodal "^3.0.0"
-    vanilla-picker "^2.11.0"
+    vanilla-picker "^2.12.1"
 
 jsonfile@^4.0.0:
   version "4.0.0"
@@ -7879,10 +7879,10 @@ jsonify@~0.0.0:
   resolved "https://registry.yarnpkg.com/jsonify/-/jsonify-0.0.0.tgz#2c74b6ee41d93ca51b7b5aaee8f503631d252a73"
   integrity sha1-LHS27kHZPKUbe1qu6PUDYx0lKnM=
 
-jsonrepair@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/jsonrepair/-/jsonrepair-2.0.0.tgz#816ab546b0e0864ea3faa4d456e61ff0d23814d0"
-  integrity sha512-beGD14VPmrQNt/Sspi12sCGT+N3w7FWM1T2UJx7biEMfGIUUpqBBPjHq8ETKA992+JS+fSnrSHxKHq7AIgdgcA==
+jsonrepair@^2.2.1:
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/jsonrepair/-/jsonrepair-2.2.1.tgz#7c6257c36550a310150c41ab7d5d4cab71828456"
+  integrity sha512-o9Je8TceILo872uQC9fIBJm957j1Io7z8Ca1iWIqY6S5S65HGE9XN7XEEw7+tUviB9Vq4sygV89MVTxl+rhZyg==
 
 jsonwebtoken@8.5.1:
   version "8.5.1"
@@ -13225,9 +13225,9 @@ url-loader@2.3.0:
     schema-utils "^2.5.0"
 
 url-parse@^1.4.3:
-  version "1.4.7"
-  resolved "https://registry.yarnpkg.com/url-parse/-/url-parse-1.4.7.tgz#a8a83535e8c00a316e403a5db4ac1b9b853ae278"
-  integrity sha512-d3uaVyzDB9tQoSXFvuSUNFibTd9zxd2bkVrDRvF5TmvWWQwqE4lgYJ5m+x1DbecWkw+LK4RNl2CU1hHuOKPVlg==
+  version "1.5.3"
+  resolved "https://registry.yarnpkg.com/url-parse/-/url-parse-1.5.3.tgz#71c1303d38fb6639ade183c2992c8cc0686df862"
+  integrity sha512-IIORyIQD9rvj0A4CLWsHkBBJuNqWpFQe224b6j9t/ABmquIS0qDU2pY6kl6AuOrL5OkCXHMCFNe1jBcuAggjvQ==
   dependencies:
     querystringify "^2.1.1"
     requires-port "^1.0.0"
@@ -13343,10 +13343,10 @@ value-equal@^1.0.1:
   resolved "https://registry.yarnpkg.com/value-equal/-/value-equal-1.0.1.tgz#1e0b794c734c5c0cade179c437d356d931a34d6c"
   integrity sha512-NOJ6JZCAWr0zlxZt+xqCHNTEKOsrks2HQd4MqhP1qy4z1SkbEP467eNx6TgDKXMvUOb+OENfJCZwM+16n7fRfw==
 
-vanilla-picker@^2.11.0:
-  version "2.11.2"
-  resolved "https://registry.yarnpkg.com/vanilla-picker/-/vanilla-picker-2.11.2.tgz#eaa24efa68c27e7ee9e0776df55d6913b855f133"
-  integrity sha512-2cP7LlUnxHxwOf06ReUVtd2RFJMnJGaxN2s0p8wzBH3In5b00Le7fFZ9VrIoBE0svZkSq/BC/Pwq/k/9n+AA2g==
+vanilla-picker@^2.12.1:
+  version "2.12.1"
+  resolved "https://registry.yarnpkg.com/vanilla-picker/-/vanilla-picker-2.12.1.tgz#6e619eecf553891b8d2d042b745a23c91f19f34c"
+  integrity sha512-2qrEP9VYylKXbyzXKsbu2dferBTvqnlsr29XjHwFE+/MEp0VNj6oEUESLDtKZ7DWzGdSv1x/+ujqFZF+KsO3cg==
   dependencies:
     "@sphinxxxx/color-conversion" "^2.2.2"
 
