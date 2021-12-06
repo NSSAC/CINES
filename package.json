@@ -34,7 +34,7 @@
         "fix-date": "^1.1.6",
         "formsy-react": "1.1.5",
         "google-map-react": "1.1.5",
-        "jsoneditor": "^9.1.1",
+        "jsoneditor": "^9.5.6",
         "jsoneditor-react": "^3.0.1",
         "jsonwebtoken": "8.5.1",
         "jss": "10.0.0",
