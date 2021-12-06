@@ -10,8 +10,15 @@ import FileUploadDialog from "../FileUpload/FileUploadDialog";
 import Breadcrumb from "./Breadcrumb";
 import * as Actions from './store/actions';
 import * as Perms from '../../permissions';
-import reducer from './store/reducers';
+import selectFileReducer from './store/reducers';
+import {combineReducers} from 'redux';
+import fileAppReducer from 'app/main/file-manager/store/reducers'
 import FILEUPLOAD_CONFIG from "../../FileManagerAppConfig";
+
+const reducer = combineReducers({
+  "SelectFileApp": selectFileReducer,
+  "fileManagerApp": fileAppReducer
+})
 
 function SelectFileDialog({ showModal, handleFMClose, target, fileTypes, multiple, onSelect,requireWritePermissions,enableUploads,title}) {
 
@@ -29,10 +36,10 @@ function SelectFileDialog({ showModal, handleFMClose, target, fileTypes, multipl
   }
 
   const dispatch = useDispatch()
-  const target_meta = useSelector(({ SelectFileApp }) => SelectFileApp.target)
-  const files = useSelector(({ SelectFileApp }) => SelectFileApp.files);
-  const filtered_files = useSelector(({ SelectFileApp }) => SelectFileApp.filtered_files);
-  const uploader = useSelector(({ fileManagerApp }) => fileManagerApp.uploader);
+  const target_meta = useSelector(({ ComboReducer }) => ComboReducer.SelectFileApp.target)
+  const files = useSelector(({ ComboReducer }) => ComboReducer.SelectFileApp.files);
+  const filtered_files = useSelector(({ ComboReducer }) => ComboReducer.SelectFileApp.filtered_files);
+  const uploader = useSelector(({ ComboReducer }) => ComboReducer.fileManagerApp.uploader);
   const user = useSelector(({auth}) => auth.user)
   const contentRef = useRef()
   const [targetFolder, setTargetFolder] = useState(tf)
@@ -207,7 +214,7 @@ function handleDrop(e){
   }, [tf]);
 
   useEffect(()=>{
-    if (uploader.recent && uploader.recent.length>0){
+    if (uploader && uploader.recent && uploader.recent.length>0){
         var sel={}
         if (multiple){
           uploader.recent.forEach((f)=>{sel[f.id]=true})
@@ -221,7 +228,7 @@ function handleDrop(e){
           setShowFileUploadDialog(false)
         },500)
     }
-  },[dispatch,uploader.recent,targetFolder,multiple])
+  },[dispatch,uploader,uploader.recent,targetFolder,multiple])
 
   useEffect(()=>{
     var filter ={file_types: fileTypes}
@@ -427,4 +434,4 @@ function handleDrop(e){
 
 }
 
-export default withReducer('SelectFileApp', reducer)(SelectFileDialog);
+export default withReducer('ComboReducer', reducer)(SelectFileDialog);
