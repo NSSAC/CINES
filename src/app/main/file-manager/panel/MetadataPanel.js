@@ -177,7 +177,7 @@ function MetadataPanel(props) {
                 return (
                     <Grid item container xs={12} sm={singleColumn?12:6} md={singleColumn?12:4} lg={singleColumn?12:3} xl={singleColumn?12:2}>
                         <React.Fragment key={group_name}>
-                            <Grid item xs={12} className={`p-8 ${label ? 'border-b border-gray-400 ' : ''} font-bold uppercase`}><span>{(typeof grp.label !== "undefined") ? grp.label : group_name}</span></Grid>
+                            <Grid item xs={12} className={`pt-8 pb-4 pl-0 ${label ? 'border-b border-gray-400 ' : ''} font-bold uppercase`}><span>{(typeof grp.label !== "undefined") ? grp.label : group_name}</span></Grid>
                             {members && members.filter((member) => {
                                 return typeof props.meta[member.type][member.field] !== 'undefined'
                             }).map((member, idx) => {

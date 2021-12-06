@@ -30,14 +30,13 @@ function FileInformationPanel(props) {
     const classes = useStyles();
 
     return (
-        <div className="flex-grow w-full flex flex-col h-full">
+        <div className="flex-grow w-full flex flex-col h-full p-4">
 
-            <table className={clsx(classes.table, "w-full text-left p-2")}>
+            <table className={clsx(classes.table, "w-full text-left")}>
 
                 <tbody>
                     <tr className="id">
-                        <th>Name</th>
-                        <td title={props.meta.name}>{props.meta.name}</td>
+                        <td colSpan={2} className="pt-4 pb-4 text-black font-bold text-lg" title={props.meta.name}>{props.meta.name}</td>
                     </tr>
                     <tr className="id">
                         <th>Id</th>
@@ -57,12 +56,18 @@ function FileInformationPanel(props) {
                         <td title={props.meta.creation_date} >{props.meta.creation_date}</td>
                     </tr>
 
-
+                    <tr className="owner">
+                        <th>Created By</th>
+                        <td title={props.meta.created_by} >{props.meta.created_by}</td>
+                    </tr>
                     <tr className="owner">
                         <th>Updated</th>
                         <td title={props.meta.update_date} >{props.meta.update_date}</td>
                     </tr>
-
+                    <tr className="owner">
+                        <th>Updated By</th>
+                        <td title={props.meta.updated_by} >{props.meta.updated_by}</td>
+                    </tr>
                     <tr className="size">
                         <th>Size</th>
                         <td title={props.meta.size}>{(!props.meta.size && (props.meta.size !== 0)) ? '-' : filesize(props.meta.size)}</td>

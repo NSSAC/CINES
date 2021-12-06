@@ -33,6 +33,7 @@ cytoscape.use(klay)
 
 const default_layouts = {
     "cola": {
+        max_total: 2500,
         animate: false, // whether to show the layout as it's running
         refresh: 1, // number of ticks per frame; higher is faster but more jerky
         maxSimulationTime: 4000, // max length in ms to run the layout
@@ -64,7 +65,7 @@ const default_layouts = {
     },
     "euler": {
         name: 'euler',
-      
+        max_total: 2500,
         // The ideal length of a spring
         // - This acts as a hint for the edge length
         // - The edge length can be longer or shorter if the forces are set to extreme values
@@ -156,6 +157,7 @@ const default_layouts = {
         randomize: false
       },
       "dagre": {
+        max_total: 2500,
         // dagre algo options, uses default value on undefined
         nodeSep: undefined, // the separation between adjacent nodes in the same rank
         edgeSep: undefined, // the separation between adjacent edges in the same rank
@@ -181,6 +183,7 @@ const default_layouts = {
       },
       "avsdf": {
         // Called on `layoutready`
+        max_total: 2500,
         ready: function () {
         },
         // Called on `layoutstop`
@@ -204,7 +207,7 @@ const default_layouts = {
     "cose": {
         name: 'cose',
         animate: false, // whether to show the layout as it's running
-
+        max_total: 2500,
         idealEdgeLength: 100,
         nodeOverlap: 20,
         refresh: 20,
@@ -234,7 +237,7 @@ const default_layouts = {
         // - "proof" slow cooling rate
         quality: 'default',
         // Whether to include labels in node dimensions. Useful for avoiding label overlap
-
+        max_total: 2500,
         nodeDimensionsIncludeLabels: false,
         // number of ticks per frame; higher is faster but more jerky
         refresh: 30,
@@ -276,6 +279,7 @@ const default_layouts = {
         initialEnergyOnIncremental: 0.5
       },
       "spread": {
+        max_total: 2500,
         animate: false, // Whether to show the layout as it's running
         ready: undefined, // Callback on layoutready
         stop: undefined, // Callback on layoutstop
@@ -293,6 +297,7 @@ const default_layouts = {
         randomize: false // Uses random initial node positions on true
     },
     "klay": {
+        max_total: 2500,
         nodeDimensionsIncludeLabels: false, // Boolean which changes whether label dimensions are included when calculating node dimensions
         fit: true, // Whether to fit
         padding: 20, // Padding on fit
@@ -360,7 +365,9 @@ const default_layouts = {
           return 2;
         }
     },
-    "random": {}
+    "random": {
+        max_total: 2500
+    }
 }
 
 function NetworkViewer(props) {
@@ -599,7 +606,11 @@ function NetworkViewer(props) {
                         onChange={(evt)=> {setLayoutID(evt.target.value)}}
                         >
                         {Object.keys(default_layouts).map((id,idx)=>{
-                            return <MenuItem key={idx} value={id}>{id.toUpperCase()}</MenuItem>
+                            const networkSize = props.meta.autometa.numNodes + props.meta.autometa.numEdges
+                            if (!default_layouts[id].max_total || (networkSize<=default_layouts[id].max_total)){
+                                return <MenuItem key={idx} value={id}>{id.toUpperCase()}</MenuItem>
+                            }
+                            return null
                         })}
                         </Select>   
                     </div>
