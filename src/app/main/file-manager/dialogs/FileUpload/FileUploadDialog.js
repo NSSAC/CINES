@@ -282,7 +282,6 @@ function FileUpload({ fileTypes, setUploadFile, path, showModal, handleClose, br
               )}
 
               {uploader.validated.map((node, index) => {
-                console.log("NODE: ",node)
                   return (
                     <TableRow
                       key={index}

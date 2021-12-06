@@ -24,6 +24,7 @@ import reducer from "./store/reducers";
 import FILEUPLOAD_CONFIG from "../FileManagerAppConfig";
 
 import '../FileManager.css'
+import { ToastContainer } from 'material-react-toastify';
 
 function FileList(props) {
     const dispatch = useDispatch();
@@ -32,6 +33,7 @@ function FileList(props) {
     const filtered_files = useSelector(({ FileListApp }) => FileListApp.filtered_files);
     const file_removal = useSelector(({ FileListApp }) => FileListApp.file_removal);
     const uploader = useSelector(({ fileManagerApp }) => fileManagerApp.uploader);
+    const usermeta_updater = useSelector(({ fileManagerApp }) => fileManagerApp.usermeta);
 
     const [selected, setSelected] = useState({})
     const [sort, setSort] = useState(localStorage.getItem("file_manager_sort")?JSON.parse(localStorage.getItem("file_manager_sort")):[{attr: "name", "dir": "desc"}])
@@ -77,6 +79,13 @@ function FileList(props) {
             dispatch(Actions.getFiles(props.path))
         }
     },[dispatch,props.path,file_removal, showNotification])
+
+    React.useEffect(()=>{
+        if (usermeta_updater && !usermeta_updater.updating){
+            dispatch(Actions.getFiles(props.path))
+        }
+    },[dispatch,props.path,usermeta_updater,usermeta_updater.updating])
+
 
     const table_columns = [
         {
@@ -136,7 +145,7 @@ function FileList(props) {
     ]
 
     React.useEffect(()=>{
-        if (uploader.recent && uploader.recent.length>0){
+        if (uploader.recent && (uploader.recent.length>0)){
             dispatch(Actions.getFiles(props.path))
         }
     },[dispatch,uploader.recent,props.path])
@@ -559,7 +568,7 @@ function FileList(props) {
                                 <div> {selectedIds.length} files selected.</div>
                                 )}
                                 {selectedIds && selectedIds.length===1 && (
-                                    <FileDetailPanel meta={active_selection} />
+                                    <FileDetailPanel meta={{...active_selection}} />
 
                                 )}
 

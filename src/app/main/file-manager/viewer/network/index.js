@@ -464,7 +464,7 @@ function NetworkViewer(props) {
     },[dispatch,raw_data])
 
     function handleResize(){
-        if (cy && cy.current){
+        if ((selectedTab === 4) && cy && cy.current){
             cy.current.resize()
             cy.current.fit()
         }

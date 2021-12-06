@@ -37,12 +37,16 @@ function FileManagerApp(props) {
   // const [search,setSearch] = useState("")
   const [fileActions,setFileActions] = useState()
   const file_meta = useSelector(({ fileManagerApp }) => fileManagerApp.file_meta);
+  const usermeta_updater = useSelector(({ fileManagerApp }) => fileManagerApp.usermeta);
   const file_path = "/" + ((props.match.params && props.match.params.path)?props.match.params.path:"")
   const history =  useHistory()
 
+
   React.useEffect(()=>{
-    dispatch(Actions.getFileMeta(file_path))
-  },[dispatch,file_path])
+    if (!usermeta_updater || (usermeta_updater && !usermeta_updater.updating)){
+      dispatch(Actions.getFileMeta(file_path))
+    }
+  },[dispatch,file_path, usermeta_updater,usermeta_updater.updating])
 
   React.useEffect(()=>{
     if (file_meta && !file_meta.isContainer){

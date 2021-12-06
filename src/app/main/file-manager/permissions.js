@@ -1,9 +1,14 @@
 export const canWriteFile = (file,user)=>{
     // console.log("canWriteFile: ", file, user)
-    
+
     if (!user || !file){
         return false
     }
+
+    file.writeACL=file.writeACL||[]
+    file.readACL=file.readACL||[]
+    file.computeACL=file.computeACL||[]
+
 
     // owner can write
     if (file.owner_id===user.id){
@@ -43,6 +48,10 @@ export const canDownloadFile = (file,user)=>{
     if (!file){
         return false
     }
+
+    file.writeACL=file.writeACL||[]
+    file.readACL=file.readACL||[]
+    file.computeACL=file.computeACL||[]
 
     if (file.public){
         return true

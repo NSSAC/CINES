@@ -18,7 +18,6 @@ function uploadFile(dispatch,f){
   const token = localStorage.getItem('id_token');
   const fileServiceInstance = new FileService(fsurl, token)
   return fileServiceInstance.create(f.path, {name: f.fileName, type:f.type}).then(fileRef => {
-    console.log("fileRef: ", fileRef)
     f.file_created=true
     f.id = fileRef.id
     return axios({
@@ -81,7 +80,6 @@ function uploadFile(dispatch,f){
 }
 
 function startUploads(dispatch){
-  console.log("startUploads()")
     var defs = queue.map((f)=>{
       if (!f.file_created){
         return uploadFile(dispatch,f)
@@ -91,7 +89,6 @@ function startUploads(dispatch){
 
     Promise.all(defs)
       .then((results)=>{
-        console.log("All uploads completed ", results)
       })
 }
 
