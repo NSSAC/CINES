@@ -72,6 +72,7 @@ class IdleTimerComponent extends React.Component {
             onActive={this.onActive}
             onIdle={this.onIdle}
             onAction={this.onAction}
+            crossTab={{emitOnAllTabs: true}}
             debounce={250}
             timeout={this.state.timeout} />
 
