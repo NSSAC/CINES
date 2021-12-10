@@ -46,7 +46,7 @@ export const file_viewers_map = {
     "snap_TCnComV": React.lazy(() => import('./viewer/text/')),
     "snap_TRnd": React.lazy(() => import('./viewer/text/')),
     "snap_undirected_graph": React.lazy(() => import('./viewer/text/')),
-    "snap_TIntPrV": React.lazy(() => import('./viewer/text/')),
+    "snap_TIntPrV": React.lazy(() => import('./viewer/distribution/')),
     "snap_TIntFltH": React.lazy(() => import('./viewer/text/')),
     "snap_TIntPrFltH": React.lazy(() => import('./viewer/text/')),
     "snap_TIntV": React.lazy(() => import('./viewer/text/')),
@@ -63,7 +63,8 @@ export const file_viewers_map = {
     "list_primitive_dataType": React.lazy(() => import('./viewer/text/')),
     "snap_TIntStrH": React.lazy(() => import('./viewer/text/')),
     "snap_TGVizLayout": React.lazy(() => import('./viewer/text/')),
-    "snap_TIntV_Subgraph": React.lazy(() => import('./viewer/text/'))
+    "snap_TIntV_Subgraph": React.lazy(() => import('./viewer/text/')),
+    "csonnet_simulation_container": React.lazy(() => import('./viewer/csonnet_simulation_container/'))
 }
 
 export const MAX_RAW_FILE_VIEW_SIZE = 10000000

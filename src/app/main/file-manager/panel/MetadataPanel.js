@@ -9,6 +9,21 @@ import * as Actions from "../store/actions";
 import reducer from "../store/reducers";
 import withReducer from "app/store/withReducer";
 import * as Perms from '../permissions';
+import { makeStyles } from '@material-ui/styles';
+import clsx from 'clsx';
+
+
+const useStyles = makeStyles(theme => ({
+    root                     : {
+      backgroundColor: theme.palette.background.default,
+    },
+    header                     :{
+      background     : 'linear-gradient(to right, ' + theme.palette.primary.dark + ' 0%, ' + theme.palette.primary.dark + ' 100%)',
+      color          : theme.palette.primary.contrastText,
+      backgroundColor: theme.palette.primary.dark
+    }
+  }));
+
 
 function matchField(prop, field_config) {
     var match;
@@ -104,8 +119,8 @@ function groupProperties(file, field_config = [], group_config = []) {
 
 function MetadataPanel(props) {
     const dispatch = useDispatch()
+    const classes = useStyles(props);
     const user = useSelector(({ auth }) => auth.user)
-
     const [editProperty, setEditProperty] = useState()
     const [propertyValue, setPropertyValue] = useState()
     const [showPropEditorDialog, setShowPropEditorDialog] = useState(false)
@@ -175,9 +190,9 @@ function MetadataPanel(props) {
                 }
                 const label = (typeof grp.label !== "undefined") ? grp.label : group_name
                 return (
-                    <Grid item container xs={12} sm={singleColumn?12:6} md={singleColumn?12:4} lg={singleColumn?12:3} xl={singleColumn?12:2}>
-                        <React.Fragment key={group_name}>
-                            <Grid item xs={12} className={`pt-8 pb-4 pl-0 ${label ? 'border-b border-gray-400 ' : ''} font-bold uppercase`}><span>{(typeof grp.label !== "undefined") ? grp.label : group_name}</span></Grid>
+                    <Grid key={group_name} item container xs={12} sm={singleColumn?12:6} md={singleColumn?12:4} lg={singleColumn?12:3} xl={singleColumn?12:2}>
+                        <React.Fragment>
+                            <Grid item xs={12} className={`pt-8 pb-4 pl-2 ${label ? clsx(classes.header) : ''} font-bold uppercase`}><span>{(typeof grp.label !== "undefined") ? grp.label : group_name}</span></Grid>
                             {members && members.filter((member) => {
                                 return typeof props.meta[member.type][member.field] !== 'undefined'
                             }).map((member, idx) => {
@@ -187,13 +202,13 @@ function MetadataPanel(props) {
                                     <React.Fragment key={idx}>
                                         {(member.type === "autometa") && (
                                             <Grid item container xs={12} title={member.field} key={`${group_name}-${idx}a`}>
-                                                <Grid item xs={6} className="font-semibold capitalize"><span>{label}</span></Grid>
+                                                <Grid item xs={6} className="font-bold capitalize"><span>{label}</span></Grid>
                                                 <Grid item xs={6}><span colSpan={8}>{val}</span></Grid>
                                             </Grid>
                                         )}
                                         {(member.type === "usermeta") && (
                                             <Grid item container xs={12} title={member.field} key={`${group_name}-${idx}a`}>
-                                                <Grid item xs={6} className="font-semibold capitalize"><span>{label}</span></Grid>
+                                                <Grid item xs={6} className="font-bold capitalize"><span>{label}</span></Grid>
                                                 {!canWrite && <Grid item xs={6} className="text-left"><span>{val}</span></Grid>}
                                                 {canWrite && (
                                                     <React.Fragment>

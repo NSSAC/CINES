@@ -90,7 +90,7 @@
         "react-text-mask": "5.4.3",
         "react-toasts": "^3.0.5",
         "react-tooltip": "^4.2.13",
-        "react-vega": "^7.3.0",
+        "react-vega": "^7.4.4",
         "react-virtualized": "9.21.2",
         "react-window": "1.8.5",
         "redux": "4.0.5",

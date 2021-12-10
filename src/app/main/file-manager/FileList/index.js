@@ -80,11 +80,18 @@ function FileList(props) {
     },[dispatch,props.path,file_removal, showNotification])
 
     React.useEffect(()=>{
-        if (usermeta_updater && !usermeta_updater.updating){
+        if (!usermeta_updater || (usermeta_updater && !usermeta_updater.updating)){
+            setSelected({})
             dispatch(Actions.getFiles(props.path))
+
         }
     },[dispatch,props.path,usermeta_updater,usermeta_updater.updating])
 
+    React.useEffect(()=>{
+        if (uploader.recent && (uploader.recent.length>0)){
+            dispatch(Actions.getFiles(props.path))
+        }
+    },[dispatch,uploader.recent,props.path])
 
     const table_columns = [
         {
@@ -143,11 +150,7 @@ function FileList(props) {
         }
     ]
 
-    React.useEffect(()=>{
-        if (uploader.recent && (uploader.recent.length>0)){
-            dispatch(Actions.getFiles(props.path))
-        }
-    },[dispatch,uploader.recent,props.path])
+
 
     React.useEffect(()=>{
         function refreshFolder(){
@@ -233,6 +236,7 @@ function FileList(props) {
             const token = localStorage.getItem('id_token')
             _files.filter((f)=>selectedIds.indexOf(f.id)>=0).forEach((f)=>{
                 if (f.container_id && f.name){
+                    console.log(`download ${f.name}`)
                     saveAs(`${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file/${f.container_id}/${f.name}?${token?'http_authorization='+token:''}&http_accept=application/octet-stream`,f.name)
                 }else{
                     saveAs(`${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file/${f.id}?${token?'http_authorization='+token:''}}&http_accept=application/octet-stream`,f.name)

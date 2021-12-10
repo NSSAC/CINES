@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import React from "react";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useHistory } from 'react-router-dom';
+import { useHistory,Link } from 'react-router-dom';
 
 import withReducer from "app/store/withReducer";
 
@@ -36,6 +36,7 @@ function FileManagerApp(props) {
   // const [prompt,setPrompt] = useState(false)
   // const [search,setSearch] = useState("")
   const [fileActions,setFileActions] = useState()
+  const user = useSelector(({auth}) => auth.user)
   const file_meta = useSelector(({ fileManagerApp }) => fileManagerApp.file_meta);
   const usermeta_updater = useSelector(({ fileManagerApp }) => fileManagerApp.usermeta);
   const file_path = "/" + ((props.match.params && props.match.params.path)?props.match.params.path:"")
@@ -49,9 +50,10 @@ function FileManagerApp(props) {
   },[dispatch,file_path, usermeta_updater,usermeta_updater.updating])
 
   React.useEffect(()=>{
-    if (file_meta && !file_meta.isContainer){
+    console.log("File Meta or Path updated")
+    // if (file_meta && !file_meta.isContainer){
       setFileActions()
-    }
+    // }
 
     if (file_meta && file_meta.isContainer && history.location.pathname.charAt(history.location.pathname.length-1)!=="/"){
         history.replace(`${history.location.pathname}/`)
@@ -100,6 +102,18 @@ function FileManagerApp(props) {
         <div className="flex-grow  m-0 p-0 overflow-hidden flex flex-col">
           {((file_meta,file_path)=>{
             if (file_meta && file_meta.error){
+              if (file_meta.error==="Forbidden"){
+                console.log("user: ", user)
+                const userServiceURL=`${process.env.REACT_APP_SCIDUCT_USER_SERVICE}`
+                const sciductID=`${process.env.REACT_APP_SCIDUCT_APP_ID}`
+                var loginURL = userServiceURL + "/authenticate/" + sciductID
+                return (
+                  <div className="text-lg text-center p-8">
+                      {(user) &&<span>You don't have permission to view this file. Perhaps you need to <a href={loginURL}>login</a>?</span> }
+                      {(!user) &&<span>There was an error retrieving this file: {file_meta.error} </span> }
+                  </div>
+                )
+              }
               return (<div>Oops, there was a problem retrieving this file: {file_meta.error}</div>)
             }
             if (!file_meta || !file_meta.id){
