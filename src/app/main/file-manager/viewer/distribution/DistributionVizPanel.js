@@ -58,7 +58,7 @@ function SimVizPanel(props) {
         mark: 'point',
         encoding: {
             x: { 
-                field: 'category', type: 'nominal',title: label||false, legend: false,"axis": {"labelAngle": 0},
+                field: 'category', type: 'nominal',title: label||false, legend: false,"axis": {"labelAngle": 0, labelOverlap: "parity"},
             },
             y: { field: "count", type: 'quantitative', title: "Count", legend: false },
             // color: {datum: {repeat: "layer"}, legend: false}
