@@ -418,17 +418,19 @@ function handleDrop(e){
 
         {showFileUploadDialog && (<FileUploadDialog
             showModal={showFileUploadDialog}
-            path={tf}
+            path={targetFolder}
             handleClose={()=>{refreshFolder(); setShowFileUploadDialog(false)}}
             multiple={multiple}
             fileTypes={fileTypes}
             dropped={droppedFiles}
+            // setSelected={setSelection}
         />)}
         {showCreateDialog && (<CreateFolder
           showModal={showCreateDialog}
-          targetPath={tf}
+          targetPath={targetFolder}
           handleClose={closeCreateFolderDialog}
           onCreate={refreshFolder}
+          setSelected={setSelection}
       />)}
     </div>
   )

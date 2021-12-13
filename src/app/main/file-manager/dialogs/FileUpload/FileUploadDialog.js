@@ -111,9 +111,11 @@ function FileUpload({ fileTypes, setUploadFile, path, showModal, handleClose, br
     }
 
     if (uploader && uploader.recentItem) {
-      let s = {}
-      s[uploader.recentItem.id] = true;
-      setSelected(s)
+      if (setSelected) {
+        let s = {}
+        s[uploader.recentItem.id] = true;
+        setSelected(s)
+      }
     }
   }, [uploader, uploader.validated])
 

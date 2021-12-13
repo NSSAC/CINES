@@ -88,10 +88,11 @@ function CreateFolder({ dialogTargetPath, setShowModal, showModal, handleClose, 
       (res) => {
 
         toast.success(`Folder '${name}' created successfully`)
-        let s = {}
-        s[res.id] = true;
-        setSelected(s)
-
+        if (setSelected) {
+          let s = {}
+          s[res.id] = true;
+          setSelected(s)
+        }
         if (isFolderManager === true)
           dispatch(ActionsHome.getHome(targetPath));
         else {
