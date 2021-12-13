@@ -33,6 +33,7 @@ import reducer from "./store/reducers";
 import FILEUPLOAD_CONFIG from "../FileManagerAppConfig";
 import "../FileManager.css";
 function FileList(props) {
+  const tableRef = React.createRef();
   const dispatch = useDispatch();
   const user = useSelector(({ auth }) => auth.user);
   const files = useSelector(({ FileListApp }) => FileListApp.files);
@@ -52,6 +53,7 @@ function FileList(props) {
       ? JSON.parse(localStorage.getItem("file_manager_sort"))
       : [{ attr: "update_date", dir: "desc" }]
   );
+  const [refreshFlag, setRefreshFlag] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const [showDetailPanel, setShowDetailPanel] = useState(true);
   const [showFileUpload, setShowFileUpload] = useState(false);
@@ -169,8 +171,12 @@ function FileList(props) {
       },
     },
   ];
+  const listScrollToTop = () => {
+    if(tableRef.current) tableRef.current.scrollIntoView();
+  }
   React.useEffect(() => {
     function refreshFolder() {
+      setRefreshFlag(true);
       dispatch(Actions.getFiles(props.path));
     }
     function openUploader() {
@@ -216,7 +222,10 @@ function FileList(props) {
     dispatch(Actions.getFiles(props.path));
     dispatch(Actions.filterFiles(files, false));
     setShowSearch(false);
-  }, [dispatch, props.path]);
+    setSelected({});
+    listScrollToTop();
+    return(() => setRefreshFlag(false))
+  }, [dispatch,props.path,refreshFlag]);
 
   // function confirmAndDelete(selectedIds){
   //     confirmAlert({
@@ -584,7 +593,7 @@ function FileList(props) {
             onDragLeave={(e) => onDragLeave(e)}
             onDrop={(e) => handleDrop(e)}
           >
-            <Table stickyHeader className="fileTableStyle  max-h-full">
+            <Table stickyHeader className="fileTableStyle  max-h-full" ref={tableRef}>
               <FileListHeader
                 checked={selectedIds.length === totalFileCount}
                 indeterminate={
