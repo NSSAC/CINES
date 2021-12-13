@@ -176,7 +176,7 @@ function MetadataPanel(props) {
     const singleColumn = props.singleColumn
 
     return (
-        <Grid item container xs={12} spacing={singleColumn?4:1} alignItems="flex-start" className="p-8">
+        <Grid item container xs={12} alignItems="flex-start" justifyContent="flex-start" spacing={singleColumn?4:1}className="p-8">
             {canWrite && (
                 <Grid item xs={12} className="p-0">
                     <Button className="m-0 m-auto" variant="contained" color="primary" onClick={() => { showAddPropDialog() }}>Add Property</Button>
@@ -190,7 +190,7 @@ function MetadataPanel(props) {
                 }
                 const label = (typeof grp.label !== "undefined") ? grp.label : group_name
                 return (
-                    <Grid key={group_name} item container xs={12} sm={singleColumn?12:6} md={singleColumn?12:4} lg={singleColumn?12:3} xl={singleColumn?12:2}>
+                    <Grid key={group_name} item container  xs={12} sm={singleColumn?12:6} md={singleColumn?12:4} lg={singleColumn?12:3} xl={singleColumn?12:2}>
                         <React.Fragment>
                             <Grid item xs={12} className={`pt-8 pb-4 pl-2 ${label ? clsx(classes.header) : ''} font-bold uppercase`}><span>{(typeof grp.label !== "undefined") ? grp.label : group_name}</span></Grid>
                             {members && members.filter((member) => {
@@ -207,7 +207,7 @@ function MetadataPanel(props) {
                                             </Grid>
                                         )}
                                         {(member.type === "usermeta") && (
-                                            <Grid item container xs={12} title={member.field} key={`${group_name}-${idx}a`}>
+                                            <Grid item container xs={12}  title={member.field} key={`${group_name}-${idx}a`}>
                                                 <Grid item xs={6} className="font-bold capitalize"><span>{label}</span></Grid>
                                                 {!canWrite && <Grid item xs={6} className="text-left"><span>{val}</span></Grid>}
                                                 {canWrite && (
