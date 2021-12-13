@@ -215,7 +215,7 @@ function FileList(props) {
   React.useEffect(() => {
     dispatch(Actions.getFiles(props.path));
     dispatch(Actions.filterFiles(files, false));
-  }, [dispatch, files, props.path]);
+  }, [dispatch, props.path]);
 
   // function confirmAndDelete(selectedIds){
   //     confirmAlert({
