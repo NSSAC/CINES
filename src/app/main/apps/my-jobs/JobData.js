@@ -51,7 +51,7 @@ function JobData() {
     }
 
     function navigateFile(selectedItem) {
-        history.push("/apps/files" + selectedItem + "/");
+        history.push("/files" + selectedItem);
     }
 
     function inputPar(data) {

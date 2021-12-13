@@ -29,7 +29,7 @@ function FileListHeader(props) {
             <TableRow>
                 {props.enableCheckBoxes && (
                     <TableCell className="selectCheckbox" padding="checkbox">
-                        <Checkbox size='small'
+                        <Checkbox title={`${(checked || indeterminate) ? 'Deselect all' : 'Select all'}`} size='small'
                             onClick={toggleChecked}
                             checked={checked}
                             indeterminate={indeterminate}
@@ -64,7 +64,7 @@ function FileListHeader(props) {
                                     return (
                                         <Tooltip title={`Sort descending by ${c.label}`} placement="bottom" onClick={()=>doSort({attr: c.attr,dir: "desc"})}>
                                             <IconButton aria-label="arrow_downward">
-                                                <Icon className="text-gray-300">arrow_downward</Icon>
+                                                <Icon style={{opacity:`${props.enableCheckBoxes?'1':'0.3'}`}} className="text-gray-300">arrow_downward</Icon>
                                             </IconButton>
                                         </Tooltip>
                                     )

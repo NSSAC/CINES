@@ -1,4 +1,3 @@
-import cytoscape from "./cytoscape.esm.min.js"
 
 function transformNetwork(raw_data){
     var nodes={}

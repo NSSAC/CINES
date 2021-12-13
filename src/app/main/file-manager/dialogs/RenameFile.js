@@ -48,7 +48,6 @@ export const RenameFile = ({showModal, handleClose, target,onRename}) => {
   }
 
   function onSubmit() {
-    let target = window.location.pathname;
     const url = `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/`
     const token = localStorage.getItem('id_token');
     const fileServiceInstance = new FileService(url, token)

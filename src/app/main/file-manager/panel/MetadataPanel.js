@@ -213,8 +213,9 @@ function MetadataPanel(props) {
                                                 {canWrite && (
                                                     <React.Fragment>
                                                         <Grid item xs={4} className="text-left"><span>{val}</span></Grid>
-                                                        <Grid item xs={2} className="cursor-pointer nowrap">
-                                                            <Icon onClick={() => { showAddPropDialog(member.field, props.meta[member.type][member.field]) }}>edit</Icon><Icon className="ml-4" onClick={() => { removeUsermetaProperty(member.field) }}>highlight_off</Icon>
+                                                        <Grid item xs={2} style={{whiteSpace:'nowrap'}} className="cursor-pointer">
+                                                            <Icon title='Edit property' onClick={() => { showAddPropDialog(member.field, props.meta[member.type][member.field]) }}>edit</Icon>
+                                                            <Icon title='Delete property' className="ml-4" onClick={() => { removeUsermetaProperty(member.field) }}>highlight_off</Icon>
                                                         </Grid>
                                                     </React.Fragment>
                                                 )}
