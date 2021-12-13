@@ -23,7 +23,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-function CreateFolder ({dialogTargetPath,setShowModal,showModal,handleClose, breadcrumbArr,isFolderManager,onCreate,targetPath,showMessage}){
+function CreateFolder({ dialogTargetPath, setShowModal, showModal, handleClose, breadcrumbArr, isFolderManager, onCreate, targetPath, showMessage, setSelected }) {
   const useStyles = makeStyles({
     inputsize: {
       width: 250,
@@ -83,26 +83,29 @@ function CreateFolder ({dialogTargetPath,setShowModal,showModal,handleClose, bre
     let metadata = {
       "name": name,
       "type": 'folder'
-  }
-  return fileServiceInstance.create(targetPath,metadata).then(
+    }
+    return fileServiceInstance.create(targetPath, metadata).then(
       (res) => {
 
         toast.success(`Folder '${name}' created successfully`)
-        
+        let s = {}
+        s[res.id] = true;
+        setSelected(s)
+
         if (isFolderManager === true)
           dispatch(ActionsHome.getHome(targetPath));
-        else{
-          if (onCreate){
+        else {
+          if (onCreate) {
             onCreate(name)
           }
           // dispatch(Actions.getFiles(targetPath, "GET_FILES"));
         }
-          
+
         handleClose()
       },
 
       (error) => {
-      
+
         if (error.response && error.response.message === "File already exists") {
           toast.error(`A file or folder named ${name} already exists in this location.`);
         } else if (
@@ -137,7 +140,7 @@ function CreateFolder ({dialogTargetPath,setShowModal,showModal,handleClose, bre
     }
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     setTimeout(() => {
       ref.current && ref.current.focus()
     }, 1000);
@@ -185,7 +188,7 @@ function CreateFolder ({dialogTargetPath,setShowModal,showModal,handleClose, bre
               onChange={(event) => inputChangedHandler(event)}
               validations={{
                 isPositiveInt: function (values, value) {
-									return RegExp(/^([0-9]|[a-zA-Z]|[._\-\s])+$/).test(value) && value.trim() !== '';
+                  return RegExp(/^([0-9]|[a-zA-Z]|[._\-\s])+$/).test(value) && value.trim() !== '';
                 },
               }}
               validationError="This is not a valid value"

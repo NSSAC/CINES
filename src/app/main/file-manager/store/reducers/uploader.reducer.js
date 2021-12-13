@@ -54,7 +54,8 @@ const reducer = function (state = initialState, action) {
 
             return {
                 ...state,
-                ...action.payload           
+                ...action.payload,
+                recentItem: action.payload.recent[0]  
             }
         case Actions.UPLOAD_FAILED:
             // toast.success("File upload complete", action.payload)

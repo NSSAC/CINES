@@ -92,7 +92,7 @@ function FileList(props) {
   // },[history,history.location.pathname])
   // console.log("AUTH: ", user)
   React.useEffect(() => {
-    if (file_removal && file_removal.removal_completed && !showNotification) {
+    if (file_removal && file_removal.removal_completed) {
       setShowNotification(
         `File removal completed.  ${file_removal.files_removed} files deleted.`
       );
@@ -671,6 +671,7 @@ function FileList(props) {
             handleClose={() => {
               setShowFileUpload(false);
             }}
+            setSelected={setSelected}
           />
         )}
         {showCreateFolder && (
@@ -682,6 +683,7 @@ function FileList(props) {
               setShowCreateFolder(false);
             }}
             onCreate={refreshFolder}
+            setSelected={setSelected}
           />
         )}
         {showMoveFiles && (

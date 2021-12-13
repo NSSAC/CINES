@@ -77,7 +77,7 @@ const BorderLinearProgress = withStyles((theme) => ({
   },
 }))(LinearProgress);
 
-function FileUpload({ fileTypes, setUploadFile, path, showModal, handleClose, breadcrumbArr,dropped }) {
+function FileUpload({ fileTypes, setUploadFile, path, showModal, handleClose, breadcrumbArr, dropped, setSelected }) {
   const dispatch = useDispatch();
   const file_types = useSelector(({ fileManagerApp }) => fileManagerApp.file_types);
   const uploader = useSelector(({ fileManagerApp }) => fileManagerApp.uploader);
@@ -95,30 +95,36 @@ function FileUpload({ fileTypes, setUploadFile, path, showModal, handleClose, br
   }, [dispatch, file_types])
 
 
-  React.useEffect(()=>{   
+  React.useEffect(() => {
     dispatch(Actions.validateFiles(uploadFiles))
-  },[dispatch,uploadFiles])
+  }, [dispatch, uploadFiles])
 
-  React.useEffect(()=>{
-    if (!uploader || !uploader.validated){
+  React.useEffect(() => {
+    if (!uploader || !uploader.validated) {
       setDisableButton(true)
       return
     }
-    if (uploader.validated.some((f)=>!f.valid)){
+    if (uploader.validated.some((f) => !f.valid)) {
       setDisableButton(true)
-    }else{
+    } else {
       setDisableButton(false)
     }
-  },[uploader,uploader.validated])
+
+    if (uploader && uploader.recentItem) {
+      let s = {}
+      s[uploader.recentItem.id] = true;
+      setSelected(s)
+    }
+  }, [uploader, uploader.validated])
 
 
   const onChangeHandler = (event) => {
-    const fileData = Object.keys(event.target.files).map((fk)=>{  
+    const fileData = Object.keys(event.target.files).map((fk) => {
       var f = event.target.files[fk]
       var fobj = {}
-      if (uploadableTypes.length===1){
+      if (uploadableTypes.length === 1) {
         fobj.type = uploadableTypes[0]
-      }else{
+      } else {
         fobj.type = uploadableTypes.indexOf(f.name.split('.').pop()) !== -1 && f.name.split('.').pop();
       }
       fobj.fileName = f.name;
@@ -130,29 +136,29 @@ function FileUpload({ fileTypes, setUploadFile, path, showModal, handleClose, br
     // setDisableButton(false);
   }
 
-  const handleDrop = (e)=> {
+  const handleDrop = (e) => {
     e.preventDefault();
     e.stopPropagation()
     const draggedFiles = [];
     var mapped = {}
-    uploadFiles.forEach((f)=>{
-      mapped[f.fileName]=true
+    uploadFiles.forEach((f) => {
+      mapped[f.fileName] = true
     })
     if (e.dataTransfer.items) {
       Array.from(e.dataTransfer.items).forEach((item, i) => {
         if (item.kind === "file") {
           let file = item.getAsFile();
           let tempObj = {};
-          if (uploadableTypes.length===1){
+          if (uploadableTypes.length === 1) {
             tempObj.type = uploadableTypes[0]
-          }else{
+          } else {
             tempObj.type = uploadableTypes.indexOf(file.name.split('.').pop()) !== -1 && file.name.split('.').pop();
           }
           tempObj.fileName = file.name;
           tempObj['contents'] = file;
-          if (!mapped[tempObj.fileName]){
+          if (!mapped[tempObj.fileName]) {
             draggedFiles.push(tempObj);
-          }else{
+          } else {
             toast.error(`${tempObj.fileName} already exists in the upload list.`)
           }
         }
@@ -231,58 +237,58 @@ function FileUpload({ fileTypes, setUploadFile, path, showModal, handleClose, br
   }
 
   return (
-      <Dialog 
-        open={showModal}
-        TransitionComponent={Transition}
-        maxWidth="lg"
-        aria-labelledby="alert-dialog-slide-title"
-        aria-describedby="alert-dialog-slide-description"
-        onEntered={onEntered}
-        onExiting={onExiting}
-        onDragEnter={handleDragStart}
-        onDrop={handleDrop}
-        onDragOver={handleDragOver}
-        onDragLeave={handleDragLeave}
-      >
-        <DialogTitle id="alert-dialog-slide-title" divider="true">
-          Upload Files
-          <DialogContentText className='mb-0' id="alert-dialog-slide-description">
-            {breadcrumbArr ? <span className="flex text-16 sm:text-16" style={breadcrumb_wrap}>
-              {breadcrumbArr.map((path, i) => (
-                <span key={i} className="flex items-center" >
-                  <span title={path} style={ellipsis} >{path} </span>
-                  {breadcrumbArr.length - 1 !== i && (
-                    <Icon>chevron_right</Icon>
-                  )}
-                </span>))}
-            </span> : null}
-          </DialogContentText>
-        </DialogTitle>
+    <Dialog
+      open={showModal}
+      TransitionComponent={Transition}
+      maxWidth="lg"
+      aria-labelledby="alert-dialog-slide-title"
+      aria-describedby="alert-dialog-slide-description"
+      onEntered={onEntered}
+      onExiting={onExiting}
+      onDragEnter={handleDragStart}
+      onDrop={handleDrop}
+      onDragOver={handleDragOver}
+      onDragLeave={handleDragLeave}
+    >
+      <DialogTitle id="alert-dialog-slide-title" divider="true">
+        Upload Files
+        <DialogContentText className='mb-0' id="alert-dialog-slide-description">
+          {breadcrumbArr ? <span className="flex text-16 sm:text-16" style={breadcrumb_wrap}>
+            {breadcrumbArr.map((path, i) => (
+              <span key={i} className="flex items-center" >
+                <span title={path} style={ellipsis} >{path} </span>
+                {breadcrumbArr.length - 1 !== i && (
+                  <Icon>chevron_right</Icon>
+                )}
+              </span>))}
+          </span> : null}
+        </DialogContentText>
+      </DialogTitle>
 
-        <DialogContent divider="true">
+      <DialogContent divider="true">
         <div className={`${isDrag ? "drag" : ""}`}>
           <input className={classes.input} ref={fileInput} type="file" multiple onChange={onChangeHandler} />
           <div className="w-full text-center items-center"><Button className={`rounded`} color="primary" variant="contained" onClick={openFileDialog} type="button" >Choose or Drop File</Button></div>
 
-          {uploader && uploader.validated && (uploader.validated.length>0) && ( 
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>Name</TableCell>
-                <TableCell className="table-cell">Type</TableCell>
-                <TableCell className="table-cell">Size</TableCell>
-                {(uploadFiles.length !== 0) && (<TableCell className=" p-0 text-center"></TableCell>)}
-              </TableRow>
-            </TableHead>
-
-            <TableBody className="p-0 text-center">
-              {((uploader.validated.length<1) && (!uploader || (uploader.queue && uploader.queue.length===0))) && (
-                <TableRow className="cursor-pointer">
-                  <TableCell className="table-cell text-center" colSpan={4}>No file selected</TableCell>
+          {uploader && uploader.validated && (uploader.validated.length > 0) && (
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Name</TableCell>
+                  <TableCell className="table-cell">Type</TableCell>
+                  <TableCell className="table-cell">Size</TableCell>
+                  {(uploadFiles.length !== 0) && (<TableCell className=" p-0 text-center"></TableCell>)}
                 </TableRow>
-              )}
+              </TableHead>
 
-              {uploader.validated.map((node, index) => {
+              <TableBody className="p-0 text-center">
+                {((uploader.validated.length < 1) && (!uploader || (uploader.queue && uploader.queue.length === 0))) && (
+                  <TableRow className="cursor-pointer">
+                    <TableCell className="table-cell text-center" colSpan={4}>No file selected</TableCell>
+                  </TableRow>
+                )}
+
+                {uploader.validated.map((node, index) => {
                   return (
                     <TableRow
                       key={index}
@@ -291,7 +297,7 @@ function FileUpload({ fileTypes, setUploadFile, path, showModal, handleClose, br
                       <TableCell style={{ wordBreak: 'break-all' }} className="p-0 table-cell">{node.fileName}</TableCell>
                       {uploadableTypes.length > 0 ?
                         <MenuTableCell
-                          value={node.type?node.type:""}
+                          value={node.type ? node.type : ""}
                           onChange={handleChangeUploadType(node)}
                         >
                           <MenuItem value="" disabled >
@@ -306,72 +312,72 @@ function FileUpload({ fileTypes, setUploadFile, path, showModal, handleClose, br
                         <TableCell className="table-cell">{uploadableTypes[0]}</TableCell>}
                       <TableCell className="table-cell">{filesize(node.contents.size)}</TableCell>
                       <TableCell className="table-cell">
-                        <RemoveCircleOutlineIcon onClick={()=>{removeFile(index)}} />
+                        <RemoveCircleOutlineIcon onClick={() => { removeFile(index) }} />
                       </TableCell>
                     </TableRow>
                   );
                 })}
-            </TableBody>
-          </Table>
+              </TableBody>
+            </Table>
           )}
-          {uploader && uploader.queue && (uploader.queue.length>0) && (
-          <Table className="mt-4 w-full b-0">
-            <TableHead>
-              <TableRow className="hidden"><TableCell></TableCell><TableCell></TableCell><TableCell></TableCell></TableRow>
-              <TableRow>
-                <TableCell colSpan={3}>Active Uploads</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {uploader.queue.map((node, index) => {
+          {uploader && uploader.queue && (uploader.queue.length > 0) && (
+            <Table className="mt-4 w-full b-0">
+              <TableHead>
+                <TableRow className="hidden"><TableCell></TableCell><TableCell></TableCell><TableCell></TableCell></TableRow>
+                <TableRow>
+                  <TableCell colSpan={3}>Active Uploads</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {uploader.queue.map((node, index) => {
                   return (
                     <TableRow
                       key={index}
                       className="cursor-pointer" >
                       <TableCell style={{ wordBreak: 'break-all' }} className="p-0 table-cell">{node.fileName}</TableCell>
                       <TableCell className="table-cell">
-                        {(()=>{
-                          function _fs(loaded,total){
+                        {(() => {
+                          function _fs(loaded, total) {
                             var lval;
-                            const t = filesize(total||0,{output: "object",pad:true,round:2})
-                            const l = filesize(loaded||0,{output: "object", pad:true,round:2})
+                            const t = filesize(total || 0, { output: "object", pad: true, round: 2 })
+                            const l = filesize(loaded || 0, { output: "object", pad: true, round: 2 })
                             lval = `${l.value} ${l.symbol}`
-                            if (t.symbol === l.symbol){
+                            if (t.symbol === l.symbol) {
                               lval = l.value
-                            }else{
+                            } else {
                               lval = `${l.value} ${l.symbol}`
                             }
-      
+
                             return `${lval}/${t.value} ${t.symbol}`
                           }
-                          return _fs(node.loaded,node.total)
+                          return _fs(node.loaded, node.total)
                         })()}
                       </TableCell>
-                      <TableCell className="table-cell nowrap" ><BorderLinearProgress style={{width: "150px"}} variant="determinate" value={node.percentage||0} /></TableCell>
+                      <TableCell className="table-cell nowrap" ><BorderLinearProgress style={{ width: "150px" }} variant="determinate" value={node.percentage || 0} /></TableCell>
                     </TableRow>
                   );
                 })}
-            </TableBody>
-          </Table>
+              </TableBody>
+            </Table>
           )}
-        
+
         </div>
-        </DialogContent>
-        <DialogActions>
-            <Button onClick={onUpload} variant="contained"
-              color="default"
-              className={classes.button}
-              startIcon={<CloudUploadIcon />}
-              disabled={uploadFiles.length === 0 || disableButton} >
-              Upload
-            </Button>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={onUpload} variant="contained"
+          color="default"
+          className={classes.button}
+          startIcon={<CloudUploadIcon />}
+          disabled={uploadFiles.length === 0 || disableButton} >
+          Upload
+        </Button>
 
-          <Button onClick={onCancel}>
-            Close
-          </Button>
+        <Button onClick={onCancel}>
+          Close
+        </Button>
 
-        </DialogActions>
-      </Dialog>
+      </DialogActions>
+    </Dialog>
 
   );
 }

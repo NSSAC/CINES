@@ -2,6 +2,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/styles';
 import clsx from 'clsx';
 import filesize from 'filesize';
+import moment from 'moment';
 
 const useStyles = makeStyles({
     table: {
@@ -53,7 +54,7 @@ function FileInformationPanel(props) {
 
                     <tr className="owner">
                         <th>Creation</th>
-                        <td title={props.meta.creation_date} >{props.meta.creation_date}</td>
+                        <td title={moment.utc(props.meta.creation_date).local().format('YYYY-MM-DD hh:mm:ss')} >{moment.utc(props.meta.creation_date).local().format('YYYY-MM-DD hh:mm:ss')}</td>
                     </tr>
 
                     <tr className="owner">
@@ -62,7 +63,7 @@ function FileInformationPanel(props) {
                     </tr>
                     <tr className="owner">
                         <th>Updated</th>
-                        <td title={props.meta.update_date} >{props.meta.update_date}</td>
+                        <td title={moment.utc(props.meta.update_date).local().format('YYYY-MM-DD hh:mm:ss')} >{moment.utc(props.meta.update_date).local().format('YYYY-MM-DD hh:mm:ss')}</td>
                     </tr>
                     <tr className="owner">
                         <th>Updated By</th>
