@@ -35,7 +35,7 @@ function FileList(props) {
     const usermeta_updater = useSelector(({ fileManagerApp }) => fileManagerApp.usermeta);
 
     const [selected, setSelected] = useState({})
-    const [sort, setSort] = useState(localStorage.getItem("file_manager_sort")?JSON.parse(localStorage.getItem("file_manager_sort")):[{attr: "name", "dir": "desc"}])
+    const [sort, setSort] = useState(localStorage.getItem("file_manager_sort")?JSON.parse(localStorage.getItem("file_manager_sort")):[{attr: "update_date", "dir": "desc"}])
     const [showSearch,setShowSearch] = useState(false)
     const [showDetailPanel,setShowDetailPanel] = useState(true)
     const [showFileUpload,setShowFileUpload] = useState(false)
@@ -57,6 +57,12 @@ function FileList(props) {
         var attr = sort[0].attr
         var dir = (sort[0].dir==="asc")?[1,-1]:[-1,1]
         _files.sort((a,b)=>{
+            if (a.size === undefined) {
+                a.size = null
+            }
+            if (a.size === undefined) {
+                a.size = null
+            }
             if (a[attr]>b[attr]) return dir[0]
             if (a[attr]<b[attr]) return dir[1]
             return 0
@@ -203,6 +209,7 @@ function FileList(props) {
 
     React.useEffect(()=>{
         dispatch(Actions.getFiles(props.path))
+        dispatch(Actions.filterFiles(files,false))
     },[dispatch,props.path])
 
 
@@ -385,10 +392,10 @@ function FileList(props) {
                             <div className="flex-grow"></div>
                             {showSearch && (
                                 <div className="flex-shrink flex flex-row h-32 p-1 mt-16 bg-white align-middle rounded ">
-                                    <input className="flex-shrink min-w-min rounded p-0 bg-white align-middle text-black text-xl" type="text" placeholder="Search for files..." value={curFilter?curFilter:""} onChange={onSearchChange} onBlur={onSearchBlur}/>
+                                    <input className="flex-shrink min-w-min rounded p-0 bg-white align-middle text-black text-lg" type="text" placeholder="Search for files and folders" value={curFilter?curFilter:""} onChange={onSearchChange} onBlur={onSearchBlur}/>
     
                                     <Tooltip title="Clear filter" aria-label="add">
-                                            <Icon  className="text-black text-xl  w-24 h-32 m-0 p-0 align-bottom flex-initial" onClick={clearFilter}>
+                                            <Icon  className="text-black text-xl  w-24 h-32 m-0 pt-4 align-bottom flex-initial" onClick={clearFilter}>
                                                 close
                                             </Icon>
                                     </Tooltip>

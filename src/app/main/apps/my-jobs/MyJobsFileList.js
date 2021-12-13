@@ -36,7 +36,7 @@ function MyJobsFileList(props) {
         }
         files = files[1]
         onloadSpinner = true;
-        if (selectedId === undefined && files.length > 0 && path.endsWith('my-jobs/') === true) {
+        if (selectedId === undefined && files.length > 0 && path.endsWith('my-jobs/') === true && props.changeState === 0) {
             dispatch(Actions.setSelectedItem(files[0].id));
         }
 

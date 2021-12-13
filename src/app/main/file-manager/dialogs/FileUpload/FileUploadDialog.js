@@ -180,6 +180,7 @@ function FileUpload({ fileTypes, setUploadFile, path, showModal, handleClose, br
   }
 
   const removeFile = (index => {
+    console.log(uploadFiles)
     uploadFiles.splice(index, 1);
     setUploadFiles([...uploadFiles]);
   })
@@ -305,7 +306,7 @@ function FileUpload({ fileTypes, setUploadFile, path, showModal, handleClose, br
                         <TableCell className="table-cell">{uploadableTypes[0]}</TableCell>}
                       <TableCell className="table-cell">{filesize(node.contents.size)}</TableCell>
                       <TableCell className="table-cell">
-                        <RemoveCircleOutlineIcon onClick={()=>{removeFile(node)}} />
+                        <RemoveCircleOutlineIcon onClick={()=>{removeFile(index)}} />
                       </TableCell>
                     </TableRow>
                   );

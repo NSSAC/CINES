@@ -24,7 +24,7 @@ export function filterFiles(files,filter){
         type: CLEAR_FILTER
       })
   }
-  var re = new RegExp(filter,"gi")
+  var re = new RegExp(filter.trim(),"gi")
   var filtered = files.filter((f)=>{
     return f.name.match(re)
   })

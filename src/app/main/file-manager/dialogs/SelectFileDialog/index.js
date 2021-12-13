@@ -276,6 +276,7 @@ function handleDrop(e){
 
   useEffect(() => {
     dispatch(Actions.getTargetMeta(targetFolder))
+    setSearch('')
   }, [dispatch, targetFolder])
 
   useEffect(() => {
