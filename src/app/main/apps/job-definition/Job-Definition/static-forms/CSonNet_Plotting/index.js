@@ -69,7 +69,7 @@ const CSonNet_plot = (props) => {
 
     useEffect(() => {
         return (
-          localStorage.removeItem('formLastPath')
+          localStorage.removeItem('last_selected_folder')
         )
       }, [])
 
@@ -137,7 +137,7 @@ const CSonNet_plot = (props) => {
                         value: props.resubmit ? props.resubmit.inputData.output_container :""
                     }]
                  })
-                 props.resubmit && localStorage.setItem('formLastPath',props.resubmit.inputData.output_container  + '/')
+                 props.resubmit && localStorage.setItem('last_selected_folder',props.resubmit.inputData.output_container  + '/')
                  setModelJSON(jobData.input_schema)
                 }
             }

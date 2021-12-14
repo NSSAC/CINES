@@ -14,7 +14,7 @@ import '../FileManager.css'
 function SimpleFileList(props) {
     const files = props.files
     const selected = props.selected;
-    const [sort, setSort] = useState([{attr: "name", "dir": "desc"}])
+    const [sort, setSort] = useState([{attr: "update_date", "dir": "desc"}])
     const [totalFileCount,setTotalFileCount] = useState(0)
 
     const selectableTypes=props.selectableTypes || "*"
@@ -182,9 +182,12 @@ function SimpleFileList(props) {
     }
 
     function navigateToFolder(path){
-        if (props.navigateToFolder){
-            props.navigateToFolder(path)
-        }
+        setTimeout(() => {
+            if (props.navigateToFolder){
+                props.navigateToFolder(path)
+            }
+        }, 200);
+        
     }
 
     const selectedIds = Object.keys(selected).filter((id) => {return selected[id]})
@@ -207,7 +210,7 @@ function SimpleFileList(props) {
                     {(_files.length===0)&&(
                         <TableBody onClick={onClickRow} >
                             <TableRow className={props.rowClass||""}><TableCell colSpan={20} className="text-center text-lg font-semibold">
-                                <span>No files found</span>
+                                <span>No files / folders found</span>
                             </TableCell></TableRow>
                         </TableBody>
                     )}

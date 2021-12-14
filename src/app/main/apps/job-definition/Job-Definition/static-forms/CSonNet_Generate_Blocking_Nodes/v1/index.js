@@ -94,7 +94,7 @@ const CSonNet_Generate_Blocking_Nodes = (props) => {
 
 
         console.log("DYNAMIC_PROPS: ", dynamicProps)
-        props.resubmit && localStorage.setItem('formLastPath', props.resubmit.inputData.output_container + '/')
+        props.resubmit && localStorage.setItem('last_selected_folder', props.resubmit.inputData.output_container + '/')
          setModelJSON(props.job_definition.input_schema)
 
     }, [props]);
@@ -106,7 +106,7 @@ const CSonNet_Generate_Blocking_Nodes = (props) => {
 
     useEffect(() => {
         return (
-          localStorage.removeItem('formLastPath')
+          localStorage.removeItem('last_selected_folder')
         )
       }, [])
 

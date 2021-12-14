@@ -94,7 +94,7 @@ const CSonNet_Contagion_Simulation_v1 = (props) => {
                             value: props.resubmit ? props.resubmit.inputData.output_container : "",
                         }]
                     })
-                    props.resubmit && localStorage.setItem('formLastPath',props.resubmit.inputData.output_container  + '/')
+                    props.resubmit && localStorage.setItem('last_selected_folder',props.resubmit.inputData.output_container  + '/')
                     setInputSchema(jobData.input_schema)
 
                 }

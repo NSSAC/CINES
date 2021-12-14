@@ -21,7 +21,9 @@ function Breadcrumb(props) {
         var path = evt.target.title;
         var parts = path.split("/").filter((x)=>!!x)
         var fp = "/" + parts.slice(1).join("/")
-        props.setTargetPath(fp)
+        setTimeout(() => {
+            props.setTargetPath(fp)
+        }, 200);
     }
 
 

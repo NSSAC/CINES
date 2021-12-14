@@ -80,6 +80,11 @@ function SelectFileDialog({ showModal, handleFMClose, target, fileTypes, multipl
     setShowCreateDialog(true);
   }
 
+  function closefileUploadDialog() {
+    refreshFolder()
+    setShowFileUploadDialog(false)
+  }
+
   function closeCreateFolderDialog() {
     setShowCreateDialog(false);
   }
@@ -210,7 +215,9 @@ function handleDrop(e){
   // },[files,uploadedSelection])
 
   useEffect(() => {
-    setTargetFolder(tf)
+    setTimeout(() => {
+      setTargetFolder(tf)
+    }, 200);
   }, [tf]);
 
   useEffect(()=>{
@@ -355,7 +362,7 @@ function handleDrop(e){
                   </div>
                 </span>
 
-                {target_meta && target_meta.type==="folder" && canWriteFolder && (
+                {target_meta && target_meta.type==="folder" && canWriteFolder && title === "Select File" &&  (
                   <Tooltip title="Upload Files" aria-label="add">
                      <IconButton className="w-64 h-64 p-0 m-0" onClick={openFileUpload}>
                         <Icon
@@ -419,7 +426,7 @@ function handleDrop(e){
         {showFileUploadDialog && (<FileUploadDialog
             showModal={showFileUploadDialog}
             path={targetFolder}
-            handleClose={()=>{refreshFolder(); setShowFileUploadDialog(false)}}
+            handleClose={closefileUploadDialog }
             multiple={multiple}
             fileTypes={fileTypes}
             dropped={droppedFiles}
@@ -430,7 +437,7 @@ function handleDrop(e){
           targetPath={targetFolder}
           handleClose={closeCreateFolderDialog}
           onCreate={refreshFolder}
-          setSelected={setSelection}
+          // setSelected={setSelection}
       />)}
     </div>
   )

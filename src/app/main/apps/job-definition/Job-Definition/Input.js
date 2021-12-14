@@ -26,7 +26,6 @@ export const Input = (props) => {
 
 	const [showFMDialog, setShowFMDialog] = useState(false);
 	const [showFolderDialog, setShowFolderDialog] = useState(false);
-	const [fileChosen, setFileChosen] = useState('');
 	const [folderChosenPath, setFolderChosenPath] = useState('');
 	const [fileChosenPath, setFileChosenPath] = useState('');
 	var typeFlag = 0;
@@ -317,24 +316,24 @@ export const Input = (props) => {
 						/>}
 					</label>
 					{props.formData[1].outputFlag ? <div className={`folderPath ${folderChosenPath === '' ? '' : 'pathBreak'}`}>{folderChosenPath === '' ? 'No folder specified' : <b onBlur={props.changed} >{folderChosenPath}</b>}</div>
-						: <div className={`folderPath ${fileChosen === '' ? '' : 'pathBreak'}`}>{fileChosen === '' ? 'No file chosen' : <b onBlur={props.changed} >{fileChosen}</b>}</div>}
+						: <div className={`folderPath ${fileChosenPath === '' ? '' : 'pathBreak'}`}>{fileChosenPath === '' ? 'No file chosen' : <b onBlur={props.changed} >{fileChosenPath}</b>}</div>}
 				</div>
 			);
 	}
 	useEffect(() => {
-		if (fileChosen || folderChosenPath) {
+		if (fileChosenPath || folderChosenPath) {
 			document.getElementById(props.formData[1].formLabel).value = 1;
 		}
 
 		if(props.formData[1].value !== "" && props.formData[1].outputFlag === false && typeFlag === 0){
-			setFileChosen(props.formData[1].value)
+			setFileChosenPath(props.formData[1].value)
 		  }
 
 		  if(props.formData[1].value !== "" && props.formData[1].outputFlag === true && typeFlag === 0){
 			setFolderChosenPath(props.formData[1].value)
 		  }
 
- },[fileChosen, folderChosenPath, props.formData, typeFlag])
+ },[fileChosenPath, folderChosenPath, props.formData, typeFlag])
 
 
 
@@ -353,7 +352,6 @@ export const Input = (props) => {
 						showModal={showFMDialog}
 						setShowModal={(p) => setShowFMDialog(p)}
 						handleFMClose={handleFMClose}
-						setFileChosen={(p) => setFileChosen(p)}
 						setFileChosenPath={(p) => setFileChosenPath(p)}
 						fileTypes={props.formData[1].types}
 						props={props}
@@ -375,7 +373,6 @@ export const Input = (props) => {
 						multiple={false} 
 						onSelect={(p)=>{
 							if (p && p[0]) {
-								setFileChosen(p[0])
 								setFileChosenPath(p[0])
 							}
 						}}

@@ -65,6 +65,15 @@ const CSonNet_Contagion_Simulation = (props) => {
     }
 
     function setInitialState(state) {
+        if(staticProps.Output_name) {
+
+            var retainedName = staticProps.Output_name.value;
+
+        } else {
+
+            retainedName = state.output_name;
+
+        }
         const dp = {
             Behaviour: { id: 101, value: state && state.input && state.input.dynamic_inputs ? state.input.dynamic_inputs['Behaviour_model'] : "" },
             SIR_Submodel: { id: 201, value: state && state.input && state.input.dynamic_inputs ? state.input.dynamic_inputs['SIR_Submodel'] : "" },
@@ -107,7 +116,7 @@ const CSonNet_Contagion_Simulation = (props) => {
             TimeSteps: { value: state && state.input ? state.input['time_steps'] : "" },
             InitialConditions: state && state.input ? state.input['initial_states_method'] : [{ type: 'random', number_nodes: "", state: "" }],
             default_state: { value: state && state.input ? state.input['default_state'] : "" },
-            Output_name: { value: (state && state.state !== "Completed") ? state.output_name : "" },
+            Output_name: { value: (state && state.state !== "Completed") ? retainedName : "" },
             outputPath: ['outputPath', {
                 description: "Select the path from File manager where the output file is to be stored.",
                 formLabel: "Output Container",
@@ -134,7 +143,7 @@ const CSonNet_Contagion_Simulation = (props) => {
 
     useEffect(() => {
         return (
-          localStorage.removeItem('formLastPath')
+          localStorage.removeItem('last_selected_folder')
         )
       }, [])
 
@@ -176,7 +185,7 @@ const CSonNet_Contagion_Simulation = (props) => {
                     setInitialState((props.resubmit && props.resubmit.inputData) ? props.resubmit.inputData : {})
                 }
 
-                props.resubmit && localStorage.setItem('formLastPath', props.resubmit.inputData.output_container + '/')
+                props.resubmit && localStorage.setItem('last_selected_folder', props.resubmit.inputData.output_container + '/')
                 setInputSchema(jobData.input_schema)
             }
         }

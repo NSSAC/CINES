@@ -30,15 +30,14 @@ function FMPopup({
   showModal,
   setShowModal,
   handleFMClose,
-  setFileChosen,
   setFileChosenPath,
   fileTypes,
 }) {
   const dispatch = useDispatch();
-  var formLastPath = localStorage.getItem('formLastPath')
+  var last_selected_folder = localStorage.getItem('last_selected_folder')
   const files = useSelector(({ fMApp }) => fMApp.files);
   const selectedItem = useSelector(({ fMApp }) => files[fMApp.selectedItemId]);
-  const [targetPath, setTargetPath] = useState(formLastPath ? formLastPath : '/home/')
+  const [targetPath, setTargetPath] = useState(last_selected_folder ? last_selected_folder : '/home/')
   const [searchbool, setSearchbool] = useState(false);
   const [search, setSearch] = useState("");
   const [checkFlag, setcheckFlag] = useState(false);
@@ -53,9 +52,8 @@ function FMPopup({
     files !== {} &&
       Object.values(files).map((node) => {
         if (node.name === uploadFile) {
-            setFileChosen(targetPath + node.name);
             setFileChosenPath(targetPath + node.name);
-            targetPath.includes('/home') && localStorage.setItem("formLastPath",targetPath)
+            targetPath.includes('/home') && localStorage.setItem("last_selected_folder",targetPath)
             setUploadFile("");
             setTargetPath("/home/");
             setSearch("");
@@ -72,11 +70,10 @@ function FMPopup({
   };
 
   const onSelect = () => {
-    setFileChosen(targetPath + selectedItem.name);
     setFileChosenPath(targetPath + selectedItem.name);
     setSearch("");
     setTargetPath("/home/");
-    targetPath.includes('/home') && localStorage.setItem("formLastPath",targetPath)
+    targetPath.includes('/home') && localStorage.setItem("last_selected_folder",targetPath)
     handleFMClose();
   };
 

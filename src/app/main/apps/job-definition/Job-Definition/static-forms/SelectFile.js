@@ -23,7 +23,6 @@ export const Input = (props) => {
 
 	const [showFMDialog, setShowFMDialog] = useState(false);
 	const [showFolderDialog, setShowFolderDialog] = useState(false);
-	const [fileChosen, setFileChosen] = useState('');
 	const [folderChosenPath, setFolderChosenPath] = useState('');
 	const [fileChosenPath, setFileChosenPath] = useState('');
 
@@ -93,7 +92,6 @@ export const Input = (props) => {
 		if (f && f[0]){
 
 			
-			setFileChosen(f[0])
 			setFileChosenPath(f[0])
 			if (props.changed){
 				props.changed({target: {value: f[0]}})
@@ -116,7 +114,7 @@ export const Input = (props) => {
 	// }
 
 	useEffect(() => {
-		if (fileChosen || folderChosenPath) {
+		if (fileChosenPath || folderChosenPath) {
 			document.getElementById(props.formData[1].formLabel).value = 1;
 		}
 	})

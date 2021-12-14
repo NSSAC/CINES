@@ -69,7 +69,7 @@ function JobDefinitionForm(props) {
 
   useEffect(() => {
     return (
-      localStorage.removeItem('formLastPath')
+      localStorage.removeItem('last_selected_folder')
     )
   }, [])
 
@@ -125,7 +125,7 @@ function JobDefinitionForm(props) {
           if (props.resubmit){
             obj["value"] = props.resubmit.inputData.input[obj.name];
             if (outputFiles === undefined) 
-              localStorage.setItem('formLastPath',props.resubmit.inputData.input[obj.name].substr(0, props.resubmit.inputData.input[obj.name].lastIndexOf("/")) + '/')
+              localStorage.setItem('last_selected_folder',props.resubmit.inputData.input[obj.name].substr(0, props.resubmit.inputData.input[obj.name].lastIndexOf("/")) + '/')
           }
           else
             obj["value"] = "";
@@ -170,7 +170,7 @@ function JobDefinitionForm(props) {
 
       }
       if (outputFiles !== undefined) {
-        props.resubmit && localStorage.setItem('formLastPath',props.resubmit.inputData.output_container + '/')
+        props.resubmit && localStorage.setItem('last_selected_folder',props.resubmit.inputData.output_container + '/')
         let outputContainer = {
           id: 200,
           formLabel: "output_container",
@@ -345,7 +345,6 @@ function JobDefinitionForm(props) {
                         formData={formElement}
                         elementType={formElement.type}
                         value={formElement.value}
-
                         changed={(event) =>
                           inputChangedHandler(event, formElement[0])
                         }

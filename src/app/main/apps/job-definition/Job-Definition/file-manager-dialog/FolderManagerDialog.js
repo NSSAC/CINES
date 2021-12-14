@@ -14,10 +14,10 @@ import CreateFolder from "app/main/file-manager/dialogs/CreateFolderDialog"
 function FolderPopup({ showModal, handleFMClose, folderPath, setFolderPath, fileTypes })  {
 
     const dispatch = useDispatch()
-    var formLastPath = localStorage.getItem('formLastPath')
+    var last_selected_folder = localStorage.getItem('last_selected_folder')
     const files = useSelector(({fMApp}) => fMApp.home);
     const selectedItem = useSelector(({fMApp}) => files[fMApp.selectedItemId]);
-    const [targetPath, setTargetPath] = useState(formLastPath ? formLastPath.replace('/home/','/') : '/')
+    const [targetPath, setTargetPath] = useState(last_selected_folder ? last_selected_folder.replace('/home/','/') : '/')
     const [searchbool, setSearchbool] = useState(false);
     const [search, setSearch] = useState("");
     const [showCreateDialog, setShowCreateDialog] = useState(false);
@@ -38,7 +38,7 @@ function FolderPopup({ showModal, handleFMClose, folderPath, setFolderPath, file
       setTargetPath(targetPath)
       localStorage.setItem("selectedFolder",targetPath)
       setFolderPath("/home" + targetPath + selectedItem.name)
-      localStorage.setItem("formLastPath",'/home' + targetPath)
+      localStorage.setItem("last_selected_folder",'/home' + targetPath)
       handleFMClose()
     }
 
