@@ -2,169 +2,183 @@ export const modelJSON = {
     "description": "Simulator of contagion dynamics on networks",
     "models": {
         "Threshold":{
-            "Absolute threshold models": {
-                "Deterministic absolute models": {
-                    "Deterministic progressive absolute threshold": {
-                        "states": [
-                            "0",
-                            "1"
-                        ],
-                        "default_state": "0",
-                        "blocking_states": ["2"],
-                        "rules": [
-                            {
-                                "input": {
-                                    "deterministic_progressive_blocking_node_threshold_value": {
-                                        "type": "integer",
-                                        "data_sources": [
-                                            "fixed"
-                                        ],
-                                        "network_element": "node",
-                                        "label": "Node threshold value",
-                                        "description": "Deterministic progressive blocking node threshold value",
-                                        "minimum": 0
-                                    }
-                                },
-                                "rule": {
-                                    "node": "all",
-                                    "from_state": "0",
-                                    "to_state": "1",
-                                    "cause": [
+            "submodels" : {
+                "Absolute threshold models": {
+                    "submodels" : {
+                        "Deterministic absolute models": {
+                            "submodels": {
+                                "Deterministic progressive absolute threshold": {
+                                    "states": [
+                                        "0",
                                         "1"
                                     ],
-                                    "rule": "deterministic_progressive_blocking_node_threshold"
+                                    "default_state": "0",
+                                    "blocking_states": ["2"],
+                                    "rules": [
+                                        {
+                                            "input": {
+                                                "deterministic_progressive_blocking_node_threshold_value": {
+                                                    "type": "integer",
+                                                    "data_sources": [
+                                                        "fixed"
+                                                    ],
+                                                    "network_element": "node",
+                                                    "label": "Node threshold value",
+                                                    "description": "Deterministic progressive blocking node threshold value",
+                                                    "minimum": 0
+                                                }
+                                            },
+                                            "rule": {
+                                                "node": "all",
+                                                "from_state": "0",
+                                                "to_state": "1",
+                                                "cause": [
+                                                    "1"
+                                                ],
+                                                "rule": "deterministic_progressive_blocking_node_threshold"
+                                            }
+                                        }
+                                    ]
                                 }
                             }
-                        ]
+                        },
+                        "Stochastic absolute models": {
+                            "submodels": {
+                                "Stochastic progressive absolute threshold model": {
+                                    "states": [
+                                        "0",
+                                        "1"
+                                    ],
+                                    "default_state": "0",
+                                    "blocking_states": ["2"],
+                                    "rules": [
+                                        {
+                                            "input": {
+                                                "node_threshold_value": {
+                                                    "type": "integer",
+                                                    "data_sources": [
+                                                        "fixed"
+                                                    ],
+                                                    "network_element": "node",
+                                                    "label": "Node threshold value",
+                                                    "description": "Stochastic progressive node threshold value >= 0.",
+                                                    "minimum": 0
+                                                },
+                                                "node_probability_auto_value": {
+                                                    "type": "number",
+                                                    "label": "Activation probability transition",
+                                                    "description": "Probability to transition to state 1 per timestep",
+                                                    "data_sources": [
+                                                        "fixed"
+                                                    ],
+                                                    "network_element": "node",
+                                                    "minimum": 0,
+                                                    "maximum": 1
+                                                }
+                                            },
+                                            "rule": {
+                                                "node": "all",
+                                                "from_state": "0",
+                                                "to_state": "1",
+                                                "cause": [
+                                                    "1"
+                                                ],
+                                                "rule": "stochastic_progressive_node_threshold"
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
                     }
                 },
-                "Stochastic absolute models": {
-                    "Stochastic progressive absolute threshold model": {
-                        "states": [
-                            "0",
-                            "1"
-                        ],
-                        "default_state": "0",
-                        "blocking_states": ["2"],
-                        "rules": [
-                            {
-                                "input": {
-                                    "node_threshold_value": {
-                                        "type": "integer",
-                                        "data_sources": [
-                                            "fixed"
-                                        ],
-                                        "network_element": "node",
-                                        "label": "Node threshold value",
-                                        "description": "Stochastic progressive node threshold value >= 0.",
-                                        "minimum": 0
-                                    },
-                                    "node_probability_auto_value": {
-                                        "type": "number",
-                                        "label": "Activation probability transition",
-                                        "description": "Probability to transition to state 1 per timestep",
-                                        "data_sources": [
-                                            "fixed"
-                                        ],
-                                        "network_element": "node",
-                                        "minimum": 0,
-                                        "maximum": 1
-                                    }
-                                },
-                                "rule": {
-                                    "node": "all",
-                                    "from_state": "0",
-                                    "to_state": "1",
-                                    "cause": [
+                "Relative threshold models": {
+                    "submodels" : {
+                        "Deterministic relative models": {
+                            "submodels": {
+                                "Deterministic progressive relative threshold model": {
+                                    "states": [
+                                        "0",
                                         "1"
                                     ],
-                                    "rule": "stochastic_progressive_node_threshold"
+                                    "default_state": "0",
+                                    "rules": [
+                                        {
+                                            "input": {
+                                                "deterministic_relative_node_threshold_value": {
+                                                    "type": "number",
+                                                    "data_sources": [
+                                                        "fixed"
+                                                    ],
+                                                    "network_element": "node",
+                                                    "label": "Node relative threshold value",
+                                                    "description": "Relative node threshold value; between 0 and 1.",
+                                                    "minimum": 0,
+                                                    "maximum": 1
+                                                }
+                                            },
+                                            "rule": {
+                                                "node": "all",
+                                                "from_state": "0",
+                                                "to_state": "1",
+                                                "cause": [
+                                                    "1"
+                                                ],
+                                                "rule": "deterministic_progressive_relative_node_threshold"
+                                            }
+                                        }
+                                    ]
                                 }
                             }
-                        ]
-                    }
-                }
-            },
-            "Relative threshold models": {
-                "Deterministic relative models": {
-                    "Deterministic progressive relative threshold model": {
-                        "states": [
-                            "0",
-                            "1"
-                        ],
-                        "default_state": "0",
-                        "rules": [
-                            {
-                                "input": {
-                                    "deterministic_relative_node_threshold_value": {
-                                        "type": "number",
-                                        "data_sources": [
-                                            "fixed"
-                                        ],
-                                        "network_element": "node",
-                                        "label": "Node relative threshold value",
-                                        "description": "Relative node threshold value; between 0 and 1.",
-                                        "minimum": 0,
-                                        "maximum": 1
-                                    }
-                                },
-                                "rule": {
-                                    "node": "all",
-                                    "from_state": "0",
-                                    "to_state": "1",
-                                    "cause": [
+                        },
+                        "Stochastic relative models": {
+                            "submodels" : {
+                                "Stochastic progressive relative threshold model": {
+                                    "states": [
+                                        "0",
                                         "1"
                                     ],
-                                    "rule": "deterministic_progressive_relative_node_threshold"
+                                    "default_state": "0",
+                                    "rules": [
+                                        {
+                                            "input": {
+                                                "relative_node_threshold_value": {
+                                                    "type": "number",
+                                                    "data_sources": [
+                                                        "fixed"
+                                                    ],
+                                                    "network_element": "node",
+                                                    "label": "Relative node threshold value.",
+                                                    "description": "Relative node threshold value; between 0 and 1.",
+                                                    "minimum": 0,
+                                                    "maximum": 1
+                                                },
+                                                "relative_node_probability_value": {
+                                                    "type": "number",
+                                                    "label": "Activation probability transition",
+                                                    "description": "Probability to transition to state 1 per timestep",
+                                                    "data_sources": [
+                                                        "fixed"
+                                                    ],
+                                                    "network_element": "node",
+                                                    "minimum": 0,
+                                                    "maximum": 1
+                                                }
+                                            },
+                                            "rule": {
+                                                "node": "all",
+                                                "from_state": "0",
+                                                "to_state": "1",
+                                                "cause": [
+                                                    "1"
+                                                ],
+                                                "rule": "stochastic_progressive_relative_node_threshold"
+                                            }
+                                        }
+                                    ]
                                 }
                             }
-                        ]
-                    }
-                },
-                "Stochastic relative models": {
-                    "Stochastic progressive relative threshold model": {
-                        "states": [
-                            "0",
-                            "1"
-                        ],
-                        "default_state": "0",
-                        "rules": [
-                            {
-                                "input": {
-                                    "relative_node_threshold_value": {
-                                        "type": "number",
-                                        "data_sources": [
-                                            "fixed"
-                                        ],
-                                        "network_element": "node",
-                                        "label": "Relative node threshold value.",
-                                        "description": "Relative node threshold value; between 0 and 1.",
-                                        "minimum": 0,
-                                        "maximum": 1
-                                    },
-                                    "relative_node_probability_value": {
-                                        "type": "number",
-                                        "label": "Activation probability transition",
-                                        "description": "Probability to transition to state 1 per timestep",
-                                        "data_sources": [
-                                            "fixed"
-                                        ],
-                                        "network_element": "node",
-                                        "minimum": 0,
-                                        "maximum": 1
-                                    }
-                                },
-                                "rule": {
-                                    "node": "all",
-                                    "from_state": "0",
-                                    "to_state": "1",
-                                    "cause": [
-                                        "1"
-                                    ],
-                                    "rule": "stochastic_progressive_relative_node_threshold"
-                                }
-                            }
-                        ]
+                        }
                     }
                 }
             }
@@ -486,8 +500,10 @@ export const modelJSON = {
             }
         },
         "SIR": {
+            "descripton": "States:  S (susceptible), I (infectious), R (recovered/removed).  State transitions S -> I, I -> R.",
             "submodels": {
                 "fixed infectious": {
+                    "description": "Agents spend a user-specified fixed time in state I.",
                     "states": [
                         "S",
                         "I",
@@ -543,6 +559,7 @@ export const modelJSON = {
                     ]
                 },
                 "stochastic infectious": {
+                    "description": "Agents transition out of state I at each time step with a user-specified probability.",
                     "states": [
                         "S",
                         "I",
