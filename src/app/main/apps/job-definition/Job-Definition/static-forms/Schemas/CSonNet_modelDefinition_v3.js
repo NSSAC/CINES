@@ -72,7 +72,50 @@ export const modelJSON = {
                     }
                 },
                 "Stochastic absolute models": {
-                    "TODO": "ADD MODELS HERE"
+                    "Progressive absolute stochastic threshold model": {
+                        "states": [
+                            "0",
+                            "1"
+                        ],
+                        "default_state": "0",
+                        "blocking_states": ["2"],
+                        "rules": [
+                            {
+                                "input": {
+                                    "node_threshold_value": {
+                                        "type": "integer",
+                                        "data_sources": [
+                                            "fixed"
+                                        ],
+                                        "network_element": "node",
+                                        "label": "Node threshold value",
+                                        "description": "Stochastic progressive node threshold value >= 0.",
+                                        "minimum": 0
+                                    },
+                                    "node_probability_auto_value": {
+                                        "type": "number",
+                                        "label": "Activation probability transition",
+                                        "description": "Probability to transition to state 1 per timestep",
+                                        "data_sources": [
+                                            "fixed"
+                                        ],
+                                        "network_element": "node",
+                                        "minimum": 0,
+                                        "maximum": 1
+                                    }
+                                },
+                                "rule": {
+                                    "node": "all",
+                                    "from_state": "0",
+                                    "to_state": "1",
+                                    "cause": [
+                                        "1"
+                                    ],
+                                    "rule": "stochastic_progressive_node_threshold"
+                                }
+                            }
+                        ]
+                    }
                 }
             },
             "Relative threshold models": {
