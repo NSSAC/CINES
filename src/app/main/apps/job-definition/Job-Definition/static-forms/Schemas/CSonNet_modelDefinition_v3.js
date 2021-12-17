@@ -120,7 +120,39 @@ export const modelJSON = {
             },
             "Relative threshold models": {
                 "Deterministic relative models": {
-                    "TODO": "ADD MODELS HERE"
+                    "Progressive relative deterministic threshold model": {
+                        "states": [
+                            "0",
+                            "1"
+                        ],
+                        "default_state": "0",
+                        "rules": [
+                            {
+                                "input": {
+                                    "deterministic_relative_node_threshold_value": {
+                                        "type": "number",
+                                        "data_sources": [
+                                            "fixed"
+                                        ],
+                                        "network_element": "node",
+                                        "label": "Node relative threshold value",
+                                        "description": "Deterministic relative threshold value.",
+                                        "minimum": 0,
+                                        "maximum": 1
+                                    }
+                                },
+                                "rule": {
+                                    "node": "all",
+                                    "from_state": "0",
+                                    "to_state": "1",
+                                    "cause": [
+                                        "1"
+                                    ],
+                                    "rule": "deterministic_progressive_relative_node_threshold"
+                                }
+                            }
+                        ]
+                    }
                 },
                 "Stochastic relative models": {
                     "TODO": "ADD MODELS HERE"
