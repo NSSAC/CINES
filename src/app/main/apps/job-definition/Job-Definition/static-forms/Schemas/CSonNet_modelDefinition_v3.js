@@ -2,12 +2,16 @@ export const modelJSON = {
     "description": "Simulator of contagion dynamics on networks",
     "models": {
         "Threshold":{
+            "description" : "States: 0 (inactive, unactivated), 1 (active, activated).  State transitions: 0 -> 1.",
             "submodels" : {
                 "Absolute threshold models": {
+                    "description" : "Thresholds are counts.",
                     "submodels" : {
                         "Deterministic absolute models": {
+                            "description" : "Deterministic state transition 0 -> 1.",
                             "submodels": {
                                 "Deterministic progressive absolute threshold": {
+                                    "description" : "Progressive model means that an agent in state 1 stays in state 1.",
                                     "states": [
                                         "0",
                                         "1"
@@ -43,14 +47,15 @@ export const modelJSON = {
                             }
                         },
                         "Stochastic absolute models": {
+                            "description" : "Stochastic state transition 0 -> 1.",
                             "submodels": {
-                                "Stochastic progressive absolute threshold model": {
+                                "Stochastic progressive absolute threshold": {
+                                    "description" : "Progressive model means that an agent in state 1 stays in state 1.",
                                     "states": [
                                         "0",
                                         "1"
                                     ],
                                     "default_state": "0",
-                                    "blocking_states": ["2"],
                                     "rules": [
                                         {
                                             "input": {
@@ -93,10 +98,13 @@ export const modelJSON = {
                     }
                 },
                 "Relative threshold models": {
+                    "description" : "Thresholds are relative to the node's degree.",
                     "submodels" : {
                         "Deterministic relative models": {
+                            "description" : "Deterministic state transition 0 -> 1.",
                             "submodels": {
-                                "Deterministic progressive relative threshold model": {
+                                "Deterministic progressive relative threshold": {
+                                    "description" : "Progressive model means that an agent in state 1 stays in state 1.",
                                     "states": [
                                         "0",
                                         "1"
@@ -132,8 +140,10 @@ export const modelJSON = {
                             }
                         },
                         "Stochastic relative models": {
+                            "description" : "Stochastic state transition 0 -> 1.",
                             "submodels" : {
-                                "Stochastic progressive relative threshold model": {
+                                "Stochastic progressive relative threshold": {
+                                    "description" : "Progressive model means that an agent in state 1 stays in state 1.",
                                     "states": [
                                         "0",
                                         "1"
@@ -184,8 +194,10 @@ export const modelJSON = {
             }
         },
         "SEIR": {
+            "description" : "States:  S (susceptible), E (exposed [infected but not infectious]), I (infectious), R (recovered/removed).  State transitions: S -> E, E -> I, I -> R",
             "submodels": {
                 "fixed exposed fixed infectious": {
+                    "description" : "Durations of nodes in state E and I are fixed and user specified.",
                     "states": [
                         "S",
                         "E",
@@ -263,6 +275,7 @@ export const modelJSON = {
                     ]
                 },
                 "fixed exposed stochastic infectious": {
+                    "description" : "Duration of nodes in state E is stochastic; duration of nodes in state I is fixed.",
                     "states": [
                         "S",
                         "E",
@@ -341,6 +354,7 @@ export const modelJSON = {
                     ]
                 },
                 "stochastic exposed fixed infectious": {
+                    "description" : "Duration of nodes in state E is fixed; duration of nodes in state I is stochastic.",
                     "states": [
                         "S",
                         "E",
@@ -419,6 +433,7 @@ export const modelJSON = {
                     ]
                 },
                 "stochastic exposed stochastic infectious": {
+                    "description" : "Durations of nodes in states E and I are stochastic.",
                     "states": [
                         "S",
                         "E",
@@ -500,7 +515,7 @@ export const modelJSON = {
             }
         },
         "SIR": {
-            "descripton": "States:  S (susceptible), I (infectious), R (recovered/removed).  State transitions S -> I, I -> R.",
+            "descripton": "States:  S (susceptible), I (infectious), R (recovered/removed).  State transitions: S -> I, I -> R.",
             "submodels": {
                 "fixed infectious": {
                     "description": "Agents spend a user-specified fixed time in state I.",
@@ -618,8 +633,10 @@ export const modelJSON = {
             }
         },
         "SIS": {
+            "descripton": "States:  S (susceptible), I (infectious).  State transitions: S -> I, I -> S.",
             "submodels": {
                 "fixed infectious": {
+                    "description": "Agents spend a user-specified fixed time in state I.",
                     "states": [
                         "S",
                         "I",
@@ -675,6 +692,7 @@ export const modelJSON = {
                     ]
                 },
                 "stochastic infectious": {
+                    "description": "Agents transition out of state I at each time step with a user-specified probability.",
                     "states": [
                         "S",
                         "I",
@@ -733,6 +751,7 @@ export const modelJSON = {
             }
         },
         "(Generalized) Independent Cascade Model": {
+            "descripton": "States:  0 (inactive, unactivated), I (active, activated).  State transitions: 0 -> 1.",
             "states": [
                 "0",
                 "1",
@@ -788,7 +807,7 @@ export const modelJSON = {
             ]
         },
         "Linear threshold Model (Integer threshold)": {
-            "description": "This model most often used in sociology.",
+            "descripton": "States:  0 (inactive, unactivated), I (active, activated).  State transitions: 0 -> 1.  This model most often used in sociology.",
             "states": [
                 "0",
                 "1"
@@ -831,7 +850,7 @@ export const modelJSON = {
             ]
         },
         "Linear threshold Model (Float threshold)": {
-            "description": "This model most often used in biology.",
+            "descripton": "States:  0 (inactive, unactivated), I (active, activated).  State transitions: 0 -> 1.  This model most often used in biology.",
             "states": [
                 "0",
                 "1"
