@@ -1,43 +1,10 @@
 export const modelJSON = {
     "description": "Simulator of contagion dynamics on networks",
     "models": {
-        "threshold_model": {
-            "states": [
-                "0",
-                "1"
-            ],
-            "default_state": "0",
-            "blocking_states": ["2"],
-            "rules": [
-                {
-                    "input": {
-                        "deterministic_progressive_blocking_node_threshold_value": {
-                            "type": "integer",
-                            "data_sources": [
-                                "fixed"
-                            ],
-                            "network_element": "node",
-                            "label": "Node threshold value",
-                            "description": "Deterministic progressive blocking node threshold value",
-                            "minimum": 0
-                        }
-                    },
-                    "rule": {
-                        "node": "all",
-                        "from_state": "0",
-                        "to_state": "1",
-                        "cause": [
-                            "1"
-                        ],
-                        "rule": "deterministic_progressive_blocking_node_threshold"
-                    }
-                }
-            ]
-        },
         "Threshold":{
             "Absolute threshold models": {
                 "Deterministic absolute models": {
-                    "Deterministic progressive absolute threshold model": {
+                    "Deterministic progressive absolute threshold": {
                         "states": [
                             "0",
                             "1"
