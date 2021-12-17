@@ -27,8 +27,8 @@ export const modelJSON = {
                                                         "fixed"
                                                     ],
                                                     "network_element": "node",
-                                                    "label": "Node threshold value",
-                                                    "description": "Deterministic progressive blocking node threshold value",
+                                                    "label": "Node threshold",
+                                                    "description": "Node threshold value >= 0.",
                                                     "minimum": 0
                                                 }
                                             },
@@ -65,14 +65,14 @@ export const modelJSON = {
                                                         "fixed"
                                                     ],
                                                     "network_element": "node",
-                                                    "label": "Node threshold value",
-                                                    "description": "Stochastic progressive node threshold value >= 0.",
+                                                    "label": "Node threshold",
+                                                    "description": "Node threshold value >= 0.",
                                                     "minimum": 0
                                                 },
                                                 "node_probability_auto_value": {
                                                     "type": "number",
-                                                    "label": "Activation probability transition",
-                                                    "description": "Probability to transition to state 1 per timestep",
+                                                    "label": "Activation transition probability",
+                                                    "description": "Probability to transition to state 1 per timestep once threshold is met",
                                                     "data_sources": [
                                                         "fixed"
                                                     ],
@@ -119,8 +119,8 @@ export const modelJSON = {
                                                         "fixed"
                                                     ],
                                                     "network_element": "node",
-                                                    "label": "Node relative threshold value",
-                                                    "description": "Relative node threshold value; between 0 and 1.",
+                                                    "label": "Node relative threshold",
+                                                    "description": "Value between 0 and 1.",
                                                     "minimum": 0,
                                                     "maximum": 1
                                                 }
@@ -158,15 +158,15 @@ export const modelJSON = {
                                                         "fixed"
                                                     ],
                                                     "network_element": "node",
-                                                    "label": "Relative node threshold value.",
-                                                    "description": "Relative node threshold value; between 0 and 1.",
+                                                    "label": "Relative node threshold.",
+                                                    "description": "Value between 0 and 1.",
                                                     "minimum": 0,
                                                     "maximum": 1
                                                 },
                                                 "relative_node_probability_value": {
                                                     "type": "number",
-                                                    "label": "Activation probability transition",
-                                                    "description": "Probability to transition to state 1 per timestep",
+                                                    "label": "Activation transition probability",
+                                                    "description": "Probability to transition to state 1 per timestep once threshold is met.",
                                                     "data_sources": [
                                                         "fixed"
                                                     ],
@@ -210,12 +210,12 @@ export const modelJSON = {
                             "input": {
                                 "edge_probability_value": {
                                     "type": "number",
-                                    "description": "Edge probability value",
                                     "data_sources": [
                                         "fixed"
                                     ],
                                     "network_element": "edge",
                                     "label": "Edge probability",
+                                    "description": "Value between 0 and 1.",
                                     "minimum": 0,
                                     "maximum": 1
                                 }
@@ -235,7 +235,7 @@ export const modelJSON = {
                                 "discrete_time_auto_value": {
                                     "type": "integer",
                                     "label": "Exposed duration",
-                                    "description": "Time spent in exposed state (E)",
+                                    "description": "Time spent in exposed state (E), >= 1",
                                     "data_sources": [
                                         "fixed"
                                     ],
@@ -256,7 +256,7 @@ export const modelJSON = {
                                 "discrete_time_auto_value": {
                                     "type": "integer",
                                     "label": "Infectious duration",
-                                    "description": "Time spent in infectious state (I)",
+                                    "description": "Time spent in infectious state (I), >= 1",
                                     "data_sources": [
                                         "fixed"
                                     ],
@@ -288,12 +288,12 @@ export const modelJSON = {
                             "input": {
                                 "edge_probability_value": {
                                     "type": "number",
-                                    "description": "Edge probability value",
                                     "data_sources": [
                                         "fixed"
                                     ],
                                     "network_element": "edge",
                                     "label": "Edge probability",
+                                    "description": "Value between 0 and 1.",
                                     "minimum": 0,
                                     "maximum": 1
                                 }
@@ -313,7 +313,7 @@ export const modelJSON = {
                                 "discrete_time_auto_value": {
                                     "type": "integer",
                                     "label": "Exposed duration",
-                                    "description": "Time spent in exposed state (E)",
+                                    "description": "Time spent in exposed state (E), >= 1.",
                                     "exclusiveMinimum": 0,
                                     "data_sources": [
                                         "fixed"
@@ -333,7 +333,7 @@ export const modelJSON = {
                             "input": {
                                 "node_probability_auto_value": {
                                     "type": "number",
-                                    "label": "Infectious probability transition",
+                                    "label": "Infectious transition probability",
                                     "description": "Probability to transition out of infectious state (I) per timestep",
                                     "data_sources": [
                                         "fixed"
@@ -367,12 +367,12 @@ export const modelJSON = {
                             "input": {
                                 "edge_probability_value": {
                                     "type": "number",
-                                    "description": "Edge probability value",
                                     "data_sources": [
                                         "fixed"
                                     ],
                                     "network_element": "edge",
                                     "label": "Edge probability",
+                                    "description": "Value between 0 and 1.",
                                     "minimum": 0,
                                     "maximum": 1
                                 }
@@ -391,7 +391,7 @@ export const modelJSON = {
                             "input": {
                                 "node_probability_auto_value": {
                                     "type": "number",
-                                    "label": "Exposed probability transition",
+                                    "label": "Exposed transition probability",
                                     "description": "Probability to transition out of exposed state (E) per timestep",
                                     "data_sources": [
                                         "fixed"
@@ -414,7 +414,7 @@ export const modelJSON = {
                                 "discrete_time_auto_value": {
                                     "type": "integer",
                                     "label": "Infectious duration",
-                                    "description": "Time spent in infectious state (I)",
+                                    "description": "Time spent in infectious state (I), >= 1.",
                                     "data_sources": [
                                         "fixed"
                                     ],
@@ -446,12 +446,12 @@ export const modelJSON = {
                             "input": {
                                 "edge_probability_value": {
                                     "type": "number",
-                                    "description": "Edge probability value",
                                     "data_sources": [
                                         "fixed"
                                     ],
                                     "network_element": "edge",
                                     "label": "Edge probability",
+                                    "description": "Value between 0 and 1.",
                                     "minimum": 0,
                                     "maximum": 1
                                 }
@@ -470,7 +470,7 @@ export const modelJSON = {
                             "input": {
                                 "node_probability_auto_value": {
                                     "type": "number",
-                                    "label": "Exposed probability transition",
+                                    "label": "Exposed transition probability",
                                     "description": "Probability to transition out of exposed state (E) per timestep",
                                     "data_sources": [
                                         "fixed"
@@ -492,7 +492,7 @@ export const modelJSON = {
                             "input": {
                                 "node_probability_auto_value": {
                                     "type": "number",
-                                    "label": "Infectious probability transition",
+                                    "label": "Infectious transition probability",
                                     "description": "Probability to transition out of infectious state (I) per timestep",
                                     "data_sources": [
                                         "fixed"
@@ -530,12 +530,12 @@ export const modelJSON = {
                             "input": {
                                 "edge_probability_value": {
                                     "type": "number",
-                                    "description": "Edge probability value",
                                     "data_sources": [
                                         "fixed"
                                     ],
                                     "network_element": "edge",
                                     "label": "Edge probability",
+                                    "description": "Value between 0 and 1.",
                                     "minimum": 0,
                                     "maximum": 1
                                 }
@@ -555,7 +555,7 @@ export const modelJSON = {
                                 "discrete_time_auto_value": {
                                     "type": "integer",
                                     "label": "Infectious duration",
-                                    "description": "Time spent in infectious state (I)",
+                                    "description": "Time spent in infectious state (I), >= 1.",
                                     "data_sources": [
                                         "fixed"
                                     ],
@@ -586,12 +586,12 @@ export const modelJSON = {
                             "input": {
                                 "edge_probability_value": {
                                     "type": "number",
-                                    "description": "Edge probability value",
                                     "data_sources": [
                                         "fixed"
                                     ],
                                     "network_element": "edge",
                                     "label": "Edge probability",
+                                    "description": "Value between 0 and 1.",
                                     "minimum": 0,
                                     "maximum": 1
                                 }
@@ -610,7 +610,7 @@ export const modelJSON = {
                             "input": {
                                 "node_probability_auto_value": {
                                     "type": "number",
-                                    "label": "Infectious probability transition",
+                                    "label": "Infectious transition probability",
                                     "description": "Probability to transition out of infectious state (I) per timestep",
                                     "data_sources": [
                                         "fixed"
@@ -648,12 +648,12 @@ export const modelJSON = {
                             "input": {
                                 "edge_probability_value": {
                                     "type": "number",
-                                    "description": "Edge probability value",
                                     "data_sources": [
                                         "fixed"
                                     ],
                                     "network_element": "edge",
                                     "label": "Edge probability",
+                                    "description": "Value between 0 and 1.",
                                     "minimum": 0,
                                     "maximum": 1
                                 }
@@ -673,7 +673,7 @@ export const modelJSON = {
                                 "discrete_time_auto_value": {
                                     "type": "integer",
                                     "label": "Infectious duration",
-                                    "description": "Time spent in infectious state (I)",
+                                    "description": "Time spent in infectious state (I), >= 1.",
                                     "data_sources": [
                                         "fixed"
                                     ],
@@ -704,12 +704,12 @@ export const modelJSON = {
                             "input": {
                                 "edge_probability_value": {
                                     "type": "number",
-                                    "description": "Edge probability value",
                                     "data_sources": [
                                         "fixed"
                                     ],
                                     "network_element": "edge",
                                     "label": "Edge probability",
+                                    "description": "Value between 0 and 1.",
                                     "minimum": 0,
                                     "maximum": 1
                                 }
@@ -728,8 +728,8 @@ export const modelJSON = {
                             "input": {
                                 "node_probability_auto_value": {
                                     "type": "number",
-                                    "label": "Infectious probability transition",
-                                    "description": "Probability to transition out of infectious state (I) per timestep",
+                                    "label": "Infectious transition probability",
+                                    "description": "Probability to transition out of infectious state (I) per timestep.",
                                     "data_sources": [
                                         "fixed"
                                     ],
@@ -763,12 +763,12 @@ export const modelJSON = {
                     "input": {
                         "edge_probability_value": {
                             "type": "number",
-                            "description": "Edge probability value",
                             "data_sources": [
                                 "fixed"
                             ],
                             "network_element": "edge",
                             "label": "Edge probability",
+                            "description": "Value between 0 and 1.",
                             "minimum": 0,
                             "maximum": 1
                         }
@@ -828,8 +828,8 @@ export const modelJSON = {
                         },
                         "edge_probability_value": {
                             "type": "number",
-                            "description": "Often between 0 and 1, but can be any value >= 0.",
                             "label": "Edge weight value",
+                            "description": "Often between 0 and 1, but can be any value >= 0.",
                             "data_sources": [
                                 "fixed"
                             ],
