@@ -446,6 +446,7 @@ function FileList(props) {
                   value={curFilter ? curFilter : ""}
                   onChange={onSearchChange}
                   onBlur={onSearchBlur}
+                  autoFocus={true}
                 />
                 <Tooltip title="Clear filter" aria-label="add">
                   <Icon
@@ -595,7 +596,7 @@ function FileList(props) {
           >
             <Table stickyHeader className="fileTableStyle  max-h-full" ref={tableRef}>
               <FileListHeader
-                checked={selectedIds.length === totalFileCount}
+                checked={totalFileCount!==0 && selectedIds.length === totalFileCount}
                 indeterminate={
                   selectedIds.length > 0 && selectedIds.length < totalFileCount
                 }
@@ -609,7 +610,7 @@ function FileList(props) {
                   );
                 }}
                 toggleAll={toggleAll}
-                enableCheckBoxes={props.enableCheckBoxes || false}
+                enableCheckBoxes={totalFileCount!==0 && (props.enableCheckBoxes || false)}
               />
               {_files.length > 0 && (
                 <TableBody onClick={onClickRow}>
