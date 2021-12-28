@@ -515,7 +515,7 @@ export const modelJSON = {
             }
         },
         "SIR": {
-            "descripton": "States:  S (susceptible), I (infectious), R (recovered/removed).  State transitions: S -> I, I -> R.",
+            "description": "States:  S (susceptible), I (infectious), R (recovered/removed).  State transitions: S -> I, I -> R.",
             "submodels": {
                 "fixed infectious": {
                     "description": "Agents spend a user-specified fixed time in state I.",
@@ -633,7 +633,7 @@ export const modelJSON = {
             }
         },
         "SIS": {
-            "descripton": "States:  S (susceptible), I (infectious).  State transitions: S -> I, I -> S.",
+            "description": "States:  S (susceptible), I (infectious).  State transitions: S -> I, I -> S.",
             "submodels": {
                 "fixed infectious": {
                     "description": "Agents spend a user-specified fixed time in state I.",
@@ -751,7 +751,7 @@ export const modelJSON = {
             }
         },
         "(Generalized) Independent Cascade Model": {
-            "descripton": "States:  0 (inactive, unactivated), I (active, activated).  State transitions: 0 -> 1.",
+            "description": "States:  0 (inactive, unactivated), I (active, activated).  State transitions: 0 -> 1.",
             "states": [
                 "0",
                 "1",
@@ -807,7 +807,7 @@ export const modelJSON = {
             ]
         },
         "Linear threshold Model (Integer threshold)": {
-            "descripton": "States:  0 (inactive, unactivated), I (active, activated).  State transitions: 0 -> 1.  This model most often used in sociology.",
+            "description": "States:  0 (inactive, unactivated), I (active, activated).  State transitions: 0 -> 1.  This model most often used in sociology.",
             "states": [
                 "0",
                 "1"
@@ -850,7 +850,7 @@ export const modelJSON = {
             ]
         },
         "Linear threshold Model (Float threshold)": {
-            "descripton": "States:  0 (inactive, unactivated), I (active, activated).  State transitions: 0 -> 1.  This model most often used in biology.",
+            "description": "States:  0 (inactive, unactivated), I (active, activated).  State transitions: 0 -> 1.  This model most often used in biology.",
             "states": [
                 "0",
                 "1"
