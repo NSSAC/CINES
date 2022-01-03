@@ -816,7 +816,7 @@ export const modelJSON = {
             "rules": [
                 {
                     "input": {
-                        "threshold_value": {
+                        "threshold_value_int": {
                             "type": "integer",
                             "data_sources": [
                                 "fixed"
@@ -859,7 +859,7 @@ export const modelJSON = {
             "rules": [
                 {
                     "input": {
-                        "threshold_value": {
+                        "threshold_value_float": {
                             "type": "number",
                             "data_sources": [
                                 "fixed"
