@@ -826,7 +826,7 @@ export const modelJSON = {
                             "description": "Threshold for LT model, >= 0.",
                             "minimum": 0
                         },
-                        "edge_probability_value": {
+                        "edge_weight_value": {
                             "type": "number",
                             "label": "Edge weight value",
                             "description": "Often between 0 and 1, but can be any value >= 0.",
@@ -868,7 +868,7 @@ export const modelJSON = {
                             "label": "Node threshold value (float)",
                             "description": "Threshold can be any real value including <= 0."
                         },
-                        "edge_probability_value": {
+                        "edge_weight_value": {
                             "type": "number",
                             "data_sources": [
                                 "fixed"
