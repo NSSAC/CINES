@@ -515,7 +515,7 @@ export const modelJSON = {
             }
         },
         "SIR": {
-            "descripton": "States:  S (susceptible), I (infectious), R (recovered/removed).  State transitions: S -> I, I -> R.",
+            "description": "States:  S (susceptible), I (infectious), R (recovered/removed).  State transitions: S -> I, I -> R.",
             "submodels": {
                 "fixed infectious": {
                     "description": "Agents spend a user-specified fixed time in state I.",
@@ -633,7 +633,7 @@ export const modelJSON = {
             }
         },
         "SIS": {
-            "descripton": "States:  S (susceptible), I (infectious).  State transitions: S -> I, I -> S.",
+            "description": "States:  S (susceptible), I (infectious).  State transitions: S -> I, I -> S.",
             "submodels": {
                 "fixed infectious": {
                     "description": "Agents spend a user-specified fixed time in state I.",
@@ -751,7 +751,7 @@ export const modelJSON = {
             }
         },
         "(Generalized) Independent Cascade Model": {
-            "descripton": "States:  0 (inactive, unactivated), I (active, activated).  State transitions: 0 -> 1.",
+            "description": "States:  0 (inactive, unactivated), I (active, activated).  State transitions: 0 -> 1.",
             "states": [
                 "0",
                 "1",
@@ -807,7 +807,7 @@ export const modelJSON = {
             ]
         },
         "Linear threshold Model (Integer threshold)": {
-            "descripton": "States:  0 (inactive, unactivated), I (active, activated).  State transitions: 0 -> 1.  This model most often used in sociology.",
+            "description": "States:  0 (inactive, unactivated), I (active, activated).  State transitions: 0 -> 1.  This model most often used in sociology.",
             "states": [
                 "0",
                 "1"
@@ -816,7 +816,7 @@ export const modelJSON = {
             "rules": [
                 {
                     "input": {
-                        "threshold_value": {
+                        "threshold_value_int": {
                             "type": "integer",
                             "data_sources": [
                                 "fixed"
@@ -826,7 +826,7 @@ export const modelJSON = {
                             "description": "Threshold for LT model, >= 0.",
                             "minimum": 0
                         },
-                        "edge_probability_value": {
+                        "edge_weight_value": {
                             "type": "number",
                             "label": "Edge weight value",
                             "description": "Often between 0 and 1, but can be any value >= 0.",
@@ -850,7 +850,7 @@ export const modelJSON = {
             ]
         },
         "Linear threshold Model (Float threshold)": {
-            "descripton": "States:  0 (inactive, unactivated), I (active, activated).  State transitions: 0 -> 1.  This model most often used in biology.",
+            "description": "States:  0 (inactive, unactivated), I (active, activated).  State transitions: 0 -> 1.  This model most often used in biology.",
             "states": [
                 "0",
                 "1"
@@ -859,7 +859,7 @@ export const modelJSON = {
             "rules": [
                 {
                     "input": {
-                        "threshold_value": {
+                        "threshold_value_float": {
                             "type": "number",
                             "data_sources": [
                                 "fixed"
@@ -868,7 +868,7 @@ export const modelJSON = {
                             "label": "Node threshold value (float)",
                             "description": "Threshold can be any real value including <= 0."
                         },
-                        "edge_probability_value": {
+                        "edge_weight_value": {
                             "type": "number",
                             "data_sources": [
                                 "fixed"
