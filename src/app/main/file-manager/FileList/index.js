@@ -32,6 +32,7 @@ import * as Perms from "../permissions";
 import reducer from "./store/reducers";
 import FILEUPLOAD_CONFIG from "../FileManagerAppConfig";
 import "../FileManager.css";
+
 function FileList(props) {
   const tableRef = React.createRef();
   const dispatch = useDispatch();
@@ -69,6 +70,7 @@ function FileList(props) {
   var uploadableTypes = FILEUPLOAD_CONFIG.fileTypes;
   const _files = filtered_files ? filtered_files.filtered : files;
   const curFilter = filtered_files ? filtered_files.filter : false;
+
   if (_files && _files.length > 0 && sort && sort.length > 0) {
     var attr = sort[0].attr;
     var dir = sort[0].dir === "asc" ? [1, -1] : [-1, 1];
@@ -84,6 +86,7 @@ function FileList(props) {
       return 0;
     });
   }
+
   // React.useEffect(()=>{
   //     // if (history.location.pathname.charAt(history.location.pathname.length-1)!=="/"){
   //     //     history.replace(`${history.location.pathname}/`)
@@ -91,6 +94,7 @@ function FileList(props) {
   //     setSelected({})
   // },[history,history.location.pathname])
   // console.log("AUTH: ", user)
+
   React.useEffect(() => {
     if (file_removal && file_removal.removal_completed) {
       setShowNotification(
@@ -100,17 +104,20 @@ function FileList(props) {
       dispatch(Actions.getFiles(props.path));
     }
   }, [dispatch, props.path, file_removal, showNotification]);
+
   React.useEffect(() => {
     if (!usermeta_updater || (usermeta_updater && !usermeta_updater.updating)) {
       setSelected({});
       dispatch(Actions.getFiles(props.path));
     }
   }, [dispatch, props.path, usermeta_updater, usermeta_updater.updating]);
+
   React.useEffect(() => {
     if (uploader.recent && uploader.recent.length > 0) {
       dispatch(Actions.getFiles(props.path));
     }
   }, [dispatch, uploader.recent, props.path]);
+
   const table_columns = [
     {
       label: "Name",
@@ -171,9 +178,11 @@ function FileList(props) {
       },
     },
   ];
+
   const listScrollToTop = () => {
     if(tableRef.current) tableRef.current.scrollIntoView();
   }
+
   React.useEffect(() => {
     function refreshFolder() {
       setRefreshFlag(true);
@@ -210,6 +219,7 @@ function FileList(props) {
       </React.Fragment>
     );
   }, [dispatch, props.path, showSearch, props.meta, user]);
+
   React.useEffect(() => {
     if (files) {
       setTotalFileCount(
@@ -218,6 +228,7 @@ function FileList(props) {
     }
     // setSelected({})
   }, [files, filtered_files]);
+
   React.useEffect(() => {
     dispatch(Actions.getFiles(props.path));
     dispatch(Actions.filterFiles(files, false));
@@ -248,6 +259,7 @@ function FileList(props) {
     var selectedIds = Object.keys(selected).filter((id) => {
       return selected[id];
     });
+
     function openMoveFiles() {
       setShowMoveFiles(true);
     }
@@ -277,6 +289,7 @@ function FileList(props) {
           }
         });
     }
+
     function confirmAndDelete(selectedIds, files) {
       const selFiles = selectedIds
         .map((id) => {
@@ -296,6 +309,7 @@ function FileList(props) {
           }
         })
         .filter((f) => !!f);
+
       if (selFiles.length !== selectedIds.length) {
         console.warn(
           "Unexpected SelectedIDs !== selFiles.length",
@@ -312,6 +326,7 @@ function FileList(props) {
         closeOnClickOutside: false,
       });
     }
+
     if (_files && _files.length > 0 && selectedIds.length === 1) {
       var asel;
       _files.some((f) => {
@@ -412,6 +427,7 @@ function FileList(props) {
       setFileActions();
     }
   }, [dispatch, selected, props, files, filtered_files, user]);
+
   React.useEffect(() => {
     if (props.setFileActions) {
       function onClickSearch() {
@@ -478,16 +494,8 @@ function FileList(props) {
         );
       }
     }
-  }, [
-    containerActions,
-    fileActions,
-    props,
-    showSearch,
-    dispatch,
-    files,
-    filtered_files,
-    curFilter,
-  ]);
+  }, [containerActions, fileActions, props, showSearch, dispatch, files, filtered_files, curFilter,]);
+
   function findRow(node) {
     if (node.tagName === "TR") {
       return node;
@@ -501,6 +509,7 @@ function FileList(props) {
     }
     return findRow(parent);
   }
+
   function toggleSelected(id, clear) {
     var sel = {};
     if (!clear) {
@@ -515,6 +524,7 @@ function FileList(props) {
     }
     setSelected(sel);
   }
+
   function toggleAll() {
     var selectedIds = Object.keys(selected).filter((id) => {
       return selected[id];
@@ -529,6 +539,7 @@ function FileList(props) {
       setSelected(s);
     }
   }
+
   function onClickRow(evt) {
     var clear =
       !evt.metaKey &&
@@ -539,18 +550,22 @@ function FileList(props) {
       toggleSelected(row.id, clear);
     }
   }
+
   function onDragEnter(evt) {
     evt.preventDefault();
     evt.stopPropagation();
   }
+
   function onDragLeave(evt) {
     evt.preventDefault();
     evt.stopPropagation();
   }
+
   function onDragOver(evt) {
     evt.preventDefault();
     evt.stopPropagation();
   }
+
   function handleDrop(e) {
     e.preventDefault();
     e.stopPropagation();
@@ -577,12 +592,15 @@ function FileList(props) {
       }, 500);
     }
   }
+
   function refreshFolder() {
     dispatch(Actions.getFiles(props.path));
   }
+
   const selectedIds = Object.keys(selected).filter((id) => {
     return selected[id];
   });
+  
   if (_files && _files.length >= 0) {
     return (
       <div className="overflow-auto w-full h-full">
