@@ -464,7 +464,7 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
     }
 
     function populateBody(submitJSON) {
-        setIsToasterFlag(true);
+        // setIsToasterFlag(true);
         // var path = window.location.pathname.replace("/apps/job-definition/", "");
         // var jobDefinition = path;
         var requestJson = {
@@ -510,6 +510,7 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
     }
 
     function delayNavigation() {
+        setIsToasterFlag(false);
         dispatch(Actions.initializeInputForm())
         history.push('/apps/my-jobs/');
     }
