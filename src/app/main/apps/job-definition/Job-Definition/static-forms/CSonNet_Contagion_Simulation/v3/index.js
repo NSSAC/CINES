@@ -30,6 +30,8 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
         ({ JobDefinitionApp }) => JobDefinitionApp.selectedjobid
     );
     const input_file_meta = useSelector(({ SimForm }) => SimForm.input_file);
+    const [blockingStateValue, setBlockingStateValue] = useState('');
+    const [blockingNodesValue, setBlockingNodesValue] = useState('');
     const [isFormValid, setIsFormValid] = useState(false);
     const [isToasterFlag, setIsToasterFlag] = useState(false);
     const [errorMsg, setErrorMsg] = useState();
@@ -112,10 +114,10 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
         // let pathEnd = 'net.science/CSonNet_Contagion_Simulation'
         let pathEnd = `${props.namespace}/${props.module}`
         setIsToasterFlag(false);
-        console.log("jobData.id: ", jobData.id, "Props version: ", `${props.namespace}/${props.module}@${props.version}`);
+        // console.log("jobData.id: ", jobData.id, "Props version: ", `${props.namespace}/${props.module}@${props.version}`);
         if ((!jobData || jobData.id && (jobData.id !== `${props.namespace}/${props.module}`)) || Object.keys(jobData).length === 0) {
             // dispatch(JobAppActions.setSelectedItem(pathEnd));
-            console.log(`Dispatch setSelectedItem: ${props.namespace}/${props.module}@${props.version}`);
+            // console.log(`Dispatch setSelectedItem: ${props.namespace}/${props.module}@${props.version}`);
             dispatch(JobAppActions.setSelectedItem(`${props.namespace}/${props.module}@${props.version}`));
         } else if (Object.keys(jobData).length !== 0 && jobData.id.includes(pathEnd)) {
             setSpinnerFlag(false);
@@ -133,10 +135,10 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
                             value: dynamicProps.input_files && (dynamicProps.input_files.length > 0) & dynamicProps.input_files[1].value
                         }]
                     }
-                    console.log("Calling setInitialState #1 : ", updatedState);
+                    // console.log("Calling setInitialState #1 : ", updatedState);
                     setInitialState(updatedState);
                 } else {
-                    console.log("Set from else: ", props.resubmit);
+                    // console.log("Set from else: ", props.resubmit);
                     setInitialState((props.resubmit && props.resubmit.inputData) ? props.resubmit.inputData : {});
                 }
                 props.resubmit && localStorage.setItem('last_selected_folder', props.resubmit.inputData.output_container + '/');
@@ -162,12 +164,12 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
     }
 
     useEffect(() => {
-        console.log("Use Effect #2 for setInitialState")
+        // console.log("Use Effect #2 for setInitialState")
         if (jobData && input_file_meta) {
-            console.log("input_file_meta: ", input_file_meta);
+            // console.log("input_file_meta: ", input_file_meta);
             if (input_file_meta.type === "csonnet_simulation_container") {
                 if (input_file_meta.provenance && input_file_meta.provenance.input) {
-                    console.log("Calling setInitialState #1", input_file_meta.provenance);
+                    // console.log("Calling setInitialState #1", input_file_meta.provenance);
                     const pfile = getInputFileFromProvenance(input_file_meta.provenance, "input_file");
                     if (pfile && pfile['type'] !== "csonnet_simulation_container") {
                         setInitialState({
@@ -179,7 +181,7 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
                             output_container: (staticProps.outputPath && staticProps.outputPath[1]) ? staticProps.outputPath[1].value : ""
                         })
                         setInputFileMessage(`Graph File: ${pfile.stored_name}`)
-                        console.log("setValidInputFile(true)");
+                        // console.log("setValidInputFile(true)");
                         setValidInputFile(true);
                         setEnableBlocking(true);
                     } else {
@@ -194,7 +196,7 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
                     setInputFileMessage(false);
                 }
             } else if (input_file_meta.type) {
-                console.log("setValidInputFile(false) non-container");
+                // console.log("setValidInputFile(false) non-container");
                 setInputFileMessage(false);
                 setValidInputFile(true);
                 setEnableBlocking(false);
@@ -204,7 +206,7 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
                 setInputFileMessage(false);
             }
         } else {
-            console.log("setValidInputFile(false)");
+            // console.log("setValidInputFile(false)");
             setValidInputFile(false);
             setEnableBlocking(false);
             setInputFileMessage(false);
@@ -222,7 +224,7 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
     })
 
     useEffect(() => {
-        console.log("Resubmit Props Data --->",props.resubmit);
+        // console.log("Resubmit Props Data --->",props.resubmit);
         if(props.resubmit) {
             setDynamicProps(props.resubmit.inputData.input.dynamicProps);
             setSubmodelArray(props.resubmit.inputData.input.submodelArrayData);
@@ -232,11 +234,21 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
     },props.resubmit)
 
     const setInitialState = (state) => {
+
         if (staticProps.Output_name) {
             var retainedName = staticProps.Output_name.value;
         } else {
             retainedName = state.output_name;
         }
+
+        if(state && state.input && state.input['blocking_states'] !== undefined) {
+            setBlockingStateValue(state.input['blocking_states']);
+        }
+
+        if(state && state.input && state.input["blocking_nodes"] !== undefined) {
+            setBlockingNodesValue(state.input["blocking_nodes"]);
+        }
+
         const dp = {
             Behaviour: { id: 101, value: state && state.input && state.input.dynamic_inputs ? state.input.dynamic_inputs['Behaviour_model'] : "" },
             input_file: [jobData.input_files[0].name, {
@@ -247,9 +259,10 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
                 outputFlag: false,
                 required: true,
                 types: jobData.input_files[0].types,
-                value: state && state.input ? state.input["input_file"] : ""
+                value: state && state.input ? state.input["input_file"] : "",
             }],
-            blocking_state: {id: 307, value: state && state.input && state.input.dynamic_inputs && state.input.dynamic_inputs['blocking_state']?state.input.dynamic_inputs['blocking_state']:""},
+            blocking_state: {id: 307, value: blockingStateValue !== '' ? blockingStateValue : '',},
+                // value: state && state.input && state.input['blocking_states'] ? state.input['blocking_states'] :""},
             blocking_nodes: [jobData.input_files[1].name || '', {
                 key: "blocking_nodes",
                 formLabel: jobData.input_files[1].name || '',
@@ -258,12 +271,33 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
                 outputFlag: false,
                 types: jobData.input_files[1].types || [],
                 required: false,
-                value: state && state.input ? state.input["blocking_nodes"] : ""
+                value: blockingNodesValue !== '' ? blockingNodesValue : '',
+                // value: state && state.input ? state.input["blocking_nodes"] : ""
             }]
         };
-        if(props.resubmit === undefined) {
-            setDynamicProps(dp, ...submodelArray);
-        }
+
+            // console.log("State", state);
+            if (state.hasOwnProperty("input")) {
+              setSubmodelArray(state.input.submodelArrayData);
+              setDynamicProps(dp, ...submodelArray);
+              setRules(state.input.rules);
+              setStatesArray(state.input.states);
+            } else if (props.resubmit === undefined) {
+              setDynamicProps(dp, ...submodelArray);
+            }
+
+        // if(props.resubmit === undefined) {
+        //     setDynamicProps(dp, ...submodelArray);
+        // }
+
+        // if(props.resubmit === undefined) {
+        //     if(submodelArray.length > 0) {
+        //         setDynamicProps(dp, ...submodelArray);
+        //     } else if(state.hasOwnProperty("submodelArrayData")){
+        //         setDynamicProps(dp, ...state.submodelArrayData);
+        //     }    
+        // }
+        
         setStaticProps({
             Seed: { value: state && state.input ? state.input['random_number_seed'] : "" },
             Iterations: { value: state && state.input ? state.input['iterations'] : "" },
@@ -318,7 +352,7 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
         setIsFormValid(false);
     }
 
-    const dynamicChangedHandler = (event, obj, submodelFlag) => {
+    const dynamicChangedHandler = (event, obj, subId, submodelFlag) => {
         const updatedJobSubmissionForm = { ...dynamicProps };
         var updatedFormElement;
         if (dynamicProps[obj] instanceof Array) {
@@ -333,6 +367,7 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
                 setStatesArray([]);
                 setRules([]);
                 staticProps.default_state.value = '';
+                staticProps.InitialConditions[0].state = '';
                 const tempMenu = (event.target.value + '.submodels').split('.').reduce((o, i) => o[i], modelJSON.models);
                 tempSubmodels.push({ 'submodel_1': '', 'menu': Object.keys(tempMenu), 'value': '' });
             } else {
@@ -380,7 +415,7 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
                     subObj['menu'] = Object.keys(initSubmodel['submodels']);
                     subObj['value'] = '';
                     tempSubmodels.push(subObj);
-                    console.log(tempSubmodels);
+                    // console.log(tempSubmodels);
                 } else {
                     setStatesArray(initSubmodel['states'])
                     staticProps.default_state.value = initSubmodel['default_state']
@@ -390,14 +425,16 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
                         rules.push(x.rule);
                         Object.keys(x.input).map(y => {
                             let inputObj = {};
-                            inputObj[y] = x.input[y];
+                            inputObj[x.input[y].label] = x.input[y];
+                            inputObj['id'] = y
                             inputObj['value'] = '';
                             inputObj['description'] = x.input[y].description;
                             tempSubmodels.push(inputObj);
                             rules[rules.length-1][y] = '';
+                            rules[rules.length-1]["input"] = x.input[y].label;
                             console.log(rules);
                         })
-                        console.log(tempSubmodels);
+                        // console.log(tempSubmodels);
                     })
                     setRules(rules);
                 }
@@ -412,7 +449,7 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
                     }
                 })
                 setSubmodelArray(tempSubmodels);
-                console.log(tempSubmodels);
+                // console.log(tempSubmodels);
             }
         }
         //END
@@ -420,15 +457,17 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
             updatedFormElement[1].value = event.target.value;
         } else {
             updatedFormElement.value = event.target.value;
+            if(subId)
+                updatedFormElement.id = subId
         }
         updatedJobSubmissionForm[obj] = updatedFormElement;
         setDynamicProps({ ...updatedJobSubmissionForm });
     }
 
     function populatesubmitJSON() {
-        console.log(staticProps);
-        console.log(dynamicProps);
-        console.log(rules);
+        // console.log(staticProps);
+        // console.log("DYNAMIC",dynamicProps);
+        // console.log(rules);
         let submitJSON = {
             "dynamicProps": dynamicProps,
             "submodelArrayData": submodelArray,
@@ -438,10 +477,10 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
             "time_steps": parseInt(staticProps.TimeSteps.value),
             'initial_states_method': staticProps.InitialConditions,
             "default_state": staticProps.default_state.value,
-            "states":statesArray,
+            "states": statesArray,
             "random_number_seed": parseInt(staticProps.Seed.value),
             'decorations': [],
-            "dynamic_inputs": {},
+            "dynamic_inputs": {"Behaviour_model": dynamicProps.Behaviour.value},
             "rules": rules,
         };
 
@@ -449,16 +488,17 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
             submitJSON.blocking_nodes = dynamicProps.blocking_nodes[1].value
             submitJSON.blocking_states = dynamicProps.blocking_state.value
         }
-        console.log("Resubmit rules", rules);
+        // console.log("Resubmit rules", rules);
         let newRules = [...rules];
         newRules.forEach(x=>{
             Object.keys(dynamicProps).forEach(y=>{
-                if(x.hasOwnProperty(y))
-                  x[y] = parseFloat(dynamicProps[y].value) 
+                if(x.hasOwnProperty(dynamicProps[y].id) && x.input === y){
+                  x[dynamicProps[y].id] = parseFloat(dynamicProps[y].value) 
+                }
             })
         });
         submitJSON.rules = newRules;
-        console.log(newRules);
+        // console.log(newRules);
         // setRules(newRules)
         populateBody(submitJSON);
     }
@@ -473,7 +513,7 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
             output_container: staticProps.outputPath[1].value,
             output_name: staticProps.Output_name.value
         };
-        console.log(requestJson);
+        console.log("-----REquest JSON",requestJson);
         onFormSubmit(requestJson);
     }
 
@@ -531,7 +571,7 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
                         <div className='content'>
                             <div className='flex flex-col'>
                                 {isToasterFlag && (
-                                    <Toaster errorMsg={errorMsg} success={success} id="CSonNet Contagion Simulation 2"></Toaster>
+                                    <Toaster errorMsg={errorMsg} success={success} id="CSonNet Contagion Simulation"></Toaster>
                                 )}
                                 <Formsy onValid={enableButton} onInvalid={disableButton} className="content1">
                                     <div className='columnStyle'>
@@ -553,6 +593,7 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
                                         <div className='borderStyle'>
                                             <h3><b>Dynamics Model</b></h3>
                                             <Grid style={childGrid} item container xs={12} >
+                                                {/* {console.log("-----Dynamic Props",dynamicProps)} */}
                                                 <SelectFormsy
                                                     className="my-12 inputStyle1 model"
                                                     name="Behaviour Model"
@@ -562,7 +603,7 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
                                                     onChange={(event) => dynamicChangedHandler(event, 'Behaviour')}
                                                     required
                                                 >
-                                                    {Object.keys(modelJSON.models).map(model => {
+                                                    {Object.keys(modelJSON.models).length > 0 && Object.keys(modelJSON.models).map(model => {
                                                         return <MenuItem key={model} value={model}>{model}</MenuItem>
                                                     })}
                                                 </SelectFormsy>
@@ -573,9 +614,10 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
                                                             <Submodels
                                                                 sub={sub}
                                                                 changed={(event) =>
-                                                                    dynamicChangedHandler(event, Object.keys(submodelArray[index])[0], true)
+                                                                    dynamicChangedHandler(event, Object.keys(submodelArray[index])[0], sub.id, true)
                                                                 }
                                                                 desc={description}
+                                                                enableBlocking={enableBlocking}
                                                             >
                                                             </Submodels>
                                                         </Grid>)
@@ -662,7 +704,7 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
                                                         <Input
                                                             formData={dynamicProps.blocking_nodes}
                                                             // elementType={dynamicProps.blocking_nodes[1].types}
-                                                            // value={dynamicProps.blocking_nodes[1].value}
+                                                            value={dynamicProps.blocking_nodes[1].value}
                                                             required={dynamicProps.blocking_nodes[1].required}
                                                             changed={(event) => dynamicChangedHandler(event, 'blocking_nodes')}
                                                         />

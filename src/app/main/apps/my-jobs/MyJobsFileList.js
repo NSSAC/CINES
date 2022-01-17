@@ -214,7 +214,7 @@ function MyJobsFileList(props) {
       };
     
       const isNumberValidation = (input) => {
-        return /^-?[\d.]+(?:e-?\d+)?$/.test(input);
+        return /^-?[\d]+(?:e-?\d+)?$/.test(input);
       };
     
       const handleSelectedPageClick = () => {

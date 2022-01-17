@@ -86,8 +86,7 @@ display: none;
   }
   
   input#GoToPagination {
-    padding-bottom: 8px;
-    padding-top: 8px;
+    padding: 8px;
   }
   
   .goToPaginationButton {

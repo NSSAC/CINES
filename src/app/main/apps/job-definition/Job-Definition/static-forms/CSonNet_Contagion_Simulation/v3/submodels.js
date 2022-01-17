@@ -22,6 +22,7 @@ export const Submodels = (props) => {
             ]}
               value={props.sub.value}
             onChange={props.changed}
+            disabled={props.enableBlocking}
             required
         >
             {props.sub.menu.map((subModel) => {
@@ -49,6 +50,7 @@ export const Submodels = (props) => {
                         },
                     }}
                     validationError="This is not a valid value"
+                    disabled={props.enableBlocking}
                     autoComplete="off"
                     required
                 />
@@ -64,10 +66,17 @@ export const Submodels = (props) => {
                     onChange={props.changed}
                     validations={{
                         isPositiveInt: function (values, value) {
-                            return RegExp(/^(0+\.?|0*\.\d+|0*1(\.0*)?)$/).test(value) 
+                            if (props.sub[Object.keys(props.sub)[0]].maximum && props.sub[Object.keys(props.sub)[0]].maximum === 1){
+                                return RegExp(/^(0+\.?|0*\.\d+|0*1(\.0*)?)$/).test(value)
+                            } else if ((props.sub[Object.keys(props.sub)[0]].minimum && props.sub[Object.keys(props.sub)[0]].minimum.toString() === '0') == 0){
+                                return RegExp(/^(?:[0-9]\d*)?(?:\.\d+)?$/).test(value);
+                            } else {
+                                return RegExp(/^[+-]?\d+(\.\d+)?$/).test(value)
+                            }
                         },
                     }}
                     validationError="This is not a valid value"
+                    disabled={props.enableBlocking}
                     autoComplete="off"
                     required
                 />
@@ -84,6 +93,7 @@ export const Submodels = (props) => {
                     ]}
                     value={props.sub.value}
                     onChange={props.changed}
+                    disabled={props.enableBlocking}
                     required
                 >
                     {props.sub.menu.map((subModel) => {
