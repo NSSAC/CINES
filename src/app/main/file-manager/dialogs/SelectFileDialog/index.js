@@ -1,4 +1,4 @@
-import { Button, ClickAwayListener, Dialog, DialogActions, DialogContent, DialogTitle, Icon, IconButton, Input, Tooltip } from "@material-ui/core"
+import { Button, ClickAwayListener, Dialog, DialogActions, DialogContent, DialogTitle, Icon, IconButton, Input } from "@material-ui/core"
 import clsx from 'clsx';
 
 import React, { useEffect, useRef, useState } from 'react';
@@ -331,10 +331,8 @@ function handleDrop(e){
 
                 <span>
                   <div className={clsx("flex")}>
-                    <Tooltip title="Click to search" placement="bottom">
                       <div onClick={showSearch}>
-                        <IconButton className="w-64 h-64 p-0 m-0"><Icon>search</Icon></IconButton>    </div>
-                    </Tooltip>
+                        <IconButton title="Click to search" className="w-64 h-64 p-0 m-0"><Icon>search</Icon></IconButton>    </div>
                     {showSearchBox && (
                       <ClickAwayListener onClickAway={handleClickAway}>
                         <div>
@@ -349,11 +347,9 @@ function handleDrop(e){
                               onChange={(event) => setSearch(event.target.value)}
                               autoFocus
                             />
-                            <Tooltip title="Click to clear and hide the search box" placement="bottom">
-                              <IconButton onClick={hideSearch} className="mx-8 mt-8" >
+                              <IconButton title="Click to clear and hide the search box" onClick={hideSearch} className="mx-8 mt-8" >
                                 <Icon>close</Icon>
                               </IconButton>
-                            </Tooltip>
                           </div>
                         </div>
                       </ClickAwayListener>
@@ -363,21 +359,18 @@ function handleDrop(e){
                 </span>
 
                 {target_meta && target_meta.type==="folder" && canWriteFolder && title === "Select File" &&  (
-                  <Tooltip title="Upload Files" aria-label="add">
-                     <IconButton className="w-64 h-64 p-0 m-0" onClick={openFileUpload}>
+                     <IconButton title="Upload Files" className="w-64 h-64 p-0 m-0" onClick={openFileUpload}>
                         <Icon
                           className="flex flex-col"
                         >
                         cloud_upload
                       </Icon>
                      </IconButton>
-                  </Tooltip>
 
               )}  
 
               {target_meta && target_meta.type==="folder" && canWriteFolder && (
-                  <Tooltip title="Create folder" aria-label="add">
-                    <IconButton className="w-64 h-64 p-0 m-0" onClick={showCreateFolderDialog}>
+                    <IconButton title="Create folder" className="w-64 h-64 p-0 m-0" onClick={showCreateFolderDialog}>
                       <Icon
                         className="flex flex-col"
 
@@ -385,7 +378,6 @@ function handleDrop(e){
                         create_new_folder
                       </Icon>
                     </IconButton>
-                  </Tooltip>
 
               )}
             </div>
@@ -428,7 +420,7 @@ function handleDrop(e){
             path={targetFolder}
             handleClose={closefileUploadDialog }
             multiple={multiple}
-            fileTypes={fileTypes}
+            fileTypes={fileTypes.filter(e => e !== 'csonnet_simulation_container')}
             dropped={droppedFiles}
             // setSelected={setSelection}
         />)}
