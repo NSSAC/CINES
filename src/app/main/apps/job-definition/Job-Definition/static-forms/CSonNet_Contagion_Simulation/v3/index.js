@@ -618,6 +618,7 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
                                                                 }
                                                                 desc={description}
                                                                 enableBlocking={enableBlocking}
+                                                                validInput={validInputFile}
                                                             >
                                                             </Submodels>
                                                         </Grid>)

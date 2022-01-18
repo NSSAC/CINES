@@ -22,7 +22,7 @@ export const Submodels = (props) => {
             ]}
               value={props.sub.value}
             onChange={props.changed}
-            disabled={props.enableBlocking}
+            disabled={props.enableBlocking || !props.validInput}
             required
         >
             {props.sub.menu.map((subModel) => {
@@ -50,7 +50,7 @@ export const Submodels = (props) => {
                         },
                     }}
                     validationError="This is not a valid value"
-                    disabled={props.enableBlocking}
+                    disabled={props.enableBlocking || !props.validInput}
                     autoComplete="off"
                     required
                 />
@@ -76,7 +76,7 @@ export const Submodels = (props) => {
                         },
                     }}
                     validationError="This is not a valid value"
-                    disabled={props.enableBlocking}
+                    disabled={props.enableBlocking || !props.validInput}
                     autoComplete="off"
                     required
                 />
@@ -93,7 +93,7 @@ export const Submodels = (props) => {
                     ]}
                     value={props.sub.value}
                     onChange={props.changed}
-                    disabled={props.enableBlocking}
+                    disabled={props.enableBlocking || !props.validInput}
                     required
                 >
                     {props.sub.menu.map((subModel) => {
