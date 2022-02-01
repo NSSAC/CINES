@@ -27,7 +27,7 @@ import { MoveMultiple } from "../dialogs/MoveMultiple";
 import { RenameFile } from "../dialogs/RenameFile";
 import * as Perms from "../permissions";
 import FILEUPLOAD_CONFIG from "../FileManagerAppConfig";
-
+import { ModifyPermissions } from "../panel/ModifyPermissions";
 import "../FileManager.css";
 
 function FileList(props) {
@@ -63,6 +63,7 @@ function FileList(props) {
   const [active_selection, setActiveSelection] = useState(false);
   const [containerActions, setContainerActions] = useState();
   const [fileActions, setFileActions] = useState();
+  const [showPermissionsDialog, setShowPermissionsDialog] = useState(false);
   const [droppedFiles, setDroppedFiles] = useState(false);
   const [menuClick, setMenuClick] = useState(null);
   const [menuItems, setMenuItems] = useState();
@@ -733,6 +734,13 @@ function FileList(props) {
     }
   }
 
+  function closePermissionsDialog() {
+    setShowPermissionsDialog(false);
+    // setTimeout(() => {
+    //   OnRefresh();
+    // }, 1000);
+  }
+
   function onClickRow(evt) {
     var clear =
       !evt.metaKey &&
@@ -819,6 +827,14 @@ function FileList(props) {
                 toggleAll={toggleAll}
                 enableCheckBoxes={totalFileCount!==0 && (props.enableCheckBoxes || false)}
               />
+               <ModifyPermissions
+                showModal={showPermissionsDialog}
+                selectedVal={props.meta}
+                props={props}
+                selected = {active_selection}
+                onModify={refreshFolder}
+                handleClose={closePermissionsDialog}
+              />
               {_files.length > 0 && (
                 <TableBody onClick={onClickRow}>
                   {_files &&
@@ -863,8 +879,10 @@ function FileList(props) {
                     <div> {selectedIds.length} files selected.</div>
                   )}
                   {selectedIds && selectedIds.length === 1 && (
-                    <FileDetailPanel meta={{ ...active_selection }} />
-                  )}
+                    <FileDetailPanel showPermissionsDialog={(p) => {
+                      setShowPermissionsDialog(p);
+                    }} meta={{ ...active_selection }} />
+                 )}
                 </div>
               </div>
             </Hidden>
