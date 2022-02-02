@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import withReducer from "app/store/withReducer";
 // import { confirmAlert } from 'react-confirm-alert';
 
@@ -73,6 +73,7 @@ function FileList(props) {
   const curFilter = filtered_files ? filtered_files.filter : false;
   const matches = useMediaQuery("(min-width:600px)");
   const menuOpen = Boolean(menuClick);
+  const history = useHistory();
 
   const selectedIds = Object.keys(selected).filter((id) => {
     return selected[id];
@@ -134,7 +135,16 @@ function FileList(props) {
       cellClass: "",
       formatter: (val, obj) => {
         return (
-          <Link style={{ color: "#1565C0" }} title={val} to={val}>
+          <Link
+            style={{ color: "#1565C0" }}
+            title={val}
+            onClick={(event) => {
+              event.preventDefault();
+              if (event.detail === 1) {
+                history.push(val);
+              }
+            }}
+          >
             {val}
           </Link>
         );

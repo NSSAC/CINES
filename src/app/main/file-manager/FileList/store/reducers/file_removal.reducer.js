@@ -21,7 +21,7 @@ const reducer = function (state = initialState, action) {
                 files: updated
             }
         case Actions.FILE_REMOVAL_COMPLETE:
-            toast.success(`${action.payload.length} ${(action.payload.length>1)?"files":"file"} removed.`)
+            toast.success(`${action.payload.length} ${(action.payload.length>1)?"files/folders":"file/folder"} removed.`)
             return {
                 removing_files: false,
                 removal_completed: true,

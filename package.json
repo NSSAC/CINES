@@ -51,7 +51,7 @@
         "mobile-detect": "1.4.4",
         "module-exists": "^0.4.0",
         "moment": "2.24.0",
-        "node-sciduct": "^1.1.8",
+        "node-sciduct": "github:NSSAC/node-sciduct",
         "notistack": "0.9.7",
         "papaparse": "^5.3.1",
         "path-to-regexp": "3.1.0",

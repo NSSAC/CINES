@@ -30,8 +30,7 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
         ({ JobDefinitionApp }) => JobDefinitionApp.selectedjobid
     );
     const input_file_meta = useSelector(({ SimForm }) => SimForm.input_file);
-    const [blockingStateValue, setBlockingStateValue] = useState('');
-    const [blockingNodesValue, setBlockingNodesValue] = useState('');
+    const [inputFileChangeCounter, setInputFileChangeCounter]  = useState(0);
     const [isFormValid, setIsFormValid] = useState(false);
     const [isToasterFlag, setIsToasterFlag] = useState(false);
     const [errorMsg, setErrorMsg] = useState();
@@ -53,6 +52,9 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
         paddingLeft: '8px',
         alignSelf: 'center',
     };
+
+    var blockingStatesValue = "";
+    var blockingNodesValue = "";
 
     // Use Effect #1 for setInitialState
     useEffect(() => {
@@ -80,7 +82,7 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
                 } else {
                     setInitialState((props.resubmit && props.resubmit.inputData) ? props.resubmit.inputData : {});
                 }
-                props.resubmit && localStorage.setItem('last_selected_folder', props.resubmit.inputData.output_container + '/');
+                props.resubmit && localStorage.setItem('last_selected_folder', props.resubmit.inputData.output_container);
                 setInputSchema(jobData.input_schema);
             }
         }
@@ -104,6 +106,18 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
             localStorage.removeItem('last_selected_folder')
         )
     }, [])
+
+    useEffect (() => {
+        if(props.resubmit) {
+            if (input_file_meta.hasOwnProperty("name")) { 
+                if(props.resubmit.inputData.input["input_file"].includes(input_file_meta["name"])) {
+                    blockingStatesValue = props.resubmit.inputData.input["blocking_states"];
+                    blockingNodesValue = props.resubmit.inputData.input["blocking_nodes"];
+                }
+            }
+            setInputFileChangeCounter(inputFileChangeCounter  + 1);
+        }
+    },[input_file_meta])
 
     useEffect(() => {
         // console.log("Use Effect #1 for setInitialState")
@@ -141,7 +155,7 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
                     // console.log("Set from else: ", props.resubmit);
                     setInitialState((props.resubmit && props.resubmit.inputData) ? props.resubmit.inputData : {});
                 }
-                props.resubmit && localStorage.setItem('last_selected_folder', props.resubmit.inputData.output_container + '/');
+                props.resubmit && localStorage.setItem('last_selected_folder', props.resubmit.inputData.output_container);
                 setInputSchema(jobData.input_schema);
             }
         }
@@ -164,7 +178,7 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
     }
 
     useEffect(() => {
-        // console.log("Use Effect #2 for setInitialState")
+        // console.log("Use Effect #2 for setInitialState")   
         if (jobData && input_file_meta) {
             // console.log("input_file_meta: ", input_file_meta);
             if (input_file_meta.type === "csonnet_simulation_container") {
@@ -174,11 +188,16 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
                     if (pfile && pfile['type'] !== "csonnet_simulation_container") {
                         setInitialState({
                             input: props.resubmit ? {
-                                ...input_file_meta.provenance.input, input_file: props.resubmit.inputData.input["input_file"]
+                                ...input_file_meta.provenance.input, 
+                                input_file: props.resubmit.inputData.input["input_file"], 
+                                blocking_states: inputFileChangeCounter <= 2 ? blockingStatesValue : '',
+                                blocking_nodes: inputFileChangeCounter <= 2 ? blockingNodesValue : '',
+                                // blocking_states: input_file_meta.hasOwnProperty("name") && props.resubmit.inputData.input["input_file"].includes(input_file_meta["name"]) ? props.resubmit.inputData.input["blocking_states"] : "",
+                                // blocking_nodes: input_file_meta.hasOwnProperty("name") && props.resubmit.inputData.input["input_file"].includes(input_file_meta["name"]) ? props.resubmit.inputData.input["blocking_nodes"] : "",
                             } : {
                                 ...input_file_meta.provenance.input
                             },
-                            output_container: (staticProps.outputPath && staticProps.outputPath[1]) ? staticProps.outputPath[1].value : ""
+                            output_container: (staticProps.outputPath && staticProps.outputPath[1]) ? staticProps.outputPath[1].value : "",
                         })
                         setInputFileMessage(`Graph File: ${pfile.stored_name}`)
                         // console.log("setValidInputFile(true)");
@@ -231,7 +250,7 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
             setRules(props.resubmit.inputData.input.rules);
             setStatesArray(props.resubmit.inputData.input.states);
         }
-    },props.resubmit)
+    },[props.resubmit])
 
     const setInitialState = (state) => {
 
@@ -239,14 +258,6 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
             var retainedName = staticProps.Output_name.value;
         } else {
             retainedName = state.output_name;
-        }
-
-        if(state && state.input && state.input['blocking_states'] !== undefined) {
-            setBlockingStateValue(state.input['blocking_states']);
-        }
-
-        if(state && state.input && state.input["blocking_nodes"] !== undefined) {
-            setBlockingNodesValue(state.input["blocking_nodes"]);
         }
 
         const dp = {
@@ -261,8 +272,7 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
                 types: jobData.input_files[0].types,
                 value: state && state.input ? state.input["input_file"] : "",
             }],
-            blocking_state: {id: 307, value: blockingStateValue !== '' ? blockingStateValue : '',},
-                // value: state && state.input && state.input['blocking_states'] ? state.input['blocking_states'] :""},
+            blocking_state: {id: 307, value: state && state.input && state.input['blocking_states'] ? state.input['blocking_states'] :""},
             blocking_nodes: [jobData.input_files[1].name || '', {
                 key: "blocking_nodes",
                 formLabel: jobData.input_files[1].name || '',
@@ -271,8 +281,7 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
                 outputFlag: false,
                 types: jobData.input_files[1].types || [],
                 required: false,
-                value: blockingNodesValue !== '' ? blockingNodesValue : '',
-                // value: state && state.input ? state.input["blocking_nodes"] : ""
+                value: state && state.input ? state.input["blocking_nodes"] : "",
             }]
         };
 
@@ -285,18 +294,6 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
             } else if (props.resubmit === undefined) {
               setDynamicProps(dp, ...submodelArray);
             }
-
-        // if(props.resubmit === undefined) {
-        //     setDynamicProps(dp, ...submodelArray);
-        // }
-
-        // if(props.resubmit === undefined) {
-        //     if(submodelArray.length > 0) {
-        //         setDynamicProps(dp, ...submodelArray);
-        //     } else if(state.hasOwnProperty("submodelArrayData")){
-        //         setDynamicProps(dp, ...state.submodelArrayData);
-        //     }    
-        // }
         
         setStaticProps({
             Seed: { value: state && state.input ? state.input['random_number_seed'] : "" },
@@ -373,6 +370,7 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
             } else {
                 setStatesArray(modelJSON.models[event.target.value]['states']);
                 staticProps.default_state.value = modelJSON.models[event.target.value]['default_state'];
+                staticProps.InitialConditions[0].state = '';
                 let rules=[];
                 modelJSON.models[event.target.value]['rules'].map(x => {
                     rules.push(x.rule);
