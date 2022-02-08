@@ -132,3 +132,7 @@ hr {
 .MuiPaper-root .Mui-focused {
   color: black !important;
 }
+
+.MuiFormControl-root .Mui-focused {
+  color: black !important;
+}
