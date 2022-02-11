@@ -80,16 +80,12 @@ function uploadFile(dispatch,f){
 }
 
 function startUploads(dispatch){
-    var defs = queue.map((f)=>{
+    queue.map((f)=>{
       if (!f.file_created){
         return uploadFile(dispatch,f)
       }
       return false
     }).filter((d)=>!!d)
-
-    Promise.all(defs)
-      .then((results)=>{
-      })
 }
 
 export function addToUploadQueue(files)

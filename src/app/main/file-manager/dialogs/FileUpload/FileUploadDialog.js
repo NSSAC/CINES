@@ -77,16 +77,19 @@ const BorderLinearProgress = withStyles((theme) => ({
   },
 }))(LinearProgress);
 
-function FileUpload({ fileTypes, setUploadFile, path, showModal, handleClose, breadcrumbArr, dropped, setSelected }) {
+function FileUpload({ fileTypes, path, showModal, handleClose, breadcrumbArr, dropped, setSelected, uploadButtonClicked, dialogCloseFlag }) {
   const dispatch = useDispatch();
   const file_types = useSelector(({ fileManagerApp }) => fileManagerApp.file_types);
   const uploader = useSelector(({ fileManagerApp }) => fileManagerApp.uploader);
+
   const [isDrag, setDrag] = useState(false);
-  var uploadableTypes = fileTypes || FILEUPLOAD_CONFIG.fileTypes
   const [uploadFiles, setUploadFiles] = useState(dropped || []);
   const [disableButton, setDisableButton] = useState(true);
+
   const classes = useStyles();
   const fileInput = useRef();
+
+  var uploadableTypes = fileTypes || FILEUPLOAD_CONFIG.fileTypes
 
   React.useEffect(() => {
     if (!file_types) {
@@ -117,8 +120,8 @@ function FileUpload({ fileTypes, setUploadFile, path, showModal, handleClose, br
         setSelected(s)
       }
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [uploader, uploader.validated])
-
 
   const onChangeHandler = (event) => {
     const fileData = Object.keys(event.target.files).map((fk) => {
@@ -178,6 +181,7 @@ function FileUpload({ fileTypes, setUploadFile, path, showModal, handleClose, br
   }
 
   const onUpload = () => {
+    uploadButtonClicked(true);
     setDisableButton(true);
     const mapped = uploadFiles.map((f) => {
       f.path = path

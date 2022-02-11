@@ -53,7 +53,7 @@ function FileManagerApp(props) {
   },[dispatch,file_path, usermeta_updater,usermeta_updater.updating])
 
   React.useEffect(()=>{
-    console.log("File Meta or Path updated")
+    // console.log("File Meta or Path updated")
     // if (file_meta && !file_meta.isContainer){
       setFileActions()
     // }

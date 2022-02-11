@@ -68,6 +68,7 @@ export const Submodels = (props) => {
                         isPositiveInt: function (values, value) {
                             if (props.sub[Object.keys(props.sub)[0]].maximum && props.sub[Object.keys(props.sub)[0]].maximum === 1){
                                 return RegExp(/^(0+\.?|0*\.\d+|0*1(\.0*)?)$/).test(value)
+                            // eslint-disable-next-line eqeqeq
                             } else if ((props.sub[Object.keys(props.sub)[0]].minimum && props.sub[Object.keys(props.sub)[0]].minimum.toString() === '0') == 0){
                                 return RegExp(/^(?:[0-9]\d*)?(?:\.\d+)?$/).test(value);
                             } else {

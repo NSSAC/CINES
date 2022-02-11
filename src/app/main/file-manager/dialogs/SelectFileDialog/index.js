@@ -51,6 +51,7 @@ function SelectFileDialog({ showModal, handleFMClose, target, fileTypes, multipl
   const [filter,setFilter] = useState({file_types: fileTypes})
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [showFileUploadDialog,setShowFileUploadDialog] = useState(false)
+  const [uploadButtonClickFlag, setUploadButtonClickFlag] = useState(false);
   var uploadableTypes = fileTypes || FILEUPLOAD_CONFIG.fileTypes
 
   const onCancel = () => {
@@ -81,8 +82,8 @@ function SelectFileDialog({ showModal, handleFMClose, target, fileTypes, multipl
   }
 
   function closefileUploadDialog() {
-    refreshFolder()
-    setShowFileUploadDialog(false)
+    setShowFileUploadDialog(false);
+    return refreshFolder();
   }
 
   function closeCreateFolderDialog() {
@@ -90,7 +91,8 @@ function SelectFileDialog({ showModal, handleFMClose, target, fileTypes, multipl
   }
 
   function openFileUpload(){
-    setShowFileUploadDialog(true)
+    setShowFileUploadDialog(true);
+    setUploadButtonClickFlag(false);
   }
 
   function showSearch() {
@@ -132,8 +134,8 @@ function SelectFileDialog({ showModal, handleFMClose, target, fileTypes, multipl
     }
   }
 
-  function refreshFolder(){
-    dispatch(Actions.getFiles((target_meta.id==="root")?'/':target_meta.id))
+  async function refreshFolder(){
+    return await dispatch(Actions.getFiles((target_meta.id==="root")?'/':target_meta.id))
   }
 
   function navigateToFolder(folder_path) {
@@ -220,39 +222,40 @@ function handleDrop(e){
     }, 200);
   }, [tf]);
 
-  useEffect(()=>{
-    if (uploader && uploader.recent && uploader.recent.length>0){
-        var sel={}
-        if (multiple){
-          uploader.recent.forEach((f)=>{sel[f.id]=true})
-        }else{
-          sel[uploader.recent[0].id]=true
-        }
+  useEffect(() => {
+    if (uploader && uploader.recent && uploader.recent.length > 0) {
+      var sel = {};
+      if (multiple) {
+        uploader.recent.forEach((f) => {
+          sel[f.id] = true;
+        });
+      } else {
+        sel[uploader.recent[0].id] = true;
+      }
 
-        dispatch(Actions.getFiles(targetFolder))
-        setTimeout(()=>{
-          setSelection(sel)
-          setShowFileUploadDialog(false)
-        },500)
+      if (uploadButtonClickFlag) {
+        if (uploader && uploader.queue.length === 0) {
+          closefileUploadDialog().then(()=>{
+            setSelection(sel);
+          })
+        }
+      }
     }
-  },[dispatch,uploader,uploader.recent,targetFolder,multiple])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, uploader, uploader.recent, targetFolder, multiple, uploadButtonClickFlag]);
 
   useEffect(()=>{
     var filter ={file_types: fileTypes}
-
     if (search){
       filter.search = search
     }
-
     setFilter(filter)
-
   }, [fileTypes,search])
 
   useEffect(()=>{
     if (files && filter){
       dispatch(Actions.filterFiles(files,filter))
     }
-
   },[dispatch,filter,files,selection])
 
   useEffect(()=>{
@@ -270,8 +273,6 @@ function handleDrop(e){
   useEffect(()=>{
     const _files = ((filtered_files && filtered_files.filtered)?filtered_files.filtered:files) || []
     var fIds = _files.map((f)=>f.id)
-    // console.log("check for selected in list: ", fIds)
-    // console.log("selection: ", selection)
 
     if (Object.keys(selection).some((id)=>{
       return selection[id] && (fIds.indexOf(id)<0)
@@ -290,9 +291,11 @@ function handleDrop(e){
     if (target_meta && target_meta.id && target_meta.isContainer) {
       dispatch(Actions.getFiles((target_meta.id==="root")?'/':target_meta.id))
     }
-
   }, [dispatch, target_meta])
 
+  const handleUploadButtonClicked = (clickFlag) => {
+    setUploadButtonClickFlag(clickFlag);
+  }
 
   const selectedIds = Object.keys(selection).filter((s) => { return selection[s] })
   const _files = filtered_files?filtered_files.filtered:files;
@@ -359,7 +362,7 @@ function handleDrop(e){
                 </span>
 
                 {target_meta && target_meta.type==="folder" && canWriteFolder && title === "Select File" &&  (
-                     <IconButton title="Upload Files" className="w-64 h-64 p-0 m-0" onClick={openFileUpload}>
+                     <IconButton title="Upload files" className="w-64 h-64 p-0 m-0" onClick={openFileUpload}>
                         <Icon
                           className="flex flex-col"
                         >
@@ -422,6 +425,7 @@ function handleDrop(e){
             multiple={multiple}
             fileTypes={fileTypes.filter(e => e !== 'csonnet_simulation_container')}
             dropped={droppedFiles}
+            uploadButtonClicked={handleUploadButtonClicked}
             // setSelected={setSelection}
         />)}
         {showCreateDialog && (<CreateFolder
