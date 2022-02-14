@@ -466,6 +466,10 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
         // console.log(staticProps);
         // console.log("DYNAMIC",dynamicProps);
         // console.log(rules);
+        if (!staticProps.Seed.value || staticProps.Seed.value === "0") {
+            let random_seed_value = Math.floor((Math.random() * 32000) + 1);
+            staticProps.Seed.value = random_seed_value;
+        } 
         let submitJSON = {
             "dynamicProps": dynamicProps,
             "submodelArrayData": submodelArray,
@@ -607,8 +611,13 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
                                                 </SelectFormsy>
                                                 {modelJSON.models[dynamicProps.Behaviour.value] !== undefined && description(modelJSON.models[dynamicProps.Behaviour.value].description)}
                                                 {submodelArray.map((sub, index) => {
+                                                    let padLeftValue = 8*(index+1);
                                                     return (
-                                                        <Grid id={props.key} style={childGrid} item container xs={12} key={index}>
+                                                        <Grid 
+                                                        id={props.key} 
+                                                        style={sub.hasOwnProperty(`submodel_${index+1}`) ? { paddingLeft: padLeftValue, alignSelf: 'center',} : {childGrid} }
+                                                        item container xs={12} 
+                                                        key={index}>
                                                             <Submodels
                                                                 sub={sub}
                                                                 changed={(event) =>
@@ -633,12 +642,12 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
                                                     type="text"
                                                     name='Seed'
                                                     style={{ width: '18px' }}
-                                                    value={String(staticProps.Seed.value)}
+                                                    value={staticProps.Seed.value ? String(staticProps.Seed.value) : "0"}
                                                     label="Seed"
                                                     onBlur={(event) => staticChangedHandler(event, 'Seed')}
                                                     validations={{
                                                         isPositiveInt: function (values, value) {
-                                                            return RegExp(/^(?:[+]?(?:[0-9]\d*))$/).test(value) && !RegExp(/^0+$/).test(value)
+                                                            return RegExp(/^(?:[+]?(?:[0-9]\d*))$/).test(value)
                                                         }
                                                     }}
                                                     validationError="This is not a valid value"
@@ -646,6 +655,7 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
                                                     disabled={!validInputFile}
                                                     required
                                                 />
+                                                {/* && !RegExp(/^0+$/).test(value) */}
                                                 {description(inputSchema.properties.random_number_seed.description)}
                                             </Grid>}
                                         </div>}
