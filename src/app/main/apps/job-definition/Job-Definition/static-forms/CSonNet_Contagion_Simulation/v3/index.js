@@ -466,7 +466,7 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
         // console.log(staticProps);
         // console.log("DYNAMIC",dynamicProps);
         // console.log(rules);
-        if (!staticProps.Seed.value || staticProps.Seed.value === "0") {
+        if (!staticProps.Seed.value || Number(staticProps.Seed.value) === 0) {
             let random_seed_value = Math.floor((Math.random() * 32000) + 1);
             staticProps.Seed.value = random_seed_value;
         } 
