@@ -46,6 +46,7 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
     const [submodelArray, setSubmodelArray] = useState([]);
     const [statesArray, setStatesArray] = useState([]);
     const [rules, setRules] = useState([]);
+    const [randomNumberSeed, setRandomNumberSeed] = useState();
     const history = useHistory();
 
     const childGrid = {
@@ -80,6 +81,9 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
                     }
                     setInitialState(updatedState);
                 } else {
+                    if(props.resubmit && props.resubmit.inputData) {
+                        setRandomNumberSeed(props.resubmit.inputData.input.random_number_seed);
+                    }
                     setInitialState((props.resubmit && props.resubmit.inputData) ? props.resubmit.inputData : {});
                 }
                 props.resubmit && localStorage.setItem('last_selected_folder', props.resubmit.inputData.output_container);
@@ -296,7 +300,7 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
             }
         
         setStaticProps({
-            Seed: { value: state && state.input ? state.input['random_number_seed'] : "" },
+            Seed: { value: state && state.input ? (randomNumberSeed ? randomNumberSeed : state.input['random_number_seed']) : "" },
             Iterations: { value: state && state.input ? state.input['iterations'] : "" },
             TimeSteps: { value: state && state.input ? state.input['time_steps'] : "" },
             InitialConditions: state && state.input ? state.input['initial_states_method'] : [{ type: 'random', number_nodes: "", state: "" }],
@@ -679,7 +683,7 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
                                                         }}
                                                         validationError="This is not a valid value"
                                                         autoComplete="off"
-                                                        disabled={!validInputFile}
+                                                        disabled={enableBlocking || !validInputFile}
                                                         required
                                                     />
                                                     {description(inputSchema.properties.iterations.description)}
@@ -700,7 +704,7 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
                                                         }}
                                                         validationError="This is not a valid value"
                                                         autoComplete="off"
-                                                        disabled={!validInputFile}
+                                                        disabled={enableBlocking || !validInputFile}
                                                         required
                                                     />
                                                     {description(inputSchema.properties.time_steps.description)}

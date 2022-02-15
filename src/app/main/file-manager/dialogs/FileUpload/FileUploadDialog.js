@@ -181,7 +181,9 @@ function FileUpload({ fileTypes, path, showModal, handleClose, breadcrumbArr, dr
   }
 
   const onUpload = () => {
-    uploadButtonClicked(true);
+    if(uploadButtonClicked) {
+      uploadButtonClicked(true);
+    }
     setDisableButton(true);
     const mapped = uploadFiles.map((f) => {
       f.path = path
