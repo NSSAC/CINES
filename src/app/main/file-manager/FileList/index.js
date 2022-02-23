@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useHistory } from "react-router-dom";
@@ -67,6 +68,7 @@ function FileList(props) {
   const [droppedFiles, setDroppedFiles] = useState(false);
   const [menuClick, setMenuClick] = useState(null);
   const [menuItems, setMenuItems] = useState();
+  const [permissionLoadFlag, setPermissionLoadFlag] = useState(false);
 
   var uploadableTypes = FILEUPLOAD_CONFIG.fileTypes;
   const _files = filtered_files ? filtered_files.filtered : files;
@@ -138,6 +140,7 @@ function FileList(props) {
           <Link
             style={{ color: "#1565C0" }}
             title={val}
+            to=''
             onClick={(event) => {
               event.preventDefault();
               if (event.detail === 1) {
@@ -289,6 +292,17 @@ function FileList(props) {
   //         closeOnClickOutside: false
   //     })
   // }
+
+  React.useEffect(() => {
+    setPermissionLoadFlag(true);
+    refreshFolder()
+    .then(()=> {
+      setTimeout(()=>{
+        setPermissionLoadFlag(false);
+      },100)
+    })
+  },[selected])
+
   React.useEffect(() => {
     var selectedIds = Object.keys(selected).filter((id) => {
       return selected[id];
@@ -662,7 +676,7 @@ function FileList(props) {
           }
 
           props.setFileActions(
-            <React.Fragment classname="flex flex-col">
+            <div classname="flex flex-col">
               <div className="flex-shrink flex flex-row justify-between h-32 p-1 mt-16 ml-16 mr-16 bg-white align-middle rounded ">
                 <input
                   className="flex-shrink min-w-min rounded p-0 bg-white align-middle text-black text-lg"
@@ -687,7 +701,7 @@ function FileList(props) {
                 {containerActions}
                 {fileActions}
               </div>
-            </React.Fragment>
+            </div>
           );
         }
       }
@@ -746,9 +760,12 @@ function FileList(props) {
 
   function closePermissionsDialog() {
     setShowPermissionsDialog(false);
-    // setTimeout(() => {
-    //   OnRefresh();
-    // }, 1000);
+    refreshFolder()
+    .then(()=> {
+      setTimeout(()=>{
+        setPermissionLoadFlag(false);
+      },100)
+    })
   }
 
   function onClickRow(evt) {
@@ -804,8 +821,23 @@ function FileList(props) {
     }
   }
 
-  function refreshFolder() {
-    dispatch(Actions.getFiles(props.path));
+  async function refreshFolder() {
+    return await dispatch(Actions.getFiles(props.path));
+  }
+
+  function setPermissionLoading(flag) {
+    setPermissionLoadFlag(flag);
+  }
+
+  function handleShowPermissionsDialog(showPerm) {
+    setPermissionLoadFlag(true);
+    refreshFolder()
+    .then(()=> {
+      setTimeout(()=>{
+        setPermissionLoadFlag(false);
+        setShowPermissionsDialog(showPerm);
+      },100)
+    })
   }
   
   if (_files && _files.length >= 0) {
@@ -844,6 +876,7 @@ function FileList(props) {
                 selected = {active_selection}
                 onModify={refreshFolder}
                 handleClose={closePermissionsDialog}
+                setPermissionLoading={setPermissionLoading}
               />
               {_files.length > 0 && (
                 <TableBody onClick={onClickRow}>
@@ -889,9 +922,12 @@ function FileList(props) {
                     <div> {selectedIds.length} files selected.</div>
                   )}
                   {selectedIds && selectedIds.length === 1 && (
-                    <FileDetailPanel showPermissionsDialog={(p) => {
-                      setShowPermissionsDialog(p);
-                    }} meta={{ ...active_selection }} />
+                    <FileDetailPanel 
+                    showPermissionsDialog={handleShowPermissionsDialog} 
+                    meta={{ ...active_selection }} 
+                    permissionLoadFlag={permissionLoadFlag}
+                    onModify={refreshFolder}
+                    />
                  )}
                 </div>
               </div>
