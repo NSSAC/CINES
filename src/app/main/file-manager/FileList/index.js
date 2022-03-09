@@ -218,6 +218,7 @@ function FileList(props) {
     }
 
     function openUploader() {
+      setShowDetailPanel(false);
       setShowFileUpload(true);
     }
 
@@ -387,7 +388,8 @@ function FileList(props) {
       const canWrite = Perms.canWriteFile(asel, user);
       const canDownload = Perms.canDownloadFile(asel, user);
       setActiveSelection(asel);
-      setShowDetailPanel(true);
+      if(!showFileUpload)
+        setShowDetailPanel(true);
       if(matches) {
         setFileActions(
           <React.Fragment>

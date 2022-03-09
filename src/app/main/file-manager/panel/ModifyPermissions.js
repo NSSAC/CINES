@@ -73,10 +73,6 @@ export const ModifyPermissions = ({ showModal, handleClose, onModify, selected, 
 
   const handleChange = (event) => setSearchValue(event.target.value);
 
-  // function OnRefresh() {
-  //   onModify()
-  // }
-
   function addUser(event, value) {
     const values = [...users];
     values.push({
@@ -93,41 +89,42 @@ export const ModifyPermissions = ({ showModal, handleClose, onModify, selected, 
   }
 
   const permApiExec = (user) => {
-    const url = `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/`;
-    const fileServiceInstance = new FileService(url, token);
-    let newError = [];
-    var perm = [];
-    if (
-      selected.readACL.indexOf(user.id) !== -1 ||
-      selected.writeACL.indexOf(user.id) !== -1 ||
-      selected.computeACL.indexOf(user.id) !== -1
-    ) {
-      perm = ["read", "compute", "write"];
-      return fileServiceInstance
-        .revoke(path + selected.name, perm, user.id, false)
-        .then(() => {
-          perm = [];
-          if (user.readACL === true) perm.push("read");
-          if (user.computeACL === true) perm.push("compute");
-          if (user.writeACL === true) perm.push("write");
-          fileServiceInstance
-            .grant(path + selected.name, perm, user.id, false)
-        })
-        .catch((error) => {
-          newError = newError.concat(usersData.errorArr);
-          newError.push(user);
-        });
-    } else {
-      if (user.readACL === true) perm.push("read");
-      if (user.computeACL === true) perm.push("compute");
-      if (user.writeACL === true) perm.push("write");
-      return fileServiceInstance
-        .grant(path + selected.name, perm, user.id, false)
-        .catch((error) => {
-          newError = newError.concat(usersData.errorArr);
-          newError.push(user);
-        });
-    }
+    return new Promise((resolve) => {
+      const url = `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/`;
+      const fileServiceInstance = new FileService(url, token);
+      let newError = [];
+      var perm = [];
+      if (
+        selected.readACL.indexOf(user.id) !== -1 ||
+        selected.writeACL.indexOf(user.id) !== -1 ||
+        selected.computeACL.indexOf(user.id) !== -1
+      ) {
+        perm = ["read", "compute", "write"];
+        fileServiceInstance
+          .revoke(path + selected.name, perm, user.id, false)
+          .then(() => {
+            perm = [];
+            if (user.readACL === true) perm.push("read");
+            if (user.computeACL === true) perm.push("compute");
+            if (user.writeACL === true) perm.push("write");
+            resolve(fileServiceInstance.grant(path + selected.name, perm, user.id, false));
+          })
+          .catch((error) => {
+            newError = newError.concat(usersData.errorArr);
+            newError.push(user);
+          });
+      } else {
+        if (user.readACL === true) perm.push("read");
+        if (user.computeACL === true) perm.push("compute");
+        if (user.writeACL === true) perm.push("write");
+        resolve(fileServiceInstance
+          .grant(path + selected.name, perm, user.id, false)
+          .catch((error) => {
+            newError = newError.concat(usersData.errorArr);
+            newError.push(user);
+          }));
+      }
+    });
   };
 
   const onSubmit = async () => {
@@ -169,6 +166,10 @@ export const ModifyPermissions = ({ showModal, handleClose, onModify, selected, 
       })
     }
   }, [searchValue]);
+
+  useEffect(()=> {
+    setSearchResults([]);
+  }, [showModal])
 
   useEffect(() => {
     ref.current && ref.current.focus();
@@ -264,7 +265,7 @@ export const ModifyPermissions = ({ showModal, handleClose, onModify, selected, 
               ))}
             </Formsy>
             {addFlag && (
-              <Tooltip title="Add user" aria-label="add">
+              <Tooltip title="Add user" aria-label="add" placement="top">
                 <Fab
                   color="secondary"
                   aria-label="add"
@@ -322,8 +323,9 @@ export const ModifyPermissions = ({ showModal, handleClose, onModify, selected, 
             disabled={users.length === 0 || submitPermClick}
             variant="contained"
             color="default"
+            style={{zIndex: "1"}}
           >
-            Add
+            Apply
           </Button>
           <Button
             onClick={() => reset(null)}

@@ -47,7 +47,7 @@ function PermissionsPanel(props) {
   const fileServiceInstance = new FileService(url, token);
 
   useEffect(() => {
-    if (props.meta) {
+    if (Object.keys(props.meta).length !== 0) {
       setSwitchChecked(props.meta.public);
       var readACL = changeACLOrder(props.meta.readACL);
       var writeACL = changeACLOrder(props.meta.writeACL);
@@ -122,168 +122,175 @@ function PermissionsPanel(props) {
       chipToDelete,
       false
     );
-    // OnRefresh();
-    // setTimeout(() => {
-    //   OnRefresh();
-    // }, 100);
   };
 
   return (
-    <div className="flex-grow w-full flex flex-col h-full">
-      <table className={clsx(classes.table, "w-full, text-left")}>
-        <tbody>
-          <tr className="owner">
-            <th>Owner</th>
-            <td title={props.meta.owner_id}>{props.meta.owner_id}</td>
-          </tr>
-          <tr className="public">
-            <th>Public</th>
-            <td title={props.meta.public.toString()}>
-              {tokenData.sub === props.meta.owner_id ? (
-                <FormControlLabel 
-                  control={<Switch checked={switchchecked} onChange={handleSwitchChange} inputProps={{ "aria-label": "controlled" }}/>}
-                  label={switchChangeFlag ? <CircularProgress size={20} color="secondary"/> : <CircularProgress size={20} variant="determinate" value={0}/>}
-                />  
-              ) : (
-                props.meta.public.toString()
-              )}
-            </td>
-          </tr>
-        </tbody>
-      </table>
-
-      {tokenData.sub === props.meta.owner_id ? (
-        <div className="buttonHr">
-          <hr />
-          {/* <div> */}
-          <Tooltip title="Manage permissions" aria-label="add">
-            <Fab
-              // style={add_icon}
-              color="secondary"
-              aria-label="add"
-              size="small"
-              // className="flex flex-col absolute bottom-0 d-none d-sm-block  left-0 ml-16 -mb-12 z-999"
-            >
-              <Icon className="flex flex-col" onClick={addPermissions}>
-                add
-              </Icon>
-            </Fab>
-          </Tooltip>
-          <hr
-            style={{
-              flex: "none",
-              width: "45px",
-            }}
-          />
-          {/* </div> */}
-          <br />
-        </div>
-      ) : (
-        <></>
-      )}
-
-      {props.permissionLoadFlag ? (
-        <div className="flex flex-1 flex-col items-center mt-40">
-          <Typography className="text-20 mt-16" color="textPrimary">
-            Loading
-          </Typography>
-          <LinearProgress className="w-xs" color="secondary" />
-        </div>
-      ) : (
+    <div>
+      {Object.keys(props.meta).length !== 0 ? (
+        <div className="flex-grow w-full flex flex-col h-full">
         <table className={clsx(classes.table, "w-full, text-left")}>
           <tbody>
-            <tr className="readacl">
-              <th>Read ACL</th>
-              <td title={props.meta.readACL.join(", ")}>
-                <Paper elevation={0}>
-                  {readACLchipData.map((data) => {
-                    let icon;
-                    if (data.startsWith("#")) {
-                      icon = <GroupIcon />;
-                    } else {
-                      icon = <PersonIcon className="person_icon" />;
-                    }
-                    return (
-                      <Chip
-                        key={data}
-                        classes={{ label: "labelChip" }}
-                        label={data.startsWith("#") ? data.slice(1) : data}
-                        size="small"
-                        variant="outlined"
-                        icon={icon}
-                        onDelete={
-                          tokenData.sub === props.meta.owner_id &&
-                          handleReadACLChipDelete(data)
-                        }
-                      />
-                    );
-                  })}
-                </Paper>
-                {readACLchipData.length > 1 && <br />}
-              </td>
+            <tr className="owner">
+              <th>Owner</th>
+              <td title={props.meta.owner_id}>{props.meta.owner_id}</td>
             </tr>
-
-            <tr className="writeacl">
-              <th>Write ACL</th>
-              <td title={props.meta.writeACL.join(", ")}>
-                <Paper elevation={0}>
-                  {writeACLchipData.map((data) => {
-                    let icon;
-                    if (data.startsWith("#")) {
-                      icon = <GroupIcon />;
-                    } else {
-                      icon = <PersonIcon className="person_icon" />;
-                    }
-                    return (
-                      <Chip
-                        key={data}
-                        classes={{ label: "labelChip" }}
-                        label={data.startsWith("#") ? data.slice(1) : data}
-                        size="small"
-                        variant="outlined"
-                        icon={icon}
-                        onDelete={
-                          tokenData.sub === props.meta.owner_id &&
-                          handleWriteACLChipDelete(data)
-                        }
-                      />
-                    );
-                  })}
-                </Paper>
-                {writeACLchipData.length > 1 && <br />}
-              </td>
-            </tr>
-            <tr className="computeacl">
-              <th>Compute ACL</th>
-              <td title={props.meta.computeACL.join(", ")}>
-                <Paper elevation={0}>
-                  {computeACLchipData.map((data) => {
-                    let icon;
-                    if (data.startsWith("#")) {
-                      icon = <GroupIcon />;
-                    } else {
-                      icon = <PersonIcon className="person_icon" />;
-                    }
-                    return (
-                      <Chip
-                        key={data}
-                        classes={{ label: "labelChip" }}
-                        label={data.startsWith("#") ? data.slice(1) : data}
-                        size="small"
-                        variant="outlined"
-                        icon={icon}
-                        onDelete={
-                          tokenData.sub === props.meta.owner_id &&
-                          handleComputeACLChipDelete(data)
-                        }
-                      />
-                    );
-                  })}
-                </Paper>
+            <tr className="public">
+              <th>Public</th>
+              <td title={props.meta.public.toString()}>
+                {tokenData.sub === props.meta.owner_id ? (
+                  <FormControlLabel 
+                    control={<Switch checked={switchchecked} onChange={handleSwitchChange} inputProps={{ "aria-label": "controlled" }}/>}
+                    label={switchChangeFlag ? <CircularProgress size={20} color="secondary"/> : <CircularProgress size={20} variant="determinate" value={0}/>}
+                  />  
+                ) : (
+                  props.meta.public.toString()
+                )}
               </td>
             </tr>
           </tbody>
         </table>
+
+        {tokenData.sub === props.meta.owner_id ? (
+          <div className="buttonHr">
+            <hr />
+            {/* <div> */}
+            <Tooltip title="Manage permissions" aria-label="add">
+              <Fab
+                // style={add_icon}
+                color="secondary"
+                aria-label="add"
+                size="small"
+                // className="flex flex-col absolute bottom-0 d-none d-sm-block  left-0 ml-16 -mb-12 z-999"
+              >
+                <Icon className="flex flex-col" onClick={addPermissions}>
+                  add
+                </Icon>
+              </Fab>
+            </Tooltip>
+            <hr
+              style={{
+                flex: "none",
+                width: "45px",
+              }}
+            />
+            {/* </div> */}
+            <br />
+          </div>
+        ) : (
+          <></>
+        )}
+
+        {props.permissionLoadFlag ? (
+          <div className="flex flex-1 flex-col items-center mt-40">
+            <Typography className="text-20 mt-16" color="textPrimary">
+              Loading
+            </Typography>
+            <LinearProgress className="w-xs" color="secondary" />
+          </div>
+        ) : (
+          <table className={clsx(classes.table, "w-full, text-left")}>
+            <tbody>
+              <tr className="readacl">
+                <th>Read ACL</th>
+                <td title={props.meta.readACL.join(", ")}>
+                  <Paper elevation={0}>
+                    {readACLchipData.map((data) => {
+                      let icon;
+                      if (data.startsWith("#")) {
+                        icon = <GroupIcon />;
+                      } else {
+                        icon = <PersonIcon className="person_icon" />;
+                      }
+                      return (
+                        <Chip
+                          key={data}
+                          classes={{ label: "labelChip" }}
+                          label={data.startsWith("#") ? data.slice(1) : data}
+                          size="small"
+                          variant="outlined"
+                          icon={icon}
+                          onDelete={
+                            tokenData.sub === props.meta.owner_id &&
+                            handleReadACLChipDelete(data)
+                          }
+                        />
+                      );
+                    })}
+                  </Paper>
+                  {readACLchipData.length > 1 && <br />}
+                </td>
+              </tr>
+
+              <tr className="writeacl">
+                <th>Write ACL</th>
+                <td title={props.meta.writeACL.join(", ")}>
+                  <Paper elevation={0}>
+                    {writeACLchipData.map((data) => {
+                      let icon;
+                      if (data.startsWith("#")) {
+                        icon = <GroupIcon />;
+                      } else {
+                        icon = <PersonIcon className="person_icon" />;
+                      }
+                      return (
+                        <Chip
+                          key={data}
+                          classes={{ label: "labelChip" }}
+                          label={data.startsWith("#") ? data.slice(1) : data}
+                          size="small"
+                          variant="outlined"
+                          icon={icon}
+                          onDelete={
+                            tokenData.sub === props.meta.owner_id &&
+                            handleWriteACLChipDelete(data)
+                          }
+                        />
+                      );
+                    })}
+                  </Paper>
+                  {writeACLchipData.length > 1 && <br />}
+                </td>
+              </tr>
+              <tr className="computeacl">
+                <th>Compute ACL</th>
+                <td title={props.meta.computeACL.join(", ")}>
+                  <Paper elevation={0}>
+                    {computeACLchipData.map((data) => {
+                      let icon;
+                      if (data.startsWith("#")) {
+                        icon = <GroupIcon />;
+                      } else {
+                        icon = <PersonIcon className="person_icon" />;
+                      }
+                      return (
+                        <Chip
+                          key={data}
+                          classes={{ label: "labelChip" }}
+                          label={data.startsWith("#") ? data.slice(1) : data}
+                          size="small"
+                          variant="outlined"
+                          icon={icon}
+                          onDelete={
+                            tokenData.sub === props.meta.owner_id &&
+                            handleComputeACLChipDelete(data)
+                          }
+                        />
+                      );
+                    })}
+                  </Paper>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        )}
+        </div>
+      ) : (
+        <div className="flex flex-1 flex-col items-center mt-40">
+            <Typography className="text-20 mt-16" color="textPrimary">
+              Loading
+            </Typography>
+            <LinearProgress className="w-xs" color="secondary" />
+        </div>
       )}
     </div>
   );

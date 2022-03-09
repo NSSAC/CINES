@@ -133,15 +133,18 @@ class SciDuctService {
 
     getTokenData = () => {
         const token = this.getIdToken();
-        const decoded = jwtDecode(token);
-        localStorage.setItem('loggedIn', 'true')
-        if (!decoded) {
-            return null;
+        let decoded;
+        if (token) {
+            decoded = jwtDecode(token);
+            localStorage.setItem('loggedIn', 'true');
+            if (!decoded) {
+                return null;
+            }
+            decoded.home_folder = localStorage.getItem("home_folder");
+            // console.log("Decoded: ", decoded)
+            return decoded;
         }
-        decoded.home_folder = localStorage.getItem("home_folder")
-
-        // console.log("Decoded: ", decoded)
-        return decoded;
+        return null;
     }
 
     render() {

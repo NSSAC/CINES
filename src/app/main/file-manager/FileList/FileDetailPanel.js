@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { Tab,Tabs } from '@material-ui/core';
 import { InsertDriveFile as FileIcon, ListAlt as MetadataIcon, History as ProvenanceIcon, Share as ShareIcon } from "@material-ui/icons";
+import instance from "app/services/sciductService/sciductService.js";
 import FileInformationPanel from "../panel/FileInformationPanel";
 import MetadataPanel from "../panel/MetadataPanel";
 import ProvenancePanel from "../panel/ProvenancePanel";
 import PermissionsPanel from "../panel/PermissionsPanel";
 
 function FileDetailPanel(props) {
-    const [selectedTab,setSelectedTab] = useState(0)
+    const [selectedTab,setSelectedTab] = useState(0);
+    var tokenData = instance.getTokenData();
 
     function handleTabChange(evt,val){
         setSelectedTab(val)
@@ -65,9 +67,9 @@ function FileDetailPanel(props) {
                 {selectedTab === 2 && (
                     <ProvenancePanel {...props} />
                 )}
-                {selectedTab === 3 && (
+                {selectedTab === 3 && tokenData ? (
                     <PermissionsPanel {...props} />
-                )}
+                ) : <></>}
             </div>
 
         </div>    
