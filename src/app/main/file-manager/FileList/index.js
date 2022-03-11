@@ -410,7 +410,7 @@ function FileList(props) {
                 </IconButton>
               </Tooltip>
             )}
-            {canWrite && (
+            {canWrite && props && props.path !== "/home" && (
               <Tooltip title="Move file or folder" aria-label="add">
                 <IconButton className="w-64 h-64" onClick={openMoveFiles}>
                   <Icon className=" text-white text-4xl" color="primary">
@@ -419,7 +419,7 @@ function FileList(props) {
                 </IconButton>
               </Tooltip>
             )}
-            {canWrite && (
+            {canWrite && props && props.path !== "/home" && (
               <Tooltip title="Delete selected file or folder" aria-label="add">
                 <IconButton
                   className="w-64 h-64"
@@ -510,14 +510,14 @@ function FileList(props) {
                 </IconButton>
               </Tooltip>
             )}
-            {canWrite && (
+            {canWrite && props && props.path !== "/home" && (
               <Tooltip title="Move file or folder" aria-label="add">
                 <IconButton className="w-64 h-64" onClick={openMoveFiles}>
                   <Icon className=" text-white text-4xl" color="primary">assignment_return</Icon>
                 </IconButton>
               </Tooltip>
             )}
-            {canWrite && (
+            {canWrite && props && props.path !== "/home" && (
               <Tooltip title="Delete selected files or folders" aria-label="add">
                 <IconButton className="w-64 h-64" onClick={() => {confirmAndDelete(selectedIds, _files);}}>
                   <Icon className="text-white text-4xl">delete</Icon>
