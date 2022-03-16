@@ -58,6 +58,7 @@ function FileList(props) {
   const [showFileUpload, setShowFileUpload] = useState(false);
   const [showCreateFolder, setShowCreateFolder] = useState(false);
   const [showMoveFiles, setShowMoveFiles] = useState(false);
+  const [moveFileFlag, setMoveFileFlag] = useState(false);
   const [showRenameDialog, setShowRenameDialog] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
   const [totalFileCount, setTotalFileCount] = useState(0);
@@ -310,6 +311,7 @@ function FileList(props) {
     });
 
     function openMoveFiles() {
+      setShowDetailPanel(false);
       setShowMoveFiles(true);
     }
     const _files = filtered_files ? filtered_files.filtered : files;
@@ -388,7 +390,7 @@ function FileList(props) {
       const canWrite = Perms.canWriteFile(asel, user);
       const canDownload = Perms.canDownloadFile(asel, user);
       setActiveSelection(asel);
-      if(!showFileUpload)
+      if(!showFileUpload && !moveFileFlag)
         setShowDetailPanel(true);
       if(matches) {
         setFileActions(
@@ -771,14 +773,12 @@ function FileList(props) {
   }
 
   function onClickRow(evt) {
-    var clear =
-      !evt.metaKey &&
-      !evt.ctrlKey &&
-      evt.target.getAttribute("type") !== "checkbox";
+    var clear = !evt.metaKey && !evt.ctrlKey && evt.target.getAttribute("type") !== "checkbox";
     var row = findRow(evt.target);
     if (row && row.id) {
       toggleSelected(row.id, clear);
     }
+    setMoveFileFlag(false);
   }
 
   function onDragEnter(evt) {
@@ -968,6 +968,8 @@ function FileList(props) {
             path={props.path}
             handleClose={() => {
               setShowMoveFiles(false);
+              setShowDetailPanel(false);
+              setMoveFileFlag(true);
             }}
             onMove={refreshFolder}
           />

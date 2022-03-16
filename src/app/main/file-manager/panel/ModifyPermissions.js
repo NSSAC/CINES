@@ -7,6 +7,7 @@ import { Fab, Icon, TextField, Tooltip, Button, Dialog, DialogActions, DialogCon
 import DeleteIcon from "@material-ui/icons/Delete";
 import { Person as PersonIcon } from "@material-ui/icons";
 import { Autocomplete } from "@material-ui/lab";
+import { toast } from "material-react-toastify";
 
 import Formsy from "formsy-react";
 import { CheckboxFormsy } from "@fuse/components/formsy";
@@ -46,6 +47,7 @@ export const ModifyPermissions = ({ showModal, handleClose, onModify, selected, 
     values.splice(index, 1);
     setUsers(values);
     setAddFlag(false);
+    setSearchResults([]);
     setSearchFlag(true);
   };
 
@@ -59,6 +61,7 @@ export const ModifyPermissions = ({ showModal, handleClose, onModify, selected, 
   const reset = (closeArg) => {
     setUsers(users.slice(0, 1));
     setAddFlag(false);
+    setSearchResults([]);
     setSearchFlag(true);
     if (closeArg !== null) handleClose();
   };
@@ -133,6 +136,7 @@ export const ModifyPermissions = ({ showModal, handleClose, onModify, selected, 
     for await (const user of users) {
       await permApiExec(user);
     }
+    toast.success(`${users.length} user(s)/team(s) have been given permissions to the selected file/folder successfully.`)
     reset("close");
     setSubmitPermClick(false);
   }
