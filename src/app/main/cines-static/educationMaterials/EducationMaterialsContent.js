@@ -21,9 +21,9 @@ function EducationProjectStructDoc() {
                         <div className="flex items-center mb-16">
                             <Icon className="text-18 cursor-pointer" color="action" onClick={navigateHome}>home</Icon>
                             <Icon className="text-16" color="action">chevron_right</Icon>
-                            <Typography color="textSecondary">Education materials</Typography>
+                            <Typography color="textSecondary">Education Materials</Typography>
                         </div>
-                        <Typography variant="h6">Education materials</Typography>
+                        <Typography variant="h6">Education Materials</Typography>
                     </div>
                 </div>
             }
@@ -40,9 +40,7 @@ function EducationProjectStructDoc() {
                             
                             <li className="mb-12">
                                     Amir Arjolu, Massachusetts Institute of Technology, Cambridge, MA. Lecture notes and
-    other materials for the course Introduction to Network Models are available at: <a target="_blank" rel="noopener noreferrer" href="https://
-    ocw.mit.edu/courses/civil-and-environmental-engineering/1-022-introduction-to-network-models-fall-2018/">https://
-    ocw.mit.edu/courses/civil-and-environmental-engineering/1-022-introduction-to-network-models-fall-2018/</a>.
+    other materials for the course Introduction to Network Models are available at: <a target="_blank" rel="noopener noreferrer" href="https://ocw.mit.edu/courses/civil-and-environmental-engineering/1-022-introduction-to-network-models-fall-2018/">https://ocw.mit.edu/courses/civil-and-environmental-engineering/1-022-introduction-to-network-models-fall-2018/</a>.
                             </li>
 
                             <li className="mb-12">
