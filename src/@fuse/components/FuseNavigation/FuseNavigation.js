@@ -11,6 +11,7 @@ import FuseNavHorizontalCollapse from './horizontal/FuseNavHorizontalCollapse';
 import FuseNavHorizontalItem from './horizontal/FuseNavHorizontalItem';
 import FuseNavHorizontalLink from './horizontal/FuseNavHorizontalLink';
 import {makeStyles} from '@material-ui/styles';
+import './FuseNav.css';
 
 const useStyles = makeStyles(theme => ({
     navigation          : {
