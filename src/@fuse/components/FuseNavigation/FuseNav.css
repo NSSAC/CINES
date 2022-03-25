@@ -1,3 +1,3 @@
-div[class*="makeStyles-navbarMobile"] {
+div[class*="MuiDrawer-paper"] {
     width: 350px !important;
 }
