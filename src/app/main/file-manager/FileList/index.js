@@ -972,6 +972,7 @@ function FileList(props) {
               setMoveFileFlag(true);
             }}
             onMove={refreshFolder}
+            setSelected={setSelected}
           />
         )}
         {showRenameDialog && (

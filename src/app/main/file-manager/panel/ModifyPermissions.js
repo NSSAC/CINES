@@ -136,7 +136,7 @@ export const ModifyPermissions = ({ showModal, handleClose, onModify, selected, 
     for await (const user of users) {
       await permApiExec(user);
     }
-    toast.success(`${users.length} user(s)/team(s) have been given permissions to the selected file/folder successfully.`)
+    toast.success(`Permissions for ${users.length} user(s)/team(s) are modified.`)
     reset("close");
     setSubmitPermClick(false);
   }
@@ -168,6 +168,8 @@ export const ModifyPermissions = ({ showModal, handleClose, onModify, selected, 
           responseTeams.length = Math.min(5-responseUsers.length, responseTeams.length)
           setSearchResults([...responseUsers, ...responseTeams]);
       })
+    } else {
+      setSearchResults([]);
     }
   }, [searchValue]);
 

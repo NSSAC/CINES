@@ -137,7 +137,7 @@ function PermissionsPanel(props) {
             <tr className="public">
               <th>Public</th>
               <td title={props.meta.public.toString()}>
-                {tokenData.sub === props.meta.owner_id ? (
+                {tokenData !== null && tokenData.sub === props.meta.owner_id ? (
                   <FormControlLabel 
                     control={<Switch checked={switchchecked} onChange={handleSwitchChange} inputProps={{ "aria-label": "controlled" }}/>}
                     label={switchChangeFlag ? <CircularProgress size={20} color="secondary"/> : <CircularProgress size={20} variant="determinate" value={0}/>}
@@ -150,17 +150,14 @@ function PermissionsPanel(props) {
           </tbody>
         </table>
 
-        {tokenData.sub === props.meta.owner_id ? (
+        {tokenData !== null && tokenData.sub === props.meta.owner_id ? (
           <div className="buttonHr">
             <hr />
-            {/* <div> */}
             <Tooltip title="Manage permissions" aria-label="add">
               <Fab
-                // style={add_icon}
                 color="secondary"
                 aria-label="add"
                 size="small"
-                // className="flex flex-col absolute bottom-0 d-none d-sm-block  left-0 ml-16 -mb-12 z-999"
               >
                 <Icon className="flex flex-col" onClick={addPermissions}>
                   add
