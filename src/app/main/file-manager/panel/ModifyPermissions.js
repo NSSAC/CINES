@@ -293,7 +293,7 @@ export const ModifyPermissions = ({ showModal, handleClose, onModify, selected, 
               id="tags-outlined"
               disabled={submitPermClick}
               onChange={(event, value) => addUser(event, value)}
-              options={searchResults.filter(
+              options={!searchValue ? [] : searchResults.filter(
                 (x) => users.map((user) => user.id).indexOf(x.id) === -1
               )}
               renderOption={(option) => {
