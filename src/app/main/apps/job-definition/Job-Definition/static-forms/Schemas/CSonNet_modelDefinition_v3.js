@@ -775,10 +775,10 @@ export const modelJSON = {
                     },
                     "rule": {
                         "node": "all",
-                        "from_state": "S",
-                        "to_state": "I",
+                        "from_state": "0",
+                        "to_state": "1",
                         "cause": [
-                            "I"
+                            "1"
                         ],
                         "rule": "edge_probability"
                     }
@@ -798,7 +798,7 @@ export const modelJSON = {
                     },
                     "rule": {
                         "node": "all",
-                        "from_state": "I",
+                        "from_state": "1",
                         "to_state": "2",
                         "cause": "auto",
                         "rule": "discrete_time_auto"
