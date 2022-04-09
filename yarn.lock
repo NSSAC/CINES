@@ -8797,15 +8797,10 @@ module-exists@^0.4.0:
   resolved "https://registry.yarnpkg.com/module-exists/-/module-exists-0.4.0.tgz#36d4d3cde08785fd4bef14fa82749703d3a4898e"
   integrity sha512-TX845E/g93EQqk4nmbjD6+Aiu9MmVcKSMykvL0RxDC9umTLG8E7AorE6AaZwlsLe6RndmNc2635x+y4rppe9ew==
 
-moment@2.24.0:
-  version "2.24.0"
-  resolved "https://registry.yarnpkg.com/moment/-/moment-2.24.0.tgz#0d055d53f5052aa653c9f6eb68bb5d12bf5c2b5b"
-  integrity sha512-bV7f+6l2QigeBBZSM/6yTNq4P2fNpSWj/0e7jQcy87A8e7o2nAfP/34/2ky5Vw4B9S446EtIhodAzkFCcR4dQg==
-
-moment@^2.10.2:
-  version "2.29.1"
-  resolved "https://registry.yarnpkg.com/moment/-/moment-2.29.1.tgz#b2be769fa31940be9eeea6469c075e35006fa3d3"
-  integrity sha512-kHmoybcPV8Sqy59DwNDY3Jefr64lK/by/da0ViFcuA4DH0vQg5Q6Ze5VimxkfQNSC+Mls/Kx53s7TjP1RhFEDQ==
+moment@2.29.2, moment@^2.10.2:
+  version "2.29.2"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.29.2.tgz#00910c60b20843bcba52d37d58c628b47b1f20e4"
+  integrity sha512-UgzG4rvxYpN15jgCmVJwac49h9ly9NurikMWGPdVxm8GZD6XjkKPxDTjQQ43gtGgnV3X0cAyWDdP2Wexoquifg==
 
 move-concurrently@^1.0.1:
   version "1.0.1"
@@ -11404,10 +11399,10 @@ react-transition-group@^4.4.1:
     loose-envify "^1.4.0"
     prop-types "^15.6.2"
 
-react-vega@^7.3.0:
-  version "7.4.2"
-  resolved "https://registry.yarnpkg.com/react-vega/-/react-vega-7.4.2.tgz#790e6f4fe9a26c36f3e8db5ceff9a70ee242fd68"
-  integrity sha512-/us6fDtXiIFKA5aZEXa/sjwFgKEQR/DFNgVwPZ5rQ3c/r9zzkTIXXZMV/NZAi7AWwhRlAvqCL1j0W+L90CxpRg==
+react-vega@^7.4.4:
+  version "7.5.0"
+  resolved "https://registry.yarnpkg.com/react-vega/-/react-vega-7.5.0.tgz#b9726d4fd7f35299d417d340935e093bf4bed558"
+  integrity sha512-JysyZ0PdihfSztkbxOd7DcYBrCVotRbkKiGNYWKkLP1D4Mt2Dq0uMwNtBEBGjoWdmrE3Qwd+uz7ekklP6MqxDw==
   dependencies:
     "@types/react" "^16.9.19"
     fast-deep-equal "^3.1.1"
