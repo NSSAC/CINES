@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
 import { Button, Icon } from '@material-ui/core';
 import './Input.css';
@@ -320,20 +321,24 @@ export const Input = (props) => {
 				</div>
 			);
 	}
+	
 	useEffect(() => {
 		if (fileChosenPath || folderChosenPath) {
 			document.getElementById(props.formData[1].formLabel).value = 1;
 		}
-
 		if(props.formData[1].value !== "" && props.formData[1].outputFlag === false && typeFlag === 0){
 			setFileChosenPath(props.formData[1].value)
-		  }
+		}
 
-		  if(props.formData[1].value !== "" && props.formData[1].outputFlag === true && typeFlag === 0){
+		if(props.formData[1].value !== "" && props.formData[1].outputFlag === true && typeFlag === 0){
 			setFolderChosenPath(props.formData[1].value)
-		  }
-
- },[fileChosenPath, folderChosenPath, props.formData, typeFlag])
+		}
+		if( (props.formData[1].name === "inputFile_Graph" && props.formData[1].value !== "") ||
+			(props.formData[1].name === "inputFile_Graph_1" && props.formData[1].value !== "") ||
+			(props.formData[1].name === "inputFile_Graph_2" && props.formData[1].value !== "") ){
+			props.fileChosenPath(props.formData[1].value);
+		}
+ 	},[fileChosenPath, folderChosenPath, props.formData, typeFlag])
 
 
 
@@ -377,7 +382,7 @@ export const Input = (props) => {
 							}
 						}}
 						title="Select File"
-						fileTypes={props.formData[1].types}
+						fileTypes={!props.formData[1].types ? [props.formData[1].type] : props.formData[1].types}
 						requireWritePermissions={false}
 						props={props}
 					/>}

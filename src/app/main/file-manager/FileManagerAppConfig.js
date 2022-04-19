@@ -71,7 +71,7 @@ export const MAX_RAW_FILE_VIEW_SIZE = 10000000
 
 const FILEUPLOAD_CONFIG = {
     fileTypeToBeRemoved:['folder','symlink'],
-    fileTypes:["PUNGraph","PNGraph","PNEANet", "csv","tsv","json","text","dynamical_systems_initial_config","dynamical_systems_problems","dynamical_systems_functions"].sort()
+    fileTypes:["PUNGraph", "PNGraph", "PNEANet", "nx_MultiDiGraph", "nx_Graph", "nx_DiGraph", "csv", "tsv", "json", "text", "dynamical_systems_initial_config", "dynamical_systems_problems", "dynamical_systems_functions"].sort()
 }
 
 export default  FILEUPLOAD_CONFIG;

@@ -6,8 +6,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 
+import withReducer from 'app/store/withReducer';
 import { Input } from "app/main/apps/job-definition/Job-Definition/Input";
 
+import reducer from './store/reducers';
 import MetadataInfoDialog from "../../my-jobs/MetadataDialog";
 import * as Actions from "./store/actions";
 import Toaster from "./Toaster";
@@ -18,6 +20,7 @@ function JobDefinitionForm(props) {
   const jobData = useSelector(
     ({ JobDefinitionApp }) => JobDefinitionApp.selectedjobid
   );
+  const input_file_meta = useSelector(({ JobDefForm }) => JobDefForm.input_file);
   const [formElementsArray, setFormElementsArray] = useState({});
   // const [jobSubmissionArray, setJobSubmissionArray] = useState({});
   const [isFormValid, setIsFormValid] = useState(false);
@@ -29,9 +32,13 @@ function JobDefinitionForm(props) {
   const [spinnerFlag, setSpinnerFlag] = useState(true);
   const [onSubmit, setOnSubmit] = useState()
   const [showDialog, setshowDialog] = useState(false);
-  const [standardOut, setStandardOut] = useState("");
-  const [headerTitle, setHeaderTitle] = useState("");
-  const dispatch = useDispatch()
+  const [standardOut] = useState("");
+  const [headerTitle] = useState("");
+  const [nxInputFileGraphChosenPath, setnxInputFileGraphChosenPath] = useState("");
+  const dispatch = useDispatch();
+  const [nodeAttributeFileObj, setNodeAttributeFileObj] = useState({});
+  const [graphFileSelectCount, setGraphFileSelectCount] = useState(0);
+  const [nodeAttributePresentFlag, setNodeAttributePresentFlag] = useState(false);
 
   var path = window.location.pathname;
   var pathEnd = path.replace("/apps/job-definition/", "");
@@ -68,6 +75,53 @@ function JobDefinitionForm(props) {
   const history = useHistory();
 
   useEffect(() => {
+    // console.log("Path",nxInputFileGraphChosenPath);
+    if(Object.keys(input_file_meta).length !== 0 && nxInputFileGraphChosenPath) {
+      if(jobData.input_files.length > 0 && jobData.input_files[jobData.input_files.length - 1].name === "node_attr_file") {
+        if(input_file_meta.nodeAttributesFileFlag) {
+          setNodeAttributePresentFlag(true)
+        }
+        setGraphFileSelectCount(graphFileSelectCount + 1);
+      } 
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[input_file_meta])
+
+  useEffect(() => {
+    // console.log("NX input_file_meta",input_file_meta);
+    if(Object.keys(input_file_meta).length !== 0) {
+      let counter = 0;
+      
+      if(jobData.input_files.length > 2 && jobData.input_files[jobData.input_files.length - 1].name === "node_attr_file") {
+        if(!nodeAttributePresentFlag &&  graphFileSelectCount === jobData.input_files.length-1) {
+          let keyValues = Object.entries(formElementsArray);
+          for (let key in formElementsArray) {
+            counter++;
+            if(key === "inputFile_Graph_1") {
+              keyValues.splice(counter, 0, [nodeAttributeFileObj.name, nodeAttributeFileObj]);
+              let newFormELementsArray = Object.fromEntries(keyValues);
+              setFormElementsArray(newFormELementsArray);
+            }
+          }
+        }
+      } else {
+        if(!input_file_meta.nodeAttributesFileFlag) {
+          let keyValues = Object.entries(formElementsArray);
+          for (let key in formElementsArray) {
+            counter++;
+            if(key === "inputFile_Graph") {
+              keyValues.splice(counter, 0, [nodeAttributeFileObj.name, nodeAttributeFileObj]);
+              let newFormELementsArray = Object.fromEntries(keyValues);
+              setFormElementsArray(newFormELementsArray);
+            }
+          }
+        }
+      }
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[graphFileSelectCount])
+  
+  useEffect(() => {
     return (
       localStorage.removeItem('last_selected_folder')
     )
@@ -100,6 +154,11 @@ function JobDefinitionForm(props) {
   //   setStandardOut(data[1]);
   //   setHeaderTitle(data[0]);
   // }
+
+  useEffect(() => {
+    if(nxInputFileGraphChosenPath)
+      dispatch(Actions.getFileMeta(nxInputFileGraphChosenPath));
+  },[dispatch, nxInputFileGraphChosenPath]);
 
   const handleClose = () => {
     setshowDialog(false);
@@ -151,11 +210,20 @@ function JobDefinitionForm(props) {
         }
       }
       if (inputFileData !== undefined) {
+
         for (let obj of inputFileData) {
-          count++;
-          let keyName = obj.name;
-          createFromData[keyName] = obj;
+          // count++;
+          // let keyName = obj.name;
+          // createFromData[keyName] = obj;
+          if(obj.name !== "node_attr_file") {
+            count++;
+            let keyName = obj.name;
+            createFromData[keyName] = obj;
+          } else {
+            setNodeAttributeFileObj(obj);
+          }
         }
+        
       }
 
       if (count % 2 !== 0) {
@@ -338,31 +406,35 @@ function JobDefinitionForm(props) {
             >
               <Grid className="p-4 border-b border-gray-600" container spacing={3}>
                 {Object.entries(formElementsArray).map((formElement) =>
-                  formElement[1].id < 200 ? (
-                    <Grid key={formElement[1].id} style={childGrid} item container xs={12} sm={6}>
-                      <Input
-                        key={formElement.id}
-                        formData={formElement}
-                        elementType={formElement.type}
-                        value={formElement.value}
-                        changed={(event) =>
-                          inputChangedHandler(event, formElement[0])
-                        }
-                      />
-                    </Grid>
-                  ) : (
-                    <Grid key={formElement[1].id} style={outputGrid} item container xs={12} sm={6}>
-                      <Input
-                        key={formElement.id}
-                        formData={formElement}
-                        elementType={formElement.type}
-                        value={formElement.value}
-                        changed={(event) =>
-                          inputChangedHandler(event, formElement[0])
-                        }
-                      />
-                    </Grid>
-                  )
+                  formElement[0] !== "extraObj" ? (
+                    formElement[1].id < 200 ? (
+                      <Grid key={formElement[1].id} style={childGrid} item container xs={12} sm={6}>
+                        <Input
+                          key={formElement.id}
+                          formData={formElement}
+                          elementType={formElement.type}
+                          value={formElement.value}
+                          fileChosenPath={(value) => setnxInputFileGraphChosenPath(value)}
+                          changed={(event) =>
+                            inputChangedHandler(event, formElement[0])
+                          }
+                        />
+                      </Grid>
+                    ) : (
+                      <Grid key={formElement[1].id} style={outputGrid} item container xs={12} sm={6}>
+                        <Input
+                          key={formElement.id}
+                          formData={formElement}
+                          elementType={formElement.type}
+                          value={formElement.value}
+                          fileChosenPath={(value) => setnxInputFileGraphChosenPath(value)}
+                          changed={(event) =>
+                            inputChangedHandler(event, formElement[0])
+                          }
+                        />
+                      </Grid>
+                    )
+                  ) : ( <></> )
                 )}
               </Grid>
               <div style={{ alignSelf: "flex-end" }}>
@@ -450,4 +522,4 @@ function JobDefinitionForm(props) {
   }
 }
 
-export default JobDefinitionForm;
+export default withReducer('JobDefForm', reducer)(React.memo(JobDefinitionForm));
