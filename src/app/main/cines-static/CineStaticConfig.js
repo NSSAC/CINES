@@ -3,6 +3,10 @@ import React from 'react';
 export const CineStaticConfig = {
     routes: [
         {
+            path    :'/search',
+            component: React.lazy(() => import('./search/SearchContent'))
+        },
+        {
             path     : '/home',
             component: React.lazy(() => import('./home/HomeContent'))
         },
