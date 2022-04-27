@@ -131,7 +131,7 @@ function NavbarLayout2() {
 
       {innerSearchClick && searchText && (
         <Redirect
-          to={{ pathname: "/search", state: { searchText: searchText } }}
+          to={{ pathname: "/search", search:`?${searchText}`, state: { searchText: searchText } }}
         />
       )}
       {cancelFlag && <Redirect to="/home" />}

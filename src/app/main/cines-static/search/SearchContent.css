@@ -1,0 +1,31 @@
+.headerStyle {
+    padding-left: 5px; 
+    border: 1px solid lightgrey;
+    width: inherit;
+    font-weight: 700;
+    word-break: break-word;
+    font-size: 20px;
+    background-color: #122230;
+    color: white;
+}
+
+.legendContentStyle {
+    border-bottom: 1px solid lightgrey;
+    border-left: 1px solid lightgrey;
+    border-right: 1px solid lightgrey;
+    padding-right: 10px;
+}
+
+.legendDataStyle {
+    background-color: #122230;
+    color: white;
+    border-radius: 50%;
+    height: 23px;
+    width: 23px;
+    text-align: center;
+}
+
+.typoContentStyle {
+    font-weight: 700;
+    word-break: break-word;
+}
