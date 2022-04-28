@@ -29,3 +29,43 @@
     font-weight: 700;
     word-break: break-word;
 }
+
+.contentGrid {
+    align-self: flex-start;
+    padding-left: 23%;
+    padding-top: 4.75%;
+    padding-bottom: 2%;
+    padding-right: 1%;
+    overflow-y: scroll;
+}
+
+.legendContentGrid {
+    align-self: flex-start;
+    position: fixed;
+    bottom: 55%;
+    left: 3%;
+}
+
+.titleStyle {
+    font-weight: 700;
+    word-break: break-word;
+    font-size: 20px;
+    padding-top: 3%;
+    padding-left: 1.5%;
+}
+
+.titleStyleGrid {
+    position: fixed;
+    left: 4;
+    right: 0;
+    bottom: 1;
+    z-index: 1;
+    background-color: #F7F7F7;
+    height: 90px !important;
+}
+
+.gridContainer {
+    overflow-y: scroll;
+    overflow-x: hidden;
+    height: 60vh;
+}

@@ -109,13 +109,14 @@ function NavbarLayout2() {
           </>
         ) : (
           <>
-            {user.role && user.role.length > 0 && (
-                <Tooltip title="Search" placement="bottom">
-                  <IconButton aria-label="Search" onClick={handleOuterSearch}>
-                    <Icon>search</Icon>
-                  </IconButton>
-                </Tooltip>
-              )}
+            <Tooltip title="Search" placement="bottom">
+              <IconButton aria-label="Search" onClick={handleOuterSearch}>
+                <Icon>search</Icon>
+              </IconButton>
+            </Tooltip>
+            {/* {user.role && user.role.length > 0 && (
+                
+              )} */}
             <Navigation className="w-full " layout="horizontal" />
             {/* <UploadStatus /> */}
             {!user.role || user.role.length === 0 ? (
@@ -130,9 +131,7 @@ function NavbarLayout2() {
       </div>
 
       {innerSearchClick && searchText && (
-        <Redirect
-          to={{ pathname: "/search", search:`?${searchText}`, state: { searchText: searchText } }}
-        />
+        <Redirect to={{ pathname: "/search", search: `${searchText}`}} />
       )}
       {cancelFlag && <Redirect to="/home" />}
     </div>
