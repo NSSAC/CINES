@@ -33,7 +33,7 @@
 .contentGrid {
     align-self: flex-start;
     padding-left: 23%;
-    padding-top: 4.75%;
+    padding-top: 5%;
     padding-bottom: 2%;
     padding-right: 1%;
     overflow-y: scroll;
@@ -42,7 +42,7 @@
 .legendContentGrid {
     align-self: flex-start;
     position: fixed;
-    bottom: 55%;
+    top: 27%;
     left: 3%;
 }
 
@@ -68,4 +68,5 @@
     overflow-y: scroll;
     overflow-x: hidden;
     height: 60vh;
+    width: inherit;
 }

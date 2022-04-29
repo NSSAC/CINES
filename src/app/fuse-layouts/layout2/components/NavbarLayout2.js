@@ -10,6 +10,8 @@ import Navigation from "app/fuse-layouts/shared-components/Navigation";
 import UserMenu from "app/fuse-layouts/shared-components/UserMenu";
 // import UploadStatus from 'app/main/file-manager/UploadStatus';
 
+import './NavbarLayout2.css';
+
 function NavbarLayout2() {
   const user = useSelector(({ auth }) => auth.user);
   const [outerSearchFlag, setOuterSearchFlag] = useState(false);
@@ -110,7 +112,7 @@ function NavbarLayout2() {
         ) : (
           <>
             <Tooltip title="Search" placement="bottom">
-              <IconButton aria-label="Search" onClick={handleOuterSearch}>
+              <IconButton id="outerSearch" aria-label="Search" onClick={handleOuterSearch}>
                 <Icon>search</Icon>
               </IconButton>
             </Tooltip>

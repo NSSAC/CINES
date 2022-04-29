@@ -1,0 +1,8 @@
+#outlined-search-label,.Mui-focused {
+    color: white;   
+    border-bottom: none;
+}
+
+#outlined-search,.MuiInput-underline,.Mui-focused {
+    border-bottom: 1px solid white;
+}
