@@ -38,6 +38,12 @@ function NavbarLayout2() {
     setInnerSearchClick(false);
   }
 
+  const handleKeyPress = (event) => {
+    if(event.key === "Enter") {
+      handleSearch(event);
+    }
+  }
+
   const handleSearch = (event) => {
     event.preventDefault();
     setInnerSearchClick(true);
@@ -57,6 +63,7 @@ function NavbarLayout2() {
           variant="standard"
           style={{ width: "inherit" }}
           onChange={handleSearchTextChange}
+          onKeyPress={handleKeyPress}
           autoFocus
         />
       )}

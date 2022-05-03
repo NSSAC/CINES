@@ -22,25 +22,19 @@ const useStyles = makeStyles((theme) => ({
     },
   }));
 
-const SearchContent = (props) => {
+const SearchContent = () => {
 
     const searchText = useLocation().search;
     const url = `${process.env.REACT_APP_SCIDUCT_DIGITAL_LIBRARIAN_SERVICE}/`;
     const token = localStorage.getItem('id_token');
     const digitalLibrarianServiceInstance = new DigitalLibrarianService(url, token);
-    // console.log("digitalLibrarianServiceInstance", digitalLibrarianServiceInstance);
 
     const [,setErrorMsg] = useState();
     const [searchedData, setSearchedData] = useState([]);
-    const [fileManagerSearchedData, setFileManagerSearchedData] = useState([]);
-    const [myJobsSearchedData, seMyJobsSearchedData] = useState([]);
-    const [jobDefinitionSearchedData, setJobDefinitionSearchedData] = useState([]);
+    const [searchMapData, setSearchMapData] = useState(new Map());
     const [outerSearchClicked, setOuterSearchClicked] = useState(false);
 
-    const fileManagerData = [];
-    const myJobsData = [];
-    const jobDefinitionData =[];
-
+    const searchMap = new Map();
     const classes = useStyles();
 
     // Start Focusing on change of the searchText from URL
@@ -61,10 +55,8 @@ const SearchContent = (props) => {
 
     // Start API call to get response
     useEffect(() => {
-        console.log("SearchText -> ", searchText.slice(1));
         digitalLibrarianServiceInstance.search(searchText.slice(1))
             .then((res) => {
-                console.log("SearchText Response", res);
                 setSearchedData(res.docs);
             })
             .catch((error) => {
@@ -77,26 +69,26 @@ const SearchContent = (props) => {
     },[searchText])
     //End
 
-    //Sart Differentiate data between each types
+    //Start Differentiate data between each types
     useEffect(() => {
         if(searchedData.length > 0) {
             searchedData.map(item => {
-                if(item.type === "file") {
-                    fileManagerData.push(item);
-                } else if(item.type === "myJobs") {
-                    myJobsData.push(item);
-                } else if(item.type === "jobDefinition") {
-                    jobDefinitionData.push(item);
+                if(searchMap.has(item.type)) {
+                    searchMap.get(item.type).push(item);
+                } else {
+                    searchMap.set(item.type,[item]);
                 }
                 return null;
             })
+            setSearchMapData(searchMap);
         }
-        setFileManagerSearchedData(fileManagerData);
-        seMyJobsSearchedData(myJobsData);
-        setJobDefinitionSearchedData(jobDefinitionData);
-    },[searchedData])
-
+    },[searchedData]);
     //End
+    
+    const capitalizeFirstLetter = (string) => {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    }
+
     return (
         <>  
             <Grid className='titleStyleGrid' item xs={12} sm={12} container spacing={2}>
@@ -114,110 +106,68 @@ const SearchContent = (props) => {
                         </Grid>
                     </Grid>
 
-                    {fileManagerSearchedData.length > 0 && 
-                        <Grid className='legendContentStyle' container spacing={2}>
+                    {[...searchMapData.keys()].map( mapItem => 
+                        <Grid className='legendContentStyle' container spacing={2} key={mapItem}>
                             <Grid item xs={9} sm={10} style={{ paddingTop: "25px" }}>
-                                <Typography className='typoContentStyle'>Files</Typography>
+                                <Typography className='typoContentStyle'>{capitalizeFirstLetter(mapItem)}</Typography>
                             </Grid>
                                 
                             <Grid item xs={3} sm={2} style={{ paddingTop: "25px" }}>
-                                <Typography className='legendDataStyle'>{fileManagerSearchedData.length}</Typography>
+                                <Typography className='legendDataStyle'>{searchMapData.get(mapItem).length}</Typography>
                             </Grid>
-                        </Grid>
-                    }
-
-                    {myJobsSearchedData.length > 0 && 
-                        <Grid className='legendContentStyle' container spacing={2}>
-                            <Grid item xs={9} sm={10} style={{ paddingTop: "25px" }}>
-                                <Typography className='typoContentStyle'>My Jobs</Typography>
-                            </Grid>
-                                
-                            <Grid item xs={3} sm={2} style={{ paddingTop: "25px" }}>
-                                <Typography className='legendDataStyle'>{myJobsSearchedData.length}</Typography>
-                            </Grid>
-                        </Grid>
-                    }   
-
-                    {jobDefinitionSearchedData.length > 0 &&
-                        <Grid className='legendContentStyle' container spacing={2}>
-                            <Grid item xs={9} sm={10} style={{ paddingTop: "25px" }}>
-                                <Typography className='typoContentStyle'>Job Definition</Typography>
-                            </Grid>
-                            
-                            <Grid item xs={3} sm={2} style={{ paddingTop: "25px" }}>
-                                <Typography className='legendDataStyle'>{jobDefinitionSearchedData.length}</Typography>
-                            </Grid>
-                        </Grid>
-                    }
+                        </Grid> 
+                    )}
                     </Grid>
 
                 <Grid className="contentGrid" item xs={9} sm={12} container spacing={2}>
-                    {fileManagerSearchedData.length > 0 && (
-                        <Grid item xs={9} sm={12} container spacing={2} style={{ paddingTop: "30px" }}>
-                            <Grid className="headerStyle"> Files </Grid>
-                            <div className={searchedData.length > 0 && "gridContainer"}>
-                            {fileManagerSearchedData.length > 0 ? fileManagerSearchedData.map((item) => {
-                                return(
-                                    <React.Fragment key={item.id}>
-                                        <Grid style={{ borderBottom: "1px solid lightgrey", paddingLeft:"1%" }} container item xs={9} sm={12}>
-                                            <Grid container item xs={9} sm={12}>
+                    {[...searchMapData.keys()].map( mapItem => {
+                        return(
+                            <Grid item xs={9} sm={12} container spacing={2} style={{ paddingTop: "30px" }} key={mapItem}>
+                                <Grid className="headerStyle"> {capitalizeFirstLetter(mapItem)} </Grid>
+                                <div className={searchedData.length > 0 && searchMapData.get(mapItem).length > 6 ? "gridContainer" : "gridContainerWithoutHeight" }>
+                                {searchMapData.get(mapItem).length > 0 && searchMapData.get(mapItem).map((item) => {
+                                    return(
+                                        <React.Fragment key={item.id}>
+                                            <Grid style={{ borderBottom: "1px solid lightgrey", paddingLeft:"1%" }} container item xs={9} sm={12}>
+                                                <Grid container item xs={9} sm={12}>
 
-                                                <Grid item xs={4} style={{ padding: "5px" }}>
-                                                    <Typography>Name</Typography>
-                                                    <Typography className='typoContentStyle'>
-                                                        {item.metadata.name}
-                                                    </Typography>
+                                                    <Grid item xs={4} style={{ padding: "5px" }}>
+                                                        <Typography>Name</Typography>
+                                                        <Typography className='typoContentStyle'>
+                                                            {item.metadata.name}
+                                                        </Typography>
+                                                    </Grid>
+
+                                                    <Grid item xs={4} style={{ padding: "5px" }}>
+                                                        <Typography>ID</Typography>
+                                                        <Typography className='typoContentStyle'>
+                                                            <Link to={`/files/${item.id}`}>{item.id}</Link>
+                                                        </Typography>
+                                                    </Grid>
+
+                                                    <Grid item xs={2} style={{ padding: "5px" }}>
+                                                        <Typography>Type</Typography>
+                                                        <Typography className='typoContentStyle'>
+                                                            {item.file_type}
+                                                        </Typography>
+                                                    </Grid>
+
+                                                    <Grid item xs={2} style={{ padding: "5px" }}>
+                                                        <Typography>Last Updated</Typography>
+                                                        <Typography className='typoContentStyle'>
+                                                            {item.update_date.replace(/T|Z/g, "  ").split(".")[0]}
+                                                        </Typography>
+                                                    </Grid>
+
                                                 </Grid>
-
-                                                <Grid item xs={4} style={{ padding: "5px" }}>
-                                                    <Typography>ID</Typography>
-                                                    <Typography className='typoContentStyle'>
-                                                        <Link to={`/files/${item.id}`}>{item.id}</Link>
-                                                    </Typography>
-                                                </Grid>
-
-                                                <Grid item xs={2} style={{ padding: "5px" }}>
-                                                    <Typography>Type</Typography>
-                                                    <Typography className='typoContentStyle'>
-                                                        {item.file_type}
-                                                    </Typography>
-                                                </Grid>
-
-                                                <Grid item xs={2} style={{ padding: "5px" }}>
-                                                    <Typography>Last Updated</Typography>
-                                                    <Typography className='typoContentStyle'>
-                                                        {item.update_date.replace(/T|Z/g, "  ").split(".")[0]}
-                                                    </Typography>
-                                                </Grid>
-
                                             </Grid>
-
-                                            {/* <Grid item xs={3} sm={2} style={{ paddingTop: "15px" }}>
-                                                <Button variant="contained" onClick={handleMetadataClick}>
-                                                    Show Metadata
-                                                </Button>
-                                            </Grid> */}
-                                        </Grid>
-                                    </React.Fragment>
-                                ) 
-                            }):<Typography className='typoContentStyle'>No record found.</Typography>}
-                            </div>
-                        </Grid>       
-                    )}
-
-                    {myJobsSearchedData.length > 0 && (
-                        <Grid item xs={9} sm={12} container spacing={2} style={{ paddingTop: "30px" }}>
-                                <Grid className='headerStyle'> My Jobs </Grid>
-                                <Typography className='typoContentStyle'>No record found.</Typography>
-                        </Grid>
-                    )}
-
-                    {jobDefinitionSearchedData.length > 0 && (
-                        <Grid item xs={9} sm={12} container spacing={2} style={{ paddingTop: "30px" }}>
-                            <Grid className='headerStyle'> Job Definition </Grid>
-                            <Typography className='typoContentStyle'>No record found.</Typography>
-                        </Grid>
-                    )}    
+                                        </React.Fragment>
+                                    ) 
+                                })}
+                                </div>
+                            </Grid>  
+                        )
+                    })}
 
                     {searchedData.length === 0 && (
                         <Grid item xs={9} sm={12} container spacing={2} style={{ paddingTop: "30px"}}>
