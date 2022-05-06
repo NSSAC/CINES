@@ -4,7 +4,7 @@ import { Link, useLocation } from 'react-router-dom';
 
 import { DigitalLibrarianService } from "node-sciduct";
 
-import { Grid, Typography } from "@material-ui/core";
+import { Grid, LinearProgress, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 
 import "./SearchContent.css"
@@ -30,6 +30,7 @@ const SearchContent = () => {
     const digitalLibrarianServiceInstance = new DigitalLibrarianService(url, token);
 
     const [,setErrorMsg] = useState();
+    const [loading, setLoading] = useState(false);
     const [searchedData, setSearchedData] = useState([]);
     const [searchMapData, setSearchMapData] = useState(new Map());
     const [outerSearchClicked, setOuterSearchClicked] = useState(false);
@@ -43,7 +44,7 @@ const SearchContent = () => {
             document.getElementById("outerSearch").click();
             setOuterSearchClicked(true);
         }
-    },[])
+    },[searchedData])
 
     useEffect(() => {
         if(outerSearchClicked) {
@@ -58,9 +59,11 @@ const SearchContent = () => {
         digitalLibrarianServiceInstance.search(searchText.slice(1))
             .then((res) => {
                 setSearchedData(res.docs);
+                setLoading(true);
             })
             .catch((error) => {
                 setSearchedData([]);
+                setLoading(true);
                 if (error.response)
                     setErrorMsg(`${error.response.status}-${error.response.statusText} error occured. Please try again`)
                  else
@@ -81,6 +84,8 @@ const SearchContent = () => {
                 return null;
             })
             setSearchMapData(searchMap);
+        } else {
+            setSearchMapData(new Map());
         }
     },[searchedData]);
     //End
@@ -121,58 +126,83 @@ const SearchContent = () => {
 
                 <Grid className="contentGrid" item xs={9} sm={12} container spacing={2}>
                     {[...searchMapData.keys()].map( mapItem => {
-                        return(
-                            <Grid item xs={9} sm={12} container spacing={2} style={{ paddingTop: "30px" }} key={mapItem}>
-                                <Grid className="headerStyle"> {capitalizeFirstLetter(mapItem)} </Grid>
-                                <div className={searchedData.length > 0 && searchMapData.get(mapItem).length > 6 ? "gridContainer" : "gridContainerWithoutHeight" }>
-                                {searchMapData.get(mapItem).length > 0 && searchMapData.get(mapItem).map((item) => {
-                                    return(
-                                        <React.Fragment key={item.id}>
-                                            <Grid style={{ borderBottom: "1px solid lightgrey", paddingLeft:"1%" }} container item xs={9} sm={12}>
-                                                <Grid container item xs={9} sm={12}>
-
-                                                    <Grid item xs={4} style={{ padding: "5px" }}>
-                                                        <Typography>Name</Typography>
-                                                        <Typography className='typoContentStyle'>
-                                                            {item.metadata.name}
-                                                        </Typography>
-                                                    </Grid>
-
-                                                    <Grid item xs={4} style={{ padding: "5px" }}>
-                                                        <Typography>ID</Typography>
-                                                        <Typography className='typoContentStyle'>
-                                                            <Link to={`/files/${item.id}`}>{item.id}</Link>
-                                                        </Typography>
-                                                    </Grid>
-
-                                                    <Grid item xs={2} style={{ padding: "5px" }}>
-                                                        <Typography>Type</Typography>
-                                                        <Typography className='typoContentStyle'>
-                                                            {item.file_type}
-                                                        </Typography>
-                                                    </Grid>
-
-                                                    <Grid item xs={2} style={{ padding: "5px" }}>
-                                                        <Typography>Last Updated</Typography>
-                                                        <Typography className='typoContentStyle'>
-                                                            {item.update_date.replace(/T|Z/g, "  ").split(".")[0]}
-                                                        </Typography>
-                                                    </Grid>
-
-                                                </Grid>
+                        return (
+                          <Grid item xs={9} sm={12} container spacing={2} style={{ paddingTop: "30px" }} key={mapItem}>
+                            <Grid className="headerStyle">
+                              {capitalizeFirstLetter(mapItem)}
+                            </Grid>
+                            <div className={searchedData.length > 0 && searchMapData.get(mapItem).length > 6 ? "gridContainer" : "gridContainerWithoutHeight" }>
+                              {searchMapData.get(mapItem).length > 0 &&
+                                searchMapData.get(mapItem)
+                                  .sort((a, b) =>
+                                    a.metadata.name.split(" ").length >
+                                    b.metadata.name.split(" ").length
+                                      ? 1
+                                      : a.metadata.name.split(" ").length ===
+                                        b.metadata.name.split(" ").length
+                                      ? a.metadata.name > b.metadata.name
+                                        ? 1
+                                        : -1
+                                      : -1
+                                  )
+                                  .map((item) => {
+                                    return (
+                                      <React.Fragment key={item.id}>
+                                        <Grid style={{ borderBottom: "1px solid lightgrey", paddingLeft: "1%" }} container item xs={9} sm={12}>
+                                          <Grid container item xs={9} sm={12}>
+                                            <Grid item xs={4} style={{ padding: "5px" }}>
+                                              <Typography>Name</Typography>
+                                              <Typography className="typoContentStyle">
+                                                {item.metadata.name}
+                                              </Typography>
                                             </Grid>
-                                        </React.Fragment>
-                                    ) 
-                                })}
-                                </div>
-                            </Grid>  
-                        )
+
+                                            <Grid item xs={4} style={{ padding: "5px" }}>
+                                              <Typography>ID</Typography>
+                                              <Typography className="typoContentStyle">
+                                                <Link to={`/files/${item.id}`}>
+                                                  {item.id}
+                                                </Link>
+                                              </Typography>
+                                            </Grid>
+
+                                            <Grid item xs={2} style={{ padding: "5px" }}>
+                                              <Typography>Type</Typography>
+                                              <Typography className="typoContentStyle">
+                                                {item.file_type}
+                                              </Typography>
+                                            </Grid>
+
+                                            <Grid item xs={2} style={{ padding: "5px" }}>
+                                              <Typography>Last Updated</Typography>
+                                              <Typography className="typoContentStyle">
+                                                {
+                                                  item.update_date
+                                                    .replace(/T|Z/g, "  ")
+                                                    .split(".")[0]
+                                                }
+                                              </Typography>
+                                            </Grid>
+                                          </Grid>
+                                        </Grid>
+                                      </React.Fragment>
+                                    );
+                                  })}
+                            </div>
+                          </Grid>
+                        );
                     })}
 
-                    {searchedData.length === 0 && (
-                        <Grid item xs={9} sm={12} container spacing={2} style={{ paddingTop: "30px"}}>
-                            <Typography className='typoContentStyle' style={{fontSize: "15px"}}>No record found.</Typography>
-                        </Grid>
+                    {loading ? 
+                        (searchedData.length === 0 && (
+                            <Grid item xs={9} sm={12} container spacing={2} style={{ paddingTop: "30px"}}>
+                                <Typography className='typoContentStyle' style={{fontSize: "15px"}}>No record found.</Typography>
+                            </Grid>
+                        )) : (
+                            <div className="flex flex-1 flex-col items-center justify-center mt-40">
+                                <Typography className="text-20 mt-16" color="textPrimary">Loading</Typography>
+                                <LinearProgress className="w-xs" color="secondary" />
+                            </div>
                     )}
 
                 </Grid>

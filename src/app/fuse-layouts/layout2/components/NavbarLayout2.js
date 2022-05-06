@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import  { Redirect } from 'react-router-dom'
 
-import {IconButton, Icon, SvgIcon, TextField, Tooltip} from "@material-ui/core";
+import {IconButton, Icon, SvgIcon, TextField, Tooltip, withStyles} from "@material-ui/core";
 
 // import { FuseScrollbars } from '@fuse';
 import Logo from "app/fuse-layouts/shared-components/Logo";
@@ -12,7 +12,16 @@ import UserMenu from "app/fuse-layouts/shared-components/UserMenu";
 
 import './NavbarLayout2.css';
 
-function NavbarLayout2() {
+const styles = {
+  input: {
+    "&:-webkit-autofill": {
+      WebkitBoxShadow: "0 0 0 1000px #1E2125 inset",
+      WebkitTextFillColor: "white",
+    }
+  }
+};
+
+function NavbarLayout2({classes}) {
   const user = useSelector(({ auth }) => auth.user);
   const [outerSearchFlag, setOuterSearchFlag] = useState(false);
   const [cancelFlag, setCancelFlag] = useState(false);
@@ -64,6 +73,7 @@ function NavbarLayout2() {
           style={{ width: "inherit" }}
           onChange={handleSearchTextChange}
           onKeyPress={handleKeyPress}
+          inputProps={{ className: classes.input }}
           autoFocus
         />
       )}
@@ -147,4 +157,4 @@ function NavbarLayout2() {
   );
 }
 
-export default NavbarLayout2;
+export default withStyles(styles)(NavbarLayout2);
