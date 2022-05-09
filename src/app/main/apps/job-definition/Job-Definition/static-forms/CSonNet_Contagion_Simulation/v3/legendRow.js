@@ -38,6 +38,8 @@ const LegendRow = (props) => {
         props.setInputFields(values);
       };
 
+    //Validation for min, max, weight is - allow any number as well as empty
+
     return (
         <>
             {props.inputFields.map((inputField, index) => (
