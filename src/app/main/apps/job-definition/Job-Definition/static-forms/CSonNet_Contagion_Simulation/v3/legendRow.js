@@ -99,6 +99,11 @@ const LegendRow = (props) => {
                                 style={{ width: '18px' }}
                                 value={inputField.min}
                                 onBlur={(event) => handleInputChange('min', index, event)}
+                                validations={{
+                                    isPositiveInt: function (values, value) {
+                                      return RegExp(/^(?:-?\d+)?$/).test(value)                             }
+                                }}
+                                validationError="This is not a valid value"
                                 label="Min" 
                                 autoComplete="off"/>
                         </Grid>
@@ -111,6 +116,11 @@ const LegendRow = (props) => {
                                 style={{ width: '18px' }}
                                 value={inputField.max}
                                 onBlur={(event) => handleInputChange('max', index, event)}
+                                validations={{
+                                    isPositiveInt: function (values, value) {
+                                      return RegExp(/^(?:-?\d+)?$/).test(value)                             }
+                                }}
+                                validationError="This is not a valid value"
                                 label="Max" 
                                 autoComplete="off"/>
                         </Grid>
@@ -123,6 +133,11 @@ const LegendRow = (props) => {
                                 style={{ width: '18px' }}
                                 value={inputField.weight}
                                 onBlur={(event) => handleInputChange('weight', index, event)}
+                                validations={{
+                                    isPositiveInt: function (values, value) {
+                                      return RegExp(/^(?:-?\d+)?$/).test(value)                             }
+                                }}
+                                validationError="This is not a valid value"
                                 label="Weight" 
                                 autoComplete="off"/>
                         </Grid>
