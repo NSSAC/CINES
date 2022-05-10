@@ -96,14 +96,14 @@ const LegendRow = (props) => {
                         <Grid item xs={4} style={{paddingLeft: "2%"}}>
                             <TextFieldFormsy
                                 className="my-12 inputStyle3"
-                                type="number"
+                                type="text"
                                 name='min'
                                 style={{ width: '18px' }}
                                 value={inputField.min}
                                 onBlur={(event) => handleInputChange('min', index, event)}
                                 validations={{
                                     isPositiveInt: function (values, value) {
-                                      return RegExp(/^(?:-?\d+)?$/).test(value)                             }
+                                      return RegExp(/^-?(?:\d+\.?\d*)?$/).test(value)                             }
                                 }}
                                 validationError="This is not a valid value"
                                 label="Min" 
@@ -120,7 +120,7 @@ const LegendRow = (props) => {
                                 onBlur={(event) => handleInputChange('max', index, event)}
                                 validations={{
                                     isPositiveInt: function (values, value) {
-                                      return RegExp(/^(?:-?\d+)?$/).test(value)                             }
+                                      return RegExp(/^-?(?:\d+\.?\d*)?$/).test(value)                             }
                                 }}
                                 validationError="This is not a valid value"
                                 label="Max" 
@@ -137,7 +137,7 @@ const LegendRow = (props) => {
                                 onBlur={(event) => handleInputChange('weight', index, event)}
                                 validations={{
                                     isPositiveInt: function (values, value) {
-                                      return RegExp(/^(?:-?\d+)?$/).test(value)                             }
+                                      return RegExp(/^-?(?:\d+\.?\d*)?$/).test(value)                             }
                                 }}
                                 validationError="This is not a valid value"
                                 label="Weight" 

@@ -870,8 +870,8 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
                                                                         required
                                                                     >
                                                                         <MenuItem key="Random" value="Random"> Random </MenuItem>
-                                                                        <MenuItem key="Min" value="Min"> Min </MenuItem>
-                                                                        <MenuItem key="Max" value="Max"> Max </MenuItem>
+                                                                        <MenuItem key="Minimum" value="Minimum"> Minimum </MenuItem>
+                                                                        <MenuItem key="Maximum" value="Maximum"> Maximum </MenuItem>
                                                                     </SelectFormsy>
                                                                 </Grid>
                                                                 <Grid item xs={3} >
