@@ -45,7 +45,7 @@ const LegendRow = (props) => {
             {props.inputFields.map((inputField, index) => (
                 <div style={triple}>
                     <Grid container xs={12} key={`${inputField}~${index}`}>
-                        <Grid item xs={5} style={{paddingLeft: "2%"}}>
+                        <Grid item xs={6} style={{paddingLeft: "2%"}}>
                             <SelectFormsy
                             className="my-12 inputStyle1 model"
                             name="property"
@@ -68,7 +68,7 @@ const LegendRow = (props) => {
                             </SelectFormsy>
                         </Grid>
 
-                        <Grid item xs={5} style={{paddingLeft: "2%"}}>
+                        <Grid item xs={4}>
                             <SelectFormsy
                             className="my-12 inputStyle1 model"
                             name="ordering"
@@ -96,7 +96,7 @@ const LegendRow = (props) => {
                         <Grid item xs={4} style={{paddingLeft: "2%"}}>
                             <TextFieldFormsy
                                 className="my-12 inputStyle3"
-                                type="text"
+                                type="number"
                                 name='min'
                                 style={{ width: '18px' }}
                                 value={inputField.min}
