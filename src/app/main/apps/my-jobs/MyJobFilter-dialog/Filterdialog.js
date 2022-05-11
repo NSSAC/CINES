@@ -238,7 +238,7 @@ export const MyJobFilter = ({
               </SelectFormsy>
               {stateFlag ? (
                 <SelectFormsy
-                  className="my-16"
+                  className="my-16 customSelect"
                   name="related"
                   label="Select value"
                   value={state}
