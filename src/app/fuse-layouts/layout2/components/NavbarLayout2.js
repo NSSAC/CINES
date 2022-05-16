@@ -2,26 +2,36 @@ import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import  { Redirect } from 'react-router-dom'
 
-import {IconButton, Icon, SvgIcon, TextField, Tooltip, withStyles} from "@material-ui/core";
+import { IconButton, Icon, SvgIcon, TextField, Tooltip } from "@material-ui/core";
 
 // import { FuseScrollbars } from '@fuse';
 import Logo from "app/fuse-layouts/shared-components/Logo";
 import Navigation from "app/fuse-layouts/shared-components/Navigation";
 import UserMenu from "app/fuse-layouts/shared-components/UserMenu";
+import { makeStyles } from "@material-ui/core/styles";
 // import UploadStatus from 'app/main/file-manager/UploadStatus';
 
 import './NavbarLayout2.css';
 
-const styles = {
+const useStyles = makeStyles({
+  underline: {
+    "&&&:before": {
+      borderBottom: "1px solid white"
+    },
+    "&&&:after": {
+      borderBottom: "none"
+    }
+  },
   input: {
     "&:-webkit-autofill": {
       WebkitBoxShadow: "0 0 0 1000px #1E2125 inset",
       WebkitTextFillColor: "white",
+      WebkitCaretColor: "white",
     }
   }
-};
+});
 
-function NavbarLayout2({classes}) {
+function NavbarLayout2() {
   const user = useSelector(({ auth }) => auth.user);
   const [outerSearchFlag, setOuterSearchFlag] = useState(false);
   const [cancelFlag, setCancelFlag] = useState(false);
@@ -58,7 +68,7 @@ function NavbarLayout2({classes}) {
     setInnerSearchClick(true);
   }
 
-
+  const classes = useStyles();
   return (
     <div className="flex flex-auto justify-between items-center w-full h-full container p-0 lg:px-24">
       <div className="flex flex-shrink-0 items-center pl-8 pr-16">
@@ -69,11 +79,11 @@ function NavbarLayout2({classes}) {
           id="outlined-search"
           label="Search field"
           type="search"
+          InputProps={{classes}}
           variant="standard"
-          style={{ width: "inherit" }}
+          style={{ width: "inherit", caretColor: "white" }}
           onChange={handleSearchTextChange}
           onKeyPress={handleKeyPress}
-          inputProps={{ className: classes.input }}
           autoFocus
         />
       )}
@@ -157,4 +167,4 @@ function NavbarLayout2({classes}) {
   );
 }
 
-export default withStyles(styles)(NavbarLayout2);
+export default NavbarLayout2;

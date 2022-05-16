@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
 
 const SearchContent = () => {
 
-    const searchText = useLocation().search;
+    const searchText = decodeURIComponent(useLocation().search);
     const url = `${process.env.REACT_APP_SCIDUCT_DIGITAL_LIBRARIAN_SERVICE}/`;
     const token = localStorage.getItem('id_token');
     const digitalLibrarianServiceInstance = new DigitalLibrarianService(url, token);
