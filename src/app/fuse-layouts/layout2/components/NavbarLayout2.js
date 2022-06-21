@@ -98,7 +98,7 @@ function NavbarLayout2() {
             </Tooltip>
 
             <Tooltip title="Advanced Search" placement="bottom">
-              <IconButton aria-label="AdvancedSearch">
+              <IconButton aria-label="AdvancedSearch" disabled>
                 <SvgIcon>
                   <svg
                     version="1.0"
@@ -110,7 +110,7 @@ function NavbarLayout2() {
                   >
                     <g
                       transform="translate(0.000000,24.000000) scale(0.100000,-0.100000)"
-                      fill="white"
+                      fill="#525c69"
                       stroke="none"
                     >
                       <path
