@@ -2,9 +2,9 @@
     padding-left: 5px; 
     border: 1px solid lightgrey;
     width: inherit;
-    font-weight: 700;
+    font-weight: 500;
     word-break: break-word;
-    font-size: 20px;
+    font-size: 16px;
     background-color: #122230;
     color: white;
 }
@@ -31,26 +31,37 @@
 }
 
 .contentGrid {
-    align-self: flex-start;
+    /* align-self: flex-start;
     padding-left: 23%;
     padding-top: 5%;
     padding-bottom: 2%;
     padding-right: 1%;
-    overflow-y: scroll;
+    overflow-y: scroll; */
+
+    overflow-x: hidden; 
+    padding-right: 1%;
 }
 
 .legendContentGrid {
     align-self: flex-start;
     position: fixed;
     top: 27%;
-    left: 3%;
+    left: 3%; 
+}
+
+.containerPadding{
+    padding-left: 1.5%;
+}
+
+.p-24{
+    padding-top: 24px;
 }
 
 .titleStyle {
     font-weight: 700;
     word-break: break-word;
     font-size: 20px;
-    padding-top: 3%;
+    /* padding-top: 3%; */
     padding-left: 1.5%;
 }
 
@@ -60,8 +71,8 @@
     right: 0;
     bottom: 1;
     z-index: 1;
-    background-color: #F7F7F7;
-    height: 90px !important;
+    background-color: #c94646;
+    height: 20px !important;
 }
 
 .gridContainer {
@@ -73,4 +84,12 @@
 
 .gridContainerWithoutHeight {
     width: inherit;
+}
+
+.iconPadding{
+    padding: 0 8px;
+}
+
+.MuiPopover-paper{
+    box-shadow: none !important
 }
