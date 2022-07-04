@@ -381,13 +381,18 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
                 let rules=[];
                 modelJSON.models[event.target.value]['rules'].map(x => {
                     rules.push(x.rule);
+                    let inputArr = []
                     Object.keys(x.input).map(y => {
                         let inputObj = {};
-                        inputObj[y] = x.input[y];
+                        inputObj[x.input[y].label] = x.input[y];
+                        inputObj['id'] = y
+                        // inputObj[y] = x.input[y];
                         inputObj['value'] = '';
                         inputObj['description'] = x.input[y].description;
                         tempSubmodels.push(inputObj);
                         rules[rules.length-1][y] = '';
+                        inputArr.push(x.input[y].label);
+                        rules[rules.length-1]["input"] = inputArr
                     })
                     // console.log(rules);
                 })
@@ -501,7 +506,7 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
         let newRules = [...rules];
         newRules.forEach(x=>{
             Object.keys(dynamicProps).forEach(y=>{
-                if(x.hasOwnProperty(dynamicProps[y].id) && x.input === y){
+                if(x.hasOwnProperty(dynamicProps[y].id) && x.input.includes(y)){
                   x[dynamicProps[y].id] = parseFloat(dynamicProps[y].value) 
                 }
             })
