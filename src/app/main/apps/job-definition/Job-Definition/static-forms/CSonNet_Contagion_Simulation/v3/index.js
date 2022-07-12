@@ -381,6 +381,7 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
                 let rules=[];
                 modelJSON.models[event.target.value]['rules'].map(x => {
                     rules.push(x.rule);
+                    let pushInputArr = Object.keys(x.input).length > 1 ? true : false
                     let inputArr = []
                     Object.keys(x.input).map(y => {
                         let inputObj = {};
@@ -391,8 +392,14 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
                         inputObj['description'] = x.input[y].description;
                         tempSubmodels.push(inputObj);
                         rules[rules.length-1][y] = '';
-                        inputArr.push(x.input[y].label);
-                        rules[rules.length-1]["input"] = inputArr
+                        // inputArr.push(x.input[y].label);
+                        // rules[rules.length-1]["input"] = inputArr
+                        if(pushInputArr){
+                            inputArr.push(x.input[y].label);
+                            rules[rules.length-1]["input"] = inputArr
+                        }else{
+                            rules[rules.length-1]["input"] = x.input[y].label;
+                        }
                     })
                     // console.log(rules);
                 })
@@ -433,6 +440,9 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
                     let rules = [];
                     initSubmodel['rules'].map(x => {
                         rules.push(x.rule);
+                    let pushInputArr = Object.keys(x.input).length > 1 ? true : false
+                    let inputArr = []
+
                         Object.keys(x.input).map(y => {
                             let inputObj = {};
                             inputObj[x.input[y].label] = x.input[y];
@@ -441,7 +451,12 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
                             inputObj['description'] = x.input[y].description;
                             tempSubmodels.push(inputObj);
                             rules[rules.length-1][y] = '';
-                            rules[rules.length-1]["input"] = x.input[y].label;
+                            if(pushInputArr){
+                                inputArr.push(x.input[y].label);
+                                rules[rules.length-1]["input"] = inputArr
+                            }else{
+                                rules[rules.length-1]["input"] = x.input[y].label;
+                            }
                             console.log(rules);
                         })
                         // console.log(tempSubmodels);
