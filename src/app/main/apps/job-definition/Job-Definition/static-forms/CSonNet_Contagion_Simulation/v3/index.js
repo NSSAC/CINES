@@ -8,7 +8,7 @@ import ReactTooltip from 'react-tooltip';
 
 import Formsy from 'formsy-react';
 import { JobService } from 'node-sciduct';
-import { Button, Grid, Icon, MenuItem } from '@material-ui/core';
+import { Button, Fab, Grid, Icon, MenuItem, Tooltip } from '@material-ui/core';
 import { FusePageSimple, SelectFormsy, TextFieldFormsy } from '@fuse';
 
 import withReducer from 'app/store/withReducer';
@@ -20,6 +20,7 @@ import * as Actions from "../store/actions";
 import modelJSON from '../../Schemas/CSonNet_modelDefinition_v3';
 import { Input } from '../../SelectFile.js'
 import Toaster from "../../../Toaster";
+import LegendRow from './legendRow';
 
 import * as JobAppActions from "../../../store/actions";
 
@@ -47,6 +48,8 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
     const [statesArray, setStatesArray] = useState([]);
     const [rules, setRules] = useState([]);
     const [randomNumberSeed, setRandomNumberSeed] = useState();
+    const [rowNum, setRowNum] = useState(0);
+    const [inputFields, setInputFields] = useState([]);
     const history = useHistory();
 
     const childGrid = {
@@ -378,13 +381,25 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
                 let rules=[];
                 modelJSON.models[event.target.value]['rules'].map(x => {
                     rules.push(x.rule);
+                    let pushInputArr = Object.keys(x.input).length > 1 ? true : false
+                    let inputArr = []
                     Object.keys(x.input).map(y => {
                         let inputObj = {};
-                        inputObj[y] = x.input[y];
+                        inputObj[x.input[y].label] = x.input[y];
+                        inputObj['id'] = y
+                        // inputObj[y] = x.input[y];
                         inputObj['value'] = '';
                         inputObj['description'] = x.input[y].description;
                         tempSubmodels.push(inputObj);
                         rules[rules.length-1][y] = '';
+                        // inputArr.push(x.input[y].label);
+                        // rules[rules.length-1]["input"] = inputArr
+                        if(pushInputArr){
+                            inputArr.push(x.input[y].label);
+                            rules[rules.length-1]["input"] = inputArr
+                        }else{
+                            rules[rules.length-1]["input"] = x.input[y].label;
+                        }
                     })
                     // console.log(rules);
                 })
@@ -425,6 +440,9 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
                     let rules = [];
                     initSubmodel['rules'].map(x => {
                         rules.push(x.rule);
+                    let pushInputArr = Object.keys(x.input).length > 1 ? true : false
+                    let inputArr = []
+
                         Object.keys(x.input).map(y => {
                             let inputObj = {};
                             inputObj[x.input[y].label] = x.input[y];
@@ -433,7 +451,12 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
                             inputObj['description'] = x.input[y].description;
                             tempSubmodels.push(inputObj);
                             rules[rules.length-1][y] = '';
-                            rules[rules.length-1]["input"] = x.input[y].label;
+                            if(pushInputArr){
+                                inputArr.push(x.input[y].label);
+                                rules[rules.length-1]["input"] = inputArr
+                            }else{
+                                rules[rules.length-1]["input"] = x.input[y].label;
+                            }
                             console.log(rules);
                         })
                         // console.log(tempSubmodels);
@@ -498,7 +521,7 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
         let newRules = [...rules];
         newRules.forEach(x=>{
             Object.keys(dynamicProps).forEach(y=>{
-                if(x.hasOwnProperty(dynamicProps[y].id) && x.input === y){
+                if(x.hasOwnProperty(dynamicProps[y].id) && x.input.includes(y)){
                   x[dynamicProps[y].id] = parseFloat(dynamicProps[y].value) 
                 }
             })
@@ -559,6 +582,13 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
         setIsToasterFlag(false);
         dispatch(Actions.initializeInputForm())
         history.push('/apps/my-jobs/');
+    }
+
+    const handleAddCustomRow = () => {
+        const values = [...inputFields];
+        values.push({property: '', ordering: '', min: '', max: '', weight: ''});
+        setInputFields(values);
+        setRowNum(rowNum + 1);
     }
 
     const description = (desc) =>
@@ -745,47 +775,140 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
                                             )}
                                             {!enableBlocking && (
                                                 <div style={{ marginLeft: '26px' }}>
-                                                    <h4 className='mt-16'><b>Initial Conditions</b></h4>
-                                                    <Grid style={childGrid} item container xs={12} >
-                                                        <TextFieldFormsy
-                                                            className="my-12 inputStyle1"
-                                                            type="text"
-                                                            name='Number nodes'
-                                                            style={{ width: '18px' }}
-                                                            value={staticProps && staticProps.InitialConditions && String(staticProps.InitialConditions[0].number_nodes)}
-                                                            onBlur={(event) => ICChangedHandler(event, 'number_nodes')}
-                                                            label="Number Nodes"
-                                                            validations={{
-                                                                isPositiveInt: function (values, value) {
-                                                                    return RegExp(/^(?:[+]?(?:[0-9]\d*))$/).test(value) && !RegExp(/^0+$/).test(value)
-                                                                }
-                                                            }}
-                                                            validationError="This is not a valid value"
-                                                            autoComplete="off"
-                                                            required
-                                                            disabled={!validInputFile}
-                                                        />
-                                                    </Grid>
+                                                    <h4 className='mt-16'><b>Initial Conditions(Seeding)</b></h4>
                                                     <Grid style={childGrid} item container xs={12} >
                                                         <SelectFormsy
                                                             className="my-12 inputStyle1 model"
-                                                            name="state"
-                                                            label={["State", <span key={1} style={{ color: 'red' }}>{'*'}</span>]}
-                                                            disabled={!validInputFile || statesArray.length === 0}
-                                                            value={staticProps.InitialConditions[0].state}
-                                                            onChange={(event) => ICChangedHandler(event, 'state')}
+                                                            name="seeding_method"
+                                                            label={["Seeding Method", <span key={1} style={{ color: 'red' }}>{'*'}</span>]}
+                                                            disabled={!validInputFile}
+                                                            value={staticProps.InitialConditions[0].seeding_method ? staticProps.InitialConditions[0].seeding_method : ''}
+                                                            onChange={(event) => ICChangedHandler(event, 'seeding_method')}
                                                             required
                                                         >
-                                                            {statesArray.map((item) => {
-                                                                return (
-                                                                    <MenuItem key={item} value={item}>
-                                                                        {item}
-                                                                    </MenuItem>
-                                                                );
-                                                            })}
+                                                            <MenuItem key="Random" value="Random"> Random </MenuItem>
+                                                            <MenuItem key="Custom" value="Custom"> Custom </MenuItem>
                                                         </SelectFormsy>
-                                                        { description(inputSchema.properties.states.description)}
                                                     </Grid>
+                                                    {staticProps.InitialConditions[0].seeding_method && staticProps.InitialConditions[0].seeding_method === "Random" && (
+                                                        <div style={{display: "flex", flexDirection: "row", marginRight: '11%'}}>
+                                                            <Grid style={childGrid} item container xs={8} >
+                                                                <TextFieldFormsy
+                                                                    className="my-12 inputStyle1"
+                                                                    type="text"
+                                                                    name='Number nodes'
+                                                                    style={{ width: '18px' }}
+                                                                    value={staticProps && staticProps.InitialConditions && String(staticProps.InitialConditions[0].number_nodes)}
+                                                                    onBlur={(event) => ICChangedHandler(event, 'number_nodes')}
+                                                                    label="Number Nodes"
+                                                                    validations={{
+                                                                        isPositiveInt: function (values, value) {
+                                                                            return RegExp(/^(?:[+]?(?:[0-9]\d*))$/).test(value) && !RegExp(/^0+$/).test(value)
+                                                                        }
+                                                                    }}
+                                                                    validationError="This is not a valid value"
+                                                                    autoComplete="off"
+                                                                    required
+                                                                    disabled={!validInputFile}
+                                                                />
+                                                            </Grid>
+                                                            <Grid style={childGrid} item container xs={8} >
+                                                                <SelectFormsy
+                                                                    className="my-12 inputStyle1 model"
+                                                                    name="state"
+                                                                    label={["State", <span key={1} style={{ color: 'red' }}>{'*'}</span>]}
+                                                                    disabled={!validInputFile || statesArray.length === 0}
+                                                                    value={staticProps.InitialConditions[0].state}
+                                                                    onChange={(event) => ICChangedHandler(event, 'state')}
+                                                                    required
+                                                                >
+                                                                    {statesArray.map((item) => {
+                                                                        return (
+                                                                            <MenuItem key={item} value={item}>
+                                                                                {item}
+                                                                            </MenuItem>
+                                                                        );
+                                                                    })}
+                                                                </SelectFormsy>
+                                                                { description(inputSchema.properties.states.description)}
+                                                            </Grid>
+                                                        </div>
+                                                    )}
+                                                    {staticProps.InitialConditions[0].seeding_method && staticProps.InitialConditions[0].seeding_method === "Custom" && (
+                                                        <>
+                                                            <div style={{display: "flex", flexDirection: "row", marginRight: '11%'}}>
+                                                                <Grid style={childGrid} item container xs={8} >
+                                                                    <TextFieldFormsy
+                                                                        className="my-12 inputStyle1"
+                                                                        type="text"
+                                                                        name='Number nodes'
+                                                                        style={{ width: '18px' }}
+                                                                        value={staticProps && staticProps.InitialConditions && String(staticProps.InitialConditions[0].number_nodes)}
+                                                                        onBlur={(event) => ICChangedHandler(event, 'number_nodes')}
+                                                                        label="Number Nodes"
+                                                                        validations={{
+                                                                            isPositiveInt: function (values, value) {
+                                                                                return RegExp(/^(?:[+]?(?:[0-9]\d*))$/).test(value) && !RegExp(/^0+$/).test(value)
+                                                                            }
+                                                                        }}
+                                                                        validationError="This is not a valid value"
+                                                                        autoComplete="off"
+                                                                        required
+                                                                        disabled={!validInputFile}
+                                                                    />
+                                                                </Grid>
+                                                                <Grid style={childGrid} item container xs={8} >
+                                                                    <SelectFormsy
+                                                                        className="my-12 inputStyle1 model"
+                                                                        name="state"
+                                                                        label={["State", <span key={1} style={{ color: 'red' }}>{'*'}</span>]}
+                                                                        disabled={!validInputFile || statesArray.length === 0}
+                                                                        value={staticProps.InitialConditions[0].state}
+                                                                        onChange={(event) => ICChangedHandler(event, 'state')}
+                                                                        required
+                                                                    >
+                                                                        {statesArray.map((item) => {
+                                                                            return (
+                                                                                <MenuItem key={item} value={item}>
+                                                                                    {item}
+                                                                                </MenuItem>
+                                                                            );
+                                                                        })}
+                                                                    </SelectFormsy>
+                                                                    { description(inputSchema.properties.states.description)}
+                                                                </Grid>
+                                                            </div>
+                                                            <div style={{display: "flex", flexDirection: "row", marginRight: '11%'}}>
+                                                                <Grid style={childGrid} item xs={11} >
+                                                                    <SelectFormsy
+                                                                        className="my-12 inputStyle2 model"                                                    
+                                                                        name="node_selection_method"
+                                                                        label={["Node Selection Method", <span key={1} style={{ color: 'red' }}>{'*'}</span>]}
+                                                                        disabled={!validInputFile}
+                                                                        value={staticProps.InitialConditions[0].node_selection_method ? staticProps.InitialConditions[0].node_selection_method : ''}
+                                                                        onChange={(event) => ICChangedHandler(event, 'node_selection_method')}
+                                                                        required
+                                                                    >
+                                                                        <MenuItem key="Random" value="Random"> Random </MenuItem>
+                                                                        <MenuItem key="Minimum" value="Minimum"> Minimum </MenuItem>
+                                                                        <MenuItem key="Maximum" value="Maximum"> Maximum </MenuItem>
+                                                                    </SelectFormsy>
+                                                                </Grid>
+                                                                <Grid item xs={3} >
+                                                                    <Tooltip title="Click to add a state row" aria-label="add">
+                                                                        <Fab color="secondary" aria-label="add" size="small" className="mt-12" style={{alignSelf:'flex-end', marginLeft:'20px'}}>
+                                                                            <Icon className="flex flex-col" onClick={handleAddCustomRow}>add</Icon>
+                                                                        </Fab>
+                                                                    </Tooltip>
+                                                                </Grid>
+                                                            </div>
+                                                            <Grid  item container xs={12} >
+                                                                {rowNum > 0 && 
+                                                                    <LegendRow inputFields={inputFields} setInputFields={(p) => {setInputFields(p)}}/>
+                                                                }
+                                                            </Grid>
+                                                        </>
+                                                    )}
                                                 </div>
                                             )}
                                             {!enableBlocking && dynamicProps.Behaviour.value !== '' && <div style={{ marginLeft: '26px' }}>

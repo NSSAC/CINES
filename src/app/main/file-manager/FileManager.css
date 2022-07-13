@@ -125,17 +125,17 @@ hr {
   border: 1px dotted #122230;
 }
 
-.Mui-focused {
+.customSelect > .Mui-focused {
   color: white !important;
 }
 
-.MuiPaper-root .Mui-focused {
+/* .MuiPaper-root .Mui-focused {
   color: black !important;
-}
+} */
 
-.MuiFormControl-root .Mui-focused {
+/* .MuiFormControl-root .Mui-focused {
   color: black !important;
-}
+}  */
 
 .MuiTooltip-popper {
   z-index: 9999 !important;
