@@ -39,7 +39,21 @@ const navigationConfig = [
                     //     'bg'   : '#F44336',
                     //     'fg'   : '#FFFFFF'
                     // }
-                    },
+                },
+                {
+                    'id'   : 'educationmaterials',
+                    'title': 'Education Materials',
+                    'type' : 'item',
+                    'url'  : '/education-materials',
+                    'icon': 'library_books'
+                },
+                {
+                    'id'   : 'courses_short_courses_workshops',
+                    'title': 'Courses, Short Courses, and Workshops',
+                    'type' : 'item',
+                    'url'  : '/courses-shortcourses-workshops',
+                    'icon': 'library_books'
+                },
                     {
                     'id'   : 'publications',
                     'title': 'Publications',

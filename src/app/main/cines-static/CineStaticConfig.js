@@ -19,6 +19,14 @@ export const CineStaticConfig = {
             component: React.lazy(() => import('./collaborators/CollaboratorsContent'))
         },
         {
+            path     : '/education-materials',
+            component: React.lazy(() => import('./educationMaterials/EducationMaterialsContent'))
+        },
+        {
+            path     : '/courses-shortcourses-workshops',
+            component: React.lazy(() => import('./coursesWorkshops/CoursesWorkshopsContent'))
+        },
+        {
             path     : '/publications',
             component: React.lazy(() => import('./publications/PublicationsContent'))
         },
