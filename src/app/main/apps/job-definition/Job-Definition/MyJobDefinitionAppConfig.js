@@ -2,12 +2,19 @@ import queryString from "query-string"
 import React from 'react';
 import { Redirect } from 'react-router-dom';
 import JobDefinitionView from './JobDefinitionView';
+
 const generate_static_form_route = (name,options) => {
     options = options || {}
     var path = `/apps/job-definition/:namespace*/${name}`
+    // var path = name.startsWith("plot") ? `/apps/job-definition/:namespace*/:plotName` : `/apps/job-definition/:namespace*/${name}`
     var out = {
         "path": path,
         "render": (props)=>{
+            // var plotName = "";
+            // if(name.startsWith("plot")) {
+            //     var pathArray = props.location.pathname.split("/");
+            //     plotName = pathArray[pathArray.length - 1];
+            // }
             var namespace = props.match.params.namespace || "global";
 
             if (!options.namespaces){
@@ -20,10 +27,12 @@ const generate_static_form_route = (name,options) => {
             var params = queryString.parse(props.location.search)
 
             // var Comp = React.lazy(()=> import(`./static-forms/${name}/`))
-            var Comp = JobDefinitionView
-            var jd = options.job_definition?options.job_definition:name
+            var Comp = JobDefinitionView;
+            var jd = options.job_definition?options.job_definition:name;
+            // var jd = options.job_definition ? options.job_definition : name.startsWith("plot") ? plotName : name;
             return (
                 <Comp namespaces={options.namespaces} namespace={namespace} module={name} static_form={true} jobdef={jd} version={params.version||"default"}   {...props.match.params} {...props}/> 
+                // <Comp namespaces={options.namespaces} namespace={namespace} module={name.startsWith("plot") ? plotName : name} static_form={true} jobdef={jd} version={params.version||"default"}   {...props.match.params} {...props}/> 
             )
         }
     }
@@ -48,6 +57,42 @@ export const MyJobDefinitionAppConfig = {
         }),
 
         generate_static_form_route("CSonNet_Plotting",{
+            "namespaces": ["development","net.science"]
+        }),
+
+        generate_static_form_route("plot_weakly_connected_component_size_distribution",{
+            "namespaces": ["development","net.science"]
+        }),
+
+        generate_static_form_route("plot_strongly_connected_component_size_distribution",{
+            "namespaces": ["development","net.science"]
+        }),
+
+        generate_static_form_route("plot_degree_distribution",{
+            "namespaces": ["development","net.science"]
+        }),
+
+        generate_static_form_route("plot_in_degree_distribution",{
+            "namespaces": ["development","net.science"]
+        }),
+
+        generate_static_form_route("plot_kcore_edge_distribution",{
+            "namespaces": ["development","net.science"]
+        }),
+
+        generate_static_form_route("plot_kcore_node_distribution",{
+            "namespaces": ["development","net.science"]
+        }),
+
+        generate_static_form_route("plot_degree_ave_cluster_coeff_distribution",{
+            "namespaces": ["development","net.science"]
+        }),
+
+        generate_static_form_route("plot_biconnected_component_size_distribution",{
+            "namespaces": ["development","net.science"]
+        }),
+
+        generate_static_form_route("plot_one_connected_component_size_distribution",{
             "namespaces": ["development","net.science"]
         }),
 

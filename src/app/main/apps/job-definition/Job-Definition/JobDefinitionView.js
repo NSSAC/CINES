@@ -112,7 +112,12 @@ function renderTask(a){
             return <div>Loading Job Definition</div>
         }
         if (props.static_form) {
-            const InputForm = React.lazy(() => import(`./static-forms/${props.module}/`))
+            let InputForm;
+            if(props.module.startsWith("plot")) {
+                InputForm = React.lazy(() => import(`./static-forms/Plot_Jobs`))
+            } else {
+                InputForm = React.lazy(() => import(`./static-forms/${props.module}/`))
+            }   
             return <InputForm resubmit={props.location.state} job_definition={job_definition} {...props} />
         } else {
 
