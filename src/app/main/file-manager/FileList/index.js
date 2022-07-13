@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useHistory } from "react-router-dom";
@@ -57,6 +58,7 @@ function FileList(props) {
   const [showFileUpload, setShowFileUpload] = useState(false);
   const [showCreateFolder, setShowCreateFolder] = useState(false);
   const [showMoveFiles, setShowMoveFiles] = useState(false);
+  const [moveFileFlag, setMoveFileFlag] = useState(false);
   const [showRenameDialog, setShowRenameDialog] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
   const [totalFileCount, setTotalFileCount] = useState(0);
@@ -67,6 +69,7 @@ function FileList(props) {
   const [droppedFiles, setDroppedFiles] = useState(false);
   const [menuClick, setMenuClick] = useState(null);
   const [menuItems, setMenuItems] = useState();
+  const [permissionLoadFlag, setPermissionLoadFlag] = useState(false);
 
   var uploadableTypes = FILEUPLOAD_CONFIG.fileTypes;
   const _files = filtered_files ? filtered_files.filtered : files;
@@ -138,6 +141,7 @@ function FileList(props) {
           <Link
             style={{ color: "#1565C0" }}
             title={val}
+            to=''
             onClick={(event) => {
               event.preventDefault();
               if (event.detail === 1) {
@@ -215,6 +219,7 @@ function FileList(props) {
     }
 
     function openUploader() {
+      setShowDetailPanel(false);
       setShowFileUpload(true);
     }
 
@@ -289,12 +294,24 @@ function FileList(props) {
   //         closeOnClickOutside: false
   //     })
   // }
+
+  React.useEffect(() => {
+    setPermissionLoadFlag(true);
+    refreshFolder()
+    .then(()=> {
+      setTimeout(()=>{
+        setPermissionLoadFlag(false);
+      },100)
+    })
+  },[selected])
+
   React.useEffect(() => {
     var selectedIds = Object.keys(selected).filter((id) => {
       return selected[id];
     });
 
     function openMoveFiles() {
+      setShowDetailPanel(false);
       setShowMoveFiles(true);
     }
     const _files = filtered_files ? filtered_files.filtered : files;
@@ -373,7 +390,8 @@ function FileList(props) {
       const canWrite = Perms.canWriteFile(asel, user);
       const canDownload = Perms.canDownloadFile(asel, user);
       setActiveSelection(asel);
-      setShowDetailPanel(true);
+      if(!showFileUpload && !moveFileFlag)
+        setShowDetailPanel(true);
       if(matches) {
         setFileActions(
           <React.Fragment>
@@ -394,7 +412,7 @@ function FileList(props) {
                 </IconButton>
               </Tooltip>
             )}
-            {canWrite && (
+            {canWrite && props && props.path !== "/home" && (
               <Tooltip title="Move file or folder" aria-label="add">
                 <IconButton className="w-64 h-64" onClick={openMoveFiles}>
                   <Icon className=" text-white text-4xl" color="primary">
@@ -403,7 +421,7 @@ function FileList(props) {
                 </IconButton>
               </Tooltip>
             )}
-            {canWrite && (
+            {canWrite && props && props.path !== "/home" && (
               <Tooltip title="Delete selected file or folder" aria-label="add">
                 <IconButton
                   className="w-64 h-64"
@@ -494,14 +512,14 @@ function FileList(props) {
                 </IconButton>
               </Tooltip>
             )}
-            {canWrite && (
+            {canWrite && props && props.path !== "/home" && (
               <Tooltip title="Move file or folder" aria-label="add">
                 <IconButton className="w-64 h-64" onClick={openMoveFiles}>
                   <Icon className=" text-white text-4xl" color="primary">assignment_return</Icon>
                 </IconButton>
               </Tooltip>
             )}
-            {canWrite && (
+            {canWrite && props && props.path !== "/home" && (
               <Tooltip title="Delete selected files or folders" aria-label="add">
                 <IconButton className="w-64 h-64" onClick={() => {confirmAndDelete(selectedIds, _files);}}>
                   <Icon className="text-white text-4xl">delete</Icon>
@@ -662,7 +680,7 @@ function FileList(props) {
           }
 
           props.setFileActions(
-            <React.Fragment classname="flex flex-col">
+            <div classname="flex flex-col">
               <div className="flex-shrink flex flex-row justify-between h-32 p-1 mt-16 ml-16 mr-16 bg-white align-middle rounded ">
                 <input
                   className="flex-shrink min-w-min rounded p-0 bg-white align-middle text-black text-lg"
@@ -687,7 +705,7 @@ function FileList(props) {
                 {containerActions}
                 {fileActions}
               </div>
-            </React.Fragment>
+            </div>
           );
         }
       }
@@ -746,20 +764,21 @@ function FileList(props) {
 
   function closePermissionsDialog() {
     setShowPermissionsDialog(false);
-    // setTimeout(() => {
-    //   OnRefresh();
-    // }, 1000);
+    refreshFolder()
+    .then(()=> {
+      setTimeout(()=>{
+        setPermissionLoadFlag(false);
+      },100)
+    })
   }
 
   function onClickRow(evt) {
-    var clear =
-      !evt.metaKey &&
-      !evt.ctrlKey &&
-      evt.target.getAttribute("type") !== "checkbox";
+    var clear = !evt.metaKey && !evt.ctrlKey && evt.target.getAttribute("type") !== "checkbox";
     var row = findRow(evt.target);
     if (row && row.id) {
       toggleSelected(row.id, clear);
     }
+    setMoveFileFlag(false);
   }
 
   function onDragEnter(evt) {
@@ -804,8 +823,23 @@ function FileList(props) {
     }
   }
 
-  function refreshFolder() {
-    dispatch(Actions.getFiles(props.path));
+  async function refreshFolder() {
+    return await dispatch(Actions.getFiles(props.path));
+  }
+
+  function setPermissionLoading(flag) {
+    setPermissionLoadFlag(flag);
+  }
+
+  function handleShowPermissionsDialog(showPerm) {
+    setPermissionLoadFlag(true);
+    refreshFolder()
+    .then(()=> {
+      setTimeout(()=>{
+        setPermissionLoadFlag(false);
+        setShowPermissionsDialog(showPerm);
+      },100)
+    })
   }
   
   if (_files && _files.length >= 0) {
@@ -844,6 +878,7 @@ function FileList(props) {
                 selected = {active_selection}
                 onModify={refreshFolder}
                 handleClose={closePermissionsDialog}
+                setPermissionLoading={setPermissionLoading}
               />
               {_files.length > 0 && (
                 <TableBody onClick={onClickRow}>
@@ -889,9 +924,12 @@ function FileList(props) {
                     <div> {selectedIds.length} files selected.</div>
                   )}
                   {selectedIds && selectedIds.length === 1 && (
-                    <FileDetailPanel showPermissionsDialog={(p) => {
-                      setShowPermissionsDialog(p);
-                    }} meta={{ ...active_selection }} />
+                    <FileDetailPanel 
+                    showPermissionsDialog={handleShowPermissionsDialog} 
+                    meta={{ ...active_selection }} 
+                    permissionLoadFlag={permissionLoadFlag}
+                    onModify={refreshFolder}
+                    />
                  )}
                 </div>
               </div>
@@ -930,8 +968,11 @@ function FileList(props) {
             path={props.path}
             handleClose={() => {
               setShowMoveFiles(false);
+              setShowDetailPanel(false);
+              setMoveFileFlag(true);
             }}
             onMove={refreshFolder}
+            setSelected={setSelected}
           />
         )}
         {showRenameDialog && (

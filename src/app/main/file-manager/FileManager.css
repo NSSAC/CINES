@@ -136,3 +136,7 @@ hr {
 .MuiFormControl-root .Mui-focused {
   color: black !important;
 }
+
+.MuiTooltip-popper {
+  z-index: 9999 !important;
+}

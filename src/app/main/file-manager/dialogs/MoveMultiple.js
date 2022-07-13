@@ -29,7 +29,8 @@ export const MoveMultiple = ({
   sourceIDs,
   path,
   selectedCount,
-  onMove
+  onMove,
+  setSelected,
 }) => {
 
   const useStyles = makeStyles({
@@ -68,6 +69,7 @@ export const MoveMultiple = ({
   const onCancel = () => {
     setDestinationPath(path)
     handleClose();
+    setSelected({});
   };
 
   const moveFiles = async () => {
@@ -87,10 +89,12 @@ export const MoveMultiple = ({
     // setMoveData(md)
     if (onMove){
       onMove(md)
+      setSelected({});
     }
 
     if (handleClose){
       handleClose();
+      setSelected({});
     }
   }
 

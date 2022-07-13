@@ -7,7 +7,7 @@ import ProvenancePanel from "../panel/ProvenancePanel";
 import PermissionsPanel from "../panel/PermissionsPanel";
 
 function FileDetailPanel(props) {
-    const [selectedTab,setSelectedTab] = useState(0)
+    const [selectedTab,setSelectedTab] = useState(0);
 
     function handleTabChange(evt,val){
         setSelectedTab(val)

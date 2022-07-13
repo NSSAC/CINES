@@ -20,7 +20,7 @@ const reducer = combineReducers({
   "fileManagerApp": fileAppReducer
 })
 
-function SelectFileDialog({ showModal, handleFMClose, target, fileTypes, multiple, onSelect,requireWritePermissions,enableUploads,title}) {
+function SelectFileDialog({ showModal, handleFMClose, target, fileTypes, multiple, onSelect, requireWritePermissions, enableUploads, title}) {
 
   var tf,fname;
   if (target){
@@ -55,8 +55,8 @@ function SelectFileDialog({ showModal, handleFMClose, target, fileTypes, multipl
   var uploadableTypes = fileTypes || FILEUPLOAD_CONFIG.fileTypes
 
   const onCancel = () => {
-    setSearch("")
-    handleFMClose()
+    setSearch("");
+    handleFMClose();
   }
 
   const onClickSelect = () => {
@@ -288,17 +288,19 @@ function handleDrop(e){
   }, [dispatch, targetFolder])
 
   useEffect(() => {
+
     if (target_meta && target_meta.id && target_meta.isContainer) {
-      dispatch(Actions.getFiles((target_meta.id==="root")?'/':target_meta.id))
+      if(targetFolder.split("/").pop() === target_meta.name)
+        dispatch(Actions.getFiles((target_meta.id==="root")?'/':target_meta.id))
     }
-  }, [dispatch, target_meta])
+  }, [dispatch,target_meta,targetFolder])
 
   const handleUploadButtonClicked = (clickFlag) => {
     setUploadButtonClickFlag(clickFlag);
   }
 
   const selectedIds = Object.keys(selection).filter((s) => { return selection[s] })
-  const _files = filtered_files?filtered_files.filtered:files;
+  const _files = filtered_files ? filtered_files.filtered : files;
   const fileTypeList = fileTypes.map((t,idx)=>{
     if (fileTypes.length===1){
       return  <span key={idx} className="text-orange-600">{t}</span>
@@ -335,7 +337,8 @@ function handleDrop(e){
                 <span>
                   <div className={clsx("flex")}>
                       <div onClick={showSearch}>
-                        <IconButton title="Click to search" className="w-64 h-64 p-0 m-0"><Icon>search</Icon></IconButton>    </div>
+                        <IconButton title="Click to search" className="w-64 h-64 p-0 m-0"><Icon>search</Icon></IconButton>    
+                      </div>
                     {showSearchBox && (
                       <ClickAwayListener onClickAway={handleClickAway}>
                         <div>
