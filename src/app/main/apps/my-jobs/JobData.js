@@ -31,7 +31,7 @@ function JobData() {
       }
 
       var navigateLabels = ['csonnet_data_analysis','csonnet_simulation','input_file']
-      var clickHere = ['rules','initial_states_method','text_sections','plot_types']
+      var clickHere = ['rules','initial_states_method','text_sections','plot_types','dynamicProps','submodelArrayData']
 
     const openoutputDialog = () => {
         setshowDialog(true);

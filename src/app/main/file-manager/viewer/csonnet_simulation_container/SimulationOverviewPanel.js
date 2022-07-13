@@ -2,6 +2,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/styles';
 import clsx from 'clsx';
 import filesize from 'filesize';
+import moment from 'moment';
 
 const useStyles = makeStyles({
     table: {
@@ -70,7 +71,23 @@ function SimulationOverviewPanel(props) {
                         <th>Type</th>
                         <td title={props.meta.type}>{props.meta.type}</td>
                     </tr>
+                    <tr className="owner">
+                        <th>Creation</th>
+                        <td title={moment.utc(props.meta.creation_date).local().format('YYYY-MM-DD hh:mm:ss')} >{moment.utc(props.meta.creation_date).local().format('YYYY-MM-DD hh:mm:ss')}</td>
+                    </tr>
 
+                    <tr className="owner">
+                        <th>Created By</th>
+                        <td title={props.meta.created_by} >{props.meta.created_by}</td>
+                    </tr>
+                    <tr className="owner">
+                        <th>Updated</th>
+                        <td title={moment.utc(props.meta.update_date).local().format('YYYY-MM-DD hh:mm:ss')} >{moment.utc(props.meta.update_date).local().format('YYYY-MM-DD hh:mm:ss')}</td>
+                    </tr>
+                    <tr className="owner">
+                        <th>Updated By</th>
+                        <td title={props.meta.updated_by} >{props.meta.updated_by}</td>
+                    </tr>
                     <tr className="size">
                         <th>Size</th>
                         <td title={props.meta.size}>{(!props.meta.size && (props.meta.size !== 0)) ? '-' : filesize(props.meta.size)}</td>

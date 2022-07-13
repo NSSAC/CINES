@@ -12,12 +12,20 @@ const initialState = {
     total_progress: 0
 }
 
+var fileHistory;
+(function() {
+    fileHistory = [];
+})();
+
 function notify(file){
-    if (file.failed){
-        toast.error(`Upload failed for ${file.fileName} : ${file.error}`,{autoClose:false})
-    }else if (file.completed) {
-        toast.success(`Upload completed for ${file.fileName}`)
+    if(!fileHistory.includes(file)) {
+        if (file.failed){
+            toast.error(`Upload failed for ${file.fileName} : ${file.error}`,{autoClose:false})
+        }else if (file.completed) {
+            toast.success(`Upload completed for ${file.fileName}`)
+        }
     }
+    fileHistory.push(file);
 }
 
 const reducer = function (state = initialState, action) {
@@ -51,7 +59,6 @@ const reducer = function (state = initialState, action) {
         case Actions.UPLOAD_COMPLETED:
             // toast.success("File upload complete", action.payload)
             action.payload.recent.forEach(notify)
-
             return {
                 ...state,
                 ...action.payload,

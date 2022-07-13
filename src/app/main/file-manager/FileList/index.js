@@ -1,37 +1,35 @@
-import {
-  Hidden,
-  Icon,
-  IconButton,
-  LinearProgress,
-  Table,
-  TableBody,
-  TableCell,
-  TableRow,
-  Tooltip,
-  Typography,
-} from "@material-ui/core";
-// Import css
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useHistory } from "react-router-dom";
+import withReducer from "app/store/withReducer";
+// import { confirmAlert } from 'react-confirm-alert';
+
+import { Hidden, Icon, IconButton, LinearProgress, Table, TableBody, TableCell, TableRow, Tooltip, Typography } from "@material-ui/core";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import { AssignmentReturn, CloudDownload, Edit, Delete } from "@material-ui/icons";
+
 import { saveAs } from "file-saver";
 import filesize from "filesize";
 import moment from "moment";
-import React, { useState } from "react";
-// import { confirmAlert } from 'react-confirm-alert';
-import confirmAlert from "../dialogs/ConfirmDelete";
-import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
-import withReducer from "app/store/withReducer";
-import CreateFolder from "../dialogs/CreateFolderDialog";
-import FileUpload from "../dialogs/FileUpload/FileUploadDialog";
-import { MoveMultiple } from "../dialogs/MoveMultiple";
-import { RenameFile } from "../dialogs/RenameFile";
+
+import reducer from "./store/reducers";
 import FileDetailPanel from "./FileDetailPanel";
 import FileListHeader from "./FileListHeader";
 import FileRow from "./FileRow";
 import * as Actions from "./store/actions";
+
+import confirmAlert from "../dialogs/ConfirmDelete";
+import CreateFolder from "../dialogs/CreateFolderDialog";
+import FileUpload from "../dialogs/FileUpload/FileUploadDialog";
+import { MoveMultiple } from "../dialogs/MoveMultiple";
+import { RenameFile } from "../dialogs/RenameFile";
 import * as Perms from "../permissions";
-import reducer from "./store/reducers";
 import FILEUPLOAD_CONFIG from "../FileManagerAppConfig";
+import { ModifyPermissions } from "../panel/ModifyPermissions";
 import "../FileManager.css";
+
 function FileList(props) {
   const tableRef = React.createRef();
   const dispatch = useDispatch();
@@ -65,10 +63,22 @@ function FileList(props) {
   const [active_selection, setActiveSelection] = useState(false);
   const [containerActions, setContainerActions] = useState();
   const [fileActions, setFileActions] = useState();
+  const [showPermissionsDialog, setShowPermissionsDialog] = useState(false);
   const [droppedFiles, setDroppedFiles] = useState(false);
+  const [menuClick, setMenuClick] = useState(null);
+  const [menuItems, setMenuItems] = useState();
+
   var uploadableTypes = FILEUPLOAD_CONFIG.fileTypes;
   const _files = filtered_files ? filtered_files.filtered : files;
   const curFilter = filtered_files ? filtered_files.filter : false;
+  const matches = useMediaQuery("(min-width:600px)");
+  const menuOpen = Boolean(menuClick);
+  const history = useHistory();
+
+  const selectedIds = Object.keys(selected).filter((id) => {
+    return selected[id];
+  });
+
   if (_files && _files.length > 0 && sort && sort.length > 0) {
     var attr = sort[0].attr;
     var dir = sort[0].dir === "asc" ? [1, -1] : [-1, 1];
@@ -84,6 +94,7 @@ function FileList(props) {
       return 0;
     });
   }
+
   // React.useEffect(()=>{
   //     // if (history.location.pathname.charAt(history.location.pathname.length-1)!=="/"){
   //     //     history.replace(`${history.location.pathname}/`)
@@ -91,6 +102,7 @@ function FileList(props) {
   //     setSelected({})
   // },[history,history.location.pathname])
   // console.log("AUTH: ", user)
+
   React.useEffect(() => {
     if (file_removal && file_removal.removal_completed) {
       setShowNotification(
@@ -100,17 +112,20 @@ function FileList(props) {
       dispatch(Actions.getFiles(props.path));
     }
   }, [dispatch, props.path, file_removal, showNotification]);
+
   React.useEffect(() => {
     if (!usermeta_updater || (usermeta_updater && !usermeta_updater.updating)) {
       setSelected({});
       dispatch(Actions.getFiles(props.path));
     }
   }, [dispatch, props.path, usermeta_updater, usermeta_updater.updating]);
+
   React.useEffect(() => {
     if (uploader.recent && uploader.recent.length > 0) {
       dispatch(Actions.getFiles(props.path));
     }
   }, [dispatch, uploader.recent, props.path]);
+
   const table_columns = [
     {
       label: "Name",
@@ -120,7 +135,16 @@ function FileList(props) {
       cellClass: "",
       formatter: (val, obj) => {
         return (
-          <Link style={{ color: "#1565C0" }} title={val} to={val}>
+          <Link
+            style={{ color: "#1565C0" }}
+            title={val}
+            onClick={(event) => {
+              event.preventDefault();
+              if (event.detail === 1) {
+                history.push(val);
+              }
+            }}
+          >
             {val}
           </Link>
         );
@@ -171,21 +195,34 @@ function FileList(props) {
       },
     },
   ];
+
   const listScrollToTop = () => {
     if(tableRef.current) tableRef.current.scrollIntoView();
   }
+
+  const handleMenuClick = (event) => {
+    setMenuClick(event.currentTarget);
+  }
+
+  const handleMenuClose = () => {
+    setMenuClick(null);
+  }
+
   React.useEffect(() => {
     function refreshFolder() {
       setRefreshFlag(true);
       dispatch(Actions.getFiles(props.path));
     }
+
     function openUploader() {
       setShowFileUpload(true);
     }
+
     function openCreateFolder() {
       setShowCreateFolder(true);
     }
     const canWrite = Perms.canWriteFile(props.meta, user);
+
     setContainerActions(
       <React.Fragment>
         <Tooltip title="Refresh Folder Listing" aria-label="add">
@@ -207,9 +244,16 @@ function FileList(props) {
             </IconButton>
           </Tooltip>
         )}
+        {canWrite && !matches && selectedIds.length > 0 && (
+          // && selectedIds.length > 0
+          <IconButton className="w-64 h-64" onClick={handleMenuClick}>
+            <Icon className="text-white text-4xl">menu</Icon>
+          </IconButton>
+        )}
       </React.Fragment>
     );
-  }, [dispatch, props.path, showSearch, props.meta, user]);
+  }, [dispatch, props.path, showSearch, props.meta, user, matches, selectedIds.length]);
+
   React.useEffect(() => {
     if (files) {
       setTotalFileCount(
@@ -218,6 +262,7 @@ function FileList(props) {
     }
     // setSelected({})
   }, [files, filtered_files]);
+
   React.useEffect(() => {
     dispatch(Actions.getFiles(props.path));
     dispatch(Actions.filterFiles(files, false));
@@ -248,6 +293,7 @@ function FileList(props) {
     var selectedIds = Object.keys(selected).filter((id) => {
       return selected[id];
     });
+
     function openMoveFiles() {
       setShowMoveFiles(true);
     }
@@ -277,6 +323,7 @@ function FileList(props) {
           }
         });
     }
+
     function confirmAndDelete(selectedIds, files) {
       const selFiles = selectedIds
         .map((id) => {
@@ -296,6 +343,7 @@ function FileList(props) {
           }
         })
         .filter((f) => !!f);
+
       if (selFiles.length !== selectedIds.length) {
         console.warn(
           "Unexpected SelectedIDs !== selFiles.length",
@@ -312,6 +360,7 @@ function FileList(props) {
         closeOnClickOutside: false,
       });
     }
+
     if (_files && _files.length > 0 && selectedIds.length === 1) {
       var asel;
       _files.some((f) => {
@@ -325,48 +374,109 @@ function FileList(props) {
       const canDownload = Perms.canDownloadFile(asel, user);
       setActiveSelection(asel);
       setShowDetailPanel(true);
-      setFileActions(
-        <React.Fragment>
-          {canDownload && (
-            <Tooltip title="Download selected file(s)" aria-label="add">
-              <IconButton className="w-64 h-64" onClick={downloadFiles}>
-                <Icon className="text-white text-4xl">cloud_download</Icon>
-              </IconButton>
-            </Tooltip>
-          )}
-          {canWrite && (
-            <Tooltip title="Rename file or folder" aria-label="add">
-              <IconButton
-                className="w-64 h-64"
-                onClick={() => setShowRenameDialog(true)}
-              >
-                <Icon className="text-white text-4xl">edit</Icon>
-              </IconButton>
-            </Tooltip>
-          )}
-          {canWrite && (
-            <Tooltip title="Move file or folder" aria-label="add">
-              <IconButton className="w-64 h-64" onClick={openMoveFiles}>
-                <Icon className=" text-white text-4xl" color="primary">
-                  assignment_return
-                </Icon>
-              </IconButton>
-            </Tooltip>
-          )}
-          {canWrite && (
-            <Tooltip title="Delete selected file or folder" aria-label="add">
-              <IconButton
-                className="w-64 h-64"
-                onClick={() => {
-                  confirmAndDelete(selectedIds, _files);
-                }}
-              >
-                <Icon className="text-white text-4xl">delete</Icon>
-              </IconButton>
-            </Tooltip>
-          )}
-        </React.Fragment>
-      );
+      if(matches) {
+        setFileActions(
+          <React.Fragment>
+            {canDownload && (
+              <Tooltip title="Download selected file(s)" aria-label="add">
+                <IconButton className="w-64 h-64" onClick={downloadFiles}>
+                  <Icon className="text-white text-4xl">cloud_download</Icon>
+                </IconButton>
+              </Tooltip>
+            )}
+            {canWrite && (
+              <Tooltip title="Rename file or folder" aria-label="add">
+                <IconButton
+                  className="w-64 h-64"
+                  onClick={() => setShowRenameDialog(true)}
+                >
+                  <Icon className="text-white text-4xl">edit</Icon>
+                </IconButton>
+              </Tooltip>
+            )}
+            {canWrite && (
+              <Tooltip title="Move file or folder" aria-label="add">
+                <IconButton className="w-64 h-64" onClick={openMoveFiles}>
+                  <Icon className=" text-white text-4xl" color="primary">
+                    assignment_return
+                  </Icon>
+                </IconButton>
+              </Tooltip>
+            )}
+            {canWrite && (
+              <Tooltip title="Delete selected file or folder" aria-label="add">
+                <IconButton
+                  className="w-64 h-64"
+                  onClick={() => {
+                    confirmAndDelete(selectedIds, _files);
+                  }}
+                >
+                  <Icon className="text-white text-4xl">delete</Icon>
+                </IconButton>
+              </Tooltip>
+            )}
+          </React.Fragment>
+        );
+      } else {
+        setMenuItems(
+          <Menu
+            anchorEl={menuClick}
+            id="menu"
+            open={menuOpen}
+            onClose={handleMenuClose}
+            onClick={handleMenuClose}
+            PaperProps={{
+              elevation: 0,
+              sx: {
+                overflow: "visible",
+                filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+                mt: 1.5,
+                "& .MuiAvatar-root": {
+                  width: 100,
+                  height: 100,
+                  ml: -0.5,
+                  mr: 1,
+                },
+                "&:before": {
+                  content: '""',
+                  display: "block",
+                  position: "absolute",
+                  top: 0,
+                  right: 14,
+                  width: 10,
+                  height: 10,
+                  bgcolor: "background.paper",
+                  transform: "translateY(-50%) rotate(45deg)",
+                  zIndex: 0,
+                },
+              },
+            }}
+            transformOrigin={{ horizontal: "right", vertical: "top" }}
+            anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+          >
+            <MenuItem onClick={downloadFiles}>
+              {canDownload && (
+                <><CloudDownload/>&nbsp;&nbsp;<span style={{"fontSize":"18px"}}>Download</span></>
+              )}
+            </MenuItem>
+            <MenuItem onClick={() => setShowRenameDialog(true)}>
+              {canWrite && (
+                <><Edit/>&nbsp;&nbsp;<span style={{"fontSize":"18px"}}>Rename</span></>
+              )}
+            </MenuItem>
+            <MenuItem onClick={openMoveFiles}>
+              {canWrite && (
+                <><AssignmentReturn/>&nbsp;&nbsp;<span style={{"fontSize":"18px"}}>Move</span></>
+              )}
+            </MenuItem>
+            <MenuItem onClick={() => {confirmAndDelete(selectedIds, _files);}}>
+              {canWrite && (
+                <><Delete/>&nbsp;&nbsp;<span style={{"fontSize":"18px"}}>Delete</span></>
+              )}
+            </MenuItem>
+          </Menu>
+        );
+      }
     } else if (selectedIds.length > 1) {
       const sf = _files.filter((f) => {
         return selectedIds.indexOf(f.id) >= 0;
@@ -374,54 +484,106 @@ function FileList(props) {
       const canDownload = Perms.canDownloadFiles(sf, user);
       const canWrite = Perms.canWriteFiles(sf, user);
       setShowDetailPanel(false);
-      setFileActions(
-        <React.Fragment>
-          {canDownload && (
-            <Tooltip title="Download selected file(s)" aria-label="add">
-              <IconButton className="w-64 h-64" onClick={downloadFiles}>
-                <Icon className="text-white text-4xl">cloud_download</Icon>
-              </IconButton>
-            </Tooltip>
-          )}
-          {canWrite && (
-            <Tooltip title="Move file or folder" aria-label="add">
-              <IconButton className="w-64 h-64" onClick={openMoveFiles}>
-                <Icon className=" text-white text-4xl" color="primary">
-                  assignment_return
-                </Icon>
-              </IconButton>
-            </Tooltip>
-          )}
-          {canWrite && (
-            <Tooltip title="Delete selected files or folders" aria-label="add">
-              <IconButton
-                className="w-64 h-64"
-                onClick={() => {
-                  confirmAndDelete(selectedIds, _files);
-                }}
-              >
-                <Icon className="text-white text-4xl">delete</Icon>
-              </IconButton>
-            </Tooltip>
-          )}
-        </React.Fragment>
-      );
+      if(matches) {
+        setFileActions(
+          <React.Fragment>
+            {canDownload && (
+              <Tooltip title="Download selected file(s)" aria-label="add">
+                <IconButton className="w-64 h-64" onClick={downloadFiles}>
+                  <Icon className="text-white text-4xl">cloud_download</Icon>
+                </IconButton>
+              </Tooltip>
+            )}
+            {canWrite && (
+              <Tooltip title="Move file or folder" aria-label="add">
+                <IconButton className="w-64 h-64" onClick={openMoveFiles}>
+                  <Icon className=" text-white text-4xl" color="primary">assignment_return</Icon>
+                </IconButton>
+              </Tooltip>
+            )}
+            {canWrite && (
+              <Tooltip title="Delete selected files or folders" aria-label="add">
+                <IconButton className="w-64 h-64" onClick={() => {confirmAndDelete(selectedIds, _files);}}>
+                  <Icon className="text-white text-4xl">delete</Icon>
+                </IconButton>
+              </Tooltip>
+            )}
+          </React.Fragment>
+        );
+      } else {
+        setMenuItems(
+          <Menu
+            anchorEl={menuClick}
+            id="menu"
+            open={menuOpen}
+            onClose={handleMenuClose}
+            onClick={handleMenuClose}
+            PaperProps={{
+              elevation: 0,
+              sx: {
+                overflow: "visible",
+                filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+                mt: 1.5,
+                "& .MuiAvatar-root": {
+                  width: 100,
+                  height: 100,
+                  ml: -0.5,
+                  mr: 1,
+                },
+                "&:before": {
+                  content: '""',
+                  display: "block",
+                  position: "absolute",
+                  top: 0,
+                  right: 14,
+                  width: 10,
+                  height: 10,
+                  bgcolor: "background.paper",
+                  transform: "translateY(-50%) rotate(45deg)",
+                  zIndex: 0,
+                },
+              },
+            }}
+            transformOrigin={{ horizontal: "right", vertical: "top" }}
+            anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+          >
+            <MenuItem onClick={downloadFiles}>
+              {canDownload && (
+                <><CloudDownload/>&nbsp;&nbsp;<span style={{"fontSize":"18px"}}>Download</span></>
+              )}
+            </MenuItem>
+            <MenuItem onClick={openMoveFiles}>
+              {canWrite && (
+                <><AssignmentReturn/>&nbsp;&nbsp;<span style={{"fontSize":"18px"}}>Move</span></>
+              )}
+            </MenuItem>
+            <MenuItem onClick={() => {confirmAndDelete(selectedIds, _files);}}>
+              {canWrite && (
+                <><Delete/>&nbsp;&nbsp;<span style={{"fontSize":"18px"}}>Delete</span></>
+              )}
+            </MenuItem>
+          </Menu>
+        );
+      }
     } else {
       setShowDetailPanel(false);
       setActiveSelection(false);
       setFileActions();
     }
-  }, [dispatch, selected, props, files, filtered_files, user]);
+  }, [dispatch, selected, props, files, filtered_files, user, matches, menuClick, menuOpen]);
+
   React.useEffect(() => {
     if (props.setFileActions) {
       function onClickSearch() {
         setShowSearch(true);
       }
+
       if (showSearch) {
         function onSearchChange(evt) {
           setSelected({});
           dispatch(Actions.filterFiles(files, evt.target.value));
         }
+
         function clearFilter(evt) {
           if (!curFilter) {
             setShowSearch(false);
@@ -429,11 +591,13 @@ function FileList(props) {
             dispatch(Actions.filterFiles(files, false));
           }
         }
+
         function onSearchBlur(evt) {
           if (!curFilter) {
             setShowSearch(false);
           }
         }
+
         props.setFileActions(
           <div className="w-full flex p-0 m-0">
             <div className="flex-grow"></div>
@@ -446,6 +610,7 @@ function FileList(props) {
                   value={curFilter ? curFilter : ""}
                   onChange={onSearchChange}
                   onBlur={onSearchBlur}
+                  autoFocus={true}
                 />
                 <Tooltip title="Clear filter" aria-label="add">
                   <Icon
@@ -464,29 +629,77 @@ function FileList(props) {
           </div>
         );
       } else {
-        props.setFileActions(
-          <React.Fragment>
-            <Tooltip title="Search for files in this folder" aria-label="add">
-              <IconButton className="w-64 h-64" onClick={onClickSearch}>
-                <Icon className="text-white text-4xl">search</Icon>
-              </IconButton>
-            </Tooltip>
-            {containerActions}
-            {fileActions}
-          </React.Fragment>
-        );
+        if(matches) {
+          props.setFileActions(
+            <React.Fragment>
+              <Tooltip title="Search for files in this folder" aria-label="add">
+                <IconButton className="w-64 h-64" onClick={onClickSearch}>
+                  <Icon className="text-white text-4xl">search</Icon>
+                </IconButton>
+              </Tooltip>
+              {containerActions}
+              {fileActions}
+            </React.Fragment>
+          );
+        } else {
+          function onSearchChange(evt) {
+            setSelected({});
+            dispatch(Actions.filterFiles(files, evt.target.value));
+          }
+
+          function clearFilter(evt) {
+            if (!curFilter) {
+              setShowSearch(false);
+            } else {
+              dispatch(Actions.filterFiles(files, false));
+            }
+          }
+
+          function onSearchBlur(evt) {
+            if (!curFilter) {
+              setShowSearch(false);
+            }
+          }
+
+          props.setFileActions(
+            <React.Fragment classname="flex flex-col">
+              <div className="flex-shrink flex flex-row justify-between h-32 p-1 mt-16 ml-16 mr-16 bg-white align-middle rounded ">
+                <input
+                  className="flex-shrink min-w-min rounded p-0 bg-white align-middle text-black text-lg"
+                  style={{width:"100%"}}
+                  type="text"
+                  placeholder="Search for files and folders"
+                  value={curFilter ? curFilter : ""}
+                  onChange={onSearchChange}
+                  onBlur={onSearchBlur}
+                  autoFocus={true}
+                />
+                <Tooltip title="Clear filter" aria-label="add">
+                  <Icon
+                    className="text-black text-xl  w-24 h-32 m-0 pt-4 align-bottom flex-initial"
+                    onClick={clearFilter}
+                  >
+                    close
+                  </Icon>
+                </Tooltip>
+              </div>
+              <div>
+                {containerActions}
+                {fileActions}
+              </div>
+            </React.Fragment>
+          );
+        }
       }
     }
-  }, [
-    containerActions,
-    fileActions,
-    props,
-    showSearch,
-    dispatch,
-    files,
-    filtered_files,
-    curFilter,
-  ]);
+  }, [containerActions, fileActions, props, showSearch, dispatch, files, filtered_files, curFilter, matches]);
+
+  React.useEffect(() => {
+    if(props.setMenuItems) {
+      props.setMenuItems(menuItems);
+    }
+  },[menuItems, props])
+
   function findRow(node) {
     if (node.tagName === "TR") {
       return node;
@@ -500,6 +713,7 @@ function FileList(props) {
     }
     return findRow(parent);
   }
+
   function toggleSelected(id, clear) {
     var sel = {};
     if (!clear) {
@@ -514,6 +728,7 @@ function FileList(props) {
     }
     setSelected(sel);
   }
+
   function toggleAll() {
     var selectedIds = Object.keys(selected).filter((id) => {
       return selected[id];
@@ -528,6 +743,14 @@ function FileList(props) {
       setSelected(s);
     }
   }
+
+  function closePermissionsDialog() {
+    setShowPermissionsDialog(false);
+    // setTimeout(() => {
+    //   OnRefresh();
+    // }, 1000);
+  }
+
   function onClickRow(evt) {
     var clear =
       !evt.metaKey &&
@@ -538,18 +761,22 @@ function FileList(props) {
       toggleSelected(row.id, clear);
     }
   }
+
   function onDragEnter(evt) {
     evt.preventDefault();
     evt.stopPropagation();
   }
+
   function onDragLeave(evt) {
     evt.preventDefault();
     evt.stopPropagation();
   }
+
   function onDragOver(evt) {
     evt.preventDefault();
     evt.stopPropagation();
   }
+
   function handleDrop(e) {
     e.preventDefault();
     e.stopPropagation();
@@ -576,12 +803,11 @@ function FileList(props) {
       }, 500);
     }
   }
+
   function refreshFolder() {
     dispatch(Actions.getFiles(props.path));
   }
-  const selectedIds = Object.keys(selected).filter((id) => {
-    return selected[id];
-  });
+  
   if (_files && _files.length >= 0) {
     return (
       <div className="overflow-auto w-full h-full">
@@ -595,7 +821,7 @@ function FileList(props) {
           >
             <Table stickyHeader className="fileTableStyle  max-h-full" ref={tableRef}>
               <FileListHeader
-                checked={selectedIds.length === totalFileCount}
+                checked={totalFileCount!==0 && selectedIds.length === totalFileCount}
                 indeterminate={
                   selectedIds.length > 0 && selectedIds.length < totalFileCount
                 }
@@ -609,7 +835,15 @@ function FileList(props) {
                   );
                 }}
                 toggleAll={toggleAll}
-                enableCheckBoxes={props.enableCheckBoxes || false}
+                enableCheckBoxes={totalFileCount!==0 && (props.enableCheckBoxes || false)}
+              />
+               <ModifyPermissions
+                showModal={showPermissionsDialog}
+                selectedVal={props.meta}
+                props={props}
+                selected = {active_selection}
+                onModify={refreshFolder}
+                handleClose={closePermissionsDialog}
               />
               {_files.length > 0 && (
                 <TableBody onClick={onClickRow}>
@@ -655,8 +889,10 @@ function FileList(props) {
                     <div> {selectedIds.length} files selected.</div>
                   )}
                   {selectedIds && selectedIds.length === 1 && (
-                    <FileDetailPanel meta={{ ...active_selection }} />
-                  )}
+                    <FileDetailPanel showPermissionsDialog={(p) => {
+                      setShowPermissionsDialog(p);
+                    }} meta={{ ...active_selection }} />
+                 )}
                 </div>
               </div>
             </Hidden>

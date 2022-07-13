@@ -35,7 +35,7 @@ export default (props) => {
                             )}
                             {(files.length > 1) && (
                                 <React.Fragment>
-                                    <p>Delete {files.length} files?</p>
+                                    <p>Delete {files.length} files/folders?</p>
                                     <ul class="list-disc m-8 pl-8">
                                         {files.map((f)=>{
                                             return (
