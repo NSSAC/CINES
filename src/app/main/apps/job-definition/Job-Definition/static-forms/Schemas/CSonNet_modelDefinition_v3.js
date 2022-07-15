@@ -158,7 +158,7 @@ export const modelJSON = {
                                                         "fixed"
                                                     ],
                                                     "network_element": "node",
-                                                    "label": "Relative node threshold.",
+                                                    "label": "Relative node threshold",
                                                     "description": "Value between 0 and 1.",
                                                     "minimum": 0,
                                                     "maximum": 1
