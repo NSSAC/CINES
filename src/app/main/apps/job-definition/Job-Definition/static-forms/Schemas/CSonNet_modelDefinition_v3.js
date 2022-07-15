@@ -69,7 +69,7 @@ export const modelJSON = {
                                                     "description": "Node threshold value >= 0.",
                                                     "minimum": 0
                                                 },
-                                                "node_probability_auto_value": {
+                                                "node_probability_value": {
                                                     "type": "number",
                                                     "label": "Activation transition probability",
                                                     "description": "Probability to transition to state 1 per timestep once threshold is met",
@@ -880,10 +880,10 @@ export const modelJSON = {
                     },
                     "rule": {
                         "node": "all",
-                        "from_state": "S",
-                        "to_state": "I",
+                        "from_state": "0",
+                        "to_state": "1",
                         "cause": [
-                            "I"
+                            "1"
                         ],
                         "rule": "linear_threshold_02"
                     }
