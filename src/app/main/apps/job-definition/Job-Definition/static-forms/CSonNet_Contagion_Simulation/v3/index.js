@@ -51,6 +51,7 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
     const [rowNum, setRowNum] = useState(0);
     const [inputFields, setInputFields] = useState([]);
     const history = useHistory();
+    const [resetProps, setResetProps] = useState({})
 
     const childGrid = {
         paddingLeft: '8px',
@@ -292,6 +293,14 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
             }]
         };
 
+        const dpp = {
+            Behaviour: dp.Behaviour,
+            blocking_state: dp.blocking_state,
+            blocking_nodes:dp.blocking_nodes,
+            input_file: dp.input_file
+        }
+        setResetProps(dpp)
+
             // console.log("State", state);
             if (state.hasOwnProperty("input")) {
               setSubmodelArray(state.input.submodelArrayData);
@@ -357,7 +366,7 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
     }
 
     const dynamicChangedHandler = (event, obj, subId, submodelFlag) => {
-        const updatedJobSubmissionForm = { ...dynamicProps };
+        let updatedJobSubmissionForm = { ...dynamicProps };
         var updatedFormElement;
         if (dynamicProps[obj] instanceof Array) {
             updatedFormElement = [dynamicProps[obj][0], { ...dynamicProps[obj][1] }];
@@ -366,6 +375,9 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
         }
         // Changing Start
         if (obj === 'Behaviour') {
+            //Reset dynamicProps
+            resetProps.input_file = dynamicProps.input_file
+            updatedJobSubmissionForm = resetProps
             let tempSubmodels = [];
             if (modelJSON.models[event.target.value].hasOwnProperty('submodels')) {
                 setStatesArray([]);
@@ -484,8 +496,13 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
             updatedFormElement.value = event.target.value;
             if(subId)
                 updatedFormElement.id = subId
+                // updatedFormElement['label'] = obj
         }
-        updatedJobSubmissionForm[obj] = updatedFormElement;
+        // if(subId){
+        //     updatedJobSubmissionForm[subId] = updatedFormElement;
+        // }else {
+            updatedJobSubmissionForm[obj] = updatedFormElement;
+        // }
         setDynamicProps({ ...updatedJobSubmissionForm });
     }
 
@@ -522,10 +539,12 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
         newRules.forEach(x=>{
             Object.keys(dynamicProps).forEach(y=>{
                 if(x.hasOwnProperty(dynamicProps[y].id) && x.input.includes(y)){
-                  x[dynamicProps[y].id] = parseFloat(dynamicProps[y].value) 
+                    x[dynamicProps[y].id] = parseFloat(dynamicProps[y].value) 
                 }
             })
         });
+        // let newDynamicProps = [...dynamicProps]
+        // console.log(newDynamicProps)
         submitJSON.rules = newRules;
         // console.log(newRules);
         // setRules(newRules)

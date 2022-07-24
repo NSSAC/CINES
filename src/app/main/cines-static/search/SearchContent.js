@@ -250,14 +250,14 @@ const SearchContent = () => {
                         .get(mapItem)
                         .sort((a, b) => {
                         // new Date(b.update_date) - new Date(a.update_date)
-
-                       return a.metadata.name.split(" ").length > b.metadata.name.split(" ").length 
-                            ?  1
-                          : a.metadata.name.split(" ").length === b.metadata.name.split(" ").length 
-                            ? new Date(b.update_date) - new Date(a.update_date) 
-                          : a.metadata.name > b.metadata.name 
-                            ? 1
-                          : -1
+                        return  (a.metadata.name.length - b.metadata.name.length || a.metadata.name.split(" ").length - b.metadata.name.split(" ").length) || new Date(b.update_date) - new Date(a.update_date)
+                      //  return a.metadata.name.split(" ").length > b.metadata.name.split(" ").length 
+                      //       ?  1
+                      //     : a.metadata.name.split(" ").length === b.metadata.name.split(" ").length 
+                      //       ? new Date(b.update_date) - new Date(a.update_date) 
+                      //     : a.metadata.name > b.metadata.name 
+                      //       ? 1
+                      //     : -1
                         })
                         
                         .map((item) => {
