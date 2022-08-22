@@ -55,7 +55,7 @@ function FileDetailPanel(props) {
                 </Tabs>
             </div>
 
-            <div className=" flex-col flex-1 flex h-full  overflow-auto p-2">
+            <div className=" flex-col flex-1 flex h-full w-full overflow-auto p-2">
                 {selectedTab === 0 && (
                     <FileInformationPanel {...props} />
                 )}

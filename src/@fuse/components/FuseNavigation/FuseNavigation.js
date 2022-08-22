@@ -11,7 +11,7 @@ import FuseNavHorizontalCollapse from './horizontal/FuseNavHorizontalCollapse';
 import FuseNavHorizontalItem from './horizontal/FuseNavHorizontalItem';
 import FuseNavHorizontalLink from './horizontal/FuseNavHorizontalLink';
 import {makeStyles} from '@material-ui/styles';
-import './FuseNav.css';
+// import './FuseNav.css';
 
 const useStyles = makeStyles(theme => ({
     navigation          : {
@@ -28,14 +28,14 @@ const useStyles = makeStyles(theme => ({
         '&.active-square-list': {
             '& .list-item, & .active.list-item': {
                 width       : '100%',
-                borderRadius: '0'
+                borderRadius: '0',
             }
         },
         '&.dense'             : {
             '& .list-item': {
                 paddingTop   : 0,
                 paddingBottom: 0,
-                height       : 32
+                height       : 32,
             }
         }
     },

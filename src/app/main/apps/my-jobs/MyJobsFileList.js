@@ -4,8 +4,8 @@ import { Link } from 'react-router-dom';
 import ReactDOM from "react-dom";
 
 import { Button, Hidden, Icon, IconButton, LinearProgress, Paper, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TableRow, TextField, Tooltip, Typography } from '@material-ui/core';
-import Pagination from '@mui/material/Pagination';
-import useMediaQuery from '@mui/material/useMediaQuery';
+import Pagination from '@material-ui/lab/Pagination';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { toast } from "material-react-toastify";
 
 import { FuseAnimate } from '@fuse';
@@ -99,6 +99,12 @@ function MyJobsFileList(props) {
         backgroundColor: "#122230",
         fontSize: "12.5px",
         marginLeft: "5px",
+      };
+      
+    const selectButtonStyleMob = {
+        backgroundColor: "#122230",
+        fontSize: '11.5px',
+        minWidth: '38px'
       };
 
     useEffect(() => {
@@ -555,7 +561,8 @@ function MyJobsFileList(props) {
                             }}
                             onKeyDown={onKeyDownPageChange}
                         />
-                        {matches ? (
+                        {
+                        matches ? (
                             <Button
                                 className="goToPaginationButton"
                                 variant="contained"
@@ -566,8 +573,17 @@ function MyJobsFileList(props) {
                             Go
                             </Button>
                         ) : (
-                            <></>
-                        )}
+                            <Button
+                                className="goToPaginationButton"
+                                variant="contained"
+                                style={selectButtonStyleMob}
+                                onClick={handleSelectedPageClick}
+                                disabled={goToButtonDisabled}
+                            >
+                            Go
+                            </Button>
+                        )
+                        }
                     </span>
                 </div>
             </div>

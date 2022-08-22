@@ -1,4 +1,4 @@
-import { AppBar, Hidden, Toolbar } from "@material-ui/core";
+import { AppBar, Hidden, Toolbar, ListItemIcon, ListItemText,} from "@material-ui/core";
 import { makeStyles, ThemeProvider } from "@material-ui/styles";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
@@ -17,9 +17,12 @@ import NavbarMobileToggleButton from "app/fuse-layouts/shared-components/NavbarM
 // import ChatPanelToggleButton from 'app/fuse-layouts/shared-components/chatPanel/ChatPanelToggleButton';
 import UserMenu from "app/fuse-layouts/shared-components/UserMenu";
 import { Redirect } from "react-router-dom";
-import Avatar from '@mui/material/Avatar';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
+// import Avatar from '@mui/material/Avatar';
+// import Menu from '@mui/material/Menu';
+// import MenuItem from '@mui/material/MenuItem';
+import Avatar from '@material-ui/core/Avatar';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 
 const userServiceURL = `${process.env.REACT_APP_SCIDUCT_USER_SERVICE}`;
 const logoutURL = `${process.env.REACT_APP_LOGOUT_URL}`;
@@ -225,7 +228,7 @@ function ToolbarLayout2(props) {
                       aria-expanded={open ? "true" : undefined}
                       style={{paddingRight: 17 }}
                     >
-                      <Avatar  sx={{ width: 29, height: 29 }}></Avatar>
+                      <Avatar  style={{ width: 29, height: 29}}></Avatar>
                     </IconButton>
                   </Tooltip>
                   <Menu
@@ -234,37 +237,10 @@ function ToolbarLayout2(props) {
                     open={open}
                     onClose={handleClose}
                     onClick={handleClose}
-                    PaperProps={{
-                      elevation: 0,
-                      sx: {
-                        overflow: "visible",
-                        filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
-                        mt: 1.5,
-                        "& .MuiAvatar-root": {
-                          width: 32,
-                          height: 32,
-                          ml: -0.5,
-                          mr: 1,
-                        },
-                        "&:before": {
-                          content: '""',
-                          display: "block",
-                          position: "absolute",
-                          top: 0,
-                          right: 5,
-                          width: 9,
-                          height: 10,
-                          bgcolor: "background.paper",
-                          transform: "translateY(-50%) rotate(45deg)",
-                          zIndex: 0,
-                        },
-                      },
-                    }}
-                    transformOrigin={{ horizontal: "right", vertical: "top" }}
-                    anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+                    style={{marginTop:35}}
                   >
                     <MenuItem>
-                      <a href={loginURL}>Login</a>
+                    <a href={loginURL}>Login</a>
                     </MenuItem>
                     <MenuItem>
                       <a href={registrationURL}>Register</a>

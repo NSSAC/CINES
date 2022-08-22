@@ -16,6 +16,7 @@ export function setUserMeta(file,property,value){
 
         filesvc.set(file.id,[property,value])
         .then((response)=>{
+            toast.success(`Property '${property}' added.`)
             dispatch({
                 type: UPDATE_USER_META_SUCCESS
             });

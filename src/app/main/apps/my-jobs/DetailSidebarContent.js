@@ -117,7 +117,7 @@ function DetailSidebarContent(props) {
       </td>)
     }
     else {
-      return (<td style={{wordBreak: 'break-all'}}>{String(selectedItem.output_container + '/' + selectedItem.output_name)}</td>)
+      return (<td style={{wordBreak: 'break-all', color: "#1565C0",}}>{String(selectedItem.output_container + '/' + selectedItem.output_name)}</td>)
     }
   }
   else {
@@ -151,7 +151,7 @@ function DetailSidebarContent(props) {
   dateList()
 
   return (
-    <FuseAnimate animation="transition.slideUpIn" delay={200}>
+    <FuseAnimate >
       <div className="file-details p-16 sm:p-8">
         {
 

@@ -6,9 +6,9 @@ import withReducer from "app/store/withReducer";
 // import { confirmAlert } from 'react-confirm-alert';
 
 import { Hidden, Icon, IconButton, LinearProgress, Table, TableBody, TableCell, TableRow, Tooltip, Typography } from "@material-ui/core";
-import useMediaQuery from "@mui/material/useMediaQuery";
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 import { AssignmentReturn, CloudDownload, Edit, Delete } from "@material-ui/icons";
 
 import { saveAs } from "file-saver";
@@ -30,6 +30,41 @@ import * as Perms from "../permissions";
 import FILEUPLOAD_CONFIG from "../FileManagerAppConfig";
 import { ModifyPermissions } from "../panel/ModifyPermissions";
 import "../FileManager.css";
+import { makeStyles } from "@material-ui/styles";
+
+const useStyles = makeStyles((theme) => ({
+  panelWidth:{
+    [theme.breakpoints.down('sm')]: {
+      width: "90%"
+    },
+  },
+  menuNotifier: {
+    "& .MuiAvatar-root": {
+    width: 100,
+    height: 100,
+    marginLeft: -0.5,
+    marginRight: 1,
+  },
+  "&:before": {
+    content: '""',
+    display: "block",
+    position: "absolute",
+    top: 134,
+    right: 26,
+    width: 10,
+    height: 10,
+    backgroundColor: "white",
+    transform: "translateY(-50%) rotate(45deg)",
+    zIndex: 0,
+  }
+  },
+  unClickable:{
+    [theme.breakpoints.down('960')]: {
+      pointerEvents: 'none'
+    },
+  },
+
+}));
 
 function FileList(props) {
   const tableRef = React.createRef();
@@ -74,10 +109,12 @@ function FileList(props) {
   var uploadableTypes = FILEUPLOAD_CONFIG.fileTypes;
   const _files = filtered_files ? filtered_files.filtered : files;
   const curFilter = filtered_files ? filtered_files.filter : false;
-  const matches = useMediaQuery("(min-width:600px)");
+  const matches = useMediaQuery("(min-width:1280px)");
+  const searchMatch = useMediaQuery("(min-width:600px)");
+
   const menuOpen = Boolean(menuClick);
   const history = useHistory();
-
+  const classes = useStyles();
   const selectedIds = Object.keys(selected).filter((id) => {
     return selected[id];
   });
@@ -135,11 +172,11 @@ function FileList(props) {
       attr: "name",
       sortable: true,
       headerClass: "",
-      cellClass: "",
+      cellClass: `${classes.unClickable}`,
       formatter: (val, obj) => {
         return (
           <Link
-            style={{ color: "#1565C0" }}
+            style={{ color: "#1565C0", pointerEvents: 'all' }}
             title={val}
             to=''
             onClick={(event) => {
@@ -165,21 +202,21 @@ function FileList(props) {
       attr: "type",
       sortable: true,
       headerClass: "hidden sm:table-cell",
-      cellClass: "hidden sm:table-cell wordBreak",
+      cellClass: `hidden sm:table-cell wordBreak ${classes.unClickable}`,
     },
     {
       label: "Owner",
       attr: "owner_id",
       sortable: true,
       headerClass: "hidden md:table-cell",
-      cellClass: "hidden md:table-cell wordBreak",
+      cellClass: `hidden md:table-cell wordBreak ${classes.unClickable}`,
     },
     {
       label: "Size",
       attr: "size",
       sortable: true,
-      headerClass: "hidden sm:table-cell",
-      cellClass: "hidden sm:table-cell wordBreak",
+      headerClass: "hidden md:table-cell",
+      cellClass: `hidden md:table-cell wordBreak ${classes.unClickable}`,
       formatter: (val, obj) => {
         if (!val && val !== 0) {
           return "-";
@@ -193,10 +230,18 @@ function FileList(props) {
       attr: "update_date",
       sortable: true,
       headerClass: "hidden md:table-cell",
-      cellClass: "hidden md:table-cell wordBreak",
+      cellClass: `hidden md:table-cell wordBreak ${classes.unClickable}`,
       formatter: (val, obj) => {
         return moment.utc(val).local().fromNow();
       },
+    },
+    {
+      label: "Info",
+      attr: "info",
+      sortable: false,
+      headerClass: "md:hidden lg:hidden xl:hidden sm:table-cell",
+      cellClass: "",
+      infoIconVisibility: true
     },
   ];
 
@@ -249,7 +294,7 @@ function FileList(props) {
             </IconButton>
           </Tooltip>
         )}
-        {canWrite && !matches && selectedIds.length > 0 && (
+        {!matches && selectedIds.length > 0 && (
           // && selectedIds.length > 0
           <IconButton className="w-64 h-64" onClick={handleMenuClick}>
             <Icon className="text-white text-4xl">menu</Icon>
@@ -443,55 +488,47 @@ function FileList(props) {
             open={menuOpen}
             onClose={handleMenuClose}
             onClick={handleMenuClose}
-            PaperProps={{
-              elevation: 0,
-              sx: {
-                overflow: "visible",
-                filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
-                mt: 1.5,
-                "& .MuiAvatar-root": {
-                  width: 100,
-                  height: 100,
-                  ml: -0.5,
-                  mr: 1,
-                },
-                "&:before": {
-                  content: '""',
-                  display: "block",
-                  position: "absolute",
-                  top: 0,
-                  right: 14,
-                  width: 10,
-                  height: 10,
-                  bgcolor: "background.paper",
-                  transform: "translateY(-50%) rotate(45deg)",
-                  zIndex: 0,
-                },
-              },
+            className="a"
+            style= {{
+              overflow: "visible",
+              filter: "drop-shadow(rgba(0, 0, 0, 0.70) 17px 16px 32px)",
+              marginTop: "59px",
+              // "& .MuiAvatar-root": {
+              //   width: 100,
+              //   height: 100,
+              //   marginLeft: -0.5,
+              //   marginRight: 1,
+              // },
+              // "&:before": {
+              //   content: '""',
+              //   display: "block",
+              //   position: "absolute",
+              //   top: 134,
+              //   right: 26,
+              //   width: 10,
+              //   height: 10,
+              //   backgroundColor: "white",
+              //   transform: "translateY(-50%) rotate(45deg)",
+              //   zIndex: 0,
+              // }
             }}
-            transformOrigin={{ horizontal: "right", vertical: "top" }}
-            anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
           >
-            <MenuItem onClick={downloadFiles}>
-              {canDownload && (
+            {canDownload &&
+            (<MenuItem onClick={downloadFiles}>
                 <><CloudDownload/>&nbsp;&nbsp;<span style={{"fontSize":"18px"}}>Download</span></>
-              )}
-            </MenuItem>
-            <MenuItem onClick={() => setShowRenameDialog(true)}>
-              {canWrite && (
+            </MenuItem>)}
+            {canWrite && 
+            (<MenuItem onClick={() => setShowRenameDialog(true)}>
                 <><Edit/>&nbsp;&nbsp;<span style={{"fontSize":"18px"}}>Rename</span></>
-              )}
-            </MenuItem>
-            <MenuItem onClick={openMoveFiles}>
-              {canWrite && (
+            </MenuItem>)}
+            {canWrite &&
+            (<MenuItem onClick={openMoveFiles}>
                 <><AssignmentReturn/>&nbsp;&nbsp;<span style={{"fontSize":"18px"}}>Move</span></>
-              )}
-            </MenuItem>
-            <MenuItem onClick={() => {confirmAndDelete(selectedIds, _files);}}>
-              {canWrite && (
+            </MenuItem>)}
+            {canWrite && 
+            (<MenuItem onClick={() => {confirmAndDelete(selectedIds, _files);}}>
                 <><Delete/>&nbsp;&nbsp;<span style={{"fontSize":"18px"}}>Delete</span></>
-              )}
-            </MenuItem>
+            </MenuItem>)}
           </Menu>
         );
       }
@@ -531,55 +568,48 @@ function FileList(props) {
       } else {
         setMenuItems(
           <Menu
-            anchorEl={menuClick}
-            id="menu"
-            open={menuOpen}
-            onClose={handleMenuClose}
-            onClick={handleMenuClose}
-            PaperProps={{
-              elevation: 0,
-              sx: {
-                overflow: "visible",
-                filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
-                mt: 1.5,
-                "& .MuiAvatar-root": {
-                  width: 100,
-                  height: 100,
-                  ml: -0.5,
-                  mr: 1,
-                },
-                "&:before": {
-                  content: '""',
-                  display: "block",
-                  position: "absolute",
-                  top: 0,
-                  right: 14,
-                  width: 10,
-                  height: 10,
-                  bgcolor: "background.paper",
-                  transform: "translateY(-50%) rotate(45deg)",
-                  zIndex: 0,
-                },
-              },
-            }}
-            transformOrigin={{ horizontal: "right", vertical: "top" }}
-            anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+          anchorEl={menuClick}
+          id="menu"
+          open={menuOpen}
+          onClose={handleMenuClose}
+          onClick={handleMenuClose}
+          className="a"
+          style= {{
+            overflow: "visible",
+            filter: "drop-shadow(rgba(0, 0, 0, 0.70) 17px 16px 32px)",
+            marginTop: "59px",
+            // "& .MuiAvatar-root": {
+            //   width: 100,
+            //   height: 100,
+            //   marginLeft: -0.5,
+            //   marginRight: 1,
+            // },
+            // "&:before": {
+            //   content: '""',
+            //   display: "block",
+            //   position: "absolute",
+            //   top: 134,
+            //   right: 26,
+            //   width: 10,
+            //   height: 10,
+            //   backgroundColor: "white",
+            //   transform: "translateY(-50%) rotate(45deg)",
+            //   zIndex: 0,
+            // }
+          }}
           >
-            <MenuItem onClick={downloadFiles}>
-              {canDownload && (
+            {canDownload && 
+            (<MenuItem onClick={downloadFiles}>
                 <><CloudDownload/>&nbsp;&nbsp;<span style={{"fontSize":"18px"}}>Download</span></>
-              )}
-            </MenuItem>
-            <MenuItem onClick={openMoveFiles}>
-              {canWrite && (
+            </MenuItem>)}
+            {canWrite && 
+            (<MenuItem onClick={openMoveFiles}>
                 <><AssignmentReturn/>&nbsp;&nbsp;<span style={{"fontSize":"18px"}}>Move</span></>
-              )}
-            </MenuItem>
-            <MenuItem onClick={() => {confirmAndDelete(selectedIds, _files);}}>
-              {canWrite && (
+            </MenuItem>)}
+            {canWrite && 
+            (<MenuItem onClick={() => {confirmAndDelete(selectedIds, _files);}}>
                 <><Delete/>&nbsp;&nbsp;<span style={{"fontSize":"18px"}}>Delete</span></>
-              )}
-            </MenuItem>
+            </MenuItem>)}
           </Menu>
         );
       }
@@ -617,18 +647,18 @@ function FileList(props) {
         }
 
         props.setFileActions(
-          <div className="w-full flex p-0 m-0">
+          <div className="w-full flex p-0 m-0 ">
             <div className="flex-grow"></div>
             {showSearch && (
-              <div className="flex-shrink flex flex-row h-32 p-1 mt-16 bg-white align-middle rounded ">
+              <div className=" flex flex-row h-32 p-1 mt-16 bg-white align-middle rounded bg-orange-400 justify-start">
                 <input
-                  className="flex-shrink min-w-min rounded p-0 bg-white align-middle text-black text-lg"
+                  className="flex-shrink min-w-min rounded p-0 bg-white align-middle text-black text-lg  "
                   type="text"
                   placeholder="Search for files and folders"
                   value={curFilter ? curFilter : ""}
                   onChange={onSearchChange}
                   onBlur={onSearchBlur}
-                  autoFocus={true}
+                  autoFocus={false}
                 />
                 <Tooltip title="Clear filter" aria-label="add">
                   <Icon
@@ -640,14 +670,14 @@ function FileList(props) {
                 </Tooltip>
               </div>
             )}
-            <div>
+            <div className="flex justify-end">
               {containerActions}
               {fileActions}
             </div>
           </div>
         );
       } else {
-        if(matches) {
+        if(searchMatch) {
           props.setFileActions(
             <React.Fragment>
               <Tooltip title="Search for files in this folder" aria-label="add">
@@ -680,7 +710,7 @@ function FileList(props) {
           }
 
           props.setFileActions(
-            <div classname="flex flex-col">
+            <div className="flex flex-col">
               <div className="flex-shrink flex flex-row justify-between h-32 p-1 mt-16 ml-16 mr-16 bg-white align-middle rounded ">
                 <input
                   className="flex-shrink min-w-min rounded p-0 bg-white align-middle text-black text-lg"
@@ -690,7 +720,7 @@ function FileList(props) {
                   value={curFilter ? curFilter : ""}
                   onChange={onSearchChange}
                   onBlur={onSearchBlur}
-                  autoFocus={true}
+                  autoFocus={false}
                 />
                 <Tooltip title="Clear filter" aria-label="add">
                   <Icon
@@ -885,13 +915,13 @@ function FileList(props) {
                   {_files &&
                     _files.map((f) => (
                       <FileRow
-                        enableCheckBoxes={props.enableCheckBoxes || false}
-                        key={f.id}
-                        table_columns={table_columns}
-                        selected={selected[f.id] || false}
-                        meta={f}
+                      enableCheckBoxes={props.enableCheckBoxes || false}
+                      key={f.id}
+                      table_columns={table_columns}
+                      selected={selected[f.id] || false}
+                      meta={f}
                       />
-                    ))}
+                      ))}
                 </TableBody>
               )}
               {_files.length === 0 && (
@@ -913,8 +943,9 @@ function FileList(props) {
             </Table>
           </div>
           {showDetailPanel && (
-            <Hidden mdDown>
-              <div className="flex flex-row flex-initial min-w-min md:w-1/3 h-full">
+            // <Hidden mdDown>
+            
+              <div className={`flex flex-row flex-initial   md:w-1/3 sm:w-2/3 ${classes.panelWidth} h-full`}>
                 <div
                   className="flex-row w-1 flex-initial"
                   style={{ background: "#999" }}
@@ -933,7 +964,7 @@ function FileList(props) {
                  )}
                 </div>
               </div>
-            </Hidden>
+            // </Hidden>
           )}
         </div>
         {showFileUpload && (

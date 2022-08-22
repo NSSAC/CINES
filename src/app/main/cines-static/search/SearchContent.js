@@ -6,17 +6,15 @@ import { DigitalLibrarianService } from "node-sciduct";
 
 import { Grid, LinearProgress, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
-import Box from "@mui/material/Box";
-import { styled } from "@mui/material/styles";
-import Paper from "@mui/material/Paper";
 
 import "./SearchContent.css";
-import Chip from "@mui/material/Chip";
-import Stack from "@mui/material/Stack";
-import Avatar from "@mui/material/Avatar";
-import Popover from '@mui/material/Popover';
 import Info from '@material-ui/icons/Info.js';
-
+import Box from '@material-ui/core/Box'
+import Avatar from '@material-ui/core/Avatar';
+import Chip from '@material-ui/core/Chip';
+import Popover from '@material-ui/core/Popover';
+import { useTheme } from '@material-ui/core/styles';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -49,6 +47,27 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.up('md')]: {
       height: "63vh"
     },
+  },
+  chipFontSize:{
+    [theme.breakpoints.up('xs')]: {
+      fontSize: "9px"
+    },
+    [theme.breakpoints.up('sm')]: {
+      fontSize: "11px"
+    },
+    [theme.breakpoints.up('md')]: {
+      fontSize: "11px "
+    },
+  },
+  chipStretch:{
+    [theme.breakpoints.up('sm')]: {
+      width: "100%"
+    }
+  },
+  chipMarginL:{
+    [theme.breakpoints.up('sm')]: {
+      marginLeft:15
+    }
   }
   
 }));
@@ -177,21 +196,21 @@ const SearchContent = () => {
         <Grid container  >
 
 
-          <Grid item xs={12} sm={2} md={2} >
-            <Stack
+          <Grid item xs={12} sm={2} md={2}>
+            <Grid item
               direction={{ xs: "row", sm: "column", md: "column" }}
               style={{
                 paddingTop:24
               }}
-              spacing={0.5}
+              className={classes.chipMarginL}
               ml={{sm: 2}}
             > 
               <Chip key={"All Results"}
-                sx={{ fontWeight: "bolder", justifyContent: "flex-start" ,fontSize:{xs:9,sm:11,md:11}}}
+                style={{ fontWeight: "700", justifyContent: "flex-start" }}
+                className={classes.chipFontSize, classes.chipStretch}
                 avatar={
                   <Avatar
-                    style={{ color: "white", fontSize: 10 }}
-                    sx={{ bgcolor: "#122230" }}
+                    style={{ color: "white", fontSize: 10, backgroundColor: "#122230"}}
                   >
                     {searchedData.length}
                   </Avatar>
@@ -202,11 +221,11 @@ const SearchContent = () => {
 
               {[...searchMapData.keys()].map((mapItem) => (
                 <Chip key={capitalizeFirstLetter(mapItem)}
-                  sx={{ fontWeight: "bolder", justifyContent: "flex-start" ,fontSize:{xs:9,sm:11,md:11}}}
+                  style={{ fontWeight: "bolder", justifyContent: "flex-start", marginTop: "3px"}}
+                  className={classes.chipFontSize, classes.chipStretch}
                   avatar={
                     <Avatar
-                      style={{ color: "white", fontSize: 10 }}
-                      sx={{ bgcolor: "#122230" }}
+                      style={{ color: "white", fontSize: 10, backgroundColor: "#122230" }}
                     >
                       {searchMapData.get(mapItem).length}
                     </Avatar>
@@ -215,7 +234,7 @@ const SearchContent = () => {
                   variant="outlined"
                 />
               ))}
-            </Stack>
+            </Grid>
           </Grid>
 
 

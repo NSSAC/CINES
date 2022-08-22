@@ -11,7 +11,8 @@ import {
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import Avatar from "@mui/material/Avatar";
+import Avatar from '@material-ui/core/Avatar';
+
 
 import * as authActions from "app/auth/store/actions";
 import { makeStyles } from "@material-ui/styles";
@@ -74,11 +75,11 @@ function UserMenu(props) {
                     )
                 }
                  </Hidden> */}
-
+                 
         <div className="flex flex-col  items-start">
           <Typography component="span" className="normal-case font-600 flex">
             {device ? (
-              <Avatar sx={{ bgcolor: '#666563d6' , width: 29, height: 29}}>
+              <Avatar style={{ backgroundColor: '#4c4a4a' , width: 29, height: 29, fontSize: '1.5rem', color:'#F7F7F7'}}>
                 {user.data.displayName
                   .split(" ")
                   .map((n) => n[0])

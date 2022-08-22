@@ -5,7 +5,7 @@ import React from "react";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from 'react-router-dom';
-import useMediaQuery from "@mui/material/useMediaQuery";
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 import withReducer from "app/store/withReducer";
 
@@ -132,7 +132,7 @@ function FileManagerApp(props) {
             }
             return (
               <div>
-                Oops, there was a problem retrieving this file:{" "}
+                Oops, there was a problem retrieving this file:&nbsp;
                 {file_meta.error}
               </div>
             );

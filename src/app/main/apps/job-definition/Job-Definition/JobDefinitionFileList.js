@@ -4,8 +4,8 @@ import ReactDOM from "react-dom";
 import { Button, LinearProgress, Typography, Grid, TextField } from "@material-ui/core";
 
 import { makeStyles } from "@material-ui/styles";
-import Pagination from "@mui/material/Pagination";
-import useMediaQuery from "@mui/material/useMediaQuery";
+import Pagination from '@material-ui/lab/Pagination';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { toast } from "material-react-toastify";
 
 import { useDispatch, useSelector } from "react-redux";
@@ -100,6 +100,12 @@ function JobDefinitionFileList(props) {
     backgroundColor: "#122230",
     fontSize: "12.5px",
     marginLeft: "5px",
+  };
+
+  const selectButtonStyleMob = {
+    backgroundColor: "#122230",
+    fontSize: '11.5px',
+    minWidth: '38px'
   };
 
   const classes = useStyles();
@@ -460,7 +466,15 @@ function JobDefinitionFileList(props) {
                   Go
                 </Button>
               ) : (
-                <></>
+                <Button
+                  className="goToPaginationButton"
+                  variant="contained"
+                  style={selectButtonStyleMob}
+                  onClick={handleSelectedPageClick}
+                  disabled={goToButtonDisabled}
+                >
+                  Go
+                </Button>
               )}
             </span>
           </div>

@@ -214,7 +214,7 @@ export const ModifyPermissions = ({ showModal, handleClose, onModify, selected, 
         <DialogTitle id="alert-dialog-slide-title" divider="true">
           {"Set Permissions"}
         </DialogTitle>
-        <DialogContent divider="true">
+        <DialogContent divider="true" style={{ padding: '8px 13px'}}>
           <div style={{ display: "flex" }}>
             <Formsy
               onValid={enableButton}
@@ -275,13 +275,14 @@ export const ModifyPermissions = ({ showModal, handleClose, onModify, selected, 
                 <Fab
                   color="secondary"
                   aria-label="add"
+                  className="ml-20 mb-12 "
                   size="small"
-                  className="ml-20 mb-12"
                   style={{ alignSelf: "flex-end", marginLeft: "20px" }}
                 >
-                  <Icon className="flex flex-col" onClick={handleAddField}>
+                  <Icon className="flex flex-col" style={{height: '23px',width:'23px',alignItems: 'center'}}  onClick={handleAddField}>
                     add
                   </Icon>
+                 
                 </Fab>
               </Tooltip>
             )}

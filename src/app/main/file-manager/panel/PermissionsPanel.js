@@ -6,8 +6,9 @@ import clsx from "clsx";
 import instance from "app/services/sciductService/sciductService.js";
 import { FileService } from "node-sciduct";
 import { Group as GroupIcon, Person as PersonIcon } from "@material-ui/icons";
-import Chip from "@mui/material/Chip";
-import FormControlLabel from '@mui/material/FormControlLabel';
+import Chip from '@material-ui/core/Chip';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import "../FileManager.css";
 
 const useStyles = makeStyles({
@@ -45,6 +46,7 @@ function PermissionsPanel(props) {
   var token = localStorage.getItem("id_token");
   var path = window.location.pathname.replace("/files", "");
   const fileServiceInstance = new FileService(url, token);
+  const matches = useMediaQuery("(min-width:599.9px)");
 
   useEffect(() => {
     if (Object.keys(props.meta).length !== 0) {
@@ -127,7 +129,7 @@ function PermissionsPanel(props) {
   return (
     <div>
       {Object.keys(props.meta).length !== 0 ? (
-        <div className="flex-grow w-full flex flex-col h-full">
+        <div className="flex-grow w-full flex flex-col h-full overflow-none">
           <table className={clsx(classes.table, "w-full, text-left")}>
             <tbody>
               <tr className="owner">
@@ -195,7 +197,7 @@ function PermissionsPanel(props) {
               <Typography className="text-20 mt-16" color="textPrimary">
                 Loading
               </Typography>
-              <LinearProgress className="w-xs" color="secondary" />
+              <LinearProgress className="w-full" color="secondary" />
             </div>
           ) : (
             <table className={clsx(classes.table, "w-full, text-left")}>
