@@ -16,6 +16,8 @@ function SimpleFileList(props) {
     const selected = props.selected;
     const [sort, setSort] = useState([{attr: "update_date", "dir": "desc"}])
     const [totalFileCount,setTotalFileCount] = useState(0)
+    const [loadingFlag , setLoadingFlag] = useState(false)
+    const [firstFile, setFirstFile] = useState();
 
     const selectableTypes=props.selectableTypes || "*"
     const _files = files
@@ -43,11 +45,17 @@ function SimpleFileList(props) {
                 }else if (obj.isContainer){
                     return <span className="cursor-pointer text-primary" style={{"color": "rgb(97, 218, 251)"}} onClick={(evt)=>{
                         evt.preventDefault(); 
-                        var newPath = `${(props.folder==="/")?"":props.folder}/${val}`
-                        if (props.navigateToFolder){
-                            props.navigateToFolder(newPath)
-                        }
-                    
+                        if (evt.detail === 1) {
+                            var newPath = `${props.folder === "/" ? "" : props.folder}/${val}`;
+                            if (props.navigateToFolder) {
+                                props.navigateToFolder(newPath);
+                            }  
+                            if (obj.type === "folder") {
+                                setLoadingFlag(true);
+                            } else {
+                                setLoadingFlag(false);
+                            }
+                        }   
                     }}>
                         {val}
                     </span>
@@ -88,6 +96,18 @@ function SimpleFileList(props) {
             }
         }
     ]
+
+    React.useEffect(()=>{
+        setFirstFile(_files[0])
+    },[_files])
+
+    React.useEffect(()=>{
+        setLoadingFlag(true);
+    },[props.folder])
+
+    React.useEffect(()=>{
+        setLoadingFlag(false);
+    },[firstFile])
 
     React.useEffect(()=>{
         if (files){
@@ -187,10 +207,20 @@ function SimpleFileList(props) {
                 props.navigateToFolder(path)
             }
         }, 200);
-        
     }
 
+    const linear_progress_loading = (
+      <div className="flex flex-1 flex-col items-center justify-center mt-40 mb-40">
+        <Typography className="text-20 mt-16" color="textPrimary">Loading</Typography>
+        <LinearProgress className="w-xs" color="secondary" />
+      </div>
+    );
+        
     const selectedIds = Object.keys(selected).filter((id) => {return selected[id]})
+    if(loadingFlag) {
+        return linear_progress_loading
+    }
+
     if (_files && _files.length>=0){
         return (
                 <Table stickyHeader className="rounded border border-black">
@@ -214,10 +244,7 @@ function SimpleFileList(props) {
                             </TableCell></TableRow>
                         </TableBody>
                     )}
-
                 </Table>                        
-
-
         )
 
     }else if (_files && _files.length===0){
@@ -227,12 +254,7 @@ function SimpleFileList(props) {
         </div> )                                                        
 
     }else{
-        return (            
-            <div className="flex flex-1 flex-col items-center justify-center mt-40">
-                <Typography className="text-20 mt-16" color="textPrimary">Loading</Typography>
-                <LinearProgress className="w-xs" color="secondary" />
-            </div>
-        )
+        return linear_progress_loading
     }
 }
 

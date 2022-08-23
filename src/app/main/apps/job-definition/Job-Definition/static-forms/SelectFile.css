@@ -53,6 +53,16 @@ input[type=submit]:hover {
     margin-top: 12px;
 }
 
+.inputStyle2 {
+    width: 100%;
+    margin-top: 12px;
+}
+
+.inputStyle3 {
+    width: 70%;
+    margin-top: 12px;
+}
+
 .folderPath {
     word-break: keep-all;
     white-space: pre-wrap;

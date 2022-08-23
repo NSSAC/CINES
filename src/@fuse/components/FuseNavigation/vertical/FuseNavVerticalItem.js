@@ -11,7 +11,7 @@ import FuseNavBadge from './../FuseNavBadge';
 
 const useStyles = makeStyles(theme => ({
     item: {
-        height                     : 40,
+        height                     : 45,
         width                      : 'calc(100% - 16px)',
         borderRadius               : '0 20px 20px 0',
         paddingRight               : 12,
@@ -28,7 +28,10 @@ const useStyles = makeStyles(theme => ({
             }
         },
         '& .list-item-icon'        : {},
-        '& .list-item-text'        : {},
+        '& .list-item-text'        : {
+            wordBreak: 'break-all',
+            whiteSpace: 'normal'
+        },
         color                      : theme.palette.text.primary,
         cursor                     : 'pointer',
         textDecoration             : 'none!important'

@@ -35,11 +35,11 @@ export default (props) => {
                             )}
                             {(files.length > 1) && (
                                 <React.Fragment>
-                                    <p>Delete {files.length} files?</p>
-                                    <ul class="list-disc m-8 pl-8">
+                                    <p>Delete {files.length} files/folders?</p>
+                                    <ul className="list-disc m-8 pl-8">
                                         {files.map((f)=>{
                                             return (
-                                                <li>
+                                                <li key={f.id}>
                                                     <span className="font-semibold">{f.name}</span>
                                                     {(f.type==="folder") && (
                                                         <span> <span className="font-bold">AND</span> it's contents </span>

@@ -1,8 +1,5 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/styles';
 import {  Grid } from '@material-ui/core';
-import clsx from 'clsx';
-import filesize from 'filesize';
 import * as Actions from "./store/actions";
 import reducer from "./store/reducers";
 import { useDispatch, useSelector } from "react-redux";
@@ -60,7 +57,7 @@ function SimVizPanel(props) {
                     console.warn("Not enough header for graph, need at least one iteration")
                     return null
                 }
-                var headers = file.contents.meta.fields.filter((h)=>{return h!=="time"})
+                headers = file.contents.meta.fields.filter((h)=>{return h!=="time"})
                 const cspec = {
                     width: "container",
                     mark: 'line',

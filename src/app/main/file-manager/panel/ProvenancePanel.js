@@ -6,7 +6,7 @@ import JSONTree from 'react-json-tree'
 
 function ProvenancePanel(props) {
     return (
-        <div className="flex-grow w-full flex flex-col h-full">
+        <div className="flex-grow w-full flex flex-col h-full overflow-none">
                 <div><Typography variant="h6">PROVENANCE</Typography></div>
                 {props.meta.provenance ? <JSONTree data={props.meta.provenance} hideRoot={true} theme={{
                     tree: {
@@ -15,7 +15,8 @@ function ProvenancePanel(props) {
                     label: {
                         color: 'black',
                         fontSize: '14px',
-                        fontWeight: 'bold'
+                        fontWeight: 'bold',
+                        wordBreak: 'break-all'
                     },
                 }} /> : null}
         </div>    

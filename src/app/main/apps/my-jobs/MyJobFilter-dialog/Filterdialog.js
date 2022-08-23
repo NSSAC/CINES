@@ -226,7 +226,7 @@ export const MyJobFilter = ({
           {
             <Formsy className="flex flex-col justify-center">
               <SelectFormsy
-                className="my-16"
+                className="my-16 customSelect"
                 name="related"
                 label="Select type"
                 value={state}
@@ -238,7 +238,7 @@ export const MyJobFilter = ({
               </SelectFormsy>
               {stateFlag ? (
                 <SelectFormsy
-                  className="my-16"
+                  className="my-16 customSelect"
                   name="related"
                   label="Select value"
                   value={state}

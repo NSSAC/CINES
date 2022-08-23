@@ -25,8 +25,8 @@ function FileListHeader(props) {
     }
 
     return (
-        <TableHead style={{ whiteSpace: 'nowrap' }}>
-            <TableRow>
+        <TableHead style={{ whiteSpace: 'nowrap'}}>
+            <TableRow style={{ backgroundColor: '#F7F7F7 !important'}}>
                 {props.enableCheckBoxes && (
                     <TableCell className="selectCheckbox" padding="checkbox">
                         <Checkbox title={`${(checked || indeterminate) ? 'Deselect all' : 'Select all'}`} size='small'
@@ -40,7 +40,7 @@ function FileListHeader(props) {
                 {columns && columns.map((c)=>{
                     return (
                         <TableCell key={c.attr} className={c.headerClass}>
-                            {c.label}
+                            {c.infoIconVisibility ? " " : c.label}
                             {(()=>{
                                 if (sort_map[c.attr]){
                                     if (sort_map[c.attr]==="asc"){
@@ -60,7 +60,11 @@ function FileListHeader(props) {
                                             </Tooltip>
                                         )
                                     }
-                                }else{
+                                }else if(c.infoIconVisibility ){
+                                    return (
+                                        <></>
+                                    )
+                                }else {
                                     return (
                                         <Tooltip title={`Sort descending by ${c.label}`} placement="bottom" onClick={()=>doSort({attr: c.attr,dir: "desc"})}>
                                             <IconButton aria-label="arrow_downward">

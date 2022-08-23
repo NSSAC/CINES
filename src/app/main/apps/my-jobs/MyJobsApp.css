@@ -28,7 +28,7 @@
 }
 
 .sidebarStyle {
-  min-width: 320px;
+  min-width: 275px;
   max-width: 500px;
 }
 
@@ -51,7 +51,7 @@
 
 @media only screen and (max-width: 1279px) {
   .sidebarStyle {
-    width: 320px;
+    width: 275px;
   }
 
   .overflowContentJob {

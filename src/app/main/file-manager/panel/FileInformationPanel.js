@@ -1,13 +1,12 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/styles';
-import clsx from 'clsx';
 import filesize from 'filesize';
 import moment from 'moment';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
     table: {
         '& th': {
-            padding: '16px 0'
+            padding: '16px 0',
         }
     },
     typeIcon: {
@@ -23,8 +22,13 @@ const useStyles = makeStyles({
             content: "'insert_chart'",
             color: '#4CAF50'
         }
-    }
-});
+    },
+      infoPanelSize:{
+    [theme.breakpoints.down('sm')]: {
+        wordBreak: "break-all"
+    },
+  }
+}))
 
 
 function FileInformationPanel(props) {
@@ -33,14 +37,14 @@ function FileInformationPanel(props) {
     return (
         <div className="flex-grow w-full flex flex-col h-full p-4">
 
-            <table className={clsx(classes.table, "w-full text-left")}>
+            <table className={`${classes.table} w-full text-left`}>
 
                 <tbody>
                     <tr className="id">
-                        <td colSpan={2} className="pt-4 pb-4 text-black font-bold text-lg" title={props.meta.name}>{props.meta.name}</td>
+                        <td colSpan={2} className={`${classes.infoPanelSize}  sm:break-all  pt-4 pb-4 text-black font-bold text-lg`} title={props.meta.name}>{props.meta.name}</td>
                     </tr>
                     <tr className="id">
-                        <th>Id</th>
+                        <th>Id</th> 
                         <td title={props.meta.id}>{props.meta.id}</td>
                     </tr>
                     <tr className="state">
@@ -49,7 +53,7 @@ function FileInformationPanel(props) {
                     </tr>
                     <tr className="type">
                         <th>Type</th>
-                        <td title={props.meta.type}>{props.meta.type}</td>
+                        <td title={props.meta.type} className={`${classes.infoPanelSize}  sm:break-all overflow-ellipsis`}>{props.meta.type}</td>
                     </tr>
 
                     <tr className="owner">
@@ -77,7 +81,7 @@ function FileInformationPanel(props) {
 
                     <tr className="MD5">
                         <th>MD5</th>
-                        <td className="overlfow-ellipsis">{props.meta.hash}</td>
+                        <td className={`${classes.infoPanelSize} sm:break-all  overflow-ellipsis`}>{props.meta.hash}</td>
                     </tr>
                 </tbody>
             </table>

@@ -21,7 +21,13 @@ const useStyles = makeStyles(theme => ({
       background     : 'linear-gradient(to right, ' + theme.palette.primary.dark + ' 0%, ' + theme.palette.primary.dark + ' 100%)',
       color          : theme.palette.primary.contrastText,
       backgroundColor: theme.palette.primary.dark
+    },
+    addPropBtn:{
+        [theme.breakpoints.down('sm')]: {
+            fontSize: '1.3rem'
+        }
     }
+
   }));
 
 
@@ -176,10 +182,10 @@ function MetadataPanel(props) {
     const singleColumn = props.singleColumn
 
     return (
-        <Grid item container xs={12} alignItems="flex-start" justifyContent="flex-start" spacing={singleColumn?4:1}className="p-8">
+        <Grid item container xs={12} sm={12} md={12} alignItems="flex-start" justifyContent="flex-start" spacing={singleColumn?4:1}className="p-8 w-full">
             {canWrite && (
-                <Grid item xs={12} className="p-0">
-                    <Button className="m-0 m-auto" variant="contained" color="primary" onClick={() => { showAddPropDialog() }}>Add Property</Button>
+                <Grid item xs={12}  className="p-0">
+                    <Button  className={`m-0 m-auto ${classes.addPropBtn}`} variant="contained" color="primary" onClick={() => { showAddPropDialog() }}>Add Property</Button>
                 </Grid>
             )}
             {group_list.map((grp) => {
