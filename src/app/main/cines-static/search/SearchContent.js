@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState, Fragment } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 import { DigitalLibrarianService } from "node-sciduct";
@@ -13,8 +13,6 @@ import Box from '@material-ui/core/Box'
 import Avatar from '@material-ui/core/Avatar';
 import Chip from '@material-ui/core/Chip';
 import Popover from '@material-ui/core/Popover';
-import { useTheme } from '@material-ui/core/styles';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -107,8 +105,6 @@ const SearchContent = () => {
 
   };
   const open = Boolean(anchorEl);
-  const popOverId = open ? 'simple-popover' : undefined;
-
 
   useEffect(() => {
     if (

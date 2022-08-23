@@ -1,8 +1,5 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/styles';
-import {  Grid,Typography,LinearProgress } from '@material-ui/core';
-import clsx from 'clsx';
-import filesize from 'filesize';
+import { Typography,LinearProgress } from '@material-ui/core';
 import * as Actions from "./store/actions";
 import reducer from "./store/reducers";
 import { useDispatch, useSelector } from "react-redux";
@@ -46,7 +43,7 @@ function SimVizPanel(props) {
         if (data){
             dispatch(Actions.parseData(data))
         }
-    },[data])
+    },[dispatch, data])
 
     var label=""
     if (props && props.meta && props.meta.provenance && props.meta.provenance.job_definition){
@@ -66,15 +63,15 @@ function SimVizPanel(props) {
         data: {"name": "data"}, // note: vega-lite data attribute is a plain object instead of an array
     }
 
-    const fullSpec = {
-        spec: cspec,
-        config: {
-            "axis": {
-                "domainColor": "#ddd",
-                "tickColor": "#ddd",
-            }
-        }
-    }
+    // const fullSpec = {
+    //     spec: cspec,
+    //     config: {
+    //         "axis": {
+    //             "domainColor": "#ddd",
+    //             "tickColor": "#ddd",
+    //         }
+    //     }
+    // }
 
     if (!parsed_data){
         return (<div className="flex flex-1 flex-col items-center justify-center mt-40">

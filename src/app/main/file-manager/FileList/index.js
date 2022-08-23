@@ -5,7 +5,7 @@ import { Link, useHistory } from "react-router-dom";
 import withReducer from "app/store/withReducer";
 // import { confirmAlert } from 'react-confirm-alert';
 
-import { Hidden, Icon, IconButton, LinearProgress, Table, TableBody, TableCell, TableRow, Tooltip, Typography } from "@material-ui/core";
+import { Icon, IconButton, LinearProgress, Table, TableBody, TableCell, TableRow, Tooltip, Typography } from "@material-ui/core";
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';

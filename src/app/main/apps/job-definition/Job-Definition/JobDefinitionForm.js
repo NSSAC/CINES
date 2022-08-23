@@ -29,8 +29,8 @@ function JobDefinitionForm(props) {
   const [spinnerFlag, setSpinnerFlag] = useState(true);
   const [onSubmit, setOnSubmit] = useState()
   const [showDialog, setshowDialog] = useState(false);
-  const [standardOut, setStandardOut] = useState("");
-  const [headerTitle, setHeaderTitle] = useState("");
+  const standardOut = "";
+  const headerTitle = "";
   const dispatch = useDispatch()
 
   var path = window.location.pathname;

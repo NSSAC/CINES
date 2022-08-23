@@ -65,7 +65,7 @@ function FileRow(props) {
     const columns = props.table_columns || []
     const infoIcon = {
         right: '0',
-        backgroundColor: 'whitesmoke',
+        backgroundColor: '#F7F7F7',
         position: 'sticky',
         top: '30px',
         width: '35px',

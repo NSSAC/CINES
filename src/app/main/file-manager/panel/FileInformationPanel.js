@@ -1,6 +1,5 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/styles';
-import clsx from 'clsx';
 import filesize from 'filesize';
 import moment from 'moment';
 

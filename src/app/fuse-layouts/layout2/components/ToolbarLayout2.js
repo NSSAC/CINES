@@ -1,4 +1,4 @@
-import { AppBar, Hidden, Toolbar, ListItemIcon, ListItemText,} from "@material-ui/core";
+import { AppBar, Hidden, Toolbar} from "@material-ui/core";
 import { makeStyles, ThemeProvider } from "@material-ui/styles";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
@@ -17,9 +17,6 @@ import NavbarMobileToggleButton from "app/fuse-layouts/shared-components/NavbarM
 // import ChatPanelToggleButton from 'app/fuse-layouts/shared-components/chatPanel/ChatPanelToggleButton';
 import UserMenu from "app/fuse-layouts/shared-components/UserMenu";
 import { Redirect } from "react-router-dom";
-// import Avatar from '@mui/material/Avatar';
-// import Menu from '@mui/material/Menu';
-// import MenuItem from '@mui/material/MenuItem';
 import Avatar from '@material-ui/core/Avatar';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';

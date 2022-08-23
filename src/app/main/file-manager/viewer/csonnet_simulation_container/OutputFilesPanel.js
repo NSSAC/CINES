@@ -1,6 +1,5 @@
 import React from 'react';
-import {Typography } from '@material-ui/core';
-import { Icon, Button } from '@material-ui/core';
+import { Icon } from '@material-ui/core';
 import saveAs from 'file-saver'
 import { FileService } from "node-sciduct";
 
@@ -10,7 +9,7 @@ function OutputFilesPanel(props) {
         return null
     }
    
-    const token = localStorage.getItem('id_token')
+    // const token = localStorage.getItem('id_token')
 
     function streamPromise(stream) {
         return new Promise(resolve => {
