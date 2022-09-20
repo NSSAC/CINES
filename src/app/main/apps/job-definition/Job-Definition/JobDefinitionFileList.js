@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 
 import { Button, LinearProgress, Typography, Grid, TextField } from "@material-ui/core";
 
-import { makeStyles } from "@material-ui/styles";
+import { makeStyles, withStyles } from "@material-ui/styles";
 import Pagination from '@material-ui/lab/Pagination';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { toast } from "material-react-toastify";
@@ -16,9 +16,12 @@ import { FuseAnimate } from "@fuse";
 import MetadataInfoDialog from "../../my-jobs/MetadataDialog";
 import JobDefinitionForm from "./JobDefinitionForm";
 import * as Actions from "./store/actions";
-
+import jobCategoryJSON from "./JobCategory.js";
 import "./JobDefinitionFileList.css";
-
+import Divider from '@material-ui/core/Divider';
+import NavigateNextIcon from '@material-ui/icons/NavigateNext';
+import Tooltip from '@material-ui/core/Tooltip';
+import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -30,7 +33,28 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const LightTooltip = withStyles((theme) => ({
+  tooltip: {
+    backgroundColor: theme.palette.common.white,
+    color: 'rgba(0, 0, 0, 0.87)',
+    boxShadow: theme.shadows[1],
+    fontSize: 11,
+  },
+}))(Tooltip);
+
+// const HtmlTooltip = withStyles((theme) => ({
+//   tooltip: {
+//     backgroundColor: '#f5f5f9',
+//     color: 'rgba(0, 0, 0, 0.87)',
+//     maxWidth: 220,
+//     fontSize: theme.typography.pxToRem(12),
+//     border: '1px solid #dadde9',
+//   },
+// }))(Tooltip);
+
+
 function JobDefinitionFileList(props) {
+  // console.log("subCatList***********",props.onSetSubCatList)
   const [page, setPage] = useState(0);
   // const [searchPage, setSearchPage] = useState(0);
   // const [searchRowperPage, setSearchRowperPage] = useState(10);
@@ -42,15 +66,17 @@ function JobDefinitionFileList(props) {
   const [standardOut] = useState("");
   const [headerTitle] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedId, setSelectedId] = useState();
+  // const [selectedId, setSelectedId] = useState();
   const [userSelectedPage, setUserSelectedPage] = useState(1);
   const [wrongPageSelectedFlag, setWrongPageSelectedFlag] = useState(false);
   const [goToButtonDisabled, setGoToButtonDisabled] = useState(false);
-
+  const [displayCategoryList, setDisplayCategoryList] = useState(false)
+  const [currCategory, setCurrCategory] = useState("")
   const dispatch = useDispatch();
   const jobDefinitionData = useSelector(
     ({ JobDefinitionApp }) => JobDefinitionApp.all_job_definitions
   );
+  // console.log("jobDefinitionData*************",jobDefinitionData)
   // const selectedItem = useSelector(
   //   ({ JobDefinitionApp }) => JobDefinitionApp.selectedjobid
   // );
@@ -60,6 +86,7 @@ function JobDefinitionFileList(props) {
   var onloadSpinner = false
   var jobDefinitionList = Object.values(jobDefinitionData);
   var totalRecords = "";
+  const max_tasks = jobCategoryJSON.max_tasks_per_category
 
   const matches = useMediaQuery("(min-width:600px)");
 
@@ -68,25 +95,94 @@ function JobDefinitionFileList(props) {
     if (jobDefinitionList[2]['content-range'] !== undefined) {
       totalRecords = jobDefinitionList[2]["content-range"].split("/")[1];
     }
-
+    
     jobDefinitionList = jobDefinitionList[1];
-    var searchResult = jobDefinitionList.filter((data) => {
-      if (
-        data.id !== "" &&
-        (props.search === "" ||
-          data.id.toLowerCase().includes(props.search.toLowerCase()))
-      )
-        return data;
+    // console.log("jobDefinitionListjobDefinitionList*****",jobDefinitionList)
+    if(!localStorage.getItem("vm")){
+      var searchResult = jobDefinitionList.filter((data) => {
+        if (
+          (data.id !== "" &&  data.id !== undefined && data.description !== null) &&
+          (props.search === "" ||
+            data.id.toLowerCase().includes(props.search.toLowerCase()))
+        )
+          return data;
+  
+        if (
+          (data.description !== "" && data.description !== undefined) &&
+          (props.search === "" ||
+            data.description.toLowerCase().includes(props.search.toLowerCase()))
+        )
+          return data;
+        return null;
+      });
+        displayResult(searchResult);
+    }else {
+      if (jobDefinitionList.length !== 0) {
+        onloadSpinner = true;
+        let vm = JSON.parse(window.localStorage.getItem('vm'))
+        let vmJobDef = vm.job_defs;
+        searchResult = jobDefinitionList.filter((data) => {
+          if (vmJobDef.includes(data.id)) {
+            return data;
+          }
+        });
+        // console.log("VIEWMOREsearchResult************",searchResult);
+      }
+    }
 
-      if (
-        (data.description !== "" && data.description !== undefined) &&
-        (props.search === "" ||
-          data.description.toLowerCase().includes(props.search.toLowerCase()))
-      )
-        return data;
-      return null;
-    });
 
+  }
+
+  function displayResult(result) {
+    if (result.length === 1) {
+      localStorage.setItem("selectedJobDefinition", JSON.stringify(result));
+      var target = window.location.pathname + result[0]["id"];
+      props.history.push(target);
+    }
+  }
+
+  function callJobType(eleId, vm) {
+    // console.log("******222jobDefinitionList", jobDefinitionList);
+    if (!vm) {
+      if (jobDefinitionList.length !== 0) {
+        onloadSpinner = true;
+
+        var searchResult = jobDefinitionList.filter((data) => {
+          if (
+            data.id !== "" &&
+            data.id !== undefined &&
+            data.description !== null &&
+            (eleId === "" ||
+              data.id.toLowerCase().includes(eleId.toLowerCase()))
+          ) {
+            return data;
+          }
+        });
+        displayResult(searchResult);
+      }
+    } else {
+      setDisplayCategoryList(true);
+      setCurrCategory(vm.label);
+      props.onSetSubCatList(true)   
+      console.log(vm);
+      if (jobDefinitionList.length !== 0) {
+        onloadSpinner = true;
+        localStorage.setItem("vm",JSON.stringify(vm))
+      }
+    }
+  }
+
+  function displayCategories(){
+    localStorage.removeItem("vm")
+    setDisplayCategoryList(false)
+    props.onSetSubCatList(false)
+  }
+
+  function onFindDescription(ele){
+    let des =  jobDefinitionList.find(
+      (ob) => ob.id === ele
+    )
+    console.log(des.description)
   }
 
   // const hereButton = {
@@ -125,10 +221,10 @@ function JobDefinitionFileList(props) {
       let currentPage = 0;
       setPage(currentPage);
     }
-    if (jobDefinitionList.length > 0 && selectedFlag) {
-      var selectedId = jobDefinitionList[0].id;
-      setSelectedId(selectedId);
-    }
+    // if (jobDefinitionList.length > 0 && selectedFlag) {
+    //   var selectedId = jobDefinitionList[0].id;
+    //   setSelectedId(selectedId);
+    // }
   },[jobDefinitionList, props.search, searchString, selectedFlag]);
 
   useEffect(() => {
@@ -228,7 +324,7 @@ function JobDefinitionFileList(props) {
 
   function onRowClick(selectedId) {
     setSelectedFlag(false);
-    setSelectedId(selectedId);
+    // setSelectedId(selectedId);
     dispatch(Actions.setSelectedItem(selectedId));
   }
 
@@ -327,157 +423,287 @@ function JobDefinitionFileList(props) {
           <FuseAnimate animation="transition.slideUpIn" delay={300}>
             {jobDefinitionList.length > 0 ? (
               <>
-                {searchResult
-                  .slice(
-                    (currentPage - 1) * rowsPerPage,
-                    (currentPage - 1) * rowsPerPage + rowsPerPage
-                  ).map((row, ind, arr) => {
-                  // lengthOfRow = arr.length;
-                  return (
-                    <React.Fragment key={row.id}>
-                      <div className={classes.root}>
-                        <Grid
-                          className={row.id === selectedId ? "selceted-row" : ""}
-                          onClick={() => onRowClick(row.id)}
-                          style={{ borderBottom: "1px solid lightgrey" }}
-                          container
-                          spacing={1}
-                        >
-                          <Grid container item xs={9} sm={10}>
-                            <Grid item xs={4} style={{ padding: "5px" }}>
-                              <Typography>Name</Typography>
-                              <Typography
-                                style={{ fontWeight: "700", wordBreak: "break-word" }}
-                              >
-                                {row.id}
-                              </Typography>
+                {displayCategoryList ? (
+                  searchResult
+                    .slice(
+                      (currentPage - 1) * rowsPerPage,
+                      (currentPage - 1) * rowsPerPage + rowsPerPage
+                    )
+                    .map((row, ind, arr) => {
+                      // lengthOfRow = arr.length;
+                      return (
+                        <React.Fragment key={row.id}>
+                          {ind === 0 && (
+                            <Grid
+                              container
+                              xs={12}
+                              sm={12}
+                              md={12}
+                              style={{ margin: "1.5rem" }}
+                            >
+                              <div className="flex flex-row justify-start items-center ">
+                                <span
+                                  className="font-semibold hover:underline cursor-pointer text-lg sm:text-base"
+                                  onClick={displayCategories}
+                                  style={{ color: "#074da4" }}
+                                >
+                                  Category
+                                </span>
+                                &nbsp;&nbsp;
+                                <ArrowForwardIosIcon fontSize="small" />
+                                <span className=" text-2xl sm:text-2xl md:text-3xl lg:text-3xl">
+                                  {currCategory}
+                                </span>
+                              </div>
+                          {/* <Divider className="flex-none mx-5" /> */}
+
                             </Grid>
-                            <Grid item xs={4} style={{ padding: "5px" }}>
-                              {/* <Typography>Created By</Typography>
+                          )}
+                          <Divider className="flex-none mx-5" />
+
+                          <div className={classes.root}>
+                            <Grid
+                              // className={
+                              //   row.id === selectedId ? "selceted-row" : ""
+                              // }
+                              onClick={() => onRowClick(row.id)}
+                              // style={{ borderBottom: "1px solid lightgrey" }}
+                              container
+                              spacing={1}
+                            >
+                              <Grid container item xs={9} sm={10}>
+                                <Grid item xs={4} style={{ padding: "5px" }}>
+                                  <Typography>Name</Typography>
+                                  <Typography
+                                    style={{
+                                      fontWeight: "700",
+                                      wordBreak: "break-word",
+                                    }}
+                                  >
+                                    {row.id}
+                                  </Typography>
+                                </Grid>
+                                <Grid item xs={4} style={{ padding: "5px" }}>
+                                  {/* <Typography>Created By</Typography>
                               <Typography style={{ fontWeight: "700" }}>
                                 {row.created_by}
                               </Typography> */}
-                            </Grid>
-                            <Grid item xs={4} style={{ padding: "5px" }}>
-                              <Typography>Last Updated</Typography>
-                              <Typography style={{ fontWeight: "700" }}>
-                                {
-                                  row.update_date
-                                    .replace(/T|Z/g, "  ")
-                                    .split(".")[0]
-                                }
-                              </Typography>
-                            </Grid>
-                            <Grid item xs={12} style={{ padding: "5px" }}>
-                              <Typography>Description</Typography>
-                              <span style={{ fontWeight: "700" }}>
-                                {row.description}
-                                {/* {row.output_files && row.output_files.type !== 'folder' && (typeof (row.output_files.type) === 'string' ? ` This task outputs a file of type ${row.output_files.type} in your chosen location ` : ` This task outputs a file of type ${Object.values(row.output_files.type)[0]} in your chosen location `)}
+                                </Grid>
+                                <Grid item xs={4} style={{ padding: "5px" }}>
+                                  <Typography>Last Updated</Typography>
+                                  <Typography style={{ fontWeight: "700" }}>
+                                    {
+                                      row.update_date
+                                        .replace(/T|Z/g, "  ")
+                                        .split(".")[0]
+                                    }
+                                  </Typography>
+                                </Grid>
+                                <Grid item xs={12} style={{ padding: "5px" }}>
+                                  <Typography>Description</Typography>
+                                  <span style={{ fontWeight: "700" }}>
+                                    {row.description}
+                                    {/* {row.output_files && row.output_files.type !== 'folder' && (typeof (row.output_files.type) === 'string' ? ` This task outputs a file of type ${row.output_files.type} in your chosen location ` : ` This task outputs a file of type ${Object.values(row.output_files.type)[0]} in your chosen location `)}
                                 {row.output_files && row.output_files.contents && ` This task outputs files of type ${(row.output_files.contents.map(a => a.type)).toString()} in your chosen location. `}
                                 {row.output_files && row.output_schema && row.output_schema.properties && ` along with output data attached to the job. Click `}
                                 {!row.output_files && row.output_schema && row.output_schema.properties && ` This task outputs data attached to the job. Click `} */}
-                              </span>
-                              {/* {row.output_schema && row.output_schema.properties && <button className='cursor-pointer' style={hereButton} onClick={() => openDialog(['Output schema', row.output_schema])}> here </button>}
+                                  </span>
+                                  {/* {row.output_schema && row.output_schema.properties && <button className='cursor-pointer' style={hereButton} onClick={() => openDialog(['Output schema', row.output_schema])}> here </button>}
                               <span style={{ fontWeight: "700" }}>{row.output_schema && row.output_schema.properties && ' to see the schema of the output.'} </span> */}
+                                </Grid>
+                              </Grid>
+                              <Grid
+                                item
+                                xs={3}
+                                sm={2}
+                                style={{ paddingTop: "15px" }}
+                              >
+                                <Button
+                                  variant="contained"
+                                  ////size="small"
+                                  //color="primary"
+                                  className={classes.button}
+                                  onClick={(e) => onSelectClick(row, e)}
+                                >
+                                  Select
+                                </Button>
+                              </Grid>
                             </Grid>
-                          </Grid>
-                          <Grid item xs={3} sm={2} style={{ paddingTop: "15px" }}>
-                            <Button
-                              variant="contained"
-                              ////size="small"
-                              //color="primary"
-                              className={classes.button}
-                              onClick={(e) => onSelectClick(row, e)}
-                            >
-                              Select
-                            </Button>
-                          </Grid>
+                          </div>
+                        </React.Fragment>
+                      );
+                    })
+                ) : (
+                  <Grid container direction="row" spacing={3} >
+                    {jobCategoryJSON.categories.map((obj) => {
+                      return (
+                        <Grid item sm={6} md={4} xs={12} key={obj.label}>
+                          <div
+                            className="flex flex-col justify-start "
+                            style={{
+                              backgroundColor: "#77e5ff61",
+                              // height: "163px"
+                              // flex: '1 1 0%',
+                              borderRadius: "0.375rem",
+                            }}
+                          >
+                            <div className="flex justify-center py-3">
+                              <Typography
+                                className="text-lg font-bold"
+                                color="inherit"
+                              >
+                                {obj.label}
+                              </Typography>
+                            </div>
 
+                            <Divider className="flex-none mx-5" />
+
+                            <div
+                              className="flex px-5 overflow-auto "
+                              style={{height: 'auto'}}
+                              style={{ height: `${22.5 * max_tasks}px` }} ///////////////////////////////////////////////
+                            >
+                              <ul className="list-inside list-disc truncate ...">
+                                {obj.job_defs.map((ele,idx) => (
+                                  <LightTooltip
+                                    title={
+                                      jobDefinitionList.find(
+                                        (ob) => ob.id === ele)['description']
+                                    }
+                                    key={ele}
+                                  >
+                                    <li
+                                      className="truncate ...  hover:underline" 
+                                      style={{ color: "rgb(18,34,48)", display: `${idx > 4 ? 'none' : 'list-item' }` }}
+                                      onClick={() => callJobType(ele, null)}
+                                    >
+                                      <span className="text-xs cursor-pointer " style={{ color: "rgb(18,34,48)" }}>{`${ele.split("/")[0]}/`}</span>
+                                      {ele.substring(ele.indexOf("/")+1).length > 30 ?
+                                        <p className="truncate ... text-base cursor-pointer" style={{paddingLeft: "18px", color: "rgb(18,34,48)"}}> {ele.substring(ele.indexOf("/")+1)}</p> :
+                                        <a className="text-base cursor-pointer" style={{ color: "rgb(18,34,48)" }}>{ele.substring(ele.indexOf("/")+1)}</a>
+                                    }
+                                    </li>
+                                  </LightTooltip>
+                                ))}
+
+                                {/* column-count: 3 */}
+                              </ul>
+                            </div>
+                            <div className="flex justify-end items-end h-32">
+                              <Button
+                                size="small"
+                                color="primary"
+                                className="capitalize "
+                                onClick={() => callJobType(null, obj)}
+                              >
+                                {/* <Link to="/apps/job-definition//?eq(tags,network_generators)"> */}
+                                  <a
+                                    className="cursor-pointer font-bold"
+                                    style={{ color: "rgb(9 79 159)" }}
+                                  >
+                                    View More
+                                  </a>
+                                {/* </Link> */}
+                                {/* <a
+                                  className="cursor-pointer font-bold"
+                                  style={{ color: "rgb(9 79 159)" }}
+                                >View More
+                                </a> */}
+                                <NavigateNextIcon
+                                  style={{
+                                    color: "rgb(21, 101, 192)",
+                                    margin: "0",
+                                  }}
+                                />
+                              </Button>
+                            </div>
+                          </div>
                         </Grid>
-                      </div>
-                    </React.Fragment>
-                  );
-                })}
+                      );
+                    })}
+                  </Grid>
+                )}
               </>
             ) : (
               <LinearProgress className="w-xs" color="secondary" />
             )}
           </FuseAnimate>
-
-          <div className="pagination-footer">
-            {matches ? (
-              <Pagination
-                className="pagination-bar"
-                color="primary"
-                count={
-                  props.search !== searchString
-                    ? Math.ceil(totalRecords / rowsPerPage)
-                    : Math.ceil(searchResult.length / rowsPerPage)
-                }
-                page={currentPage}
-                onChange={handleChangePage}
-              />
-            ) : (
-              <Pagination
-                className="pagination-bar"
-                color="primary"
-                defaultPage={1}
-                siblingCount={0}
-                size="small"
-                count={
-                  props.search !== searchString
-                    ? Math.ceil(totalRecords / rowsPerPage)
-                    : Math.ceil(searchResult.length / rowsPerPage)
-                }
-                page={currentPage}
-                onChange={handleChangePage}
-              />
-            )}
-            <span className="goToPage_span">
-              <label>Go to page:</label>
-              <TextField
-                className={
-                  matches ? "goToPagination" : "goToPaginationForMobile"
-                }
-                id="GoToPagination"
-                variant="outlined"
-                type="number"
-                value={userSelectedPage}
-                onChange={onPageChange}
-                InputProps={{
-                  inputProps: {
-                    min: 1,
-                    max:
-                      props.search !== searchString
-                        ? Math.ceil(totalRecords / rowsPerPage)
-                        : Math.ceil(searchResult.length / rowsPerPage),
-                  },
-                }}
-                onKeyDown={onKeyDownPageChange}
-              />
+          {displayCategoryList && (
+            <div className="pagination-footer">
               {matches ? (
-                <Button
-                  className="goToPaginationButton"
-                  variant="contained"
-                  style={selectButtonStyle}
-                  onClick={handleSelectedPageClick}
-                  disabled={goToButtonDisabled}
-                >
-                  Go
-                </Button>
+                <Pagination
+                  className="pagination-bar"
+                  color="primary"
+                  count={
+                    props.search !== searchString
+                      ? Math.ceil(totalRecords / rowsPerPage)
+                      : Math.ceil(searchResult.length / rowsPerPage)
+                  }
+                  page={currentPage}
+                  onChange={handleChangePage}
+                />
               ) : (
-                <Button
-                  className="goToPaginationButton"
-                  variant="contained"
-                  style={selectButtonStyleMob}
-                  onClick={handleSelectedPageClick}
-                  disabled={goToButtonDisabled}
-                >
-                  Go
-                </Button>
+                <Pagination
+                  className="pagination-bar"
+                  color="primary"
+                  defaultPage={1}
+                  siblingCount={0}
+                  size="small"
+                  count={
+                    props.search !== searchString
+                      ? Math.ceil(totalRecords / rowsPerPage)
+                      : Math.ceil(searchResult.length / rowsPerPage)
+                  }
+                  page={currentPage}
+                  onChange={handleChangePage}
+                />
               )}
-            </span>
-          </div>
+              <span className="goToPage_span">
+                <label>Go to page:</label>
+                <TextField
+                  className={
+                    matches ? "goToPagination" : "goToPaginationForMobile"
+                  }
+                  id="GoToPagination"
+                  variant="outlined"
+                  type="number"
+                  value={userSelectedPage}
+                  onChange={onPageChange}
+                  InputProps={{
+                    inputProps: {
+                      min: 1,
+                      max:
+                        props.search !== searchString
+                          ? Math.ceil(totalRecords / rowsPerPage)
+                          : Math.ceil(searchResult.length / rowsPerPage),
+                    },
+                  }}
+                  onKeyDown={onKeyDownPageChange}
+                />
+                {matches ? (
+                  <Button
+                    className="goToPaginationButton"
+                    variant="contained"
+                    style={selectButtonStyle}
+                    onClick={handleSelectedPageClick}
+                    disabled={goToButtonDisabled}
+                  >
+                    Go
+                  </Button>
+                ) : (
+                  <Button
+                    className="goToPaginationButton"
+                    variant="contained"
+                    style={selectButtonStyleMob}
+                    onClick={handleSelectedPageClick}
+                    disabled={goToButtonDisabled}
+                  >
+                    Go
+                  </Button>
+                )}
+              </span>
+            </div>
+          )}
 
           {/* {props.search === "" ? (
             <div>

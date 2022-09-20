@@ -473,7 +473,7 @@ function DetailSidebarContent(props) {
                               )
                             } else {
                               return (
-                                <td style={{ lineBreak: 'anywhere' }}>{JSON.stringify(data[1])}</td>
+                                <td className="break-all" >{JSON.stringify(data[1])}</td>
                               )
                             }
                           })()}

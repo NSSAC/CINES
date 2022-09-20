@@ -120,7 +120,6 @@ function MyJobsFileList(props) {
       }, [files]);
     
       useEffect(() => {
-          console.log(firstFileId);
         if (document.getElementsByClassName("jobRows").length > 0) {
             document.getElementsByClassName("jobBody")[0].scrollIntoView();
             document.getElementsByClassName("jobRows")[0].click();
@@ -468,7 +467,7 @@ function MyJobsFileList(props) {
                                                             )
                                                         })()}
                                                     </TableCell>
-                                                    <TableCell style={{lineBreak:'anywhere'}}>
+                                                    <TableCell style={{wordBreak: 'break-all'}}>
                                                         {row.output_name || <b>-</b>} 
                                                     </TableCell>
                                                     <TableCell  >
