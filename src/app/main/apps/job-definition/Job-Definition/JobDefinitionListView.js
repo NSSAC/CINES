@@ -247,17 +247,6 @@ function JobDefinitionListView(props) {
                                     </>
                                   );
                                 }}
-                                onInputChange={(event, value, reason) => {
-                                    console.log(event)
-
-                                    console.log(event)
-                                    console.log(value)
-                                    console.log(reason)
-                                    if(!open){
-                                        console.log("rest values")
-                                    }
-                                }}
-                                // inputValue={null}
                                 clearOnBlur={true}
                                 debug={true}
                                 fullWidth={true}

@@ -8,7 +8,7 @@ import Pagination from '@material-ui/lab/Pagination';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { toast } from "material-react-toastify";
 import { useDispatch, useSelector } from "react-redux";
-import { useHistory, withRouter, useSearchParams } from "react-router-dom";
+import { useHistory, withRouter, useRouter } from "react-router-dom";
 import { FuseAnimate } from "@fuse";
 import MetadataInfoDialog from "../../my-jobs/MetadataDialog";
 import JobDefinitionForm from "./JobDefinitionForm";
@@ -154,39 +154,30 @@ function JobDefinitionFileList(props) {
   }
 
 
- 
+  useEffect(() => {
+    if(window.location.pathname == "/apps/job-definition/"){
+      if (window.location.search === "") {
+        setDisplayCategoryList(false);
+        props.onSetSubCatList(false)  
+        localStorage.removeItem("vm")
+      }
+      // else{
+      //   if(localStorage.getItem("vm")){
+      //     // let vm = JSON.parse(localStorage.getItem("vm"))
+      //     // setDisplayCategoryList(true);
+      //     // setCurrCategory(vm.label);
+      //     props.onSetSubCatList(true) 
+      //   }
+      // }
+    }
+  }, [window.location.search])
 
-  // useEffect(() => {
-  //   return history.listen(location => {
-  //     console.log("0", location.key, "setLocationKeys", locationKeys)
-  //     if (history.action === 'PUSH') {
-  //       console.log("1.Push", location.key, "setLocationKeys", locationKeys)
-  //       setLocationKeys([ location.key ])
-  //     }
   
-  //     if (history.action === 'POP') {
-  //       if (locationKeys[1] === location.key) {
-  //       console.log("1.Pop", location.key, "setLocationKeys", locationKeys)
-  //         setLocationKeys(([ _, ...keys ]) => keys)
-
-  //         setDisplayCategoryList(false);
-  //         // setCurrCategory(vm.label);
-  //         // Handle forward event
-  
-  //       }
-  //        else {
-  //       console.log("3. Nothing", location.key, "setLocationKeys", locationKeys)
-  //         setLocationKeys((keys) => [ location.key, ...keys ])
-
-  //         setDisplayCategoryList(false);
-  
-  //         // Handle back event
-  
-  //       }
-  //     }
-  //   })
-  // }, [ locationKeys, ])
-
+  async function sleep(ms){
+    return new Promise(((resolve) => {
+        setTimeout(resolve,ms)
+    }))
+}
 
   useEffect(() => {
     if(localStorage.getItem("vm")){
@@ -197,7 +188,6 @@ function JobDefinitionFileList(props) {
       if(!window.location.search.includes(vm.query)){
         history.push(`?${vm.query}`)
       }
-
     }
   },[localStorage.getItem("vm")]);
 
@@ -228,14 +218,16 @@ function JobDefinitionFileList(props) {
         displayResult(searchResult);
       }
     } else {
+      localStorage.removeItem("vm")
       setDisplayCategoryList(true);
       setCurrCategory(vm.label);
       props.onSetSubCatList(true)   
       // console.log(vm);
-      localStorage.removeItem("vm")
       if (jobDefinitionList.length !== 0) {
         onloadSpinner = true;
         localStorage.setItem("vm",JSON.stringify(vm))
+      // props.onSetSubCatList(true)   
+        await sleep(500)
       }
     }
   }
@@ -681,7 +673,7 @@ function JobDefinitionFileList(props) {
                               </ul> */}
                             </div>
                             {/* VIEW MORE */}
-                            <div className="flex justify-end items-end h-32">
+                            {/* <div className="flex justify-end items-end h-32">
                               <Button
                                 size="small"
                                 color="primary"
@@ -702,7 +694,7 @@ function JobDefinitionFileList(props) {
                                   }}
                                 />
                               </Button>
-                            </div>
+                            </div> */}
                           </div>
                         </Grid>
                       );
