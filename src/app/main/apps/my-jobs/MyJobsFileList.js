@@ -50,6 +50,7 @@ function MyJobsFileList(props) {
     const [wrongPageSelectedFlag, setWrongPageSelectedFlag] = useState(false);
     const [goToButtonDisabled, setGoToButtonDisabled] = useState(false);
     var type;
+    localStorage.removeItem("vm")
     // var rowLength = 10;
 
     // For mobile-devices

@@ -24,6 +24,7 @@ const useStyles = makeStyles(theme => ({
 
 function HomeContent(props)
 {
+    localStorage.removeItem("vm")
     const graphicStyle ={
         width: "60%",
         maxWidth: "600px",

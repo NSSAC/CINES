@@ -119,3 +119,9 @@ display: none;
   [class$="-MuiSvgIcon-root-MuiPaginationItem-icon"] {
     font-size: large !important;
   }
+
+  .bullet:before {
+    content:"•";
+    text-decoration: none;
+    padding-right: 11px;
+}

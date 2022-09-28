@@ -7,12 +7,9 @@ import { makeStyles, withStyles } from "@material-ui/styles";
 import Pagination from '@material-ui/lab/Pagination';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { toast } from "material-react-toastify";
-
 import { useDispatch, useSelector } from "react-redux";
-import { withRouter } from "react-router-dom";
-
+import { useHistory, withRouter, useSearchParams } from "react-router-dom";
 import { FuseAnimate } from "@fuse";
-
 import MetadataInfoDialog from "../../my-jobs/MetadataDialog";
 import JobDefinitionForm from "./JobDefinitionForm";
 import * as Actions from "./store/actions";
@@ -22,6 +19,7 @@ import Divider from '@material-ui/core/Divider';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import Tooltip from '@material-ui/core/Tooltip';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
+
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -42,15 +40,7 @@ const LightTooltip = withStyles((theme) => ({
   },
 }))(Tooltip);
 
-// const HtmlTooltip = withStyles((theme) => ({
-//   tooltip: {
-//     backgroundColor: '#f5f5f9',
-//     color: 'rgba(0, 0, 0, 0.87)',
-//     maxWidth: 220,
-//     fontSize: theme.typography.pxToRem(12),
-//     border: '1px solid #dadde9',
-//   },
-// }))(Tooltip);
+
 
 
 function JobDefinitionFileList(props) {
@@ -87,8 +77,11 @@ function JobDefinitionFileList(props) {
   var jobDefinitionList = Object.values(jobDefinitionData);
   var totalRecords = "";
   const max_tasks = jobCategoryJSON.max_tasks_per_category
-
   const matches = useMediaQuery("(min-width:600px)");
+  const query = window.location.search;
+  const [ locationKeys, setLocationKeys ] = useState([])
+
+  const history = useHistory()
 
   if (jobDefinitionList.length !== 0) {
     onloadSpinner = true;
@@ -98,6 +91,14 @@ function JobDefinitionFileList(props) {
     
     jobDefinitionList = jobDefinitionList[1];
     // console.log("jobDefinitionListjobDefinitionList*****",jobDefinitionList)
+    if(query){
+      let a = query.split(",")
+      let b = a[1].split(")")[0]
+      let c = b.split("_").join(" ").toLowerCase()
+      let d = jobCategoryJSON.categories.filter((obj) => obj.label.toLowerCase().includes(c))
+      localStorage.setItem("vm",JSON.stringify(d[0]))
+    }
+
     if(!localStorage.getItem("vm")){
       var searchResult = jobDefinitionList.filter((data) => {
         if (
@@ -116,8 +117,28 @@ function JobDefinitionFileList(props) {
         return null;
       });
         displayResult(searchResult);
-    }else {
-      if (jobDefinitionList.length !== 0) {
+    }else { 
+
+      if(props.search !== ""){
+        var searchResult = jobDefinitionList.filter((data) => {
+          if (
+            (data.id !== "" &&  data.id !== undefined && data.description !== null) &&
+            (props.search === "" ||
+              data.id.toLowerCase().includes(props.search.toLowerCase()))
+          )
+            return data;
+    
+          if (
+            (data.description !== "" && data.description !== undefined) &&
+            (props.search === "" ||
+              data.description.toLowerCase().includes(props.search.toLowerCase()))
+          )
+            return data;
+          return null;
+        });
+          displayResult(searchResult);
+      }
+      else if (jobDefinitionList.length !== 0) {
         onloadSpinner = true;
         let vm = JSON.parse(window.localStorage.getItem('vm'))
         let vmJobDef = vm.job_defs;
@@ -126,12 +147,59 @@ function JobDefinitionFileList(props) {
             return data;
           }
         });
-        // console.log("VIEWMOREsearchResult************",searchResult);
       }
     }
 
 
   }
+
+
+ 
+
+  // useEffect(() => {
+  //   return history.listen(location => {
+  //     console.log("0", location.key, "setLocationKeys", locationKeys)
+  //     if (history.action === 'PUSH') {
+  //       console.log("1.Push", location.key, "setLocationKeys", locationKeys)
+  //       setLocationKeys([ location.key ])
+  //     }
+  
+  //     if (history.action === 'POP') {
+  //       if (locationKeys[1] === location.key) {
+  //       console.log("1.Pop", location.key, "setLocationKeys", locationKeys)
+  //         setLocationKeys(([ _, ...keys ]) => keys)
+
+  //         setDisplayCategoryList(false);
+  //         // setCurrCategory(vm.label);
+  //         // Handle forward event
+  
+  //       }
+  //        else {
+  //       console.log("3. Nothing", location.key, "setLocationKeys", locationKeys)
+  //         setLocationKeys((keys) => [ location.key, ...keys ])
+
+  //         setDisplayCategoryList(false);
+  
+  //         // Handle back event
+  
+  //       }
+  //     }
+  //   })
+  // }, [ locationKeys, ])
+
+
+  useEffect(() => {
+    if(localStorage.getItem("vm")){
+      let vm = JSON.parse(localStorage.getItem("vm"))
+      setDisplayCategoryList(true);
+      setCurrCategory(vm.label);
+      props.onSetSubCatList(true)  
+      if(!window.location.search.includes(vm.query)){
+        history.push(`?${vm.query}`)
+      }
+
+    }
+  },[localStorage.getItem("vm")]);
 
   function displayResult(result) {
     if (result.length === 1) {
@@ -141,8 +209,7 @@ function JobDefinitionFileList(props) {
     }
   }
 
-  function callJobType(eleId, vm) {
-    // console.log("******222jobDefinitionList", jobDefinitionList);
+  async function callJobType(eleId, vm) {
     if (!vm) {
       if (jobDefinitionList.length !== 0) {
         onloadSpinner = true;
@@ -164,7 +231,8 @@ function JobDefinitionFileList(props) {
       setDisplayCategoryList(true);
       setCurrCategory(vm.label);
       props.onSetSubCatList(true)   
-      console.log(vm);
+      // console.log(vm);
+      localStorage.removeItem("vm")
       if (jobDefinitionList.length !== 0) {
         onloadSpinner = true;
         localStorage.setItem("vm",JSON.stringify(vm))
@@ -173,6 +241,8 @@ function JobDefinitionFileList(props) {
   }
 
   function displayCategories(){
+    let newurl  = window.location.protocol + "//" + window.location.host + window.location.pathname ;
+    window.history.pushState({path:newurl},'',newurl)
     localStorage.removeItem("vm")
     setDisplayCategoryList(false)
     props.onSetSubCatList(false)
@@ -443,15 +513,15 @@ function JobDefinitionFileList(props) {
                             >
                               <div className="flex flex-row justify-start items-center ">
                                 <span
-                                  className="font-semibold hover:underline cursor-pointer text-lg sm:text-base"
+                                  className="font-semibold hover:underline cursor-pointer text-sm sm:text-base  md:text-lg  lg:text-lg "
                                   onClick={displayCategories}
-                                  style={{ color: "#074da4" }}
+                                  // style={{ color: "#074da4" }}
                                 >
                                   Category
                                 </span>
                                 &nbsp;&nbsp;
                                 <ArrowForwardIosIcon fontSize="small" />
-                                <span className=" text-2xl sm:text-2xl md:text-3xl lg:text-3xl">
+                                <span className="font-semibold text-sm sm:text-base  md:text-lg  lg:text-lg ">
                                   {currCategory}
                                 </span>
                               </div>
@@ -547,7 +617,7 @@ function JobDefinitionFileList(props) {
                               borderRadius: "0.375rem",
                             }}
                           >
-                            <div className="flex justify-center py-3">
+                            <div className="flex justify-center py-3"  >
                               <Typography
                                 className="text-lg font-bold"
                                 color="inherit"
@@ -559,11 +629,35 @@ function JobDefinitionFileList(props) {
                             <Divider className="flex-none mx-5" />
 
                             <div
-                              className="flex px-5 overflow-auto "
-                              style={{height: 'auto'}}
-                              style={{ height: `${22.5 * max_tasks}px` }} ///////////////////////////////////////////////
-                            >
-                              <ul className="list-inside list-disc truncate ...">
+                              className="flex flex-col px-5 overflow-auto "
+                              // style={{flexGrow: "1"}} 
+                              style={{ height: `${22 * (max_tasks*2)}px` }}
+                            > 
+                            {obj.job_defs.map((ele,idx) => (
+                                  <LightTooltip
+                                    title={
+                                      jobDefinitionList.find(
+                                        (ob) => ob.id === ele)['description']
+                                    }
+                                    key={ele}
+                                  > 
+
+                                    <div className="truncate ...  bullet"
+                                      style={{ color: "rgb(18,34,48)", display: `${idx > 4 ? 'none': 'unset'}`  }}
+                                      onClick={() => callJobType(ele, null)} >
+
+                                      <div className="truncate ...  hover:underline inline">
+                                        <span className="text-xs cursor-pointer w-full ">{`${ele.split("/")[0]}/`}</span>
+                                        <p className="truncate ... text-base cursor-pointer w-full"  style={{ paddingLeft: "20px"}}> {ele.substring(ele.indexOf("/")+1)}</p>
+                                      </div>  
+                                     
+                                    </div>
+                                  </LightTooltip>
+                                ))}
+
+
+                            {/* /////////////////////////////////// */}
+                              {/* <ul className="list-inside list-disc truncate ...">
                                 {obj.job_defs.map((ele,idx) => (
                                   <LightTooltip
                                     title={
@@ -577,18 +671,16 @@ function JobDefinitionFileList(props) {
                                       style={{ color: "rgb(18,34,48)", display: `${idx > 4 ? 'none' : 'list-item' }` }}
                                       onClick={() => callJobType(ele, null)}
                                     >
-                                      <span className="text-xs cursor-pointer " style={{ color: "rgb(18,34,48)" }}>{`${ele.split("/")[0]}/`}</span>
-                                      {ele.substring(ele.indexOf("/")+1).length > 30 ?
-                                        <p className="truncate ... text-base cursor-pointer" style={{paddingLeft: "18px", color: "rgb(18,34,48)"}}> {ele.substring(ele.indexOf("/")+1)}</p> :
-                                        <a className="text-base cursor-pointer" style={{ color: "rgb(18,34,48)" }}>{ele.substring(ele.indexOf("/")+1)}</a>
-                                    }
+                                      <span className="text-xs cursor-pointer w-full" style={{ color: "rgb(18,34,48)" }}>{`${ele.split("/")[0]}/`}</span>
+                                      
+                                      <p className="truncate ... text-base cursor-pointer w-full"  style={{paddingLeft: "18px", color: "rgb(18,34,48)"}}> {ele.substring(ele.indexOf("/")+1)}</p>
+
                                     </li>
                                   </LightTooltip>
                                 ))}
-
-                                {/* column-count: 3 */}
-                              </ul>
+                              </ul> */}
                             </div>
+                            {/* VIEW MORE */}
                             <div className="flex justify-end items-end h-32">
                               <Button
                                 size="small"
@@ -596,19 +688,13 @@ function JobDefinitionFileList(props) {
                                 className="capitalize "
                                 onClick={() => callJobType(null, obj)}
                               >
-                                {/* <Link to="/apps/job-definition//?eq(tags,network_generators)"> */}
+                                
                                   <a
                                     className="cursor-pointer font-bold"
                                     style={{ color: "rgb(9 79 159)" }}
                                   >
                                     View More
                                   </a>
-                                {/* </Link> */}
-                                {/* <a
-                                  className="cursor-pointer font-bold"
-                                  style={{ color: "rgb(9 79 159)" }}
-                                >View More
-                                </a> */}
                                 <NavigateNextIcon
                                   style={{
                                     color: "rgb(21, 101, 192)",

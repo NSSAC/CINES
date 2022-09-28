@@ -10,3 +10,11 @@
     display: none;
     cursor: text
 }
+/* MuiButtonBase-root-809 MuiIconButton-root-801 MuiAutocomplete-clearIndicator */
+
+_:-webkit-full-screen, .safari_headr { 
+    width:100% !important;
+}
+.abc{
+    width: 100% !important;
+}
