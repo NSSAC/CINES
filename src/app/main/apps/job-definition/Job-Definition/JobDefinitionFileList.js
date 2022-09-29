@@ -90,7 +90,6 @@ function JobDefinitionFileList(props) {
     }
     
     jobDefinitionList = jobDefinitionList[1];
-    // console.log("jobDefinitionListjobDefinitionList*****",jobDefinitionList)
     if(query){
       let a = query.split(",")
       let b = a[1].split(")")[0]
@@ -161,14 +160,6 @@ function JobDefinitionFileList(props) {
         props.onSetSubCatList(false)  
         localStorage.removeItem("vm")
       }
-      // else{
-      //   if(localStorage.getItem("vm")){
-      //     // let vm = JSON.parse(localStorage.getItem("vm"))
-      //     // setDisplayCategoryList(true);
-      //     // setCurrCategory(vm.label);
-      //     props.onSetSubCatList(true) 
-      //   }
-      // }
     }
   }, [window.location.search])
 
@@ -221,12 +212,10 @@ function JobDefinitionFileList(props) {
       localStorage.removeItem("vm")
       setDisplayCategoryList(true);
       setCurrCategory(vm.label);
-      props.onSetSubCatList(true)   
-      // console.log(vm);
+      props.onSetSubCatList(true)
       if (jobDefinitionList.length !== 0) {
         onloadSpinner = true;
         localStorage.setItem("vm",JSON.stringify(vm))
-      // props.onSetSubCatList(true)   
         await sleep(500)
       }
     }
@@ -646,31 +635,6 @@ function JobDefinitionFileList(props) {
                                     </div>
                                   </LightTooltip>
                                 ))}
-
-
-                            {/* /////////////////////////////////// */}
-                              {/* <ul className="list-inside list-disc truncate ...">
-                                {obj.job_defs.map((ele,idx) => (
-                                  <LightTooltip
-                                    title={
-                                      jobDefinitionList.find(
-                                        (ob) => ob.id === ele)['description']
-                                    }
-                                    key={ele}
-                                  >
-                                    <li
-                                      className="truncate ...  hover:underline" 
-                                      style={{ color: "rgb(18,34,48)", display: `${idx > 4 ? 'none' : 'list-item' }` }}
-                                      onClick={() => callJobType(ele, null)}
-                                    >
-                                      <span className="text-xs cursor-pointer w-full" style={{ color: "rgb(18,34,48)" }}>{`${ele.split("/")[0]}/`}</span>
-                                      
-                                      <p className="truncate ... text-base cursor-pointer w-full"  style={{paddingLeft: "18px", color: "rgb(18,34,48)"}}> {ele.substring(ele.indexOf("/")+1)}</p>
-
-                                    </li>
-                                  </LightTooltip>
-                                ))}
-                              </ul> */}
                             </div>
                             {/* VIEW MORE */}
                             {/* <div className="flex justify-end items-end h-32">

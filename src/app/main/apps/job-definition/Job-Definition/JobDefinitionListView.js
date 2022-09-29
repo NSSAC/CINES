@@ -22,32 +22,6 @@ import CloseIcon from '@material-ui/icons/Close';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import "./JobDefintionListView.css";
 
-// const useStyles = makeStyles((theme) => 
-//   createStyles({
-//           root: {
-//       "& .MuiAutocomplete-listbox": {
-//         "& li:nth-child(even)": { backgroundColor: "#CCC" },
-//         "& li:nth-child(odd)": { backgroundColor: "#FFF" }
-//       }
-//     }
-//     // root: {
-//     //   "& .MuiAutocomplete-listbox": {
-//     //     border: "2px solid red",
-//     //     fontSize: "20px",
-//     //     "& li:nth-child(even)": { backgroundColor: "yellow" },
-//     //     "& li:nth-child(odd)": { backgroundColor: "green" },
-//     //   },
-//     //   "& .MuiAutocomplete-clearIndicator": {
-//     //     display: "none",
-//     //     cursor: "text",
-//     //   },
-//     //   "& .MuiAutocomplete-endAdornment": {
-//     //     display: "none",
-//     //     cursor: "text",
-//     //   },
-//     // },
-//   })
-// ); 
 const useStyles = makeStyles((theme) => ({
     paper: {
       border: '1px solid',
@@ -71,8 +45,9 @@ function JobDefinitionListView(props) {
         ({ JobDefinitionApp }) => JobDefinitionApp.all_job_definitions
       );
     const jobDefinitionIdList = jobDefinitionData ? _.map(jobDefinitionData.payload, extractId) : [];
-        const [a,seta] = useState("")
-    
+    if(jobDefinitionIdList && jobDefinitionIdList.length > 0){
+      localStorage.setItem("jobDefinitionIdList",JSON.stringify(jobDefinitionIdList))
+    }
 
 
   function extractId(obj) {
@@ -96,10 +71,9 @@ function JobDefinitionListView(props) {
         
       if (val && localStorage.getItem("vm")) {
         let vm = JSON.parse(localStorage.getItem("vm"));
-        // console.log("vmmm", vm);
-
         let vmJobDef = vm.job_defs;
-        let list = jobDefinitionIdList.filter((data) => {
+        let listLoc = JSON.parse(localStorage.getItem("jobDefinitionIdList"))
+        let list = listLoc.filter((data) => {
           if (vmJobDef.includes(data.id)) {
             return data;
           }
