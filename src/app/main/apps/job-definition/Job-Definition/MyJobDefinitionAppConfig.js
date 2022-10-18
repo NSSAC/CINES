@@ -60,41 +60,44 @@ export const MyJobDefinitionAppConfig = {
             "namespaces": ["development","net.science"]
         }),
 
-        generate_static_form_route("plot_weakly_connected_component_size_distribution",{
-            "namespaces": ["development","net.science"]
-        }),
+        // USING THE GENERATED FORMS FOR THESE DEFINITIONS UNTIL WE 
+        // FULLY DEFINE THE COMPLEX FORMS
+        
+        // generate_static_form_route("plot_weakly_connected_component_size_distribution",{
+        //     "namespaces": ["development","net.science"]
+        // }),
 
-        generate_static_form_route("plot_strongly_connected_component_size_distribution",{
-            "namespaces": ["development","net.science"]
-        }),
+        // generate_static_form_route("plot_strongly_connected_component_size_distribution",{
+        //     "namespaces": ["development","net.science"]
+        // }),
 
-        generate_static_form_route("plot_degree_distribution",{
-            "namespaces": ["development","net.science"]
-        }),
+        // generate_static_form_route("plot_degree_distribution",{
+        //     "namespaces": ["development","net.science"]
+        // }),
 
-        generate_static_form_route("plot_in_degree_distribution",{
-            "namespaces": ["development","net.science"]
-        }),
+        // generate_static_form_route("plot_in_degree_distribution",{
+        //     "namespaces": ["development","net.science"]
+        // }),
 
-        generate_static_form_route("plot_kcore_edge_distribution",{
-            "namespaces": ["development","net.science"]
-        }),
+        // generate_static_form_route("plot_kcore_edge_distribution",{
+        //     "namespaces": ["development","net.science"]
+        // }),
 
-        generate_static_form_route("plot_kcore_node_distribution",{
-            "namespaces": ["development","net.science"]
-        }),
+        // generate_static_form_route("plot_kcore_node_distribution",{
+        //     "namespaces": ["development","net.science"]
+        // }),
 
-        generate_static_form_route("plot_degree_ave_cluster_coeff_distribution",{
-            "namespaces": ["development","net.science"]
-        }),
+        // generate_static_form_route("plot_degree_ave_cluster_coeff_distribution",{
+        //     "namespaces": ["development","net.science"]
+        // }),
 
-        generate_static_form_route("plot_biconnected_component_size_distribution",{
-            "namespaces": ["development","net.science"]
-        }),
+        // generate_static_form_route("plot_biconnected_component_size_distribution",{
+        //     "namespaces": ["development","net.science"]
+        // }),
 
-        generate_static_form_route("plot_one_connected_component_size_distribution",{
-            "namespaces": ["development","net.science"]
-        }),
+        // generate_static_form_route("plot_one_connected_component_size_distribution",{
+        //     "namespaces": ["development","net.science"]
+        // }),
 
         // {
         //     path: "/apps/jobdefs/",

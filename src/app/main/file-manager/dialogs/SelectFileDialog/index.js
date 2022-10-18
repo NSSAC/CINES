@@ -288,10 +288,12 @@ function handleDrop(e){
   }, [dispatch, targetFolder])
 
   useEffect(() => {
-
     if (target_meta && target_meta.id && target_meta.isContainer) {
-      if(targetFolder.split("/").pop() === target_meta.name)
-        dispatch(Actions.getFiles((target_meta.id==="root")?'/':target_meta.id))
+      if (target_meta.id==="root"){
+        dispatch(Actions.getFiles("/"));
+      } else if(targetFolder.split("/").pop() === target_meta.name){
+        dispatch(Actions.getFiles(target_meta.id))
+      }
     }
   }, [dispatch,target_meta,targetFolder])
 

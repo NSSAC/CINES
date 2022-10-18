@@ -203,7 +203,7 @@ const SearchContent = () => {
             > 
               <Chip key={"All Results"}
                 style={{ fontWeight: "700", justifyContent: "flex-start" }}
-                className={classes.chipFontSize, classes.chipStretch}
+                className={classes.chipFontSize +' '+  classes.chipStretch}
                 avatar={
                   <Avatar
                     style={{ color: "white", fontSize: 10, backgroundColor: "#122230"}}
@@ -218,7 +218,7 @@ const SearchContent = () => {
               {[...searchMapData.keys()].map((mapItem) => (
                 <Chip key={capitalizeFirstLetter(mapItem)}
                   style={{ fontWeight: "bolder", justifyContent: "flex-start", marginTop: "3px"}}
-                  className={classes.chipFontSize, classes.chipStretch}
+                  className={classes.chipFontSize +' '+ classes.chipStretch}
                   avatar={
                     <Avatar
                       style={{ color: "white", fontSize: 10, backgroundColor: "#122230" }}
