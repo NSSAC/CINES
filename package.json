@@ -99,7 +99,7 @@
         "redux-thunk": "2.3.0",
         "styled-components": "4.4.1",
         "typeface-muli": "0.0.71",
-        "vega": "^5.13.0",
+        "vega": "^5.22.1",
         "vega-lite": "^4.13.1",
         "velocity-react": "1.4.3"
     },
