@@ -58,7 +58,7 @@
         "prismjs": "1.25.0",
         "prop-types": "^15.6.0",
         "qs": "6.9.1",
-        "raw-loader": "1.0.0",
+        "raw-loader": "4.0.2",
         "react": "^16.12.0",
         "react-autosuggest": "9.4.3",
         "react-beautiful-dnd": "12.2.0",
@@ -84,7 +84,7 @@
         "react-router-dom": "5.2.0",
         "react-router-navigation-prompt": "1.8.13",
         "react-router-redux": "^4.0.8",
-        "react-scripts": "3.4.0",
+        "react-scripts": "5.0.1",
         "react-select": "3.0.8",
         "react-spring": "8.0.27",
         "react-swipeable-views": "0.13.3",
@@ -117,7 +117,7 @@
         "marked": "0.8.0",
         "purgecss": "1.4.2",
         "tailwindcss": "1.1.4",
-        "webpack": "4.41.5",
+        "webpack": "5.75.0",
         "webpack-bundle-analyzer": "3.6.0"
     },
     "scripts": {
