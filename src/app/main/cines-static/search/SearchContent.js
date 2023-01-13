@@ -324,7 +324,7 @@ const SearchContent = () => {
                                     <Typography className="typoContentStyle">
                                        {device ? <Link to={`/files/${item.id}`}>
                                     {item.metadata.name}
-                                    </Link> : <Link style={{color:"black"}} underline="none"  to={`/files/${item.id}`}>
+                                     </Link> : <Link style={{color:"black"}} underline="none"  to={`/files/${item.id}`}>
                                     {item.metadata.name}
                                       </Link>}
                                     </Typography>
