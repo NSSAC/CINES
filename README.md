@@ -1,2 +1,0 @@
-# CINES
-CINES project repository

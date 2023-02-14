@@ -1,8 +1,0 @@
-/* #outlined-search-label,.Mui-auto-focused {
-    color: white;   
-    border-bottom: none;
-} */
-
-#outlined-search,.MuiInput-underline,.Mui-auto-focused {
-    border-bottom: 1px solid white;
-}
