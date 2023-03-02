@@ -52,7 +52,7 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
     const [inputFields, setInputFields] = useState([]);
     const history = useHistory();
     const [resetProps, setResetProps] = useState({})
-
+    
     const childGrid = {
         paddingLeft: '8px',
         alignSelf: 'center',
@@ -315,7 +315,7 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
             Seed: { value: state && state.input ? (randomNumberSeed ? randomNumberSeed : state.input['random_number_seed']) : "" },
             Iterations: { value: state && state.input ? state.input['iterations'] : "" },
             TimeSteps: { value: state && state.input ? state.input['time_steps'] : "" },
-            InitialConditions: state && state.input ? state.input['initial_states_method'] : [{ type: 'random', number_nodes: "", state: "" }],
+            InitialConditions: state && state.input ? state.input['initial_states_method'] : [{ type: '', number_nodes: "", state: "" }],
             default_state: { value: state && state.input ? state.input['default_state'] : "" },
             Output_name: { value: (state && state.state !== "Completed") ? retainedName : "" },
             outputPath: ['outputPath', {
@@ -328,6 +328,12 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
                 value: state && state.input ? state.output_container : "",
             }]
         });
+        if(state &&  state.input && state.input['initial_states_method'][0]['node_selection_criteria']){
+            const rowArray = [...state.input['initial_states_method'][0]['node_selection_criteria']]
+            const rowArrayLength = rowArray.length
+            setInputFields(rowArray);
+            setRowNum(rowArrayLength)
+        }
     };
 
     function staticChangedHandler(event, obj) {
@@ -513,7 +519,7 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
         if (!staticProps.Seed.value || Number(staticProps.Seed.value) === 0) {
             let random_seed_value = Math.floor((Math.random() * 32000) + 1);
             staticProps.Seed.value = random_seed_value;
-        } 
+        }
         let submitJSON = {
             "dynamicProps": dynamicProps,
             "submodelArrayData": submodelArray,
@@ -529,6 +535,25 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
             "dynamic_inputs": {"Behaviour_model": dynamicProps.Behaviour.value},
             "rules": rules,
         };
+        if(inputFields.length > 0 && submitJSON['initial_states_method'][0]['type'] == 'custom'){
+            let changedInputFields = inputFields.map((ele) =>{
+                if(typeof ele.min === "string"){
+                  ele.min = parseInt(ele.min) 
+                }
+                if(ele.max == ""){
+                    delete ele.max
+                }
+                if(ele.weight == ""){   
+                    delete ele.weight
+                }
+            return ele
+            })
+
+            submitJSON['initial_states_method'][0]['node_selection_criteria'] = changedInputFields
+        }else if(submitJSON['initial_states_method'][0].hasOwnProperty('node_selection_criteria') || submitJSON['initial_states_method'][0].hasOwnProperty('node_selection_criteria')){
+            delete submitJSON['initial_states_method'][0]['node_selection_criteria'] 
+            delete submitJSON['initial_states_method'][0]['node_selection_method']
+        }
 
         if (dynamicProps.blocking_nodes && dynamicProps.blocking_nodes[1].value){
             submitJSON.blocking_nodes = dynamicProps.blocking_nodes[1].value
@@ -605,8 +630,8 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
 
     const handleAddCustomRow = () => {
         const values = [...inputFields];
-        values.push({property: '', ordering: '', min: '', max: '', weight: ''});
-        setInputFields(values);
+        values.push({property: 'degree', ordering: 'increasing', min: '0', max: '', weight: ''});
+        setInputFields(values); 
         setRowNum(rowNum + 1);
     }
 
@@ -798,18 +823,18 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
                                                     <Grid style={childGrid} item container xs={12} >
                                                         <SelectFormsy
                                                             className="my-12 inputStyle1 model"
-                                                            name="seeding_method"
+                                                            name="type"
                                                             label={["Seeding Method", <span key={1} style={{ color: 'red' }}>{'*'}</span>]}
                                                             disabled={!validInputFile}
-                                                            value={staticProps.InitialConditions[0].seeding_method ? staticProps.InitialConditions[0].seeding_method : ''}
-                                                            onChange={(event) => ICChangedHandler(event, 'seeding_method')}
+                                                            value={staticProps.InitialConditions[0].type ? staticProps.InitialConditions[0].type : ''}
+                                                            onChange={(event) => ICChangedHandler(event, 'type')}
                                                             required
                                                         >
-                                                            <MenuItem key="Random" value="Random"> Random </MenuItem>
-                                                            <MenuItem key="Custom" value="Custom"> Custom </MenuItem>
+                                                            <MenuItem key="Random" value="random"> Random </MenuItem>
+                                                            <MenuItem key="Custom" value="custom"> Custom </MenuItem>
                                                         </SelectFormsy>
                                                     </Grid>
-                                                    {staticProps.InitialConditions[0].seeding_method && staticProps.InitialConditions[0].seeding_method === "Random" && (
+                                                    {staticProps.InitialConditions[0].type && staticProps.InitialConditions[0].type === "random" && (
                                                         <div style={{display: "flex", flexDirection: "row", marginRight: '11%'}}>
                                                             <Grid style={childGrid} item container xs={8} >
                                                                 <TextFieldFormsy
@@ -853,7 +878,7 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
                                                             </Grid>
                                                         </div>
                                                     )}
-                                                    {staticProps.InitialConditions[0].seeding_method && staticProps.InitialConditions[0].seeding_method === "Custom" && (
+                                                    {staticProps.InitialConditions[0].type && staticProps.InitialConditions[0].type === "custom" && (
                                                         <>
                                                             <div style={{display: "flex", flexDirection: "row", marginRight: '11%'}}>
                                                                 <Grid style={childGrid} item container xs={8} >
@@ -908,9 +933,11 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
                                                                         onChange={(event) => ICChangedHandler(event, 'node_selection_method')}
                                                                         required
                                                                     >
-                                                                        <MenuItem key="Random" value="Random"> Random </MenuItem>
-                                                                        <MenuItem key="Minimum" value="Minimum"> Minimum </MenuItem>
-                                                                        <MenuItem key="Maximum" value="Maximum"> Maximum </MenuItem>
+                                                                        <MenuItem key="random-weighted" value="random-weighted"> Random-weighted </MenuItem>
+                                                                        <MenuItem key="random-uniform" value="random-uniform"> Random-uniform </MenuItem>
+                                                                        <MenuItem key="min-weighted-values" value="min-weighted-values"> Min-weighted-values </MenuItem>
+                                                                        <MenuItem key="max-weighted-values" value="max-weighted-values"> Max-weighted-values </MenuItem>
+
                                                                     </SelectFormsy>
                                                                 </Grid>
                                                                 <Grid item xs={3} >

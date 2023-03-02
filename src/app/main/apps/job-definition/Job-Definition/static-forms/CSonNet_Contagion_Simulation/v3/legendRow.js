@@ -29,11 +29,11 @@ const LegendRow = (props) => {
         } else if (prop === "ordering") {
             values[index].ordering = event.target.value;
         }else if (prop === "min") {
-            values[index].min = event.target.value;
+            values[index].min =  parseInt(event.target.value) || "0";
         }else if (prop === "max") {
-            values[index].max = event.target.value;
+            values[index].max =  parseInt(event.target.value) || "";
         }else{
-            values[index].weight = event.target.value;
+            values[index].weight =  parseInt(event.target.value) || "";
         }
         props.setInputFields(values);
       };
@@ -53,18 +53,19 @@ const LegendRow = (props) => {
                             value={inputField.property}
                             onChange={(event) => handleInputChange("property", index, event)}
                             required
+                            req="true"
                             >
-                                <MenuItem key="Degree" value="Degree"> Degree </MenuItem>
-                                <MenuItem key="In-Degree" value="In-Degree"> In-Degree </MenuItem>
-                                <MenuItem key="Out-Degree" value="Out-Degree"> Out-Degree </MenuItem>
-                                <MenuItem key="Betweenness Centrality" value="Betweenness Centrality"> Betweenness Centrality </MenuItem>
-                                <MenuItem key="Authority Score" value="Authority Score"> Authority Score </MenuItem>
-                                <MenuItem key="Hub Score" value="Hub Score"> Hub Score </MenuItem>
-                                <MenuItem key="Clustering Coefficient" value="Clustering Coefficient"> Clustering Coefficient </MenuItem>
-                                <MenuItem key="Eigenvalue Centrality" value="Eigenvalue Centrality"> Eigenvalue Centrality </MenuItem>
-                                <MenuItem key="Page Rank" value="Page Rank"> Page Rank </MenuItem>
-                                <MenuItem key="Closeness Centrality" value="Closeness Centrality"> Closeness Centrality </MenuItem>
-                                <MenuItem key="kCore" value="kCore"> kCore </MenuItem>
+                                <MenuItem key="Degree" value="degree"> Degree </MenuItem>
+                                <MenuItem key="In-Degree" value="in-degree"> In-Degree </MenuItem>
+                                <MenuItem key="Out-Degree" value="out-degree"> Out-Degree </MenuItem>
+                                <MenuItem key="Betweenness Centrality" value="betweenness-centrality"> Betweenness Centrality </MenuItem>
+                                <MenuItem key="Authority Score" value="authority-score"> Authority Score </MenuItem>
+                                <MenuItem key="Hub Score" value="hub-score"> Hub Score </MenuItem>
+                                <MenuItem key="Clustering Coefficient" value="clustering-coefficient"> Clustering Coefficient </MenuItem>
+                                <MenuItem key="Eigenvalue Centrality" value="eigenvalue-centrality"> Eigenvalue Centrality </MenuItem>
+                                <MenuItem key="Page Rank" value="page-rank"> Page Rank </MenuItem>
+                                <MenuItem key="Closeness Centrality" value="closeness-centrality"> Closeness Centrality </MenuItem>
+                                <MenuItem key="kCore" value="kcore"> kCore </MenuItem>
                             </SelectFormsy>
                         </Grid>
 
@@ -76,10 +77,11 @@ const LegendRow = (props) => {
                             value={inputField.ordering}
                             onChange={(event) => handleInputChange("ordering", index, event)}
                             required
+                            req="true"
                             >
-                                <MenuItem key="High" value="High"> High </MenuItem>
-                                <MenuItem key="Low" value="Low"> Low </MenuItem>
-                                <MenuItem key="Random" value="Random"> Random </MenuItem>
+                                <MenuItem key="increasing" value="increasing"> Increasing </MenuItem>
+                                <MenuItem key="decreasing" value="decreasing"> Decreasing </MenuItem>
+                                <MenuItem key="ignore" value="ignore"> Ignore </MenuItem>
                             </SelectFormsy> 
                         </Grid>
 
@@ -99,7 +101,7 @@ const LegendRow = (props) => {
                                 type="text"
                                 name='min'
                                 style={{ width: '18px' }}
-                                value={inputField.min}
+                                value={inputField.min || '0'}
                                 onBlur={(event) => handleInputChange('min', index, event)}
                                 validations={{
                                     isPositiveInt: function (values, value) {
@@ -107,40 +109,41 @@ const LegendRow = (props) => {
                                 }}
                                 validationError="This is not a valid value"
                                 label="Min" 
+                                required
                                 autoComplete="off"/>
                         </Grid>
 
                         <Grid item xs={4} style={{paddingLeft: "2%"}}>
                             <TextFieldFormsy
                                 className="my-12 inputStyle3"
-                                type="text"
+                                type="number"
                                 name='max'
                                 style={{ width: '18px' }}
                                 value={inputField.max}
                                 onBlur={(event) => handleInputChange('max', index, event)}
-                                validations={{
-                                    isPositiveInt: function (values, value) {
-                                      return RegExp(/^-?(?:\d+\.?\d*)?$/).test(value)                             }
-                                }}
-                                validationError="This is not a valid value"
-                                label="Max" 
+                                // validations={{
+                                //     isPositiveInt: function (values, value) {
+                                //       return RegExp(/^-?(?:\d+\.?\d*)?$/).test(value)                             }
+                                // }}
+                                // validationError="This is not a valid value"
+                                label="Max"
                                 autoComplete="off"/>
                         </Grid>
 
                         <Grid item xs={4} style={{paddingLeft: "2%"}}>
                             <TextFieldFormsy
                                 className="my-12 inputStyle3"
-                                type="text"
+                                type="number"
                                 name='weight'
                                 style={{ width: '18px' }}
                                 value={inputField.weight}
                                 onBlur={(event) => handleInputChange('weight', index, event)}
-                                validations={{
-                                    isPositiveInt: function (values, value) {
-                                      return RegExp(/^-?(?:\d+\.?\d*)?$/).test(value)                             }
-                                }}
-                                validationError="This is not a valid value"
-                                label="Weight" 
+                                // validations={{
+                                //     isPositiveInt: function (values, value) {
+                                //       return RegExp(/^-?(?:\d+\.?\d*)?$/).test(value)                             }
+                                // }}
+                                // validationError="This is not a valid value"
+                                label="Weight"
                                 autoComplete="off"/>
                         </Grid>
                     </Grid>
