@@ -66,7 +66,7 @@ function FileRow(props) {
     const infoIcon = {
         right: '0',
         backgroundColor: '#F7F7F7',
-        position: 'sticky',
+        position: 'sticky', 
         top: '30px',
         width: '35px',
         paddingLeft: '0px',

@@ -20,7 +20,7 @@ const reducer = combineReducers({
   "fileManagerApp": fileAppReducer
 })
 
-function SelectFileDialog({ showModal, handleFMClose, target, fileTypes, multiple, onSelect, requireWritePermissions, enableUploads, title}) {
+function SelectFileDialog({ showModal, handleFMClose, target, fileTypes, multiple, onSelect, requireWritePermissions, enableUploads, title, labelName}) {
 
   var tf,fname;
   if (target){
@@ -60,12 +60,16 @@ function SelectFileDialog({ showModal, handleFMClose, target, fileTypes, multipl
   }
 
   const onClickSelect = () => {
-
     if (onSelect) {
       var tf = []
       files.forEach((f) => {
         if (selection[f.id]) {
+          let filePath = `${targetFolder}/${f.name}`
           tf.push(`${targetFolder}/${f.name}`)
+          tf.push(f.autometa.edgeDirectionality || "")
+          tf.push(f.type || "")
+          extractFileData(f,filePath,labelName)
+          
         }
       })
       onSelect(tf)
@@ -74,7 +78,45 @@ function SelectFileDialog({ showModal, handleFMClose, target, fileTypes, multipl
     localStorage.setItem("last_selected_folder",targetFolder)
 
     handleFMClose()
+    window.formEdited = true
+  }
+  function extractFileData(item,filePath,labelName){
+    let checkInputFiles = window.checkInputFiles
+    let createItem = {}
+    let updateInputFiles;
+    let checkLabel
 
+    createItem['filePath'] = filePath
+    createItem['hash'] = item.hash
+    createItem['id'] = item.id
+    createItem['isContainer'] = item.isContainer
+    createItem['name'] = labelName
+    createItem['size'] = item.size
+    createItem['stored_name'] = item.name
+    createItem['type'] = item.type
+    createItem['version'] = item.version
+    
+    if(checkInputFiles){
+      updateInputFiles = checkInputFiles.map((ele) => {
+        if(ele.name === createItem.name){
+          Object.keys(ele).forEach((key) => {
+            if(createItem[key]){
+              ele[key] = createItem[key]
+            }
+          })
+        }
+        return ele
+      })
+
+      checkLabel = updateInputFiles.filter((ele) => ele.name === createItem.name)
+      if(!checkLabel){
+        updateInputFiles.push(createItem)
+      }
+      window.checkInputFiles = updateInputFiles
+    }else{
+      window.checkInputFiles = []
+      window.checkInputFiles.push(createItem)
+    }
   }
 
   function showCreateFolderDialog() {
@@ -290,8 +332,11 @@ function handleDrop(e){
   useEffect(() => {
 
     if (target_meta && target_meta.id && target_meta.isContainer) {
-      if(targetFolder.split("/").pop() === target_meta.name)
+      if(targetFolder.split("/").pop() === target_meta.name){
         dispatch(Actions.getFiles((target_meta.id==="root")?'/':target_meta.id))
+      }else if(targetFolder ==="/" && target_meta.id === "root"){
+        dispatch(Actions.getFiles((target_meta.id==="root")?'/':target_meta.id))
+      }
     }
   }, [dispatch,target_meta,targetFolder])
 

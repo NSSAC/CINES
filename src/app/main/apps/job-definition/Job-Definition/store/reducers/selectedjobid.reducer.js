@@ -5,6 +5,8 @@ const selectedjobid = function (state ={}, action) {
     {
         case Actions.SET_SELECTED_ITEM_ID:
             return action.payload;
+        case Actions.CLEAR_SELECTED_ITEM_ID:
+            return null;
         default:
             return state;
     }

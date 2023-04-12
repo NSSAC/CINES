@@ -28,6 +28,7 @@ function MyJobsApp(props) {
   const history = useHistory();
   var path = window.location.pathname;
   var selectedItem = useSelector(({ myJobsApp }) => myJobsApp.selectedjobid);
+  localStorage.removeItem("resubmitJob")
 
   useEffect(() => {
     setOnLoad(true);
@@ -42,9 +43,11 @@ function MyJobsApp(props) {
     sessionStorage.removeItem("selectedTypeArray");
     sessionStorage.removeItem("preStateValue");
     sessionStorage.removeItem("preJobTypeValue");
+    localStorage.removeItem("resubmitJob")
   }, [dispatch]);
 
   useEffect(() => {
+    localStorage.removeItem("resubmitJob")
     var sortOrder = JSON.parse(sessionStorage.getItem("sortOrder"))
     var sortType = JSON.parse(sessionStorage.getItem("type"))
     if (initialPage === true && changeState > 0)

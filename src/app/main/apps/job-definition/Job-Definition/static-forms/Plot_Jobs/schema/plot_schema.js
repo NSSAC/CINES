@@ -176,7 +176,7 @@ export const plotSchema = {
               axes_in_scientfic: {
                 description:
                   "Identify which axis ticks (if either) are to be shown in scientific notatation",
-                enum: ["y", "x", "both", "neither"],
+                enum: ["x", "y", "both", "neither"],
                 type: "string",
               },
               tick_fontsize: {

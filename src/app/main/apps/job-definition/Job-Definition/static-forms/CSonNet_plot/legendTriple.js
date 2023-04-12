@@ -21,12 +21,16 @@ const Legend_triple = (props) => {
     const values = [...props.inputFields];
     values.push({ legend_name: '', data_color: '', alpha_values: 1 });
     props.setInputFields(values);
+    window.restoreInputFields = values
+    window.formEdited = true
   };
 
   const handleRemoveFields = index => {
     const values = [...props.inputFields];
     values.splice(index, 1);
     props.setInputFields(values);
+    window.restoreInputFields = values
+    window.formEdited = true
   };
 
   const handleInputChange = (prop, index, event) => {
@@ -41,6 +45,8 @@ const Legend_triple = (props) => {
      
 
     props.setInputFields(values);
+    window.restoreInputFields = values
+    window.formEdited = true
   };
 
 

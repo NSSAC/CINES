@@ -50,6 +50,30 @@ function MyJobsFileList(props) {
     const [wrongPageSelectedFlag, setWrongPageSelectedFlag] = useState(false);
     const [goToButtonDisabled, setGoToButtonDisabled] = useState(false);
     var type;
+    localStorage.removeItem("verDrop")
+    //Static Form Parameter
+    window.restoreDynamicProps = undefined
+    window.restoreStatic = undefined
+    window.restoreSubmodelArray = undefined
+    window.restoreInputFields = undefined
+    window.restoreStatesArray = undefined
+    window.restoreRules = undefined
+    window.formVersion = undefined
+    window.formEdited = false
+    window.restoreOutputName = undefined
+    window.restoreOutputPath = undefined
+    window.restoreDynamicForm = undefined
+
+    //Static Ploting form
+    window.restorePlotData = undefined
+
+    //Dynamic Form Parameter
+    window.restoreD_FEArray = undefined
+    window.restoreDynamicFData = undefined
+
+    //Check for correct format of file
+    window.checkInputFiles = undefined
+
     // var rowLength = 10;
 
     // For mobile-devices

@@ -50,14 +50,142 @@ const CSonNet_Contagion_Simulation_v1 = (props) => {
     }
 
     useEffect(() => {
-        let pathEnd = 'net.science/CSonNet_Contagion_Simulation'
+        // let pathEnd = 'net.science/CSonNet_Contagion_Simulation'
+        let pathEnd = `${props.namespace}/${props.module}`
         setIsToasterFlag(false);
-        if (jobData.id && !jobData.id.includes(pathEnd) || Object.keys(jobData).length === 0)
-          dispatch(Actions.setSelectedItem(pathEnd));
-        if (Object.keys(jobData).length !== 0 && jobData.id.includes(pathEnd)) {
+        if (jobData.id && !jobData.id.includes(pathEnd) || jobData.version !== props.version || Object.keys(jobData).length === 0){
+            dispatch(Actions.setSelectedItem(`${pathEnd}@${props.version}`));
+        }
+        if(Object.keys(jobData).length !== 0 && jobData.id.includes(pathEnd)) {
                 setSpinnerFlag(false)
                 if (jobData) {
-                     setDynamicProps({
+                    if(props.resubmit){
+                        const dp = {
+                            Behaviour: { id: 101, value: props.resubmit && props.resubmit.inputData.input.dynamic_inputs ? props.resubmit.inputData.input.dynamic_inputs['Behaviour_model'] : "" },
+                            SIR_Submodel: { id: 201, value: props.resubmit && props.resubmit.inputData.input.dynamic_inputs ? props.resubmit.inputData.input.dynamic_inputs['SIR_Submodel'] : "" },
+                            SIS_Submodel: { id: 202, value: props.resubmit && props.resubmit.inputData.input.dynamic_inputs ? props.resubmit.inputData.input.dynamic_inputs['SIS_Submodel'] : "" },
+                            SEIR_Submodel: { id: 203, value: props.resubmit && props.resubmit.inputData.input.dynamic_inputs ? props.resubmit.inputData.input.dynamic_inputs['SEIR_Submodel'] : "" },
+                            threshold: { id: 301, value: props.resubmit && String(props.resubmit.inputData.input.dynamic_inputs.threshold) !== 'undefined' ? props.resubmit.inputData.input.dynamic_inputs['threshold'] : "" },
+                            Edge_probability: { id: 302, value: props.resubmit && String(props.resubmit.inputData.input.dynamic_inputs.Edge_probability) !== 'undefined' ? props.resubmit.inputData.input.dynamic_inputs['Edge_probability'] : "" },
+                            Infectious_probability_transition: { id: 303, value: props.resubmit && String(props.resubmit.inputData.input.dynamic_inputs.Infectious_probability_transition) !== 'undefined'? props.resubmit.inputData.input.dynamic_inputs['Infectious_probability_transition'] : "" },
+                            Infectious_duration: { id: 304, value: props.resubmit && String(props.resubmit.inputData.input.dynamic_inputs.Infectious_duration) !== 'undefined'? props.resubmit.inputData.input.dynamic_inputs['Infectious_duration'] : "" },
+                            Exposed_duration: { id: 305, value: props.resubmit && String(props.resubmit.inputData.input.dynamic_inputs.Exposed_duration) !== 'undefined'? props.resubmit.inputData.input.dynamic_inputs['Exposed_duration'] : "" },
+                            Exposed_probability_transition: { id: 306, value: props.resubmit && String(props.resubmit.inputData.input.dynamic_inputs.Exposed_probability_transition) !== 'undefined'? props.resubmit.inputData.input.dynamic_inputs['Exposed_probability_transition'] : "" },
+                            inputFile_Graph: [jobData.input_files[0].name, {
+                                formLabel: jobData.input_files[0].name,
+                                id: 0,
+                                name: jobData.input_files[0].name,
+                                outputFlag: false,
+                                required: true,
+                                types: jobData.input_files[0].types,
+                                value: props.resubmit ? props.resubmit.inputData.input["Graph"] : ""
+                            }]
+                        }
+                        setDynamicProps(dp)
+                        let statProps = {
+                            Seed: { value: props.resubmit ? props.resubmit.inputData.input['random_number_seed'] : "" },
+                            Iterations: { value: props.resubmit ? props.resubmit.inputData.input['iterations'] : "" },
+                            TimeSteps: { value: props.resubmit ? props.resubmit.inputData.input['time_steps'] : "" },
+                            InitialConditions: props.resubmit ? props.resubmit.inputData.input['initial_states_method'] : [{ type: 'random', number_nodes: "", state: "" }],
+                            default_state: { value: props.resubmit ? props.resubmit.inputData.input['default_state'] : "" },
+                            Output_name: { value: (props.resubmit && props.resubmit.inputData.state !== "Completed") ? props.resubmit.inputData.output_name : "" },
+                            outputPath: ['outputPath', {
+                                description: "Select the path from File manager where the output file is to be stored.",
+                                formLabel: "Output Container",
+                                id: 200,
+                                outputFlag: true,
+                                types: ["folder", "epihiper_multicell_analysis", "epihiperOutput", "csonnet_simulation_container"],
+                                value: props.resubmit ? props.resubmit.inputData.output_container : "",
+                            }]
+                        }
+                        setStaticProps(statProps)
+                        if(!window.restoreStatic){
+                            window.restoreStatic = statProps
+                        }
+                        if(!window.restoreDynamicProps){
+                            window.restoreDynamicProps = dp
+                            generateRestoreRules(dp)
+                        }
+                        props.resubmit && localStorage.setItem('last_selected_folder',props.resubmit.inputData.output_container  + '/')
+                    }else if(props.localResubmit){
+
+                        if(props.localResubmit && props.localResubmit.input && props.localResubmit.input["dynamicProps"] && Object.keys(props.localResubmit.input.dynamic_inputs).length <= 1){
+                            let a  = {...props.localResubmit.input.dynamicProps}
+                            let input_file;
+                            let blocking_nodes;
+                            if(a.input_file){
+                                input_file = a.input_file ? a.input_file : []
+                                delete a.input_file
+                            }
+                            if(a.blocking_nodes){
+                                blocking_nodes = a.blocking_nodes ? a.blocking_nodes : []
+                                delete a.blocking_nodes
+                            }
+                                                       
+                            Object.keys(a).forEach((ele) => {
+                                    a[ele] = a[ele]['value']
+                            })
+                            a['input_file'] = input_file
+                            a['blocking_nodes'] = blocking_nodes
+                            // console.log(a)
+                            props.localResubmit.input.dynamic_inputs = a
+                            if(props.localResubmit.input.dynamic_inputs['Behaviour']){
+                                props.localResubmit.input.dynamic_inputs['Behaviour_model'] = props.localResubmit.input.dynamic_inputs['Behaviour']
+                                delete props.localResubmit.input.dynamic_inputs['Behaviour']
+                            }
+                        }
+                        const dp = {
+                            Behaviour: { id: 101, value: props.localResubmit && props.localResubmit.input.dynamic_inputs ? props.localResubmit.input.dynamic_inputs['Behaviour_model'] : "" },
+                            SIR_Submodel: { id: 201, value: props.localResubmit && props.localResubmit.input.dynamic_inputs ? props.localResubmit.input.dynamic_inputs['SIR_Submodel'] : "" },
+                            SIS_Submodel: { id: 202, value: props.localResubmit && props.localResubmit.input.dynamic_inputs ? props.localResubmit.input.dynamic_inputs['SIS_Submodel'] : "" },
+                            SEIR_Submodel: { id: 203, value: props.localResubmit && props.localResubmit.input.dynamic_inputs ? props.localResubmit.input.dynamic_inputs['SEIR_Submodel'] : "" },
+                            threshold: { id: 301, value: props.localResubmit && props.localResubmit.input.dynamic_inputs && String(props.localResubmit.input.dynamic_inputs.threshold) !== 'undefined' ? props.localResubmit.input.dynamic_inputs['threshold'] : "" },
+                            Edge_probability: { id: 302, value: props.localResubmit && props.localResubmit.input.dynamic_inputs && String(props.localResubmit.input.dynamic_inputs.Edge_probability) !== 'undefined' ? props.localResubmit.input.dynamic_inputs['Edge_probability'] : "" },
+                            Infectious_probability_transition: { id: 303, value: props.localResubmit && props.localResubmit.input.dynamic_inputs && String(props.localResubmit.input.dynamic_inputs.Infectious_probability_transition) !== 'undefined'? props.localResubmit.input.dynamic_inputs['Infectious_probability_transition'] : "" },
+                            Infectious_duration: { id: 304, value: props.localResubmit && props.localResubmit.input.dynamic_inputs && String(props.localResubmit.input.dynamic_inputs.Infectious_duration) !== 'undefined'? props.localResubmit.input.dynamic_inputs['Infectious_duration'] : "" },
+                            Exposed_duration: { id: 305, value: props.localResubmit && props.localResubmit.input.dynamic_inputs && String(props.localResubmit.input.dynamic_inputs.Exposed_duration) !== 'undefined'? props.localResubmit.input.dynamic_inputs['Exposed_duration'] : "" },
+                            Exposed_probability_transition: { id: 306, value: props.localResubmit && props.localResubmit.input.dynamic_inputs && String(props.localResubmit.input.dynamic_inputs.Exposed_probability_transition) !== 'undefined'? props.localResubmit.input.dynamic_inputs['Exposed_probability_transition'] : "" },
+                            inputFile_Graph: [jobData.input_files[0].name, {
+                                formLabel: jobData.input_files[0].name,
+                                id: 0,
+                                name: jobData.input_files[0].name,
+                                outputFlag: false,
+                                required: true,
+                                types: jobData.input_files[0].types,
+                                value: props.localResubmit ? props.localResubmit.input['input_file'] : ""
+                            }]
+                        }
+                        setDynamicProps(dp)
+                        let statProps = {
+                            Seed: { value: props.localResubmit ? props.localResubmit.input['random_number_seed'] : "" },
+                            Iterations: { value: props.localResubmit ? props.localResubmit.input['iterations'] : "" },
+                            TimeSteps: { value: props.localResubmit ? props.localResubmit.input['time_steps'] : "" },
+                            InitialConditions: props.localResubmit ? props.localResubmit.input['initial_states_method'] : [{ type: 'random', number_nodes: "", state: "" }],
+                            default_state: { value: props.localResubmit ? props.localResubmit.input['default_state'] : "" },
+                            Output_name: { value: (props.localResubmit && props.localResubmit.state !== "Completed") ? props.localResubmit.output_name : "" },
+                            outputPath: ['outputPath', {
+                                description: "Select the path from File manager where the output file is to be stored.",
+                                formLabel: "Output Container",
+                                id: 200,
+                                outputFlag: true,
+                                types: ["folder", "epihiper_multicell_analysis", "epihiperOutput", "csonnet_simulation_container"],
+                                value: props.localResubmit ? props.localResubmit.output_container : "",
+                            }]
+                        }
+                        setStaticProps(statProps)
+                        window.restoreOutputName = statProps.Output_name.value
+                        window.restoreOutputPath = statProps.outputPath[1].value
+
+                        if(!window.restoreStatic){
+                            window.restoreStatic = statProps
+                        }
+                        if(!window.restoreDynamicProps){
+                            window.restoreDynamicProps = dp
+                            generateRestoreRules(dp)
+                        }
+                        props.localResubmit && localStorage.setItem('last_selected_folder',props.localResubmit.output_container  + '/')
+                    }else{
+                        setDynamicProps({
                         Behaviour: { id: 101, value: props.resubmit && props.resubmit.inputData.input.dynamic_inputs ? props.resubmit.inputData.input.dynamic_inputs['Behaviour_model'] : "" },
                         SIR_Submodel: { id: 201, value: props.resubmit && props.resubmit.inputData.input.dynamic_inputs ? props.resubmit.inputData.input.dynamic_inputs['SIR_Submodel'] : "" },
                         SIS_Submodel: { id: 202, value: props.resubmit && props.resubmit.inputData.input.dynamic_inputs ? props.resubmit.inputData.input.dynamic_inputs['SIS_Submodel'] : "" },
@@ -94,7 +222,7 @@ const CSonNet_Contagion_Simulation_v1 = (props) => {
                             value: props.resubmit ? props.resubmit.inputData.output_container : "",
                         }]
                     })
-                    props.resubmit && localStorage.setItem('last_selected_folder',props.resubmit.inputData.output_container  + '/')
+                    }
                     setInputSchema(jobData.input_schema)
 
                 }
@@ -108,6 +236,100 @@ const CSonNet_Contagion_Simulation_v1 = (props) => {
 
     const onFormCancel = () => {
     };
+
+    function generateRestoreRules(prop){
+        let tempRules = {}
+        let behaviourModel = prop ? prop.Behaviour.value : dynamicProps.Behaviour.value
+
+        switch (behaviourModel) {
+            case 'Threshold Model':
+                window.restoreStatesArray = modelJSON['models']['threshold_model']['states'];
+                tempRules = modelJSON['models']['threshold_model']['rules'][0]['rule'];
+                tempRules['deterministic_progressive_node_threshold_value'] = prop ? parseInt(prop.threshold.value) :  parseInt(dynamicProps.threshold.value);
+                window.restoreRules = []
+                window.restoreRules[0] = tempRules;
+                break;
+
+            case 'SEIR Model':
+                window.restoreStatesArray = modelJSON['models']['SEIR']['submodels']['fixed exposed fixed infectious']['states'];
+                let subModel_SEIR = prop ? prop.SEIR_Submodel.value : dynamicProps.SEIR_Submodel.value
+                window.restoreRules = []
+                switch (subModel_SEIR) {
+                    case 'SEIR1':
+                        tempRules = modelJSON['models']['SEIR']['submodels']['fixed exposed fixed infectious']['rules'][0]['rule'];
+                        tempRules["edge_probability_value"] = prop ? parseInt(prop.Edge_probability.value) : parseFloat(dynamicProps.Edge_probability.value);
+                        window.restoreRules[0] = tempRules;
+
+                        tempRules = modelJSON['models']['SEIR']['submodels']['fixed exposed fixed infectious']['rules'][1]['rule'];
+                        tempRules["discrete_time_auto_value"] = prop ? parseInt(prop.Exposed_duration.value) : parseInt(dynamicProps.Exposed_duration.value);
+                        window.restoreRules[1] = tempRules;
+
+                        tempRules = modelJSON['models']['SEIR']['submodels']['fixed exposed fixed infectious']['rules'][2]['rule'];
+                        tempRules["discrete_time_auto_value"] = prop ? parseInt(prop.Infectious_duration.value) : parseInt(dynamicProps.Infectious_duration.value);
+                        window.restoreRules[2] = tempRules;
+                        break;
+
+                    case 'SEIR2':
+                        tempRules = modelJSON['models']['SEIR']['submodels']['fixed exposed stochastic infectious']['rules'][0]['rule'];
+                        tempRules["edge_probability_value"] =  prop ? parseInt(prop.Edge_probability.value) : parseFloat(dynamicProps.Edge_probability.value);
+                        window.restoreRules[0] = tempRules;
+
+                        tempRules = modelJSON['models']['SEIR']['submodels']['fixed exposed stochastic infectious']['rules'][1]['rule'];
+                        tempRules["discrete_time_auto_value"] = prop ? parseInt(prop.Exposed_duration.value) : parseInt(dynamicProps.Exposed_duration.value);
+                        window.restoreRules[1] = tempRules;
+
+                        tempRules = modelJSON['models']['SEIR']['submodels']['fixed exposed stochastic infectious']['rules'][2]['rule'];
+                        tempRules["node_probability_auto_value"] = prop ? parseInt(prop.Infectious_probability_transition.value) : parseFloat(dynamicProps.Infectious_probability_transition.value);
+                        window.restoreRules[2] = tempRules;
+                        break;
+
+                    case 'SEIR3':
+                        tempRules = modelJSON['models']['SEIR']['submodels']['stochastic exposed fixed infectious']['rules'][0]['rule'];
+                        tempRules["edge_probability_value"] = prop ? parseInt(prop.Edge_probability.value) : parseFloat(dynamicProps.Edge_probability.value);
+                        window.restoreRules[0] = tempRules;
+
+                        tempRules = modelJSON['models']['SEIR']['submodels']['stochastic exposed fixed infectious']['rules'][1]['rule'];
+                        tempRules["node_probability_auto_value"] = prop ? parseInt(prop.Exposed_probability_transition.value) : parseFloat(dynamicProps.Exposed_probability_transition.value);
+                        window.restoreRules[1] = tempRules;
+
+                        tempRules = modelJSON['models']['SEIR']['submodels']['stochastic exposed fixed infectious']['rules'][2]['rule'];
+                        tempRules["discrete_time_auto_value"] =  prop ? parseInt(prop.Infectious_duration.value) : parseInt(dynamicProps.Infectious_duration.value);
+                        window.restoreRules[2] = tempRules;
+                        break;
+
+                    case 'SEIR4':
+                        tempRules = modelJSON['models']['SEIR']['submodels']['stochastic exposed stochastic infectious']['rules'][0]['rule'];
+                        tempRules["edge_probability_value"] = prop ? parseInt(prop.Edge_probability.value) : parseFloat(dynamicProps.Edge_probability.value);
+                        window.restoreRules[0] = tempRules;
+
+                        tempRules = modelJSON['models']['SEIR']['submodels']['stochastic exposed stochastic infectious']['rules'][1]['rule'];
+                        tempRules["node_probability_auto_value"] = prop ? parseInt(prop.Exposed_probability_transition.value) : parseFloat(dynamicProps.Exposed_probability_transition.value);
+                        window.restoreRules[1] = tempRules;
+
+                        tempRules = modelJSON['models']['SEIR']['submodels']['stochastic exposed stochastic infectious']['rules'][2]['rule'];
+                        tempRules["node_probability_auto_value"] = prop ? parseInt(prop.Infectious_probability_transition.value) : parseFloat(dynamicProps.Infectious_probability_transition.value);
+                        window.restoreRules[2] = tempRules;
+                        break;
+                }
+                break;
+
+            case 'SIR Model':
+                window.restoreStatesArray = modelJSON['models']['SIR']['submodels']['fixed infectious']['states'];
+                window.restoreRules = []
+                switch (dynamicProps.SIR_Submodel.value) {
+                    case 'fixed infectious':
+                        tempRules = modelJSON['models']['SIR']['submodels']['fixed infectious']['rules'][0]['rule'];
+                        tempRules["edge_probability_value"] = prop ? parseInt(prop.Edge_probability.value) : parseFloat(dynamicProps.Edge_probability.value);
+                        window.restoreRules[0] = tempRules;
+
+                        tempRules = modelJSON['models']['SIR']['submodels']['fixed infectious']['rules'][1]['rule'];
+                        tempRules["discrete_time_auto_value"] = prop ? parseInt(prop.Infectious_duration.value) : parseInt(dynamicProps.Infectious_duration.value);
+                        window.restoreRules[1] = tempRules;
+                        break;
+                }
+                break;
+        }
+    }
 
     function populatesubmitJSON() {
         let submitJSON = {
@@ -246,7 +468,6 @@ const CSonNet_Contagion_Simulation_v1 = (props) => {
                 break;
 
         }
-        console.log(submitJSON)
         populateBody(submitJSON)
     }
 
@@ -339,6 +560,9 @@ const CSonNet_Contagion_Simulation_v1 = (props) => {
         updatedFormElement.value = event.target.value;
         updatedJobSubmissionForm[obj] = updatedFormElement;
         setDynamicProps({ ...updatedJobSubmissionForm })
+        window.restoreDynamicProps = { ...updatedJobSubmissionForm }
+        generateRestoreRules()
+        window.formEdited = true
 
     }
 
@@ -354,6 +578,14 @@ const CSonNet_Contagion_Simulation_v1 = (props) => {
 
         updatedJobSubmissionForm[obj] = updatedFormElement;
         setStaticProps({ ...updatedJobSubmissionForm });
+        window.restoreStatic = { ...updatedJobSubmissionForm }
+        window.formEdited = true
+        if(obj === "Output_name"){
+            window.restoreOutputName = event.target.value
+        }
+        if(obj === "OutputPath"){
+            window.restoreOutputPath = event.target.value
+        }
     }
 
     function ICChangedHandler(event, obj) {
@@ -371,6 +603,8 @@ const CSonNet_Contagion_Simulation_v1 = (props) => {
 
         updatedJobSubmissionForm[obj] = updatedFormElement;
         setStaticProps({ ...updatedJobSubmissionForm });
+        window.restoreStatic = { ...updatedJobSubmissionForm }
+        window.formEdited = true
     }
 
     useEffect(() => {
@@ -595,11 +829,14 @@ const CSonNet_Contagion_Simulation_v1 = (props) => {
                                                         })}
                                                     </SelectFormsy>}
 
-                                                    {dynamicProps.Behaviour.value !== '' && description(inputSchema.properties.initial_states_method.items.oneOf[0].properties.state.description)}
+                                                    {dynamicProps.Behaviour.value !== '' && (dynamicProps.Behaviour.value == 'Threshold Model' || dynamicProps.Behaviour.value =='SEIR Model' || dynamicProps.Behaviour.value == 'SIR Model') &&
+                                                            description(inputSchema.properties.initial_states_method.items.oneOf[0].properties.state.description)}
                                                 </Grid>
                                             </div>
                                             {dynamicProps.Behaviour.value !== '' && <div style={{ marginLeft: '26px' }}>
-                                                <h4 className='my-16'><b>Initial Conditions (default)</b></h4>
+                                                {dynamicProps.Behaviour.value !== '' && (dynamicProps.Behaviour.value == 'Threshold Model' || dynamicProps.Behaviour.value =='SEIR Model' || dynamicProps.Behaviour.value == 'SIR Model') &&
+                                                        <h4 className='my-16'><b>Initial Conditions (default)</b></h4>}
+                                               
                                                 <Grid style={childGrid} item container xs={12} >
                                                     {dynamicProps.Behaviour.value === 'Threshold Model' && <SelectFormsy
                                                         className="my-12 inputStyle1 model"
@@ -649,7 +886,8 @@ const CSonNet_Contagion_Simulation_v1 = (props) => {
                                                             );
                                                         })}
                                                     </SelectFormsy>}
-                                                    {description(inputSchema.properties.default_state.description)}
+                                                    {dynamicProps.Behaviour.value !== '' && (dynamicProps.Behaviour.value == 'Threshold Model' || dynamicProps.Behaviour.value =='SEIR Model' || dynamicProps.Behaviour.value == 'SIR Model') && 
+                                                    description(inputSchema.properties.default_state.description)}
                                                 </Grid>
                                             </div>}
                                             {/* <Input_conditions ></Input_conditions> */}
@@ -702,7 +940,7 @@ const CSonNet_Contagion_Simulation_v1 = (props) => {
                                         disabled={!isFormValid || success }                                    >
                                         Submit
 							</Button>
-                                    {props.resubmit ? <Link to="/apps/my-jobs/" style={{ color: 'transparent' }}>
+                                    {(props.resubmit || props.localResubmit) ? <Link to="/apps/my-jobs/" style={{ color: 'transparent' }}>
                                         <Button
                                             variant="contained"
                                             onClick={onFormCancel}

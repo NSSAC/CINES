@@ -45,6 +45,10 @@ function FileOverviewPanel(props) {
                         <th>Id</th>
                         <td title={props.meta.id}>{props.meta.id}</td>
                     </tr>
+                    <tr className="id">
+                        <th>Version</th>
+                        <td title={props.meta.version}>{props.meta.version}</td>
+                    </tr>
                     <tr className="state">
                         <th>State</th>
                         <td title={props.meta.state}>{props.meta.state}</td>

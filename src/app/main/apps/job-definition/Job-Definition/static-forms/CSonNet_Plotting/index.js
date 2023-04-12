@@ -30,9 +30,11 @@ import * as Actions from "../../store/actions";
 import { JobService } from 'node-sciduct';
 
 const CSonNet_plot = (props) => {
-    const jobData = useSelector(
-        ({ JobDefinitionApp }) => JobDefinitionApp.selectedjobid
-      );
+    // const jobData = useSelector(
+    //     ({ JobDefinitionApp }) => JobDefinitionApp.selectedjobid
+    //   );
+    const jobData = useSelector(({ JobDefinitionApp }) => { return JobDefinitionApp.job_definition })
+
     const [modelJSON, setModelJSON] = useState({});
     const [isFormValid, setIsFormValid] = useState(false);
     const [success, setSuccess] = useState();
@@ -49,7 +51,6 @@ const CSonNet_plot = (props) => {
         paddingLeft: '25px',
         alignSelf: 'center'
     };
-    // console.log("test" && "book")
 
     function disableButton() {
         setIsFormValid(false);
@@ -78,65 +79,191 @@ const CSonNet_plot = (props) => {
         // let pathEnd = 'net.science/CSonNet_Plotting'
         let pathEnd = `${props.namespace}/${props.module}`
         setIsToasterFlag(false);
-        if (jobData.id && !jobData.id.includes(pathEnd) || Object.keys(jobData).length === 0)
-        dispatch(Actions.setSelectedItem(pathEnd));
+        if (jobData.id && !jobData.id.includes(pathEnd) || Object.keys(jobData).length === 0){
+            // dispatch(Actions.setSelectedItem(pathEnd));
+            dispatch(Actions.getJobDefinition(`${props.namespace}/${props.module}@${props.version}`));
+
+        }
         if (Object.keys(jobData).length !== 0 && jobData.id.includes(pathEnd)) {
                 if (jobData) {
-                    setDynamicProps({errorbar_plot: { id: 101, value: props.resubmit && Boolean(props.resubmit.inputData.input.plot_types.errorbar_plot.toString())? props.resubmit.inputData.input.plot_types.errorbar_plot.exists.toString(): '' },
-                    line_plot: { id: 102, value: props.resubmit && Boolean(props.resubmit.inputData.input.plot_types.line_plot.toString())? props.resubmit.inputData.input.plot_types.line_plot.toString(): '' },
-                    scatter_plot: { id: 103, value: props.resubmit && Boolean(props.resubmit.inputData.input.plot_types.scatter_plot.toString())? props.resubmit.inputData.input.plot_types.scatter_plot.toString():'' },
-                    bar_plot: { id: 104, value: props.resubmit && Boolean(props.resubmit.inputData.input.plot_types.bar_plot.toString())? props.resubmit.inputData.input.plot_types.bar_plot.exists.toString():'' },
-                    errorbar_capsize: { id: 1011, value: props.resubmit && props.resubmit.inputData.input.plot_types.errorbar_plot.capsize ? props.resubmit.inputData.input.plot_types.errorbar_plot.capsize.toString():3 },
-                    capwidth: { id: 1012, value: props.resubmit && props.resubmit.inputData.input.plot_types.errorbar_plot.capwidth ? props.resubmit.inputData.input.plot_types.errorbar_plot.capwidth.toString():1 },
-                    show_error_every: { id: 1013, value: props.resubmit && props.resubmit.inputData.input.plot_types.errorbar_plot.show_error_every ? props.resubmit.inputData.input.plot_types.errorbar_plot.show_error_every.toString():1 },
-                    bar_width: { id: 1041, value: props.resubmit && props.resubmit.inputData.input.plot_types.bar_plot.bar_width ? props.resubmit.inputData.input.plot_types.bar_plot.bar_width.toString():0.25 },
-                    bar_annotation_fontsize: { id: 1042, value: props.resubmit && props.resubmit.inputData.input.plot_types.bar_plot.bar_annotation_fontsize ? props.resubmit.inputData.input.plot_types.bar_plot.bar_annotation_fontsize.toString():10 },
-                    show_points: { id: 201, value: props.resubmit && Boolean(props.resubmit.inputData.input.show_points.toString()) ? props.resubmit.inputData.input.show_points.toString():"" },
-                    line_width: { id: 202, value: props.resubmit && props.resubmit.inputData.input.line_width ? props.resubmit.inputData.input.line_width.toString():4 },
-                    output_filetype: { id: 203, value: props.resubmit && props.resubmit.inputData.input.output_filetype ? props.resubmit.inputData.input.output_filetype:"" },
-                    legend_fontsize: { id: 301, value: props.resubmit && props.resubmit.inputData.input.text_sections.legend_section.legend_fontsize ? props.resubmit.inputData.input.text_sections.legend_section.legend_fontsize.toString():25 },
-                    triples: { id: 302, value:[] },
-                    add_legend_items: { id: 303, value: "" },
-                    title_fontsize: { id: 401, value: props.resubmit && props.resubmit.inputData.input.text_sections.title_section.title_fontsize ? props.resubmit.inputData.input.text_sections.title_section.title_fontsize.toString():15 },
-                    title_text: { id: 402, value: props.resubmit && props.resubmit.inputData.input.text_sections.title_section.title_text ? props.resubmit.inputData.input.text_sections.title_section.title_text:"" },
-                    x_axis_fontsize: { id: 501, value: props.resubmit && props.resubmit.inputData.input.text_sections.x_axis_section.x_axis_fontsize ? props.resubmit.inputData.input.text_sections.x_axis_section.x_axis_fontsize.toString():35 },
-                    x_axis_text: { id: 502, value: props.resubmit && props.resubmit.inputData.input.text_sections.x_axis_section.x_axis_text ? props.resubmit.inputData.input.text_sections.x_axis_section.x_axis_text:"" },
-                    x_scale: { id: 503, value: props.resubmit && props.resubmit.inputData.input.text_sections.x_axis_section.x_scale ? props.resubmit.inputData.input.text_sections.x_axis_section.x_scale:"" },
-                    set_x_limits: { id: 504, value: props.resubmit && Boolean(props.resubmit.inputData.input.text_sections.x_axis_section.set_x_limits.toString()) ? props.resubmit.inputData.input.text_sections.x_axis_section.set_x_limits.toString():"" },
-                    x_limit_lower: { id: 505, value: props.resubmit && String(props.resubmit.inputData.input.text_sections.x_axis_section.x_limit_lower) !== 'undefined' ? props.resubmit.inputData.input.text_sections.x_axis_section.x_limit_lower.toString():"" },
-                    x_limit_higher: { id: 506, value: props.resubmit && String(props.resubmit.inputData.input.text_sections.x_axis_section.x_limit_higher) !== 'undefined'? props.resubmit.inputData.input.text_sections.x_axis_section.x_limit_higher.toString():"" },
-                    set_x_increment: { id: 507, value: props.resubmit && Boolean(props.resubmit.inputData.input.text_sections.x_axis_section.set_x_increment.toString()) ? props.resubmit.inputData.input.text_sections.x_axis_section.set_x_increment.toString():"" },
-                    x_increment: { id: 508, value: props.resubmit && String(props.resubmit.inputData.input.text_sections.x_axis_section.x_increment) !== 'undefined'? props.resubmit.inputData.input.text_sections.x_axis_section.x_increment.toString():"" },
-                    y_axis_fontsize: { id: 601, value: props.resubmit && props.resubmit.inputData.input.text_sections.y_axis_section.y_axis_fontsize ? props.resubmit.inputData.input.text_sections.y_axis_section.y_axis_fontsize.toString():35 },
-                    y_axis_text: { id: 602, value: props.resubmit && props.resubmit.inputData.input.text_sections.y_axis_section.y_axis_text ? props.resubmit.inputData.input.text_sections.y_axis_section.y_axis_text:"" },
-                    y_scale: { id: 603, value: props.resubmit && props.resubmit.inputData.input.text_sections.y_axis_section.y_scale ? props.resubmit.inputData.input.text_sections.y_axis_section.y_scale:"" },
-                    set_y_limits: { id: 604, value: props.resubmit && Boolean(props.resubmit.inputData.input.text_sections.y_axis_section.set_y_limits.toString()) ? props.resubmit.inputData.input.text_sections.y_axis_section.set_y_limits.toString():"" },
-                    y_limit_lower: { id: 605, value:  props.resubmit && String(props.resubmit.inputData.input.text_sections.y_axis_section.y_limit_lower) !== 'undefined'? props.resubmit.inputData.input.text_sections.y_axis_section.y_limit_lower.toString():"" },
-                    y_limit_higher: { id: 606, value: props.resubmit && String(props.resubmit.inputData.input.text_sections.y_axis_section.y_limit_higher) !== 'undefined'? props.resubmit.inputData.input.text_sections.y_axis_section.y_limit_higher.toString():"" },
-                    set_y_increment: { id: 607, value: props.resubmit && Boolean(props.resubmit.inputData.input.text_sections.y_axis_section.set_y_increment.toString()) ? props.resubmit.inputData.input.text_sections.y_axis_section.set_y_increment.toString():"" },
-                    y_increment: { id: 608, value:  props.resubmit && String(props.resubmit.inputData.input.text_sections.y_axis_section.y_increment) !== 'undefined'? props.resubmit.inputData.input.text_sections.y_axis_section.y_increment.toString():"" },
-                    tick_fontsize: { id: 701, value: props.resubmit && props.resubmit.inputData.input.text_sections.tick_section.tick_fontsize ? props.resubmit.inputData.input.text_sections.tick_section.tick_fontsize.toString():35 },
-                    axes_in_scientfic: { id: 702, value: props.resubmit && props.resubmit.inputData.input.text_sections.tick_section.axes_in_scientific ? props.resubmit.inputData.input.text_sections.tick_section.axes_in_scientific:"" },
-                    dpi: { id: 801, value:  props.resubmit && props.resubmit.inputData.input.dpi ? props.resubmit.inputData.input.dpi.toString():600 },
-                    Output_name: { value: (props.resubmit && props.resubmit.inputData.state !== "Completed") ? props.resubmit.inputData.output_name :'' },
-                    inputFile_Graph: [jobData.input_files[0].name, {
-                        formLabel: jobData.input_files[0].name,
-                        id: 0,
-                        name: jobData.input_files[0].name,
-                        outputFlag: false,
-                        required: true,
-                        types: jobData.input_files[0].types,
-                        value: props.resubmit ? props.resubmit.inputData.input["csonnet_data_analysis"] : ""
-                    }],
-                    outputPath: ['outputPath', {
-                        description: "Select the path from File manager where the output file is to be stored.",
-                        formLabel: "output_container",
-                        id: 200,
-                        outputFlag: true,
-                        types: ["folder", "epihiper_multicell_analysis", "epihiperOutput","csonnet_simulation_container"],
-                        value: props.resubmit ? props.resubmit.inputData.output_container :""
-                    }]
-                 })
+                    if(props.resubmit){
+                        let dp = {errorbar_plot: { id: 101, value: props.resubmit && Boolean(props.resubmit.inputData.input.plot_types.errorbar_plot.toString())? props.resubmit.inputData.input.plot_types.errorbar_plot.exists.toString(): '' },
+                        line_plot: { id: 102, value: props.resubmit && Boolean(props.resubmit.inputData.input.plot_types.line_plot.toString())? props.resubmit.inputData.input.plot_types.line_plot.toString(): '' },
+                        scatter_plot: { id: 103, value: props.resubmit && Boolean(props.resubmit.inputData.input.plot_types.scatter_plot.toString())? props.resubmit.inputData.input.plot_types.scatter_plot.toString():'' },
+                        bar_plot: { id: 104, value: props.resubmit && Boolean(props.resubmit.inputData.input.plot_types.bar_plot.toString())? props.resubmit.inputData.input.plot_types.bar_plot.exists.toString():'' },
+                        errorbar_capsize: { id: 1011, value: props.resubmit && props.resubmit.inputData.input.plot_types.errorbar_plot.capsize ? props.resubmit.inputData.input.plot_types.errorbar_plot.capsize.toString():3 },
+                        capwidth: { id: 1012, value: props.resubmit && props.resubmit.inputData.input.plot_types.errorbar_plot.capwidth ? props.resubmit.inputData.input.plot_types.errorbar_plot.capwidth.toString():1 },
+                        show_error_every: { id: 1013, value: props.resubmit && props.resubmit.inputData.input.plot_types.errorbar_plot.show_error_every ? props.resubmit.inputData.input.plot_types.errorbar_plot.show_error_every.toString():1 },
+                        bar_width: { id: 1041, value: props.resubmit && props.resubmit.inputData.input.plot_types.bar_plot.bar_width ? props.resubmit.inputData.input.plot_types.bar_plot.bar_width.toString():0.25 },
+                        bar_annotation_fontsize: { id: 1042, value: props.resubmit && props.resubmit.inputData.input.plot_types.bar_plot.bar_annotation_fontsize ? props.resubmit.inputData.input.plot_types.bar_plot.bar_annotation_fontsize.toString():10 },
+                        show_points: { id: 201, value: props.resubmit && Boolean(props.resubmit.inputData.input.show_points.toString()) ? props.resubmit.inputData.input.show_points.toString():"" },
+                        line_width: { id: 202, value: props.resubmit && props.resubmit.inputData.input.line_width ? props.resubmit.inputData.input.line_width.toString():4 },
+                        output_filetype: { id: 203, value: props.resubmit && props.resubmit.inputData.input.output_filetype ? props.resubmit.inputData.input.output_filetype:"" },
+                        legend_fontsize: { id: 301, value: props.resubmit && props.resubmit.inputData.input.text_sections.legend_section.legend_fontsize ? props.resubmit.inputData.input.text_sections.legend_section.legend_fontsize.toString():25 },
+                        triples: { id: 302, value:[] },
+                        add_legend_items: { id: 303, value: "" },
+                        title_fontsize: { id: 401, value: props.resubmit && props.resubmit.inputData.input.text_sections.title_section.title_fontsize ? props.resubmit.inputData.input.text_sections.title_section.title_fontsize.toString():15 },
+                        title_text: { id: 402, value: props.resubmit && props.resubmit.inputData.input.text_sections.title_section.title_text ? props.resubmit.inputData.input.text_sections.title_section.title_text:"" },
+                        x_axis_fontsize: { id: 501, value: props.resubmit && props.resubmit.inputData.input.text_sections.x_axis_section.x_axis_fontsize ? props.resubmit.inputData.input.text_sections.x_axis_section.x_axis_fontsize.toString():35 },
+                        x_axis_text: { id: 502, value: props.resubmit && props.resubmit.inputData.input.text_sections.x_axis_section.x_axis_text ? props.resubmit.inputData.input.text_sections.x_axis_section.x_axis_text:"" },
+                        x_scale: { id: 503, value: props.resubmit && props.resubmit.inputData.input.text_sections.x_axis_section.x_scale ? props.resubmit.inputData.input.text_sections.x_axis_section.x_scale:"" },
+                        set_x_limits: { id: 504, value: props.resubmit && Boolean(props.resubmit.inputData.input.text_sections.x_axis_section.set_x_limits.toString()) ? props.resubmit.inputData.input.text_sections.x_axis_section.set_x_limits.toString():"" },
+                        x_limit_lower: { id: 505, value: props.resubmit && String(props.resubmit.inputData.input.text_sections.x_axis_section.x_limit_lower) !== 'undefined' ? props.resubmit.inputData.input.text_sections.x_axis_section.x_limit_lower.toString():"" },
+                        x_limit_higher: { id: 506, value: props.resubmit && String(props.resubmit.inputData.input.text_sections.x_axis_section.x_limit_higher) !== 'undefined'? props.resubmit.inputData.input.text_sections.x_axis_section.x_limit_higher.toString():"" },
+                        set_x_increment: { id: 507, value: props.resubmit && Boolean(props.resubmit.inputData.input.text_sections.x_axis_section.set_x_increment.toString()) ? props.resubmit.inputData.input.text_sections.x_axis_section.set_x_increment.toString():"" },
+                        x_increment: { id: 508, value: props.resubmit && String(props.resubmit.inputData.input.text_sections.x_axis_section.x_increment) !== 'undefined'? props.resubmit.inputData.input.text_sections.x_axis_section.x_increment.toString():"" },
+                        y_axis_fontsize: { id: 601, value: props.resubmit && props.resubmit.inputData.input.text_sections.y_axis_section.y_axis_fontsize ? props.resubmit.inputData.input.text_sections.y_axis_section.y_axis_fontsize.toString():35 },
+                        y_axis_text: { id: 602, value: props.resubmit && props.resubmit.inputData.input.text_sections.y_axis_section.y_axis_text ? props.resubmit.inputData.input.text_sections.y_axis_section.y_axis_text:"" },
+                        y_scale: { id: 603, value: props.resubmit && props.resubmit.inputData.input.text_sections.y_axis_section.y_scale ? props.resubmit.inputData.input.text_sections.y_axis_section.y_scale:"" },
+                        set_y_limits: { id: 604, value: props.resubmit && Boolean(props.resubmit.inputData.input.text_sections.y_axis_section.set_y_limits.toString()) ? props.resubmit.inputData.input.text_sections.y_axis_section.set_y_limits.toString():"" },
+                        y_limit_lower: { id: 605, value:  props.resubmit && String(props.resubmit.inputData.input.text_sections.y_axis_section.y_limit_lower) !== 'undefined'? props.resubmit.inputData.input.text_sections.y_axis_section.y_limit_lower.toString():"" },
+                        y_limit_higher: { id: 606, value: props.resubmit && String(props.resubmit.inputData.input.text_sections.y_axis_section.y_limit_higher) !== 'undefined'? props.resubmit.inputData.input.text_sections.y_axis_section.y_limit_higher.toString():"" },
+                        set_y_increment: { id: 607, value: props.resubmit && Boolean(props.resubmit.inputData.input.text_sections.y_axis_section.set_y_increment.toString()) ? props.resubmit.inputData.input.text_sections.y_axis_section.set_y_increment.toString():"" },
+                        y_increment: { id: 608, value:  props.resubmit && String(props.resubmit.inputData.input.text_sections.y_axis_section.y_increment) !== 'undefined'? props.resubmit.inputData.input.text_sections.y_axis_section.y_increment.toString():"" },
+                        tick_fontsize: { id: 701, value: props.resubmit && props.resubmit.inputData.input.text_sections.tick_section.tick_fontsize ? props.resubmit.inputData.input.text_sections.tick_section.tick_fontsize.toString():35 },
+                        axes_in_scientfic: { id: 702, value: props.resubmit && props.resubmit.inputData.input.text_sections.tick_section.axes_in_scientific ? props.resubmit.inputData.input.text_sections.tick_section.axes_in_scientific:"" },
+                        dpi: { id: 801, value:  props.resubmit && props.resubmit.inputData.input.dpi ? props.resubmit.inputData.input.dpi.toString():600 },
+                        Output_name: { value: (props.resubmit && props.resubmit.inputData.state !== "Completed") ? props.resubmit.inputData.output_name :'' },
+                        inputFile_Graph: [jobData.input_files[0].name, {
+                            formLabel: jobData.input_files[0].name,
+                            id: 0,
+                            name: jobData.input_files[0].name,
+                            outputFlag: false,
+                            required: true,
+                            types: jobData.input_files[0].types,
+                            value: props.resubmit ? props.resubmit.inputData.input["csonnet_data_analysis"] : ""
+                        }],
+                        outputPath: ['outputPath', {
+                            description: "Select the path from File manager where the output file is to be stored.",
+                            formLabel: "output_container",
+                            id: 200,
+                            outputFlag: true,
+                            types: ["folder", "epihiper_multicell_analysis", "epihiperOutput","csonnet_simulation_container"],
+                            value: props.resubmit ? props.resubmit.inputData.output_container :""
+                        }]
+                     }
+                        setDynamicProps(dp)
+                        window.restoreDynamicProps = dp
+
+                    }else if(props.localResubmit){
+                        let dp = {errorbar_plot: { id: 101, value: props.localResubmit && Boolean(props.localResubmit.input.plot_types.errorbar_plot.toString())? props.localResubmit.input.plot_types.errorbar_plot.exists.toString(): '' },
+                        line_plot: { id: 102, value: props.localResubmit && Boolean(props.localResubmit.input.plot_types.line_plot.toString())? props.localResubmit.input.plot_types.line_plot.toString(): '' },
+                        scatter_plot: { id: 103, value: props.localResubmit && Boolean(props.localResubmit.input.plot_types.scatter_plot.toString())? props.localResubmit.input.plot_types.scatter_plot.toString():'' },
+                        bar_plot: { id: 104, value: props.localResubmit && Boolean(props.localResubmit.input.plot_types.bar_plot.toString())? props.localResubmit.input.plot_types.bar_plot.exists.toString():'' },
+                        errorbar_capsize: { id: 1011, value: props.localResubmit && props.localResubmit.input.plot_types.errorbar_plot.capsize ? props.localResubmit.input.plot_types.errorbar_plot.capsize.toString():3 },
+                        capwidth: { id: 1012, value: props.localResubmit && props.localResubmit.input.plot_types.errorbar_plot.capwidth ? props.localResubmit.input.plot_types.errorbar_plot.capwidth.toString():1 },
+                        show_error_every: { id: 1013, value: props.localResubmit && props.localResubmit.input.plot_types.errorbar_plot.show_error_every ? props.localResubmit.input.plot_types.errorbar_plot.show_error_every.toString():1 },
+                        bar_width: { id: 1041, value: props.localResubmit && props.localResubmit.input.plot_types.bar_plot.bar_width ? props.localResubmit.input.plot_types.bar_plot.bar_width.toString():0.25 },
+                        bar_annotation_fontsize: { id: 1042, value: props.localResubmit && props.localResubmit.input.plot_types.bar_plot.bar_annotation_fontsize ? props.localResubmit.input.plot_types.bar_plot.bar_annotation_fontsize.toString():10 },
+                        show_points: { id: 201, value: props.localResubmit && Boolean(props.localResubmit.input.show_points.toString()) ? props.localResubmit.input.show_points.toString():"" },
+                        line_width: { id: 202, value: props.localResubmit && props.localResubmit.input.line_width ? props.localResubmit.input.line_width.toString():4 },
+                        output_filetype: { id: 203, value: props.localResubmit && props.localResubmit.input.output_filetype ? props.localResubmit.input.output_filetype:"" },
+                        legend_fontsize: { id: 301, value: props.localResubmit && props.localResubmit.input.text_sections.legend_section.legend_fontsize ? props.localResubmit.input.text_sections.legend_section.legend_fontsize.toString():25 },
+                        triples: { id: 302, value:[] },
+                        add_legend_items: { id: 303, value: "" },
+                        title_fontsize: { id: 401, value: props.localResubmit && props.localResubmit.input.text_sections.title_section.title_fontsize ? props.localResubmit.input.text_sections.title_section.title_fontsize.toString():15 },
+                        title_text: { id: 402, value: props.localResubmit && props.localResubmit.input.text_sections.title_section.title_text ? props.localResubmit.input.text_sections.title_section.title_text:"" },
+                        x_axis_fontsize: { id: 501, value: props.localResubmit && props.localResubmit.input.text_sections.x_axis_section.x_axis_fontsize ? props.localResubmit.input.text_sections.x_axis_section.x_axis_fontsize.toString():35 },
+                        x_axis_text: { id: 502, value: props.localResubmit && props.localResubmit.input.text_sections.x_axis_section.x_axis_text ? props.localResubmit.input.text_sections.x_axis_section.x_axis_text:"" },
+                        x_scale: { id: 503, value: props.localResubmit && props.localResubmit.input.text_sections.x_axis_section.x_scale ? props.localResubmit.input.text_sections.x_axis_section.x_scale:"" },
+                        set_x_limits: { id: 504, value: props.localResubmit && Boolean(props.localResubmit.input.text_sections.x_axis_section.set_x_limits.toString()) ? props.localResubmit.input.text_sections.x_axis_section.set_x_limits.toString():"" },
+                        x_limit_lower: { id: 505, value: props.localResubmit && String(props.localResubmit.input.text_sections.x_axis_section.x_limit_lower) !== 'undefined' ? props.localResubmit.input.text_sections.x_axis_section.x_limit_lower.toString():"" },
+                        x_limit_higher: { id: 506, value: props.localResubmit && String(props.localResubmit.input.text_sections.x_axis_section.x_limit_higher) !== 'undefined'? props.localResubmit.input.text_sections.x_axis_section.x_limit_higher.toString():"" },
+                        set_x_increment: { id: 507, value: props.localResubmit && Boolean(props.localResubmit.input.text_sections.x_axis_section.set_x_increment.toString()) ? props.localResubmit.input.text_sections.x_axis_section.set_x_increment.toString():"" },
+                        x_increment: { id: 508, value: props.localResubmit && String(props.localResubmit.input.text_sections.x_axis_section.x_increment) !== 'undefined'? props.localResubmit.input.text_sections.x_axis_section.x_increment.toString():"" },
+                        y_axis_fontsize: { id: 601, value: props.localResubmit && props.localResubmit.input.text_sections.y_axis_section.y_axis_fontsize ? props.localResubmit.input.text_sections.y_axis_section.y_axis_fontsize.toString():35 },
+                        y_axis_text: { id: 602, value: props.localResubmit && props.localResubmit.input.text_sections.y_axis_section.y_axis_text ? props.localResubmit.input.text_sections.y_axis_section.y_axis_text:"" },
+                        y_scale: { id: 603, value: props.localResubmit && props.localResubmit.input.text_sections.y_axis_section.y_scale ? props.localResubmit.input.text_sections.y_axis_section.y_scale:"" },
+                        set_y_limits: { id: 604, value: props.localResubmit && Boolean(props.localResubmit.input.text_sections.y_axis_section.set_y_limits.toString()) ? props.localResubmit.input.text_sections.y_axis_section.set_y_limits.toString():"" },
+                        y_limit_lower: { id: 605, value:  props.localResubmit && String(props.localResubmit.input.text_sections.y_axis_section.y_limit_lower) !== 'undefined'? props.localResubmit.input.text_sections.y_axis_section.y_limit_lower.toString():"" },
+                        y_limit_higher: { id: 606, value: props.localResubmit && String(props.localResubmit.input.text_sections.y_axis_section.y_limit_higher) !== 'undefined'? props.localResubmit.input.text_sections.y_axis_section.y_limit_higher.toString():"" },
+                        set_y_increment: { id: 607, value: props.localResubmit && Boolean(props.localResubmit.input.text_sections.y_axis_section.set_y_increment.toString()) ? props.localResubmit.input.text_sections.y_axis_section.set_y_increment.toString():"" },
+                        y_increment: { id: 608, value:  props.localResubmit && String(props.localResubmit.input.text_sections.y_axis_section.y_increment) !== 'undefined'? props.localResubmit.input.text_sections.y_axis_section.y_increment.toString():"" },
+                        tick_fontsize: { id: 701, value: props.localResubmit && props.localResubmit.input.text_sections.tick_section.tick_fontsize ? props.localResubmit.input.text_sections.tick_section.tick_fontsize.toString():35 },
+                        axes_in_scientfic: { id: 702, value: props.localResubmit && props.localResubmit.input.text_sections.tick_section.axes_in_scientific ? props.localResubmit.input.text_sections.tick_section.axes_in_scientific:"" },
+                        dpi: { id: 801, value:  props.localResubmit && props.localResubmit.input.dpi ? props.localResubmit.input.dpi.toString():600 },
+                        Output_name: { value: (props.localResubmit && props.localResubmit.state !== "Completed") ? props.localResubmit.output_name :'' },
+                        inputFile_Graph: [jobData.input_files[0].name, {
+                            formLabel: jobData.input_files[0].name,
+                            id: 0,
+                            name: jobData.input_files[0].name,
+                            outputFlag: false,
+                            required: true,
+                            types: jobData.input_files[0].types,
+                            value: props.localResubmit ? props.localResubmit.input["csonnet_data_analysis"] : ""
+                        }],
+                        outputPath: ['outputPath', {
+                            description: "Select the path from File manager where the output file is to be stored.",
+                            formLabel: "output_container",
+                            id: 200,
+                            outputFlag: true,
+                            types: ["folder", "epihiper_multicell_analysis", "epihiperOutput","csonnet_simulation_container"],
+                            value: props.localResubmit ? props.localResubmit.output_container :""
+                        }]
+                     }
+                        setDynamicProps(dp)
+                        window.restoreDynamicProps = dp
+
+                    props.localResubmit && localStorage.setItem('last_selected_folder',props.localResubmit.output_container  + '/')
+
+                    }else{
+                        setDynamicProps({errorbar_plot: { id: 101, value: props.resubmit && Boolean(props.resubmit.inputData.input.plot_types.errorbar_plot.toString())? props.resubmit.inputData.input.plot_types.errorbar_plot.exists.toString(): '' },
+                        line_plot: { id: 102, value: props.resubmit && Boolean(props.resubmit.inputData.input.plot_types.line_plot.toString())? props.resubmit.inputData.input.plot_types.line_plot.toString(): '' },
+                        scatter_plot: { id: 103, value: props.resubmit && Boolean(props.resubmit.inputData.input.plot_types.scatter_plot.toString())? props.resubmit.inputData.input.plot_types.scatter_plot.toString():'' },
+                        bar_plot: { id: 104, value: props.resubmit && Boolean(props.resubmit.inputData.input.plot_types.bar_plot.toString())? props.resubmit.inputData.input.plot_types.bar_plot.exists.toString():'' },
+                        errorbar_capsize: { id: 1011, value: props.resubmit && props.resubmit.inputData.input.plot_types.errorbar_plot.capsize ? props.resubmit.inputData.input.plot_types.errorbar_plot.capsize.toString():3 },
+                        capwidth: { id: 1012, value: props.resubmit && props.resubmit.inputData.input.plot_types.errorbar_plot.capwidth ? props.resubmit.inputData.input.plot_types.errorbar_plot.capwidth.toString():1 },
+                        show_error_every: { id: 1013, value: props.resubmit && props.resubmit.inputData.input.plot_types.errorbar_plot.show_error_every ? props.resubmit.inputData.input.plot_types.errorbar_plot.show_error_every.toString():1 },
+                        bar_width: { id: 1041, value: props.resubmit && props.resubmit.inputData.input.plot_types.bar_plot.bar_width ? props.resubmit.inputData.input.plot_types.bar_plot.bar_width.toString():0.25 },
+                        bar_annotation_fontsize: { id: 1042, value: props.resubmit && props.resubmit.inputData.input.plot_types.bar_plot.bar_annotation_fontsize ? props.resubmit.inputData.input.plot_types.bar_plot.bar_annotation_fontsize.toString():10 },
+                        show_points: { id: 201, value: props.resubmit && Boolean(props.resubmit.inputData.input.show_points.toString()) ? props.resubmit.inputData.input.show_points.toString():"" },
+                        line_width: { id: 202, value: props.resubmit && props.resubmit.inputData.input.line_width ? props.resubmit.inputData.input.line_width.toString():4 },
+                        output_filetype: { id: 203, value: props.resubmit && props.resubmit.inputData.input.output_filetype ? props.resubmit.inputData.input.output_filetype:"" },
+                        legend_fontsize: { id: 301, value: props.resubmit && props.resubmit.inputData.input.text_sections.legend_section.legend_fontsize ? props.resubmit.inputData.input.text_sections.legend_section.legend_fontsize.toString():25 },
+                        triples: { id: 302, value:[] },
+                        add_legend_items: { id: 303, value: "" },
+                        title_fontsize: { id: 401, value: props.resubmit && props.resubmit.inputData.input.text_sections.title_section.title_fontsize ? props.resubmit.inputData.input.text_sections.title_section.title_fontsize.toString():15 },
+                        title_text: { id: 402, value: props.resubmit && props.resubmit.inputData.input.text_sections.title_section.title_text ? props.resubmit.inputData.input.text_sections.title_section.title_text:"" },
+                        x_axis_fontsize: { id: 501, value: props.resubmit && props.resubmit.inputData.input.text_sections.x_axis_section.x_axis_fontsize ? props.resubmit.inputData.input.text_sections.x_axis_section.x_axis_fontsize.toString():35 },
+                        x_axis_text: { id: 502, value: props.resubmit && props.resubmit.inputData.input.text_sections.x_axis_section.x_axis_text ? props.resubmit.inputData.input.text_sections.x_axis_section.x_axis_text:"" },
+                        x_scale: { id: 503, value: props.resubmit && props.resubmit.inputData.input.text_sections.x_axis_section.x_scale ? props.resubmit.inputData.input.text_sections.x_axis_section.x_scale:"" },
+                        set_x_limits: { id: 504, value: props.resubmit && Boolean(props.resubmit.inputData.input.text_sections.x_axis_section.set_x_limits.toString()) ? props.resubmit.inputData.input.text_sections.x_axis_section.set_x_limits.toString():"" },
+                        x_limit_lower: { id: 505, value: props.resubmit && String(props.resubmit.inputData.input.text_sections.x_axis_section.x_limit_lower) !== 'undefined' ? props.resubmit.inputData.input.text_sections.x_axis_section.x_limit_lower.toString():"" },
+                        x_limit_higher: { id: 506, value: props.resubmit && String(props.resubmit.inputData.input.text_sections.x_axis_section.x_limit_higher) !== 'undefined'? props.resubmit.inputData.input.text_sections.x_axis_section.x_limit_higher.toString():"" },
+                        set_x_increment: { id: 507, value: props.resubmit && Boolean(props.resubmit.inputData.input.text_sections.x_axis_section.set_x_increment.toString()) ? props.resubmit.inputData.input.text_sections.x_axis_section.set_x_increment.toString():"" },
+                        x_increment: { id: 508, value: props.resubmit && String(props.resubmit.inputData.input.text_sections.x_axis_section.x_increment) !== 'undefined'? props.resubmit.inputData.input.text_sections.x_axis_section.x_increment.toString():"" },
+                        y_axis_fontsize: { id: 601, value: props.resubmit && props.resubmit.inputData.input.text_sections.y_axis_section.y_axis_fontsize ? props.resubmit.inputData.input.text_sections.y_axis_section.y_axis_fontsize.toString():35 },
+                        y_axis_text: { id: 602, value: props.resubmit && props.resubmit.inputData.input.text_sections.y_axis_section.y_axis_text ? props.resubmit.inputData.input.text_sections.y_axis_section.y_axis_text:"" },
+                        y_scale: { id: 603, value: props.resubmit && props.resubmit.inputData.input.text_sections.y_axis_section.y_scale ? props.resubmit.inputData.input.text_sections.y_axis_section.y_scale:"" },
+                        set_y_limits: { id: 604, value: props.resubmit && Boolean(props.resubmit.inputData.input.text_sections.y_axis_section.set_y_limits.toString()) ? props.resubmit.inputData.input.text_sections.y_axis_section.set_y_limits.toString():"" },
+                        y_limit_lower: { id: 605, value:  props.resubmit && String(props.resubmit.inputData.input.text_sections.y_axis_section.y_limit_lower) !== 'undefined'? props.resubmit.inputData.input.text_sections.y_axis_section.y_limit_lower.toString():"" },
+                        y_limit_higher: { id: 606, value: props.resubmit && String(props.resubmit.inputData.input.text_sections.y_axis_section.y_limit_higher) !== 'undefined'? props.resubmit.inputData.input.text_sections.y_axis_section.y_limit_higher.toString():"" },
+                        set_y_increment: { id: 607, value: props.resubmit && Boolean(props.resubmit.inputData.input.text_sections.y_axis_section.set_y_increment.toString()) ? props.resubmit.inputData.input.text_sections.y_axis_section.set_y_increment.toString():"" },
+                        y_increment: { id: 608, value:  props.resubmit && String(props.resubmit.inputData.input.text_sections.y_axis_section.y_increment) !== 'undefined'? props.resubmit.inputData.input.text_sections.y_axis_section.y_increment.toString():"" },
+                        tick_fontsize: { id: 701, value: props.resubmit && props.resubmit.inputData.input.text_sections.tick_section.tick_fontsize ? props.resubmit.inputData.input.text_sections.tick_section.tick_fontsize.toString():35 },
+                        axes_in_scientfic: { id: 702, value: props.resubmit && props.resubmit.inputData.input.text_sections.tick_section.axes_in_scientific ? props.resubmit.inputData.input.text_sections.tick_section.axes_in_scientific:"" },
+                        dpi: { id: 801, value:  props.resubmit && props.resubmit.inputData.input.dpi ? props.resubmit.inputData.input.dpi.toString():600 },
+                        Output_name: { value: (props.resubmit && props.resubmit.inputData.state !== "Completed") ? props.resubmit.inputData.output_name :'' },
+                        inputFile_Graph: [jobData.input_files[0].name, {
+                            formLabel: jobData.input_files[0].name,
+                            id: 0,
+                            name: jobData.input_files[0].name,
+                            outputFlag: false,
+                            required: true,
+                            types: jobData.input_files[0].types,
+                            value: props.resubmit ? props.resubmit.inputData.input["csonnet_data_analysis"] : ""
+                        }],
+                        outputPath: ['outputPath', {
+                            description: "Select the path from File manager where the output file is to be stored.",
+                            formLabel: "output_container",
+                            id: 200,
+                            outputFlag: true,
+                            types: ["folder", "epihiper_multicell_analysis", "epihiperOutput","csonnet_simulation_container"],
+                            value: props.resubmit ? props.resubmit.inputData.output_container :""
+                        }]
+                     })
+                    }
+                   
                  props.resubmit && localStorage.setItem('last_selected_folder',props.resubmit.inputData.output_container  + '/')
                  setModelJSON(jobData.input_schema)
                 }
@@ -145,7 +272,14 @@ const CSonNet_plot = (props) => {
     }, [jobData.id]);
 
     useEffect(()=>{
-        inputFields.length == 0 && props.resubmit && props.resubmit.inputData.input.text_sections.legend_section.legend_items && setInputFields(props.resubmit.inputData.input.text_sections.legend_section.legend_items)
+        if(props.resubmit){
+            inputFields.length == 0 && props.resubmit && props.resubmit.inputData.input.text_sections.legend_section.legend_items && setInputFields(props.resubmit.inputData.input.text_sections.legend_section.legend_items)
+            window.restoreInputFields = props.resubmit.inputData.input.text_sections.legend_section.legend_items
+        }else if(props.localResubmit){
+            inputFields.length == 0 && props.localResubmit && props.localResubmit.input.text_sections.legend_section.legend_items && setInputFields(props.localResubmit.input.text_sections.legend_section.legend_items)
+            window.restoreInputFields = props.localResubmit.input.text_sections.legend_section.legend_items
+
+        }
         // dynamicProps.triples && inputFields.length && setInputFields(dynamicProps.triples.value)
     },[dynamicProps])
 
@@ -167,6 +301,8 @@ const CSonNet_plot = (props) => {
 
         updatedJobSubmissionForm[obj] = updatedFormElement;
         setDynamicProps({ ...updatedJobSubmissionForm });
+        window.restoreDynamicProps = { ...updatedJobSubmissionForm }
+        window.formEdited = true
     }
 
     const createSubmissionData = () => {
@@ -190,7 +326,6 @@ const CSonNet_plot = (props) => {
 
             tempTriples.triples = tempTriple
             setDynamicProps({ ...tempTriples });
-            console.log(tempTriples)
 
         }
 
@@ -485,7 +620,7 @@ const CSonNet_plot = (props) => {
                                         disabled={!isFormValid || success || onSubmit}                                    >
                                         Submit
 							</Button>
-                                    {props.resubmit ? <Link to="/apps/my-jobs/" style={{ color: 'transparent' }}>
+                                    {(props.resubmit || props.localResubmit) ? <Link to="/apps/my-jobs/" style={{ color: 'transparent' }}>
                                         <Button
                                             variant="contained"
                                             onClick={onFormCancel}

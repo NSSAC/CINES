@@ -15,9 +15,10 @@ import Toaster from "./Toaster";
 import "./JobDefinitionForm.css";
 
 function JobDefinitionForm(props) {
-  const jobData = useSelector(
-    ({ JobDefinitionApp }) => JobDefinitionApp.selectedjobid
-  );
+  // const jobData = useSelector(
+  //   ({ JobDefinitionApp }) => JobDefinitionApp.selectedjobid
+  // );
+  const jobData = useSelector(({ JobDefinitionApp }) => { return JobDefinitionApp.job_definition })
   const [formElementsArray, setFormElementsArray] = useState({});
   // const [jobSubmissionArray, setJobSubmissionArray] = useState({});
   const [isFormValid, setIsFormValid] = useState(false);
@@ -75,9 +76,11 @@ function JobDefinitionForm(props) {
 
   useEffect(() => {
     setIsToasterFlag(false);
-    if ((jobData.id && !(jobData.id === (pathEnd))) || Object.keys(jobData).length === 0)
-      dispatch(Actions.setSelectedItem(pathEnd));
-    if (Object.keys(jobData).length !== 0 && jobData.id.includes(pathEnd)) {
+    if ((jobData.id && !(jobData.id === (pathEnd))) || Object.keys(jobData).length === 0){
+      dispatch(Actions.getJobDefinition(`${props.namespace}/${props.module}@${props.version}`));
+    }
+      // dispatch(Actions.setSelectedItem(`${props.namespace}/${props.module}@${props.version}`));
+    if (Object.keys(jobData).length !== 0 && jobData.id.includes(pathEnd)  ) {
       setSpinnerFlag(false);
       var createFromData = jobData.input_schema.properties;
       var inputFileData = jobData.input_files;
@@ -123,11 +126,16 @@ function JobDefinitionForm(props) {
           obj["outputFlag"] = false;
           // obj["required"] = obj.required
           if (props.resubmit){
-            obj["value"] = props.resubmit.inputData.input[obj.name];
-            if (outputFiles === undefined) 
-              localStorage.setItem('last_selected_folder',props.resubmit.inputData.input[obj.name].substr(0, props.resubmit.inputData.input[obj.name].lastIndexOf("/")) + '/')
-          }
-          else
+            obj["value"] = props.resubmit.inputData.input[obj.name] 
+            if (outputFiles === undefined) {
+                  localStorage.setItem('last_selected_folder',props.resubmit.inputData.input[obj.name].substr(0, props.resubmit.inputData.input[obj.name].lastIndexOf("/")) + '/')
+            }
+          }else if(props.localResubmit){
+            obj["value"] = props.localResubmit.input[obj.name];
+            if (outputFiles === undefined) {
+                  localStorage.setItem('last_selected_folder',props.localResubmit.input[obj.name].substr(0, props.localResubmit.input[obj.name].lastIndexOf("/")) + '/')
+            }
+          }else
             obj["value"] = "";
         }
       }
@@ -136,8 +144,13 @@ function JobDefinitionForm(props) {
         count++;
         createFromData[key]["id"] = count + 100;
         createFromData[key]["formLabel"] = key;
-        if (props.resubmit)
-          createFromData[key]["value"] = props.resubmit.inputData.input[key];
+        if (props.resubmit || props.localResubmit){
+          if(props.resubmit){
+            createFromData[key]["value"] = props.resubmit.inputData.input[key]
+          }else{
+            createFromData[key]["value"] = props.localResubmit.input[key];
+          }
+        }
         else if (String(createFromData[key]['default']) !== 'undefined')
           createFromData[key]["value"] = createFromData[key]['default'].toString();
         else
@@ -170,11 +183,17 @@ function JobDefinitionForm(props) {
 
       }
       if (outputFiles !== undefined) {
+        if(props.resubmit){
+          props.resubmit && localStorage.setItem('last_selected_folder',props.resubmit.inputData.output_container ? props.localResubmit.output_container + '/' : "")
+        }else if(props.localResubmit){
+          props.localResubmit && localStorage.setItem('last_selected_folder',props.localResubmit.output_container ? props.localResubmit.output_container + '/' : "")
+        }else{
         props.resubmit && localStorage.setItem('last_selected_folder',props.resubmit.inputData.output_container + '/')
+        }
         let outputContainer = {
           id: 200,
           formLabel: "output_container",
-          value: props.resubmit ? props.resubmit.inputData.output_container : "",
+          value: props.resubmit ? props.resubmit.inputData.output_container : (props.localResubmit && props.localResubmit.output_container) ? props.localResubmit.output_container : "",
           description:
             "Select the path from File manager where the output file is to be stored.",
           types: ["folder", "epihiper_multicell_analysis", "epihiperOutput","csonnet_simulation_container"],
@@ -183,7 +202,8 @@ function JobDefinitionForm(props) {
         let outputName = {
           id: 201,
           formLabel: "output_name",
-          value: (props.resubmit && props.resubmit.inputData.state !== "Completed") ? props.resubmit.inputData.output_name : "",
+          value: (props.resubmit && props.resubmit.inputData.state !== "Completed") ? props.resubmit.inputData.output_name :
+                 (props.localResubmit && props.localResubmit.state !== "Completed" && props.localResubmit.output_name) ? props.localResubmit.output_name : ""  ,
           type: "string",
           fileType: outputFiles.type,
           required: true,
@@ -193,13 +213,13 @@ function JobDefinitionForm(props) {
       }
 
       setFormElementsArray({ ...createFromData });
+      window.restoreD_FEArray = {...createFromData}
     } else {
       setFlag(false);
     }
   };
 
   const inputChangedHandler = (event, inputIdentifier) => {
-    if (event.target.value !== "") {
       const updatedJobSubmissionForm = {
         ...formElementsArray,
       };
@@ -209,7 +229,8 @@ function JobDefinitionForm(props) {
       updatedFormElement.value = event.target.value;
       updatedJobSubmissionForm[inputIdentifier] = updatedFormElement;
       setFormElementsArray({ ...updatedJobSubmissionForm });
-    }
+      window.restoreD_FEArray = { ...updatedJobSubmissionForm }
+      window.formEdited = true
   };
 
   const createSubmissionData = async () => {
@@ -339,7 +360,7 @@ function JobDefinitionForm(props) {
               <Grid className="p-4 border-b border-gray-600" container spacing={3}>
                 {Object.entries(formElementsArray).map((formElement) =>
                   formElement[1].id < 200 ? (
-                    <Grid key={formElement[1].id} style={childGrid} item container xs={12} sm={6}>
+                    <Grid key={formElement[1].id} style={childGrid} item container xs={12} sm={6} className="abcd">
                       <Input
                         key={formElement.id}
                         formData={formElement}
@@ -351,7 +372,7 @@ function JobDefinitionForm(props) {
                       />
                     </Grid>
                   ) : (
-                    <Grid key={formElement[1].id} style={outputGrid} item container xs={12} sm={6}>
+                    <Grid key={formElement[1].id} style={outputGrid} item container xs={12} sm={6} className="qwe">
                       <Input
                         key={formElement.id}
                         formData={formElement}
@@ -377,7 +398,7 @@ function JobDefinitionForm(props) {
                 >
                   Submit
                 </Button>
-                {props.resubmit ? <Link
+                {(props.resubmit || props.localResubmit) ? <Link
                   to="/apps/my-jobs/"
                   style={{ color: "transparent" }}
                 >

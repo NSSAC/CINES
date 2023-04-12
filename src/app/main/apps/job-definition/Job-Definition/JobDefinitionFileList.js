@@ -111,6 +111,33 @@ function JobDefinitionFileList(props) {
   const classes = useStyles();
 
   useEffect(() => {
+    localStorage.removeItem("verDrop")
+    localStorage.removeItem("jdTrigger")
+
+    //Static Form Parameter
+    window.restoreDynamicProps = undefined
+    window.restoreStatic = undefined
+    window.restoreSubmodelArray = undefined
+    window.restoreInputFields = undefined
+    window.restoreStatesArray = undefined
+    window.restoreRules = undefined
+    window.formVersion = undefined
+    window.formEdited = false
+    window.restoreOutputName = undefined
+    window.restoreOutputPath = undefined
+    window.restoreDynamicForm = undefined
+
+    //Static Ploting form
+    window.restorePlotData = undefined
+
+    //Dynamic Form Parameter
+    window.restoreD_FEArray = undefined
+    window.restoreDynamicFData = undefined
+
+    //Check for correct format of file
+    window.checkInputFiles = undefined
+
+
     setSpinnerFlag(false)
     setPreviousString(props.search);
     if (props.search !== searchString) {
@@ -211,7 +238,9 @@ function JobDefinitionFileList(props) {
 
   const onSelectClick = (row, e) => {
     e.stopPropagation()
+    dispatch(Actions.clearJobDefinition())
     localStorage.setItem("selectedJobDefinition", JSON.stringify(row));
+    localStorage.setItem("selectedJdId", row.id)
     var target = window.location.pathname + row.id;
     props.history.push(target);
   };

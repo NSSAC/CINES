@@ -11,6 +11,7 @@ import withReducer from "app/store/withReducer";
 import * as Perms from '../permissions';
 import { makeStyles } from '@material-ui/styles';
 import clsx from 'clsx';
+import JSONTree from 'react-json-tree'
 
 
 const useStyles = makeStyles(theme => ({
@@ -26,7 +27,12 @@ const useStyles = makeStyles(theme => ({
         [theme.breakpoints.down('sm')]: {
             fontSize: '1.3rem'
         }
-    }
+    },
+    wordBreak:{
+        [theme.breakpoints.down('sm')]: {
+            wordBreak: 'break-all',
+        },
+      },
 
   }));
 
@@ -208,17 +214,57 @@ function MetadataPanel(props) {
                                     <React.Fragment key={idx}>
                                         {(member.type === "autometa") && (
                                             <Grid item container xs={12} title={member.field} key={`${group_name}-${idx}a`}>
-                                                <Grid item xs={6} className="font-bold capitalize"><span>{label}</span></Grid>
-                                                <Grid item xs={6}><span colSpan={8}>{val}</span></Grid>
+                                                <Grid item xs={6} className={`font-bold capitalize ${classes.wordBreak}`}><span>{label}</span></Grid>
+                                                <Grid item xs={6}><span className={`sm:break-all ${classes.wordBreak} overflow-ellipsis`} colSpan={8}>
+                                                    { typeof val === 'object' ? 
+                                                        <JSONTree data={val} hideRoot={true} theme={{
+                                                            tree: {
+                                                                backgroundColor: '#F7F7F7'
+                                                            },
+                                                            label: {
+                                                                color: 'black',
+                                                                fontSize: '14px',
+                                                                fontWeight: 'bold',
+                                                                wordBreak: 'break-all'
+                                                            },
+                                                        }} /> : val
+                                                    // typeof val !== 'string' ? JSON.stringify(val) : val
+                                                    }</span></Grid>
                                             </Grid>
                                         )}
                                         {(member.type === "usermeta") && (
                                             <Grid item container xs={12}  title={member.field} key={`${group_name}-${idx}a`}>
-                                                <Grid item xs={6} className="font-bold capitalize"><span>{label}</span></Grid>
-                                                {!canWrite && <Grid item xs={6} className="text-left"><span>{val}</span></Grid>}
+                                                <Grid item xs={6} className={`font-bold capitalize ${classes.wordBreak}`}><span>{label}</span></Grid>
+                                                {!canWrite && <Grid item xs={6} className="text-left"><span  className={`sm:break-all ${classes.wordBreak} overflow-ellipsis`} >
+                                                    {  typeof val === 'object' ? 
+                                                        <JSONTree data={val} hideRoot={true} theme={{
+                                                            tree: {
+                                                                backgroundColor: '#F7F7F7'
+                                                            },
+                                                            label: {
+                                                                color: 'black',
+                                                                fontSize: '14px',
+                                                                fontWeight: 'bold',
+                                                                wordBreak: 'break-all'
+                                                            },
+                                                        }} /> : val
+                                                    }</span></Grid>}
                                                 {canWrite && (
                                                     <React.Fragment>
-                                                        <Grid item xs={4} className="text-left"><span>{val}</span></Grid>
+                                                        <Grid item xs={4} className="text-left"><span  className={`sm:break-all ${classes.wordBreak} overflow-ellipsis`} >
+                                                            { typeof val === 'object' ? 
+                                                                <JSONTree data={val} hideRoot={true} theme={{
+                                                                    tree: {
+                                                                        backgroundColor: '#F7F7F7'
+                                                                    },
+                                                                    label: {
+                                                                        color: 'black',
+                                                                        fontSize: '14px',
+                                                                        fontWeight: 'bold',
+                                                                        wordBreak: 'break-all'
+                                                                    },
+                                                                }} /> : val
+                                                            }</span></Grid>
                                                         <Grid item xs={2} style={{whiteSpace:'nowrap'}} className="cursor-pointer">
                                                             <Icon title='Edit property' onClick={() => { showAddPropDialog(member.field, props.meta[member.type][member.field]) }}>edit</Icon>
                                                             <Icon title='Delete property' className="ml-4" onClick={() => { removeUsermetaProperty(member.field) }}>highlight_off</Icon>

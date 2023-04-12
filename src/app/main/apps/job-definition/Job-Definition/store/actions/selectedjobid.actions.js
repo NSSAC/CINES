@@ -1,6 +1,8 @@
 // import { JobService } from "node-sciduct";
 import axios from "axios"
 export const SET_SELECTED_ITEM_ID = "[My Jobs APP] SET SELECTED ITEM";
+export const CLEAR_SELECTED_ITEM_ID = "[JOBSERVICE] CLEAR SELECTED ITEM";
+
 
 // export function setSelectedItem(id) {
 //   const url = `${process.env.REACT_APP_SCIDUCT_JOB_SERVICE}/`
@@ -17,6 +19,12 @@ export const SET_SELECTED_ITEM_ID = "[My Jobs APP] SET SELECTED ITEM";
 //     });
 //   }
 // }
+export function clearSelectedItem(){
+  return (dispatch) =>
+    dispatch({
+      type: CLEAR_SELECTED_ITEM_ID
+    });
+}
 
 export function setSelectedItem(target) {
   const token = localStorage.getItem('id_token');

@@ -23,13 +23,14 @@ import Toaster from "../../../Toaster";
 import LegendRow from './legendRow';
 
 import * as JobAppActions from "../../../store/actions";
-
-const CSonNet_Contagion_Simulation_v3 = (props) => {
+const CSonNet_Contagion_Simulation_v3 = (props) => {  
 
     const dispatch = useDispatch();
-    const jobData = useSelector(
-        ({ JobDefinitionApp }) => JobDefinitionApp.selectedjobid
-    );
+    // const jobData = useSelector(
+    //     ({ JobDefinitionApp }) => JobDefinitionApp.selectedjobid
+    // );
+    const jobData = useSelector(({ JobDefinitionApp }) => { return JobDefinitionApp.job_definition })
+
     const input_file_meta = useSelector(({ SimForm }) => SimForm.input_file);
     const [inputFileChangeCounter, setInputFileChangeCounter]  = useState(0);
     const [isFormValid, setIsFormValid] = useState(false);
@@ -52,7 +53,8 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
     const [inputFields, setInputFields] = useState([]);
     const history = useHistory();
     const [resetProps, setResetProps] = useState({})
-    
+    const [edgeDirectionality, setEdgeDirectionality] = useState('')
+
     const childGrid = {
         paddingLeft: '8px',
         alignSelf: 'center',
@@ -66,8 +68,8 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
         let pathEnd = `${props.namespace}/${props.module}`;
         setIsToasterFlag(false);
         if ((!jobData || jobData.id && (jobData.id !== `${props.namespace}/${props.module}`)) || Object.keys(jobData).length === 0) {
-            dispatch(JobAppActions.setSelectedItem(`${props.namespace}/${props.module}@${props.version}`));
-        } else if (Object.keys(jobData).length !== 0 && jobData.id.includes(pathEnd)) {
+            dispatch(JobAppActions.getJobDefinition(`${props.namespace}/${props.module}@${props.version}`));
+        }else if (Object.keys(jobData).length !== 0 && jobData.id.includes(pathEnd)) {
             setSpinnerFlag(false);
             if (jobData) {
                 if (input_file_meta && input_file_meta.provenance && input_file_meta.provenance.input) {
@@ -86,11 +88,19 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
                     setInitialState(updatedState);
                 } else {
                     if(props.resubmit && props.resubmit.inputData) {
-                        setRandomNumberSeed(props.resubmit.inputData.input.random_number_seed);
+                        setRandomNumberSeed(props.resubmit.inputData.input.random_number_seed ? props.resubmit.inputData.input.random_number_seed : "");
+                        setInitialState((props.resubmit && props.resubmit.inputData) ? props.resubmit.inputData : {});
+                        props.resubmit && localStorage.setItem('last_selected_folder', props.resubmit.inputData.output_container);
+
+                    }else if(props.localResubmit){
+                        setRandomNumberSeed(props.localResubmit.input.random_number_seed ? props.localResubmit.input.random_number_seed : "");
+                        setInitialState((props.localResubmit) ? props.localResubmit : {});
+                        props.localResubmit && localStorage.setItem('last_selected_folder', props.localResubmit.output_container);
+
+                    }else{
+                        setInitialState((props.resubmit && props.resubmit.inputData) ? props.resubmit.inputData : {});
                     }
-                    setInitialState((props.resubmit && props.resubmit.inputData) ? props.resubmit.inputData : {});
                 }
-                props.resubmit && localStorage.setItem('last_selected_folder', props.resubmit.inputData.output_container);
                 setInputSchema(jobData.input_schema);
             }
         }
@@ -122,6 +132,16 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
                     blockingStatesValue = props.resubmit.inputData.input["blocking_states"];
                     blockingNodesValue = props.resubmit.inputData.input["blocking_nodes"];
                 }
+            setEdgeDirectionality(input_file_meta.autometa.edgeDirectionality)
+            }
+            setInputFileChangeCounter(inputFileChangeCounter  + 1);
+        }else if(props.localResubmit){
+            if (input_file_meta.hasOwnProperty("name")) {
+                if(props.localResubmit.input["input_file"] && props.localResubmit.input["input_file"].includes(input_file_meta["name"])) {
+                    blockingStatesValue = props.localResubmit.input["blocking_states"];
+                    blockingNodesValue = props.localResubmit.input["blocking_nodes"];
+                }
+            setEdgeDirectionality(input_file_meta.autometa.edgeDirectionality)
             }
             setInputFileChangeCounter(inputFileChangeCounter  + 1);
         }
@@ -161,9 +181,19 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
                     setInitialState(updatedState);
                 } else {
                     // console.log("Set from else: ", props.resubmit);
+                    if(props.resubmit && props.resubmit.inputData) {
+                        setInitialState((props.resubmit && props.resubmit.inputData) ? props.resubmit.inputData : {});
+                        props.resubmit && localStorage.setItem('last_selected_folder', props.resubmit.inputData.output_container);
+
+                    }else if(props.localResubmit){
+                        setInitialState((props.localResubmit) ? props.localResubmit : {});
+                        props.localResubmit && localStorage.setItem('last_selected_folder', props.localResubmit.output_container);
+
+                    }else{
                     setInitialState((props.resubmit && props.resubmit.inputData) ? props.resubmit.inputData : {});
+                    }
                 }
-                props.resubmit && localStorage.setItem('last_selected_folder', props.resubmit.inputData.output_container);
+                // props.resubmit && localStorage.setItem('last_selected_folder', props.resubmit.inputData.output_container);
                 setInputSchema(jobData.input_schema);
             }
         }
@@ -194,6 +224,31 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
                     // console.log("Calling setInitialState #1", input_file_meta.provenance);
                     const pfile = getInputFileFromProvenance(input_file_meta.provenance, "input_file");
                     if (pfile && pfile['type'] !== "csonnet_simulation_container") {
+                        if(props.resubmit){
+                        setInitialState({
+                            input: props.resubmit ? {
+                                ...input_file_meta.provenance.input, 
+                                input_file: props.resubmit.inputData.input["input_file"], 
+                                blocking_states: inputFileChangeCounter <= 2 ? blockingStatesValue : '',
+                                blocking_nodes: inputFileChangeCounter <= 2 ? blockingNodesValue : '',
+                            } : {
+                                ...input_file_meta.provenance.input
+                            },
+                            output_container: (staticProps.outputPath && staticProps.outputPath[1]) ? staticProps.outputPath[1].value : "",
+                        })
+                    }else if(props.localResubmit){
+                        setInitialState({
+                            input: props.localResubmit ? {
+                                ...input_file_meta.provenance.input, 
+                                input_file: props.localResubmit.input["input_file"], 
+                                blocking_states: inputFileChangeCounter <= 2 ? blockingStatesValue : '',
+                                blocking_nodes: inputFileChangeCounter <= 2 ? blockingNodesValue : '',
+                            } : {
+                                ...input_file_meta.provenance.input
+                            },
+                            output_container: (staticProps.outputPath && staticProps.outputPath[1]) ? staticProps.outputPath[1].value : "",
+                        })
+                    }else{
                         setInitialState({
                             input: props.resubmit ? {
                                 ...input_file_meta.provenance.input, 
@@ -207,6 +262,7 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
                             },
                             output_container: (staticProps.outputPath && staticProps.outputPath[1]) ? staticProps.outputPath[1].value : "",
                         })
+                    }
                         setInputFileMessage(`Graph File: ${pfile.stored_name}`)
                         // console.log("setValidInputFile(true)");
                         setValidInputFile(true);
@@ -251,14 +307,32 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
     })
 
     useEffect(() => {
-        // console.log("Resubmit Props Data --->",props.resubmit);
         if(props.resubmit) {
             setDynamicProps(props.resubmit.inputData.input.dynamicProps);
-            setSubmodelArray(props.resubmit.inputData.input.submodelArrayData);
+            if(props.resubmit.inputData.input && props.resubmit.inputData.input.submodelArrayData){
+                setSubmodelArray(props.resubmit.inputData.input.submodelArrayData);
+            }else{
+                setSubmodelArray([]);
+            }
             setRules(props.resubmit.inputData.input.rules);
             setStatesArray(props.resubmit.inputData.input.states);
+        }       
+        if(props.localResubmit){
+            if(!props.localResubmit.input.dynamicProps){ 
+                setInitialState((props.localResubmit) ? props.localResubmit : {});
+                // setDynamicProps(props.localResubmit.input.dynamic_inputs);
+            }else{
+                setDynamicProps(props.localResubmit.input.dynamicProps);
+            }
+            if(props.localResubmit.input && props.localResubmit.input.submodelArrayData){
+                setSubmodelArray(props.localResubmit.input.submodelArrayData);
+            }else{
+                setSubmodelArray([]);
+            }
+            setRules(props.localResubmit.input.rules);
+            setStatesArray(props.localResubmit.input.states);
         }
-    },[props.resubmit])
+    },[props.resubmit, props.localResubmit])
 
     const setInitialState = (state) => {
 
@@ -266,6 +340,38 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
             var retainedName = staticProps.Output_name.value;
         } else {
             retainedName = state.output_name;
+        }
+        let blockingNode;
+        let inputFileVal;
+        if(state && state.input && !state.input["blocking_nodes"]){
+            blockingNode = [ jobData.input_files[1].name || '', {
+                key: "blocking_nodes",
+                formLabel: jobData.input_files[1].name || '',
+                id: 1,
+                name:  jobData.input_files[1].name || '',
+                outputFlag: false,
+                types: jobData.input_files[1].types || [],
+                required: false,
+                value: "",
+            }]
+        }else{
+            blockingNode = [
+                jobData.input_files[1].name || '', {
+                key: "blocking_nodes",
+                formLabel: jobData.input_files[1].name || '',
+                id: 1,
+                name: jobData.input_files[1].name || '',
+                outputFlag: false,
+                types: jobData.input_files[1].types || [],
+                required: false,
+                value: state && state.input ? state.input["blocking_nodes"] : "",
+            }]
+        }
+        if(state && state.input && !state.input["input_file"]){
+            if(state.input["Graph"])
+            inputFileVal = `${state.input["Graph"]} **(Reselect the file)`
+        }else{
+            inputFileVal = state && state.input ? state.input["input_file"] : ""
         }
 
         const dp = {
@@ -278,19 +384,10 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
                 outputFlag: false,
                 required: true,
                 types: jobData.input_files[0].types,
-                value: state && state.input ? state.input["input_file"] : "",
+                value: inputFileVal
             }],
             blocking_state: {id: 307, value: state && state.input && state.input['blocking_states'] ? state.input['blocking_states'] :""},
-            blocking_nodes: [jobData.input_files[1].name || '', {
-                key: "blocking_nodes",
-                formLabel: jobData.input_files[1].name || '',
-                id: 1,
-                name: jobData.input_files[1].name || '',
-                outputFlag: false,
-                types: jobData.input_files[1].types || [],
-                required: false,
-                value: state && state.input ? state.input["blocking_nodes"] : "",
-            }]
+            blocking_nodes: blockingNode
         };
 
         const dpp = {
@@ -301,38 +398,68 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
         }
         setResetProps(dpp)
 
-            // console.log("State", state);
             if (state.hasOwnProperty("input")) {
-              setSubmodelArray(state.input.submodelArrayData);
-              setDynamicProps(dp, ...submodelArray);
+                if(state.input && state.input['submodelArrayData']){
+                    setSubmodelArray(state.input.submodelArrayData);
+                    setDynamicProps(dp, ...submodelArray);
+                    if(!window.restoreSubmodelArray){
+                        window.restoreSubmodelArray = state.input.submodelArrayData
+                    }
+                }else{
+                    setSubmodelArray([]);
+                    setDynamicProps(dp, ...submodelArray)
+                    if(!window.restoreSubmodelArray){
+                        window.restoreSubmodelArray = []
+                    }
+                }
               setRules(state.input.rules);
               setStatesArray(state.input.states);
-            } else if (props.resubmit === undefined) {
+              if(!window.restoreRules){
+                window.restoreRules = state.input.rules
+              }
+              if(!window.restoreStatesArray){
+                window.restoreStatesArray = state.input.states
+              }
+            } 
+            else if (props.resubmit === undefined) {
               setDynamicProps(dp, ...submodelArray);
             }
+            let statProps = {
+                Seed: { value: state && state.input ? (randomNumberSeed ? randomNumberSeed : state.input['random_number_seed']) : "" },
+                Iterations: { value: state && state.input ? state.input['iterations'] : "" },
+                TimeSteps: { value: state && state.input ? state.input['time_steps'] : "" },
+                InitialConditions: state && state.input ? state.input['initial_states_method'] : [{ type: '', number_nodes: "", state: "" }],
+                default_state: { value: state && state.input ? state.input['default_state'] : "" },
+                Output_name: { value: (state && state.state !== "Completed") ? retainedName : "" },
+                outputPath: ['outputPath', {
+                    description: "Select the path from File manager where the output file is to be stored.",
+                    formLabel: "Output Container",
+                    required: true,
+                    id: 200,
+                    outputFlag: true,
+                    types: ["folder", "epihiper_multicell_analysis", "epihiperOutput", "csonnet_simulation_container"],
+                    value: state && state.input ? state.output_container : "",
+                }]
+            }
+            window.restoreOutputName = statProps.Output_name.value
+            window.restoreOutputPath = statProps.outputPath[1].value
         
-        setStaticProps({
-            Seed: { value: state && state.input ? (randomNumberSeed ? randomNumberSeed : state.input['random_number_seed']) : "" },
-            Iterations: { value: state && state.input ? state.input['iterations'] : "" },
-            TimeSteps: { value: state && state.input ? state.input['time_steps'] : "" },
-            InitialConditions: state && state.input ? state.input['initial_states_method'] : [{ type: '', number_nodes: "", state: "" }],
-            default_state: { value: state && state.input ? state.input['default_state'] : "" },
-            Output_name: { value: (state && state.state !== "Completed") ? retainedName : "" },
-            outputPath: ['outputPath', {
-                description: "Select the path from File manager where the output file is to be stored.",
-                formLabel: "Output Container",
-                required: true,
-                id: 200,
-                outputFlag: true,
-                types: ["folder", "epihiper_multicell_analysis", "epihiperOutput", "csonnet_simulation_container"],
-                value: state && state.input ? state.output_container : "",
-            }]
-        });
-        if(state &&  state.input && state.input['initial_states_method'][0]['node_selection_criteria']){
+        setStaticProps(statProps);
+
+        if(!window.restoreStatic){
+            window.restoreStatic = statProps
+        }
+        if(!window.restoreDynamicProps){
+            window.restoreDynamicProps = {...dp, ...submodelArray}
+        }
+        if(state &&  state.input && state.input['initial_states_method'][0] && state.input['initial_states_method'][0]['node_selection_criteria']){
             const rowArray = [...state.input['initial_states_method'][0]['node_selection_criteria']]
             const rowArrayLength = rowArray.length
             setInputFields(rowArray);
             setRowNum(rowArrayLength)
+            if(!window.restoreInputFields){
+                window.restoreInputFields = rowArray
+            }
         }
     };
 
@@ -346,6 +473,14 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
         updatedFormElement.value = event.target.value;
         updatedJobSubmissionForm[obj] = updatedFormElement;
         setStaticProps({ ...updatedJobSubmissionForm });
+        window.restoreStatic = { ...updatedJobSubmissionForm }
+        window.formEdited = true
+        if(obj === "Output_name"){
+            window.restoreOutputName = event.target.value
+        }
+        if(obj === "outputPath"){
+            window.restoreOutputPath = event.target.value
+        }
     }
 
     function ICChangedHandler(event, obj) {
@@ -361,6 +496,8 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
             updatedFormElement[0][obj] = event.target.value;
         updatedJobSubmissionForm[obj] = updatedFormElement;
         setStaticProps({ ...updatedJobSubmissionForm });
+        window.restoreStatic = { ...updatedJobSubmissionForm }
+        window.formEdited = true
     }
 
     const enableButton = () => {
@@ -387,13 +524,16 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
             let tempSubmodels = [];
             if (modelJSON.models[event.target.value].hasOwnProperty('submodels')) {
                 setStatesArray([]);
+                window.restoreStatesArray = []
                 setRules([]);
+                window.restoreRules = []
                 staticProps.default_state.value = '';
                 staticProps.InitialConditions[0].state = '';
                 const tempMenu = (event.target.value + '.submodels').split('.').reduce((o, i) => o[i], modelJSON.models);
                 tempSubmodels.push({ 'submodel_1': '', 'menu': Object.keys(tempMenu), 'value': '' });
             } else {
                 setStatesArray(modelJSON.models[event.target.value]['states']);
+                window.restoreStatesArray = modelJSON.models[event.target.value]['states']
                 staticProps.default_state.value = modelJSON.models[event.target.value]['default_state'];
                 staticProps.InitialConditions[0].state = '';
                 let rules=[];
@@ -419,11 +559,12 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
                             rules[rules.length-1]["input"] = x.input[y].label;
                         }
                     })
-                    // console.log(rules);
                 })
                 setRules(rules);
+                window.restoreRules = rules
             }
             setSubmodelArray(tempSubmodels);
+            window.restoreSubmodelArray = tempSubmodels
         }
         if (submodelFlag) {
             if (obj.includes('submodel')) {
@@ -442,7 +583,9 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
                 tempSubmodels[tempSubmodels.length-1].description = initSubmodel['description']
                 if (typeof initSubmodel['submodels'] !== 'undefined') {
                     setStatesArray([]);
+                    window.restoreStatesArray = []
                     setRules([]);
+                    window.restoreRules = []
                     staticProps.default_state.value = '';
                     const nextSub = `submodel_${parseInt(obj.substr(-1)) + 1}`;
                     let subObj = {};
@@ -450,11 +593,10 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
                     subObj['menu'] = Object.keys(initSubmodel['submodels']);
                     subObj['value'] = '';
                     tempSubmodels.push(subObj);
-                    // console.log(tempSubmodels);
                 } else {
                     setStatesArray(initSubmodel['states'])
+                    window.restoreStatesArray = initSubmodel['states']
                     staticProps.default_state.value = initSubmodel['default_state']
-                    // console.log(initSubmodel['rules'])
                     let rules = [];
                     initSubmodel['rules'].map(x => {
                         rules.push(x.rule);
@@ -475,14 +617,13 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
                             }else{
                                 rules[rules.length-1]["input"] = x.input[y].label;
                             }
-                            console.log(rules);
                         })
-                        // console.log(tempSubmodels);
                     })
                     setRules(rules);
+                    window.restoreRules = rules
                 }
-                // console.log(tempSubmodels)
                 setSubmodelArray(tempSubmodels);
+                window.restoreSubmodelArray = tempSubmodels
             }
             else {
                 let tempSubmodels = [...submodelArray];
@@ -492,8 +633,12 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
                     }
                 })
                 setSubmodelArray(tempSubmodels);
-                // console.log(tempSubmodels);
+                window.restoreSubmodelArray = tempSubmodels
+
             }
+        }
+        if(obj == "input_file"){
+            setEdgeDirectionality(event.edgeDirectionality)
         }
         //END
         if (updatedFormElement instanceof Array) {
@@ -510,6 +655,8 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
             updatedJobSubmissionForm[obj] = updatedFormElement;
         // }
         setDynamicProps({ ...updatedJobSubmissionForm });
+        window.restoreDynamicProps = { ...updatedJobSubmissionForm }
+        window.formEdited = true
     }
 
     function populatesubmitJSON() {
@@ -537,8 +684,8 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
         };
         if(inputFields.length > 0 && submitJSON['initial_states_method'][0]['type'] == 'custom'){
             let changedInputFields = inputFields.map((ele) =>{
-                if(typeof ele.min === "string"){
-                  ele.min = parseInt(ele.min) 
+                if(ele.min == ""){
+                    delete ele.min
                 }
                 if(ele.max == ""){
                     delete ele.max
@@ -586,7 +733,6 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
             output_container: staticProps.outputPath[1].value,
             output_name: staticProps.Output_name.value
         };
-        console.log("-----REquest JSON",requestJson);
         onFormSubmit(requestJson);
     }
 
@@ -595,7 +741,6 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
         const url = `${process.env.REACT_APP_SCIDUCT_JOB_SERVICE}/`;
         const token = localStorage.getItem('id_token');;
         const jobServiceInstance = new JobService(url, token);
-        // console.log("DO SUBMIT HERE: ",requestJson.job_definition, requestJson.input, requestJson.pragmas, requestJson.output_name, requestJson.output_container)
         // return;
         jobServiceInstance.createJobInstance(requestJson.job_definition, requestJson.input, requestJson.pragmas, requestJson.output_name, requestJson.output_container).then(res => {
             setIsToasterFlag(true);
@@ -630,8 +775,9 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
 
     const handleAddCustomRow = () => {
         const values = [...inputFields];
-        values.push({property: 'degree', ordering: 'increasing', min: '0', max: '', weight: ''});
+        values.push({property: 'degree', ordering: 'increasing', min: '', max: '', weight: ''});
         setInputFields(values); 
+        window.restoreInputFields = values
         setRowNum(rowNum + 1);
     }
 
@@ -660,6 +806,7 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
                                             <p>Input may either be a Graph or a previous simulation.</p>
                                             <Grid item container xs={12} className="whitespace-normal">
                                                 <Input
+                                                    name={dynamicProps.input_file.name}
                                                     formData={dynamicProps.input_file}
                                                     elementType={dynamicProps.input_file.types}
                                                     value={dynamicProps.input_file.value}
@@ -673,7 +820,6 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
                                         <div className='borderStyle'>
                                             <h3><b>Dynamics Model</b></h3>
                                             <Grid style={childGrid} item container xs={12} >
-                                                {/* {console.log("-----Dynamic Props",dynamicProps)} */}
                                                 <SelectFormsy
                                                     className="my-12 inputStyle1 model"
                                                     name="Behaviour Model"
@@ -790,7 +936,7 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
                                                     <Grid style={childGrid} item container xs={12} >
                                                         <Input
                                                             formData={dynamicProps.blocking_nodes}
-                                                            // elementType={dynamicProps.blocking_nodes[1].types}
+                                                            elementType={dynamicProps.blocking_nodes[1].types}
                                                             value={dynamicProps.blocking_nodes[1].value}
                                                             required={dynamicProps.blocking_nodes[1].required}
                                                             changed={(event) => dynamicChangedHandler(event, 'blocking_nodes')}
@@ -950,7 +1096,7 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
                                                             </div>
                                                             <Grid  item container xs={12} >
                                                                 {rowNum > 0 && 
-                                                                    <LegendRow inputFields={inputFields} setInputFields={(p) => {setInputFields(p)}}/>
+                                                                    <LegendRow edgeDirectionality={edgeDirectionality} inputFields={inputFields} setInputFields={(p) => {setInputFields(p)}}/>
                                                                 }
                                                             </Grid>
                                                         </>
@@ -1028,7 +1174,7 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
                                     >
                                         Submit
                                     </Button>
-                                    {props.resubmit ? <Link to="/apps/my-jobs/" style={{ color: 'transparent' }}>
+                                    {(props.resubmit || props.localResubmit) ? <Link to="/apps/my-jobs/" style={{ color: 'transparent' }}>
                                         <Button
                                             variant="contained"
                                             // onClick={onFormCancel}

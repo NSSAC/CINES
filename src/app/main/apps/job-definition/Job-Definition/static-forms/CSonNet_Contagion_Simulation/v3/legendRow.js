@@ -3,6 +3,7 @@ import React from "react";
 import { SelectFormsy, TextFieldFormsy } from '@fuse';
 import { Button, MenuItem, Grid } from "@material-ui/core";
 import DeleteIcon from '@material-ui/icons/Delete';
+import '../CSonNet_CS.css'
 
 const triple = {
     display: 'flex',
@@ -13,6 +14,42 @@ const triple = {
     border: '1px solid black',
     marginTop: '10px'
 }
+const undirected = [
+    {label: "Degree", value: "degree"},
+    {label: "Betweenness Centrality", value: "betweenness-centrality"},
+    {label: "Authority Score", value: "authority-score"},
+    {label: "Hub Score", value: "hub-score"},
+    {label: "Clustering Coefficient", value: "clustering-coefficient"},
+    {label: "Eigenvalue Centrality", value: "eigenvalue-centrality"},
+    {label: "Page Rank", value: "page-rank"},
+    {label: "Closeness Centrality", value: "closeness-centrality"},
+    {label: "kCore", value: "kcore"}
+]
+const directed = [
+    {label: "Degree", value: "degree"},
+    {label: "In-Degree ", value: "in-degree"},
+    {label: "Out-Degree", value: "out-degree"},
+    {label: "Betweenness Centrality", value: "betweenness-centrality"},
+    {label: "Authority Score", value: "authority-score"},
+    {label: "Hub Score", value: "hub-score"},
+    {label: "Clustering Coefficient", value: "clustering-coefficient"},
+    {label: "Page Rank", value: "page-rank"},
+    {label: "Closeness Centrality", value: "closeness-centrality"},
+    {label: "kCore", value: "kcore"}]
+
+const allProperties = [
+    {label: "Degree", value: "degree"},
+    {label: "In-Degree ", value: "in-degree"},
+    {label: "Out-Degree", value: "out-degree"},
+    {label: "Betweenness Centrality", value: "betweenness-centrality"},
+    {label: "Authority Score", value: "authority-score"},
+    {label: "Hub Score", value: "hub-score"},
+    {label: "Clustering Coefficient", value: "clustering-coefficient"},
+    {label: "Eigenvalue Centrality", value: "eigenvalue-centrality"},
+    {label: "Page Rank", value: "page-rank"},
+    {label: "Closeness Centrality", value: "closeness-centrality"},
+    {label: "kCore", value: "kcore"}
+]
 
 const LegendRow = (props) => {
     
@@ -29,14 +66,14 @@ const LegendRow = (props) => {
         } else if (prop === "ordering") {
             values[index].ordering = event.target.value;
         }else if (prop === "min") {
-            values[index].min =  parseInt(event.target.value) || "0";
+            values[index].min =  parseInt(event.target.value) || "";
         }else if (prop === "max") {
             values[index].max =  parseInt(event.target.value) || "";
         }else{
             values[index].weight =  parseInt(event.target.value) || "";
         }
         props.setInputFields(values);
-      };
+        };
 
     //Validation for min, max, weight is - allow any number as well as empty
 
@@ -55,17 +92,17 @@ const LegendRow = (props) => {
                             required
                             req="true"
                             >
-                                <MenuItem key="Degree" value="degree"> Degree </MenuItem>
-                                <MenuItem key="In-Degree" value="in-degree"> In-Degree </MenuItem>
-                                <MenuItem key="Out-Degree" value="out-degree"> Out-Degree </MenuItem>
-                                <MenuItem key="Betweenness Centrality" value="betweenness-centrality"> Betweenness Centrality </MenuItem>
-                                <MenuItem key="Authority Score" value="authority-score"> Authority Score </MenuItem>
-                                <MenuItem key="Hub Score" value="hub-score"> Hub Score </MenuItem>
-                                <MenuItem key="Clustering Coefficient" value="clustering-coefficient"> Clustering Coefficient </MenuItem>
-                                <MenuItem key="Eigenvalue Centrality" value="eigenvalue-centrality"> Eigenvalue Centrality </MenuItem>
-                                <MenuItem key="Page Rank" value="page-rank"> Page Rank </MenuItem>
-                                <MenuItem key="Closeness Centrality" value="closeness-centrality"> Closeness Centrality </MenuItem>
-                                <MenuItem key="kCore" value="kcore"> kCore </MenuItem>
+                                {props.edgeDirectionality == "undirected" ? 
+                                undirected.map((ele) => {
+                                    return <MenuItem key={ele.value} value={ele.value}> {ele.label} </MenuItem>
+                                }) : props.edgeDirectionality == "directed" ?
+                                directed.map((ele) => {
+                                    return <MenuItem key={ele.value} value={ele.value}> {ele.label} </MenuItem>
+                                }) : 
+                                allProperties.map((ele) => {
+                                    return <MenuItem key={ele.value} value={ele.value}> {ele.label} </MenuItem>
+                                })
+                            }
                             </SelectFormsy>
                         </Grid>
 
@@ -97,19 +134,21 @@ const LegendRow = (props) => {
                         
                         <Grid item xs={4} style={{paddingLeft: "2%"}}>
                             <TextFieldFormsy
-                                className="my-12 inputStyle3"
-                                type="text"
+                                className="my-12 inputStyle3 hideArrow"
+                                type="number"
                                 name='min'
-                                style={{ width: '18px' }}
-                                value={inputField.min || '0'}
+                                style={{ width: '18px'}}
+                                // value={inputField.min || '0'}
+                                value={inputField.min}
+
                                 onBlur={(event) => handleInputChange('min', index, event)}
-                                validations={{
-                                    isPositiveInt: function (values, value) {
-                                      return RegExp(/^-?(?:\d+\.?\d*)?$/).test(value)                             }
-                                }}
-                                validationError="This is not a valid value"
+                                // validations={{
+                                //     isPositiveInt: function (values, value) {
+                                //       return RegExp(/^-?(?:\d+\.?\d*)?$/).test(value)                             }
+                                // }}
+                                // validationError="This is not a valid value"
                                 label="Min" 
-                                required
+                                // required
                                 autoComplete="off"/>
                         </Grid>
 

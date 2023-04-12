@@ -43,6 +43,7 @@ function FileManagerApp(props) {
   const usermeta_updater = useSelector(({ fileManagerApp }) => fileManagerApp.usermeta);
   const file_path = "/" + ((props.match.params && props.match.params.path)?props.match.params.path:"")
   const history =  useHistory()
+  let defaultType = ""
 
   const matches = useMediaQuery("(min-width:600px)");
 
@@ -110,7 +111,7 @@ function FileManagerApp(props) {
         {((file_meta, file_path) => {
           if (file_meta && file_meta.error) {
             if (file_meta.error === "Forbidden") {
-              console.log("user: ", user);
+              // console.log("user: ", user);
               const userServiceURL = `${process.env.REACT_APP_SCIDUCT_USER_SERVICE}`;
               const sciductID = `${process.env.REACT_APP_SCIDUCT_APP_ID}`;
               var loginURL = userServiceURL + "/authenticate/" + sciductID;
@@ -148,8 +149,17 @@ function FileManagerApp(props) {
             );
           }
 
-          if (file_viewers_map[file_meta.type]) {
-            const Comp = file_viewers_map[file_meta.type];
+          if(file_meta.type && file_meta.type != "folder" && !file_viewers_map.hasOwnProperty(file_meta.type)){
+            defaultType = "text"
+          }
+
+          if (file_viewers_map[file_meta.type] || file_viewers_map[defaultType]  ) {
+            let Comp;
+            if(file_meta.type && file_meta.type != "folder" && !file_viewers_map.hasOwnProperty(file_meta.type)){
+              Comp = file_viewers_map[defaultType] ;
+            }else{
+              Comp = file_viewers_map[file_meta.type] ;
+            }
             return (
               <Comp
                 {...props}

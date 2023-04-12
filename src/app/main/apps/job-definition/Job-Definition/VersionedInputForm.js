@@ -40,8 +40,25 @@ function VersionedInputForm(props) {
     if (job_definition && job_definition.failed){
         history.replace(`${props.location.pathname}?version=default`)
     }else if (formVersion && VForm && job_definition){
+        let clearDynamicProps = false
+        if(!window.formVersion){
+            window.formVersion = formVersion
+        }
+        if(window.formVersion !== formVersion){
+            if(props.localResubmit && props.localResubmit.input){
+                props.localResubmit.input['dynamicProps'] = undefined
+                props.localResubmit.input['dynamic_inputs'] = undefined
+                props.localResubmit.input['rules'] = undefined
+                // props.localResubmit.input['states'] = undefined
+                if(props.localResubmit.input['submodelArrayData']){
+                    props.localResubmit.input['submodelArrayData'] = undefined
+                }
+                clearDynamicProps = true
+            }
+            window.formVersion = formVersion
+        }
         return (
-            <VForm { ...props } job_definition={job_definition} />  
+            <VForm { ...props } job_definition={job_definition} formVersion={formVersion}/>  
         )
     }else{
         return <div>Loading form version...</div>

@@ -8,6 +8,23 @@ import React from 'react';
 
 const TickSection = (props) => {
 
+    //this is to just rearrange the format of enum, if backend send correct format this if condition can be removed
+    if(props.modelJSON && props.modelJSON.properties && props.modelJSON.properties.text_sections.properties.tick_section.properties.axes_in_scientfic.enum ){
+        let enumArr = props.modelJSON.properties.text_sections.properties.tick_section.properties.axes_in_scientfic.enum
+        let createdEnum;
+        let finalEnum
+        if(enumArr[0].length == 1 && enumArr[0] == "y"){
+            if(enumArr[1] && enumArr[1] == "x"){
+                createdEnum = [enumArr[1], enumArr[0], ...new Set(enumArr)]
+                createdEnum = new Set(createdEnum)
+                finalEnum = Array.from(createdEnum)
+                if(finalEnum.length > 0){
+                    props.modelJSON.properties.text_sections.properties.tick_section.properties.axes_in_scientfic.enum = finalEnum
+                }
+            }
+        }
+    }
+
     return (
         <>
             <div className="h4 mt-24 ml-16" style={{ width: '100%', fontWeight: '600' }}>Tick section</div>
