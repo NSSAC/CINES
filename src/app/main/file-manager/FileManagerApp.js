@@ -149,8 +149,10 @@ function FileManagerApp(props) {
             );
           }
 
-          if(file_meta.type && file_meta.type != "folder" && !file_viewers_map.hasOwnProperty(file_meta.type)){
+          if(file_meta.type && file_meta.type != "folder" && !file_viewers_map.hasOwnProperty(file_meta.type) && !file_meta.isContainer){
             defaultType = "text"
+          }else if(file_meta.type && file_meta.type != "folder" && !file_viewers_map.hasOwnProperty(file_meta.type) && file_meta.isContainer){
+            defaultType = "folder"
           }
 
           if (file_viewers_map[file_meta.type] || file_viewers_map[defaultType]  ) {

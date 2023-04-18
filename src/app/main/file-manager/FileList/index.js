@@ -118,6 +118,9 @@ function FileList(props) {
   const selectedIds = Object.keys(selected).filter((id) => {
     return selected[id];
   });
+  if(!window.disableClick){
+    window.disableClick = undefined
+  }
 
   if (_files && _files.length > 0 && sort && sort.length > 0) {
     var attr = sort[0].attr;
@@ -176,14 +179,15 @@ function FileList(props) {
       formatter: (val, obj) => {
         return (
           <Link
-            style={{ color: "#1565C0", pointerEvents: 'all' }}
+            style={{ color: "#1565C0", pointerEvents: `${!window.disableClick ? 'all' : 'none'}` }}
             title={val}
             to=''
             onClick={(event) => {
               event.preventDefault();
-              if (event.detail === 1) {
-                history.push(val);
-              }
+                if (event.detail === 1 && !window.disableClick) {
+                  history.push(val);
+                  window.disableClick = val
+                }
             }}
           >
             {val}
@@ -803,12 +807,14 @@ function FileList(props) {
   }
 
   function onClickRow(evt) {
-    var clear = !evt.metaKey && !evt.ctrlKey && evt.target.getAttribute("type") !== "checkbox";
+    if(!window.disableClick){
+      var clear = !evt.metaKey && !evt.ctrlKey && evt.target.getAttribute("type") !== "checkbox";
     var row = findRow(evt.target);
     if (row && row.id) {
       toggleSelected(row.id, clear);
     }
     setMoveFileFlag(false);
+    }
   }
 
   function onDragEnter(evt) {
@@ -872,7 +878,17 @@ function FileList(props) {
     })
   }
   
-  if (_files && _files.length >= 0) {
+  if(window.disableClick){
+    return (
+      <div className="flex flex-1 flex-col items-center justify-center mt-40">
+        <Typography className="text-20 mt-16" color="textPrimary">
+          Loading
+        </Typography>
+        <LinearProgress className="w-xs" color="secondary" />
+      </div>
+    );
+  }
+  else if (_files && _files.length > 0) {
     return (
       <div className="overflow-auto w-full h-full">
         <div className="flex w-full h-full">
@@ -901,7 +917,7 @@ function FileList(props) {
                 toggleAll={toggleAll}
                 enableCheckBoxes={totalFileCount!==0 && (props.enableCheckBoxes || false)}
               />
-               <ModifyPermissions
+              <ModifyPermissions
                 showModal={showPermissionsDialog}
                 selectedVal={props.meta}
                 props={props}
@@ -1019,7 +1035,8 @@ function FileList(props) {
         )}{" "}
       </div>
     );
-  } else if (_files && _files.length === 0) {
+  } 
+  else if (_files && _files.length === 0) {
     return (
       <div
         className="flex flex-1 flex-col items-center justify-center mt-40"
@@ -1033,7 +1050,8 @@ function FileList(props) {
         </Typography>
       </div>
     );
-  } else {
+  }
+  else{
     return (
       <div className="flex flex-1 flex-col items-center justify-center mt-40">
         <Typography className="text-20 mt-16" color="textPrimary">
