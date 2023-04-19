@@ -22,6 +22,7 @@ function Breadcrumb({props,className, styles, path})
             targetPath = targetPath + arr[i] + '/'
         }
          props.history.push(targetPath)
+         window.disableClick = true
        }
 
     }
