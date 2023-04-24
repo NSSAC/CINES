@@ -5,7 +5,7 @@ import { FileService, UserService } from "node-sciduct";
 
 import { Fab, Icon, TextField, Tooltip, Button, Dialog, DialogActions, DialogContent, DialogTitle, Slide } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
-import { Person as PersonIcon } from "@material-ui/icons";
+import {  Group as GroupIcon, Person as PersonIcon } from "@material-ui/icons";
 import { Autocomplete } from "@material-ui/lab";
 import { toast } from "material-react-toastify";
 
@@ -32,9 +32,35 @@ export const ModifyPermissions = ({ showModal, handleClose, onModify, selected, 
     successCount: 0,
     flag: false,
   });
+  const [tokenTeam,setTokenTeam] = useState();
+  const [tokenTeamArray, setTokenTeamArray] = useState()
   
   var path = window.location.pathname.replace("/files", "");
   var token = localStorage.getItem("id_token");
+
+  useEffect(() => {
+    parseJwt(token);
+  })
+
+  function parseJwt (token) {
+    if(!tokenTeam){
+      var base64Url = token.split('.')[1];
+      var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(''));
+      jsonPayload = JSON.parse(jsonPayload)
+      if(jsonPayload.teams.length > 0) {
+        let teamObj = jsonPayload.teams.map((team) => {
+          let obj = {}
+          obj['id'] = team
+          return obj
+        })
+        setTokenTeam(teamObj)
+        setTokenTeamArray(jsonPayload.teams)
+      }
+    }
+}
 
   const handleAddField = () => {
     setSearchFlag(true);
@@ -133,6 +159,13 @@ export const ModifyPermissions = ({ showModal, handleClose, onModify, selected, 
   const onSubmit = async () => {
     setSubmitPermClick(true);
     setPermissionLoading(true);
+    if(tokenTeamArray && tokenTeamArray.length > 0){
+      users.forEach((user) => {
+        if(tokenTeamArray.includes(user.id)){
+          user.id = `#${user.id}`
+        }
+      })
+    }
     for await (const user of users) {
       await permApiExec(user);
     }
@@ -166,7 +199,7 @@ export const ModifyPermissions = ({ showModal, handleClose, onModify, selected, 
           // if(responseTeams.length===0)
           // otherResponse=[{id: "nssac", first_name: "nssac", last_name: "nssac", organization: "persistent"},{id: "epihiper", first_name: "epihiper", last_name: "epihiper", organization: "persistent"}]
           responseTeams.length = Math.min(5-responseUsers.length, responseTeams.length)
-          setSearchResults([...responseUsers, ...responseTeams]);
+          setSearchResults([...responseUsers, ...tokenTeam, ...responseTeams]);
       })
     } else {
       setSearchResults([]);
@@ -300,7 +333,10 @@ export const ModifyPermissions = ({ showModal, handleClose, onModify, selected, 
               renderOption={(option) => {
                 return (
                   <Fragment>
+                    {tokenTeamArray.includes(option.id) ?
+                    <GroupIcon fontSize="small"/> :
                     <PersonIcon className="person_icon" />
+                    }
                     &nbsp;{option.id}
                   </Fragment>
                 );
