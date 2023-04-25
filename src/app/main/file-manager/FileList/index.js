@@ -888,7 +888,7 @@ function FileList(props) {
       </div>
     );
   }
-  else if (_files && _files.length > 0) {
+  else if (_files && _files.length >= 0) {
     return (
       <div className="overflow-auto w-full h-full">
         <div className="flex w-full h-full">

@@ -39,7 +39,9 @@ export const ModifyPermissions = ({ showModal, handleClose, onModify, selected, 
   var token = localStorage.getItem("id_token");
 
   useEffect(() => {
-    parseJwt(token);
+    if(token){
+      parseJwt(token);
+    }
   })
 
   function parseJwt (token) {

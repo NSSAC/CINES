@@ -202,7 +202,7 @@ function PermissionsPanel(props) {
               <tbody>
                 <tr className="readacl">
                   <th>Read ACL</th>
-                  <td title={props.meta.readACL.join(", ")}>
+                  <td>
                     {tokenData !== null && (
                       <Paper elevation={0}>
                         {readACLchipData.map((data) => {
@@ -219,6 +219,7 @@ function PermissionsPanel(props) {
                               label={
                                 data.startsWith("#") ? data.slice(1) : data
                               }
+                              title={data.startsWith("#") ? data.slice(1) : data}
                               size="small"
                               variant="outlined"
                               icon={icon}
@@ -237,7 +238,7 @@ function PermissionsPanel(props) {
 
                 <tr className="writeacl">
                   <th>Write ACL</th>
-                  <td title={props.meta.writeACL.join(", ")}>
+                  <td>
                     {tokenData !== null && (
                       <Paper elevation={0}>
                         {writeACLchipData.map((data) => {
@@ -254,6 +255,7 @@ function PermissionsPanel(props) {
                               label={
                                 data.startsWith("#") ? data.slice(1) : data
                               }
+                              title={data.startsWith("#") ? data.slice(1) : data}
                               size="small"
                               variant="outlined"
                               icon={icon}
@@ -271,7 +273,7 @@ function PermissionsPanel(props) {
                 </tr>
                 <tr className="computeacl">
                   <th>Compute ACL</th>
-                  <td title={props.meta.computeACL.join(", ")}>
+                  <td>
                     {tokenData !== null && (
                       <Paper elevation={0}>
                         {computeACLchipData.map((data) => {
@@ -288,6 +290,7 @@ function PermissionsPanel(props) {
                               label={
                                 data.startsWith("#") ? data.slice(1) : data
                               }
+                              title={data.startsWith("#") ? data.slice(1) : data}
                               size="small"
                               variant="outlined"
                               icon={icon}
