@@ -14,6 +14,9 @@ import { MyJobFilter } from "app/main/apps/my-jobs/MyJobFilter-dialog/Filterdial
 import { Link } from "react-router-dom";
 import "./MyJobsApp.css";
 import { useHistory } from "react-router-dom";
+import Switch from '@material-ui/core/Switch';
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 function MyJobsApp(props) {
   const dispatch = useDispatch();
@@ -29,6 +32,19 @@ function MyJobsApp(props) {
   var path = window.location.pathname;
   var selectedItem = useSelector(({ myJobsApp }) => myJobsApp.selectedjobid);
   localStorage.removeItem("resubmitJob")
+  const [expandableList, setExpandableList] = useState(true);
+  const [expCheck, setExpCheck] = useState(true)
+
+  const handleExpandableList = (event) => {
+    setExpandableList(event.target.checked);
+    if(event.target.checked){
+      setExpCheck(true)
+    } else{
+      window.expList = []
+      window.expCheckedList = {}
+      setExpCheck(false)
+    }
+  };
 
   useEffect(() => {
     setOnLoad(true);
@@ -36,7 +52,7 @@ function MyJobsApp(props) {
     let type = "creation_date";
     let descShort = true;
     sessionStorage.setItem("isFilterApplied", JSON.stringify(false));
-    dispatch(Actions.getFiles(10, 0, descShort, type, true));
+    dispatch(Actions.getFiles(10, 0, descShort, type, true, expCheck));
     sessionStorage.setItem("count", start);
     sessionStorage.setItem("sortOrder", JSON.stringify(descShort));
     sessionStorage.setItem("type", JSON.stringify(type));
@@ -44,14 +60,15 @@ function MyJobsApp(props) {
     sessionStorage.removeItem("preStateValue");
     sessionStorage.removeItem("preJobTypeValue");
     localStorage.removeItem("resubmitJob")
-  }, [dispatch]);
+  }, [dispatch,expCheck]);
 
   useEffect(() => {
     localStorage.removeItem("resubmitJob")
     var sortOrder = JSON.parse(sessionStorage.getItem("sortOrder"))
     var sortType = JSON.parse(sessionStorage.getItem("type"))
-    if (initialPage === true && changeState > 0)
-      dispatch(Actions.getFiles(10, 0, sortOrder, sortType, true));
+    if (initialPage === true && changeState > 0){
+      dispatch(Actions.getFiles(10, 0, sortOrder, sortType, true, expCheck));
+    }
     /* eslint-disable-next-line */
   }, [changeState])
 
@@ -96,6 +113,7 @@ function MyJobsApp(props) {
                 handleClose={handleClose}
                 renderFlag={renderFlag}
                 setRenderFlag={(p) => { setRenderFlag(p) }}
+                expCheck = {expCheck}
               />
             </div>
           }
@@ -124,7 +142,7 @@ function MyJobsApp(props) {
                       chevron_right
                     </Icon>
                     <Typography className='' color="textPrimary">
-                      {selectedItem.id}
+                      {selectedItem.id} 
                     </Typography>
                   </>
                 }
@@ -172,7 +190,8 @@ function MyJobsApp(props) {
                 : null}
             </div>}
 
-            {path.endsWith('my-jobs/') === true && <FuseAnimate animation="transition.expandIn" delay={200}>
+            {path.endsWith('my-jobs/') === true && 
+            <FuseAnimate animation="transition.expandIn" delay={200}>
               <Tooltip title="Filter" placement="bottom">
                 <IconButton aria-label="search" onClick={showFileUploadDialog}>
                   <Icon>filter_list</Icon>
@@ -181,7 +200,8 @@ function MyJobsApp(props) {
             </FuseAnimate>}
           </div>
 
-          <div className="flex flex-1 items-end">
+          <div className="flex flex-1 items-end justify-between">
+
             <Tooltip title="Job Definition" placement="top">
               <Link to="/apps/job-definition/">
                 <FuseAnimate animation="transition.expandIn" delay={600}>
@@ -195,17 +215,35 @@ function MyJobsApp(props) {
                 </FuseAnimate>
               </Link>
             </Tooltip>
+            {path.endsWith('my-jobs/') === true && 
+
+                  <FormGroup row>
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={expandableList}
+                        onChange={handleExpandableList}
+                        name="toggleList"
+                        inputProps={{ 'aria-label': 'secondary checkbox' }}
+                      />
+                    }
+                    label="Tree View"
+                  />
+                  </FormGroup>
+              }
           </div>
         </div>
       }
       content={
-        <MyJobsFileList
-          changeState={changeState}
-          setInitialPage={(p) => { setInitialPage(p) }}
-          setChangeState={(p) => setChangeState(p)}
-          flag={flag}
-          pageLayout={pageLayout}
-        />
+          <MyJobsFileList
+            changeState={changeState}
+            setInitialPage={(p) => { setInitialPage(p) }}
+            setChangeState={(p) => setChangeState(p)}
+            flag={flag}
+            pageLayout={pageLayout}
+            expandableList = {expandableList}
+            expCheck = {expCheck}
+          />
       }
       leftSidebarVariant="temporary"
       leftSidebarHeader={<MainSidebarHeader />}

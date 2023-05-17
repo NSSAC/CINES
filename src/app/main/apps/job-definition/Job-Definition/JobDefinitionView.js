@@ -252,7 +252,7 @@ function JobDefinitionView(props) {
             let submodelArray = window.restoreSubmodelArray;
             let inputFields = window.restoreInputFields;
             let statesArray = window.restoreStatesArray;
-            let rules = window.restoreRules;
+            let rules = window.restoreRules || [];
             let inputFileCheck = window.restoreDynamicProps.input_file ? window.restoreDynamicProps.input_file[1].value  : window.restoreDynamicProps.inputFile_Graph ? window.restoreDynamicProps.inputFile_Graph[1].value : ""
             let restoreOutputName =  window.restoreOutputName || ""
             let restoreOutputPath = window.restoreOutputPath || ""
@@ -265,7 +265,7 @@ function JobDefinitionView(props) {
                 'initial_states_method': staticProps ? staticProps.InitialConditions : "",
                 "default_state": staticProps ? staticProps.default_state.value : "",
                 "states": statesArray,
-                "random_number_seed": staticProps ? parseInt(staticProps.Seed.value) : "",
+                "random_number_seed": staticProps && staticProps.Seed.value !== "" ? parseInt(staticProps.Seed.value) : "",
                 'decorations': [],
                 "dynamic_inputs": {"Behaviour_model": dynamicProps.Behaviour.value},
                 "rules": rules ? rules : [],
@@ -301,14 +301,21 @@ function JobDefinitionView(props) {
                 submitJSON.blocking_nodes = dynamicProps.blocking_nodes[1].value
                 submitJSON.blocking_states = dynamicProps.blocking_state.value
             }
-            let newRules = [...rules];
-            newRules.forEach(x=>{
-                Object.keys(dynamicProps).forEach(y=>{
-                    if(x.hasOwnProperty(dynamicProps[y].id) && x.input.includes(y)){
-                        x[dynamicProps[y].id] = parseFloat(dynamicProps[y].value) 
-                    }
-                })
-            });
+
+            let newRules;
+            if(rules.length > 0){
+                newRules = [...rules]
+                newRules.forEach(x=>{
+                    Object.keys(dynamicProps).forEach(y=>{
+                        if(x.hasOwnProperty(dynamicProps[y].id) && x.input.includes(y)){
+                            x[dynamicProps[y].id] = parseFloat(dynamicProps[y].value) 
+                        }
+                    })
+                });
+            }else{
+                newRules = rules
+            }
+            
             submitJSON.rules = newRules;
             let createdJSON = {
                 "input" : submitJSON,

@@ -20,7 +20,12 @@ function ImageViewer(props) {
     }else{
         accept="application/octet-stream"
     }
-    const image_url = `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file/${props.meta.id}?http_authorization=${localStorage.getItem('id_token')}&&http_accept=${encodeURIComponent(accept)}`
+    var image_url;
+    if(localStorage.getItem('id_token')){
+        image_url = `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file/${props.meta.id}?http_authorization=${localStorage.getItem('id_token')}&&http_accept=${encodeURIComponent(accept)}`
+    }else{
+        image_url = `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file/${props.meta.id}?http_accept=${encodeURIComponent(accept)}`
+    }
 
     function handleTabChange(event, value) {
         setSelectedTab(value);

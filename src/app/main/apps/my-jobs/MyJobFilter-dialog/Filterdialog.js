@@ -27,7 +27,8 @@ export const MyJobFilter = ({
   handleLogout,
   remainingTime,
   renderFlag,
-  setRenderFlag
+  setRenderFlag,
+  expCheck
 }) => {
   const useStyles = makeStyles((theme) => ({
     root: {
@@ -69,6 +70,13 @@ export const MyJobFilter = ({
     createjobTypeArray(jobData);
     // eslint-disable-next-line
   }, [jobData && jobData.length]);
+  
+  useEffect(() => {
+      sessionStorage.removeItem("preStateValue")
+      sessionStorage.removeItem("preJobTypeValue")
+      setPreStateValue([]);
+      setPreJobTypeValue([]);
+  },[expCheck])
 
   function onEntered() {
     var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
@@ -152,7 +160,7 @@ export const MyJobFilter = ({
     var sortOrder = JSON.parse(sessionStorage.getItem("sortOrder"))
     var sortType = JSON.parse(sessionStorage.getItem("type"))
     handleClose();
-    dispatch(Actions.getFiles(10, 0, sortOrder, sortType, true, true));
+    dispatch(Actions.getFiles(10, 0, sortOrder, sortType, true, expCheck));
     sessionStorage.setItem("count", 0);
   };
   const reset = () => {
@@ -165,7 +173,7 @@ export const MyJobFilter = ({
     var sortOrder = JSON.parse(sessionStorage.getItem("sortOrder"))
     var sortType = JSON.parse(sessionStorage.getItem("type"))
     sessionStorage.setItem("isFilterApplied", JSON.stringify(false));
-    dispatch(Actions.getFiles(10, 0, sortOrder, sortType, true));
+    dispatch(Actions.getFiles(10, 0, sortOrder, sortType, true, expCheck));
     sessionStorage.setItem("count", start);
   };
 
