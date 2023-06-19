@@ -107,8 +107,12 @@ function FileRow(props) {
             {columns.map((column,idx)=>{
                 return (
                     <>
-                    {!column.infoIconVisibility ? 
-                    (<TableCell key={idx} className={column.cellClass}>{column.formatter?column.formatter(meta[column.attr],meta):meta[column.attr]}</TableCell>) : 
+                    {!column.infoIconVisibility ?
+                    (<TableCell key={idx} className={`${column.cellClass}`}>
+                        {column.formatter ?
+                            column.formatter(meta[column.attr], meta) :
+                            meta[column.attr]}
+                    </TableCell>) :
                      <Hidden mdUp>
                      <TableCell style={infoIcon} key={idx} className={column.cellClass}>
                         <IconButton

@@ -28,9 +28,12 @@ export const file_viewers_map = {
     "dynamical_systems_initial_config": React.lazy(() => import('./viewer/text/')),
     "json":  React.lazy(() => import('./viewer/json/')),
     // "geographical_region":  React.lazy(() => import('./viewer/json/')),
-    // "epihiperDiseaseModel":  React.lazy(() => import('./viewer/json/')),
-    // "epihiperInitialization":  React.lazy(() => import('./viewer/json/')),
-    // "epihiperIntervention":  React.lazy(() => import('./viewer/json/')),
+    "epihiperDiseaseModel":  React.lazy(() => import('./viewer/json/')),
+    "epihiperInitialization":  React.lazy(() => import('./viewer/json/')),
+    "vegalite+json": React.lazy(() => import('./viewer/vegaliteJSON/')),
+    "epihiperIntervention":  React.lazy(() => import('./viewer/json/')),
+    "epihiperSimulationSummary": React.lazy(() => import('./viewer/csv/')),
+    "epihiperSimulation": React.lazy(() => import('./viewer/csv/')),
     // "epihiperTraits":  React.lazy(() => import('./viewer/json/')),
     "PUNGraph": React.lazy(() => import('./viewer/network/')),
     "PNGraph": React.lazy(() => import('./viewer/network/')),
@@ -64,8 +67,11 @@ export const file_viewers_map = {
     "snap_TIntStrH": React.lazy(() => import('./viewer/text/')),
     "snap_TGVizLayout": React.lazy(() => import('./viewer/text/')),
     "snap_TIntV_Subgraph": React.lazy(() => import('./viewer/text/')),
-    "csonnet_simulation_container": React.lazy(() => import('./viewer/csonnet_simulation_container/'))
+    "csonnet_simulation_container": React.lazy(() => import('./viewer/csonnet_simulation_container/')),
+    "blacklisted": React.lazy(() => import('./viewer/blacklisted'))
 }
+
+export const blacklisted_FileType = ["xlsx","excel"]
 
 export const MAX_RAW_FILE_VIEW_SIZE = 10000000
 

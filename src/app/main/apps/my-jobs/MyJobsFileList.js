@@ -98,7 +98,11 @@ function MyJobsFileList(props) {
         files = files[1]
         onloadSpinner = true;
         if (selectedId === undefined && files.length > 0 && path.endsWith('my-jobs/') === true && props.changeState === 0) {
+            if(!props.selectedJobDef){
+                props.setSelectedJobDef(true)
             dispatch(Actions.setSelectedItem(files[0].id));
+            }
+            // dispatch(Actions.setSelectedItem(files[0].id));
         }
 
         if (files.length > 0) {
@@ -144,8 +148,13 @@ function MyJobsFileList(props) {
 
     useEffect(() => {
         if (files.length > 0 && sortCount === false) {
-          if (document.getElementsByClassName("jobRows").length > 0)
-            document.getElementsByClassName("jobRows")[0].click();
+          if (document.getElementsByClassName("jobRows").length > 0){
+            if(!props.selectedJobDef){
+                props.setSelectedJobDef(true)
+                document.getElementsByClassName("jobRows")[0].click();
+            }
+          }
+            // document.getElementsByClassName("jobRows")[0].click();
         }
       }, [files.length, page, sortCount]);
     
@@ -157,7 +166,11 @@ function MyJobsFileList(props) {
       useEffect(() => {
         if (document.getElementsByClassName("jobRows").length > 0) {
             document.getElementsByClassName("jobBody")[0].scrollIntoView();
-            document.getElementsByClassName("jobRows")[0].click();
+            if(!props.selectedJobDef){
+                props.setSelectedJobDef(true)
+                document.getElementsByClassName("jobRows")[0].click();
+            }
+            // document.getElementsByClassName("jobRows")[0].click();
         }
       }, [firstFileId]);
 
@@ -177,31 +190,137 @@ function MyJobsFileList(props) {
         if (files.length > 0) {
             var i, changeState = false, cancelledState = false;
             var cancelledJob = localStorage.getItem("cancelledJob")
+            let id = ""
+            let notComp_state = []
             for (i = 0; i < files.length; i++) {
                 if (files[i].state !== 'Completed' && files[i].state !== 'Failed' && files[i].state !== 'Cancelled') {
                     changeState = true;
+                    id = files[i].id
+                    notComp_state.push(id)
                 }
             }
+
             if (cancelledJob === null)
                 cancelledState = true;
             else {
                 for (i = 0; i < files.length; i++) {
                     if (files[i].id === cancelledJob) {
                         cancelledState = true;
-                        if (files[i].state === 'Completed' || files[i].state === 'Failed' || files[i].state === 'Cancelled')
+                        if (files[0].state === 'Completed' || files[i].state === 'Failed' || files[i].state === 'Cancelled')
                             localStorage.removeItem("cancelledJob")
                         break;
                     }
                 }
             }
-            const timer_selectedItem = setInterval(() => {
-                selectedItem && selectedItem.state !== 'Completed' && selectedItem.state !== 'Failed' && selectedItem.state !== 'Cancelled' && dispatch(Actions.setSelectedItem(selectedId));
-            }, 8000);
+            // const timer_selectedItem = setInterval(() => {
+            //     selectedItem && selectedItem.state !== 'Completed' && selectedItem.state !== 'Failed' && selectedItem.state !== 'Cancelled' && dispatch(Actions.setSelectedItem(selectedId));
+            // }, 8000);
 
-            const timer_jobList = setInterval(() => {
+            // const timer_jobList = setInterval(() => {
+            //     if (changeState || !cancelledState) {
+            //         props.setChangeState(props.changeState + 1);
+            //         // Below logic is used to call api after every 8000ms. this logic calls job definiton api that are expanded and are in running state. 
+            //         //notComp_state is array that has JD id which are in running state. if any id found in window.expCheckedList that matches the item in notComp_state, api gets called to fetch its updated state. Further if for the same window.expCheckedList[ele] has expanded child and its status is running api will get called to update its state
+
+            //         notComp_state.forEach((ele) => {  
+            //                 if(Object.keys(window.expCheckedList).length > 0 && window.expCheckedList.hasOwnProperty(ele)){
+            //                         dispatch(Actions.getChildJobs(ele));
+
+            //                         if(window.expCheckedList[ele].child_expanded.length > 0){
+            //                             window.expCheckedList[ele].child_expanded.forEach((child) => {
+            //                             const index = window.expList.findIndex(obj => obj.id === ele);
+            //                             if (index !== -1) {
+            //                                 const child_state = window.expList[index].value.filter(el => el.id === child)[0].state
+            //                                 let jd_state = ['Completed','Failed','Cancelled']
+            //                                 if(!jd_state.includes(child_state)){
+            //                                     setTimeout(() => {
+            //                                         dispatch(Actions.getChildJobs(child));
+            //                                         window.checkForUpdates = true
+            //                                         window.newText = "Childd"
+    
+            //                                     }, 2000);
+            //                                     // dispatch(Actions.getChildJobs(child));
+            //                                 }
+            //                             }
+            //                             })
+            //                         }
+            //                         window.checkForUpdates = true
+            //                         window.newText = "Parentt"
+            //                 }
+            //             })
+            //         cancelledState && setSortCount(true)
+            //     }else {
+                
+            //         if(window.expList.length > 0){
+            //             window.expList.forEach((ele) => {
+            //                 let pendingStatus = false;
+            //                 let jd_state = ['Completed','Failed','Cancelled']
+            //                 for (i = 0; i < ele.value.length; i++) {
+            //                     if(!jd_state.includes(ele.value[i].state)){
+            //                         pendingStatus = true;
+            //                         break;
+            //                     }
+            //                 }
+            //                 if(pendingStatus){
+            //                     props.setChangeState(props.changeState + 1);
+            //                     dispatch(Actions.getChildJobs(ele.id));
+            //                     window.checkForUpdates = true
+            //                 }
+            //             })
+            //         }
+            //     }
+            //     setTimeout(() => {
+            //         setSortCount(false);
+            //     }, 2000);
+            // }, 8000);
+
+
+            const timer_jobList = setInterval(async () => {
                 if (changeState || !cancelledState) {
                     props.setChangeState(props.changeState + 1);
-                    cancelledState && setSortCount(true)
+                    if (Object.keys(window.expCheckedList).length > 0) {
+                        for (const ele of notComp_state) {
+                            if (window.expCheckedList.hasOwnProperty(ele)) {
+                                dispatch(Actions.getChildJobs(ele));
+                                if (window.expCheckedList[ele].child_expanded.length > 0) {
+                                    for (const child of window.expCheckedList[ele].child_expanded) {
+                                        const index = window.expList.findIndex(obj => obj.id === ele);
+                                        if (index !== -1) {
+                                            const child_state = window.expList[index].value.find(el => el.id === child)?.state;
+                                            const jd_state = ['Completed', 'Failed', 'Cancelled'];
+                                            if (child_state && !jd_state.includes(child_state)) {
+                                                await new Promise(resolve => setTimeout(resolve, 2000));
+                                                dispatch(Actions.getChildJobs(child));
+                                                window.checkForUpdates = true;
+                                                window.newText = "Childd";
+                                            }
+                                        }
+                                    }
+                                }
+                                window.checkForUpdates = true;
+                                window.newText = "Parentt";
+                            }
+                        }
+                    }
+                    cancelledState && setSortCount(true);
+                } else {
+                    if (window.expList.length > 0) {
+                        for (const ele of window.expList) {
+                            let pendingStatus = false;
+                            const jd_state = ['Completed', 'Failed', 'Cancelled'];
+                            for (const value of ele.value) {
+                                if (value.state && !jd_state.includes(value.state)) {
+                                    pendingStatus = true;
+                                    break;
+                                }
+                            }
+                            if (pendingStatus) {
+                                props.setChangeState(props.changeState + 1);
+                                dispatch(Actions.getChildJobs(ele.id));
+                                window.checkForUpdates = true;
+                            }
+                        }
+                    }
                 }
                 setTimeout(() => {
                     setSortCount(false);
@@ -210,7 +329,7 @@ function MyJobsFileList(props) {
 
             return () => {
                 clearInterval(timer_jobList);
-                clearInterval(timer_selectedItem);
+                // clearInterval(timer_selectedItem);
             }
         }
 
@@ -384,7 +503,7 @@ function MyJobsFileList(props) {
       };
 
     function onRowClick(e, selId) {
-        // e.stopPropagation()
+        e.stopPropagation()
         if(selId !== selectedId){
             setSelectedFlag(false)
             setSelectedId(selId)
@@ -416,6 +535,7 @@ function MyJobsFileList(props) {
             // 2. window.expList : Array that contains two keys (id && value). id store the value of id that is being expanded. value is an array that store the child jobs under the id
             // 3. window.currentId : Stores the value of currently expanded id 
             // 4. window.dynStyle : Used for styling and shifting the list to left side 
+            // 5. window.checkForUpdates : Used to allow the code to update the value of  window.expList. Once updated it is marked to false
 
 
         if(expandedList1 && expandedList1.length !== 0){
@@ -438,6 +558,22 @@ function MyJobsFileList(props) {
                         expandedList[i].creation_date = tempDate
                     }
                 }
+                // Below if condition is to update the variable window.expList so that is get updated time to time to re`nder the STATUS of that job defintion
+                if (window.checkForUpdates) {
+                    console.log(window.newText)
+                    console.log(expandedList[0].parent_id)
+                    console.log(expandedList)
+
+            
+                    if (expandedList.length > 0) {
+                        let updatingId = expandedList[0].parent_id
+                        const index = window.expList.findIndex(obj => obj.id === updatingId);
+                        if (index !== -1) {
+                            window.expList[index].value = expandedList                            
+                        }
+                    }
+                    window.checkForUpdates = false
+                }
 
                 if(Object.keys(window.expCheckedList).length > 0 && window.currentId !== undefined){
                     if(window.expList && window.expList.length > 0 && window.expList.every((v) => v.id !== window.currentId)){
@@ -458,7 +594,7 @@ function MyJobsFileList(props) {
             }
         }
 
-        const expand = (e, id, expandCheck) => {
+        const expand = (e, id, expandCheck, state) => {
             e.stopPropagation()
             setIsExpanded(!isExpanded)
             if(expandCheck){
@@ -573,7 +709,7 @@ function MyJobsFileList(props) {
                 {props.expandableList === true && 
                     <TableCell style={getStyle(setClass, row.parent_id)} className={`expander ${setClass ? "expandShifter" : ""}`}>
                         {row['has_children'] && 
-                        <IconButton  onClick={(e) => expand(e, row.id, !isExpanded)}   style={{padding: 0}}>
+                        <IconButton  onClick={(e) => expand(e, row.id, !isExpanded, row.state)}   style={{padding: 0}}>
                         {isExpanded ? <KeyboardArrowDownIcon /> : <KeyboardArrowRightIcon />}
                       </IconButton>}
                     </TableCell>}

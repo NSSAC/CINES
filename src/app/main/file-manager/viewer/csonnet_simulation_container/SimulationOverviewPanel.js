@@ -29,7 +29,6 @@ const useStyles = makeStyles({
 function SimulationOverviewPanel(props) {
     const classes = useStyles();
     var graph;
-    console.log("SimulationOverviewPanel")
     if (props && props.meta && props.meta.provenance && props.meta.provenance){
         var infiles = props.meta.provenance.input_files
         var found;

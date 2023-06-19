@@ -11,7 +11,7 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import { AssignmentReturn, CloudDownload, Edit, Delete } from "@material-ui/icons";
 
-import { saveAs } from "file-saver";
+// import { saveAs } from "file-saver";
 import filesize from "filesize";
 import moment from "moment";
 
@@ -364,31 +364,60 @@ function FileList(props) {
       setShowMoveFiles(true);
     }
     const _files = filtered_files ? filtered_files.filtered : files;
+    // function downloadFiles() {
+    //   const token = localStorage.getItem("id_token");
+    //   _files
+    //     .filter((f) => selectedIds.indexOf(f.id) >= 0)
+    //     .forEach((f) => {
+    //       if (f.container_id && f.name) {
+    //         console.log(`download ${f.name}`);
+    //         saveAs(
+    //           `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file/${
+    //             f.container_id
+    //           }/${f.name}?${
+    //             token ? "http_authorization=" + token : ""
+    //           }&http_accept=application/octet-stream`,
+    //           f.name
+    //         );
+    //       } else {
+    //         saveAs(
+    //           `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file/${f.id}?${
+    //             token ? "http_authorization=" + token : ""
+    //           }}&http_accept=application/octet-stream`,
+    //           f.name
+    //         );
+    //       }
+    //     });
+    // }
+
     function downloadFiles() {
       const token = localStorage.getItem("id_token");
+      
       _files
         .filter((f) => selectedIds.indexOf(f.id) >= 0)
         .forEach((f) => {
           if (f.container_id && f.name) {
             console.log(`download ${f.name}`);
-            saveAs(
-              `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file/${
-                f.container_id
-              }/${f.name}?${
-                token ? "http_authorization=" + token : ""
-              }&http_accept=application/octet-stream`,
-              f.name
-            );
+            let url = `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file/${f.container_id}/${f.name}?${token ? "http_authorization=" + token : ""}&http_accept=application/octet-stream`
+
+            let link = document.createElement("a");
+            link.href = url;
+            link.download = f.name;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
           } else {
-            saveAs(
-              `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file/${f.id}?${
-                token ? "http_authorization=" + token : ""
-              }}&http_accept=application/octet-stream`,
-              f.name
-            );
+            let url =  `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file/${f.id}?${token ? "http_authorization=" + token : ""}}&http_accept=application/octet-stream`
+            let link = document.createElement("a");
+            link.href = url;
+            link.download = f.name;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
           }
         });
-    }
+  }
 
     function confirmAndDelete(selectedIds, files) {
       const selFiles = selectedIds

@@ -34,6 +34,7 @@ function MyJobsApp(props) {
   localStorage.removeItem("resubmitJob")
   const [expandableList, setExpandableList] = useState(true);
   const [expCheck, setExpCheck] = useState(true)
+  const [selectedJobDef, setSelectedJobDef] = useState(false)
 
   const handleExpandableList = (event) => {
     setExpandableList(event.target.checked);
@@ -243,6 +244,8 @@ function MyJobsApp(props) {
             pageLayout={pageLayout}
             expandableList = {expandableList}
             expCheck = {expCheck}
+            setSelectedJobDef = {(p) => setSelectedJobDef(p)}
+            selectedJobDef={selectedJobDef}
           />
       }
       leftSidebarVariant="temporary"
