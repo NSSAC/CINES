@@ -82,11 +82,14 @@ function JobDefinitionForm(props) {
       // dispatch(Actions.setSelectedItem(`${props.namespace}/${props.module}@${props.version}`));
     if (Object.keys(jobData).length !== 0 && jobData.id.includes(pathEnd)  ) {
       setSpinnerFlag(false);
-      var createFromData = jobData.input_schema.properties;
+      var createFromData = jobData.input_schema.properties || {};
       var inputFileData = jobData.input_files;
       var outputFiles = jobData.output_files;
       var requiredFeildArray = jobData.input_schema.required;
       var responseData = jobData;
+      if(outputFiles && Object.keys(outputFiles).length === 0){
+        outputFiles = undefined
+      }
       creatForm(
         createFromData,
         inputFileData,
