@@ -134,7 +134,7 @@ function MyJobsFileList(props) {
         fontSize: "12.5px",
         marginLeft: "5px",
       };
-      
+
     const selectButtonStyleMob = {
         backgroundColor: "#122230",
         fontSize: '11.5px',
@@ -157,12 +157,12 @@ function MyJobsFileList(props) {
             // document.getElementsByClassName("jobRows")[0].click();
         }
       }, [files.length, page, sortCount]);
-    
+
       // To make the 1st row element selected and show its meta-data
       useEffect(() => {
         if (Array.isArray(files) && files.length > 0) setFirstFileId(files[0].id);
       }, [files]);
-    
+
       useEffect(() => {
         if (document.getElementsByClassName("jobRows").length > 0) {
             document.getElementsByClassName("jobBody")[0].scrollIntoView();
@@ -212,9 +212,9 @@ function MyJobsFileList(props) {
                     }
                 }
             }
-            // const timer_selectedItem = setInterval(() => {
-            //     selectedItem && selectedItem.state !== 'Completed' && selectedItem.state !== 'Failed' && selectedItem.state !== 'Cancelled' && dispatch(Actions.setSelectedItem(selectedId));
-            // }, 8000);
+            const timer_selectedItem = setInterval(() => {
+                selectedItem && selectedItem.state !== 'Completed' && selectedItem.state !== 'Failed' && selectedItem.state !== 'Cancelled' && dispatch(Actions.setSelectedItem(selectedId));
+            }, 8000);
 
             // const timer_jobList = setInterval(() => {
             //     if (changeState || !cancelledState) {
@@ -329,7 +329,7 @@ function MyJobsFileList(props) {
 
             return () => {
                 clearInterval(timer_jobList);
-                // clearInterval(timer_selectedItem);
+                clearInterval(timer_selectedItem);
             }
         }
 
@@ -543,7 +543,7 @@ function MyJobsFileList(props) {
 
             if (expandedList.length !== 0) {
                 expandedList = expandedList[1]
-        
+
                 if (expandedList.length > 0) {
                     let i;
                     for (i = 0; i < expandedList.length; i++) {
@@ -564,12 +564,12 @@ function MyJobsFileList(props) {
                     console.log(expandedList[0].parent_id)
                     console.log(expandedList)
 
-            
+
                     if (expandedList.length > 0) {
                         let updatingId = expandedList[0].parent_id
                         const index = window.expList.findIndex(obj => obj.id === updatingId);
                         if (index !== -1) {
-                            window.expList[index].value = expandedList                            
+                            window.expList[index].value = expandedList
                         }
                     }
                     window.checkForUpdates = false
@@ -598,7 +598,7 @@ function MyJobsFileList(props) {
             e.stopPropagation()
             setIsExpanded(!isExpanded)
             if(expandCheck){
-                
+
                 window.currentId = id
                 let idPresent = false;
                 let parent_elementId;
