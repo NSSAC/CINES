@@ -1,4 +1,4 @@
-import { Icon, LinearProgress, Typography } from "@material-ui/core";
+import { Icon, LinearProgress, Typography, IconButton } from "@material-ui/core";
 import { makeStyles } from '@material-ui/styles';
 import clsx from 'clsx';
 import React from "react";
@@ -14,6 +14,7 @@ import FileList from "./FileList/";
 import { file_viewers_map } from "./FileManagerAppConfig";
 import * as Actions from "./store/actions";
 import reducer from "./store/reducers";
+import { blacklisted_FileType } from "./FileManagerAppConfig";
 
 import './FileManager.css'
 
@@ -43,6 +44,7 @@ function FileManagerApp(props) {
   const usermeta_updater = useSelector(({ fileManagerApp }) => fileManagerApp.usermeta);
   const file_path = "/" + ((props.match.params && props.match.params.path)?props.match.params.path:"")
   const history =  useHistory()
+  let defaultType = ""
 
   const matches = useMediaQuery("(min-width:600px)");
 
@@ -78,6 +80,24 @@ function FileManagerApp(props) {
     props.history.push("/home")
   }
 
+  function downloadFile(meta) {
+    const token = localStorage.getItem("id_token");
+    let url;
+    let accept = "application/octet-stream" 
+    if (meta.container_id && meta.name) {
+        url = `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file/${meta.container_id}/${meta.name}?${token ? "http_authorization=" + token : ""}&http_accept=application/octet-stream`
+    } else {
+        url = `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file/${meta.id}?${token ? "http_authorization=" + token : ""}&&http_accept=${encodeURIComponent(accept)}`
+    }
+
+    let link = document.createElement("a");
+    link.href = url;
+    link.download = meta.name;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
   return (
     <div className={`${clsx(classes.root)} flex flex-col w-full h-full`}>
       <div
@@ -99,18 +119,25 @@ function FileManagerApp(props) {
             home
           </Icon>
           <Icon className="text-18">chevron_right</Icon>
-          <Breadcrumb props={props} path={file_path} className="text-white" />
+          <Breadcrumb props={props} path={file_path} meta={file_meta} abc="adfad" className="text-white" />
         </div>
         <div className="flex-grow text-right flex-row text-lg m-0">
           {fileActions}
           {menuItems}
+          {!file_meta.isContainer ?
+              <IconButton title="Click to Download" className="w-64 h-64" onClick={() => downloadFile(file_meta)}>
+                <Icon className="text-white text-4xl">cloud_download</Icon>
+              </IconButton>
+            :
+            ""
+          }
         </div>
       </div>
       <div className="flex-grow  m-0 p-0 overflow-hidden flex flex-col">
         {((file_meta, file_path) => {
           if (file_meta && file_meta.error) {
             if (file_meta.error === "Forbidden") {
-              console.log("user: ", user);
+              // console.log("user: ", user);
               const userServiceURL = `${process.env.REACT_APP_SCIDUCT_USER_SERVICE}`;
               const sciductID = `${process.env.REACT_APP_SCIDUCT_APP_ID}`;
               var loginURL = userServiceURL + "/authenticate/" + sciductID;
@@ -148,8 +175,23 @@ function FileManagerApp(props) {
             );
           }
 
-          if (file_viewers_map[file_meta.type]) {
-            const Comp = file_viewers_map[file_meta.type];
+          if(file_meta.type && file_meta.type != "folder" && !file_viewers_map.hasOwnProperty(file_meta.type) && !file_meta.isContainer){
+            if(blacklisted_FileType.includes(file_meta.type)){
+              defaultType = "blacklisted"
+            }else{
+              defaultType = "text"
+            }
+          }else if(file_meta.type && file_meta.type != "folder" && !file_viewers_map.hasOwnProperty(file_meta.type) && file_meta.isContainer){
+            defaultType = "folder"
+          }
+
+          if (file_viewers_map[file_meta.type] || file_viewers_map[defaultType]  ) {
+            let Comp;
+            if(file_meta.type && file_meta.type != "folder" && !file_viewers_map.hasOwnProperty(file_meta.type)){
+              Comp = file_viewers_map[defaultType] ;
+            }else{
+              Comp = file_viewers_map[file_meta.type] ;
+            }
             return (
               <Comp
                 {...props}

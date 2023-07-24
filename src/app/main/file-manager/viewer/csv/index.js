@@ -75,9 +75,9 @@ function CSVViewer(props) {
                         label="Provenance"
 
                     />
-                                        <Tab
+                    <Tab
                         // icon={<FileIcon alt="JSON Tree" />}
-                        className="min-w-0"
+                        className={`${enableFileView?'':'hidden'} min-w-0`}
                         title="Table"
                         label="Table"
 
@@ -88,7 +88,8 @@ function CSVViewer(props) {
             {selectedTab === 0 && <div className="p-4 overflow-auto flex-grow"><FileOverviewPanel meta={props.meta}/></div>}
             {selectedTab === 2 && <div className="p-4 overflow-auto flex-grow"><MetadataPanel meta={props.meta}/></div>}
             {selectedTab === 3 && <div className="p-4 overflow-auto flex-grow"><ProvenancePanel meta={props.meta}/></div>}
-            {selectedTab === 4 && data && <div className={`${enableFileView?'':'hidden'} p-4 overflow-auto flex-grow`}>
+            {selectedTab === 4 && data && 
+            <div className={`${enableFileView?'':'hidden'} overflow-auto flex-grow`}>
                 {/* <pre>{JSON.stringify(data,null,4)}</pre> */}
                 <Table stickyHeader>
                     {hasHeader && (

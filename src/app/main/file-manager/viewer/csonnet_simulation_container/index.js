@@ -35,7 +35,6 @@ function CSonnetSimulationContainer(props) {
                 setEnableOutputFileView(false)
             }
 
-            console.log("Check for files.analysis:", files.analysis)
             if (files.analysis && files.analysis.length>0){
                 setEnableDynamicVisualization(true)
             }else{

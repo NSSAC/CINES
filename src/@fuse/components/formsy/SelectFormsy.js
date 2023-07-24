@@ -23,7 +23,8 @@ function SelectFormsy(props)
         'SelectDisplayProps',
         'value',
         'variant',
-        'disabled'
+        'disabled',
+        'required'
     ]);
 
     // An error message is returned only if the component is invalid
@@ -55,7 +56,7 @@ function SelectFormsy(props)
     return (
         <FormControl error={Boolean(errorMessage)} className={props.className} variant={importedProps.variant}>
             {props.label && (
-                <InputLabel htmlFor={props.name}>{props.label}</InputLabel>
+                <InputLabel htmlFor={props.name}>{props.label} {props.req ? <span style={{color: 'red'}}>{'*'}</span> : ""}</InputLabel>
             )}
             <Select
                 {...importedProps}

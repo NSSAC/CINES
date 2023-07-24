@@ -1,13 +1,13 @@
 import { Icon, IconButton, Tooltip } from '@material-ui/core';
 import React, { useState } from 'react';
 import { confirmAlert } from 'react-confirm-alert';
-import { useSelector } from 'react-redux';
-
+import { useDispatch, useSelector } from 'react-redux';
 import { FuseAnimate } from '@fuse';
 
 import CancelJob from './CancelJob';
 
 import "app/main/file-manager/Confirm-alert.css";
+import * as Actions from '../job-definition/Job-Definition/store/actions/index';
 
 function DetailSidebarHeader(props)
 {
@@ -15,6 +15,7 @@ function DetailSidebarHeader(props)
     const selectedItem = useSelector(({myJobsApp}) => myJobsApp.selectedjobid);
     const [cancelJob, setCancelJob] = useState(false);
     var stateFlag = false;
+    const dispatch = useDispatch()
 
     if ((files.payload && files.payload.length === 0) || !selectedItem || (Object.keys(selectedItem).length === 0 && selectedItem.constructor === Object))
     {
@@ -45,15 +46,32 @@ function DetailSidebarHeader(props)
 
       function onRerun(item) {
         var parts = item.job_definition.split("@")
-        
+        extractFileData(item)
         var target = window.location.pathname.replace(`my-jobs/${item.id}`,'job-definition/').replace('my-jobs','job-definition') + parts[0];
         props.history.push({
           pathname: target,
           search: "?version=" + parts[1],
           state: { inputData: item }
-      });
-        localStorage.setItem('resubmitJob',JSON.stringify(item))
+        });
 
+        dispatch(Actions.clearJobDefinition());
+        localStorage.setItem('resubmitJob',JSON.stringify(item))
+        
+      }
+      function extractFileData(item){
+        let checkInputFiles = [...item.input_files]
+        checkInputFiles.forEach((ele) => {
+          if(ele.autometa || ele.usermeta){
+            delete ele.autometa 
+            delete ele.usermeta
+          }
+          let name = ele.name || ""
+          if(item.input && item.input[name] && item.input[name] !== ""){
+            ele['filePath'] = item.input[name]
+          }
+        })
+        console.log(checkInputFiles)
+        window.checkInputFiles = checkInputFiles
       }
 
       function checkstate(){

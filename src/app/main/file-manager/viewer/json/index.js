@@ -100,7 +100,7 @@ function JsonViewer(props) {
                                 
                             }
                         }} 
-                        shouldExpandNode={()=>true}
+                        // shouldExpandNode={()=>true}
                     />
                 </div>
             )}

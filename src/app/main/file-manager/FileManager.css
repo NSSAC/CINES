@@ -140,3 +140,16 @@ hr {
 .MuiTooltip-popper {
   z-index: 9999 !important;
 }
+
+/* If file state is empty, ready, or partial use .case-one  */
+.case_one {
+  color: blue !important;
+}
+/* If file state is "staging" or "loading" use .case_two  */
+.case_two {
+  color: #ffa600 !important;
+}
+/* If file state is invalid use .case_three  */
+.case_three {
+  color: #ff0000 !important;
+}

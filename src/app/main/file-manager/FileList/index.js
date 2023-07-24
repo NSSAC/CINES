@@ -11,7 +11,7 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import { AssignmentReturn, CloudDownload, Edit, Delete } from "@material-ui/icons";
 
-import { saveAs } from "file-saver";
+// import { saveAs } from "file-saver";
 import filesize from "filesize";
 import moment from "moment";
 
@@ -118,6 +118,9 @@ function FileList(props) {
   const selectedIds = Object.keys(selected).filter((id) => {
     return selected[id];
   });
+  if(!window.disableClick){
+    window.disableClick = undefined
+  }
 
   if (_files && _files.length > 0 && sort && sort.length > 0) {
     var attr = sort[0].attr;
@@ -176,14 +179,15 @@ function FileList(props) {
       formatter: (val, obj) => {
         return (
           <Link
-            style={{ color: "#1565C0", pointerEvents: 'all' }}
+            style={{ color: "#1565C0", pointerEvents: `${!window.disableClick ? 'all' : 'none'}` }}
             title={val}
             to=''
             onClick={(event) => {
               event.preventDefault();
-              if (event.detail === 1) {
-                history.push(val);
-              }
+                if (event.detail === 1 && !window.disableClick) {
+                  history.push(val);
+                  window.disableClick = val
+                }
             }}
           >
             {val}
@@ -360,31 +364,60 @@ function FileList(props) {
       setShowMoveFiles(true);
     }
     const _files = filtered_files ? filtered_files.filtered : files;
+    // function downloadFiles() {
+    //   const token = localStorage.getItem("id_token");
+    //   _files
+    //     .filter((f) => selectedIds.indexOf(f.id) >= 0)
+    //     .forEach((f) => {
+    //       if (f.container_id && f.name) {
+    //         console.log(`download ${f.name}`);
+    //         saveAs(
+    //           `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file/${
+    //             f.container_id
+    //           }/${f.name}?${
+    //             token ? "http_authorization=" + token : ""
+    //           }&http_accept=application/octet-stream`,
+    //           f.name
+    //         );
+    //       } else {
+    //         saveAs(
+    //           `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file/${f.id}?${
+    //             token ? "http_authorization=" + token : ""
+    //           }}&http_accept=application/octet-stream`,
+    //           f.name
+    //         );
+    //       }
+    //     });
+    // }
+
     function downloadFiles() {
       const token = localStorage.getItem("id_token");
+      
       _files
         .filter((f) => selectedIds.indexOf(f.id) >= 0)
         .forEach((f) => {
           if (f.container_id && f.name) {
             console.log(`download ${f.name}`);
-            saveAs(
-              `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file/${
-                f.container_id
-              }/${f.name}?${
-                token ? "http_authorization=" + token : ""
-              }&http_accept=application/octet-stream`,
-              f.name
-            );
+            let url = `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file/${f.container_id}/${f.name}?${token ? "http_authorization=" + token : ""}&http_accept=application/octet-stream`
+
+            let link = document.createElement("a");
+            link.href = url;
+            link.download = f.name;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
           } else {
-            saveAs(
-              `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file/${f.id}?${
-                token ? "http_authorization=" + token : ""
-              }}&http_accept=application/octet-stream`,
-              f.name
-            );
+            let url =  `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/file/${f.id}?${token ? "http_authorization=" + token : ""}}&http_accept=application/octet-stream`
+            let link = document.createElement("a");
+            link.href = url;
+            link.download = f.name;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
           }
         });
-    }
+  }
 
     function confirmAndDelete(selectedIds, files) {
       const selFiles = selectedIds
@@ -803,12 +836,14 @@ function FileList(props) {
   }
 
   function onClickRow(evt) {
-    var clear = !evt.metaKey && !evt.ctrlKey && evt.target.getAttribute("type") !== "checkbox";
+    if(!window.disableClick){
+      var clear = !evt.metaKey && !evt.ctrlKey && evt.target.getAttribute("type") !== "checkbox";
     var row = findRow(evt.target);
     if (row && row.id) {
       toggleSelected(row.id, clear);
     }
     setMoveFileFlag(false);
+    }
   }
 
   function onDragEnter(evt) {
@@ -872,7 +907,17 @@ function FileList(props) {
     })
   }
   
-  if (_files && _files.length >= 0) {
+  if(window.disableClick){
+    return (
+      <div className="flex flex-1 flex-col items-center justify-center mt-40">
+        <Typography className="text-20 mt-16" color="textPrimary">
+          Loading
+        </Typography>
+        <LinearProgress className="w-xs" color="secondary" />
+      </div>
+    );
+  }
+  else if (_files && _files.length >= 0) {
     return (
       <div className="overflow-auto w-full h-full">
         <div className="flex w-full h-full">
@@ -901,7 +946,7 @@ function FileList(props) {
                 toggleAll={toggleAll}
                 enableCheckBoxes={totalFileCount!==0 && (props.enableCheckBoxes || false)}
               />
-               <ModifyPermissions
+              <ModifyPermissions
                 showModal={showPermissionsDialog}
                 selectedVal={props.meta}
                 props={props}
@@ -1019,7 +1064,8 @@ function FileList(props) {
         )}{" "}
       </div>
     );
-  } else if (_files && _files.length === 0) {
+  } 
+  else if (_files && _files.length === 0) {
     return (
       <div
         className="flex flex-1 flex-col items-center justify-center mt-40"
@@ -1033,7 +1079,8 @@ function FileList(props) {
         </Typography>
       </div>
     );
-  } else {
+  }
+  else{
     return (
       <div className="flex flex-1 flex-col items-center justify-center mt-40">
         <Typography className="text-20 mt-16" color="textPrimary">

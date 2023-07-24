@@ -64,36 +64,101 @@ const CSonNet_Generate_Blocking_Nodes = (props) => {
         // if (Object.keys(props.job_definition).length !== 0 && props.job_definition.id.includes(pathEnd)) {
         //         if (props.job_definition) {
         // console.log(`useEffect() setDynamicProps from resubmit`, props.resubmit)
-        setDynamicProps({
-            blocking_class: { id: 101, value: (props.resubmit && props.resubmit.inputData && props.resubmit.inputData.input && typeof props.resubmit.inputData.input.blocking_class !== 'undefined')?props.resubmit.inputData.input.blocking_class:"" , required: true },
-            blocking_method: {id: 102, value: (props.resubmit && props.resubmit.inputData && props.resubmit.inputData.input && typeof props.resubmit.inputData.input.blocking_method !== 'undefined')?props.resubmit.inputData.input.blocking_method:"", required: true},
-            random_seed: {id: 103, value: (props.resubmit && props.resubmit.inputData && props.resubmit.inputData.input && typeof props.resubmit.inputData.input.random_seed !== 'undefined')?props.resubmit.inputData.input.random_seed:0, required: true},
-            number_blocking_nodes: {id: 104, value: (props.resubmit && props.resubmit.inputData && props.resubmit.inputData.input && typeof props.resubmit.inputData.input.number_blocking_nodes !== 'undefined')?props.resubmit.inputData.input.number_blocking_nodes:1, required: true},
-            blocking_node_state: {id: 105, value: (props.resubmit && props.resubmit.inputData && props.resubmit.inputData.input)?props.resubmit.inputData.input.blocking_node_state:"", required: true},
-            inactive_state: {id: 105, value: (props.resubmit && props.resubmit.inputData && props.resubmit.inputData.input)?props.resubmit.inputData.input.inactive_state:"", required: true},
-            output_name: { value: (props.resubmit && props.resubmit.inputData && props.resubmit.inputData.input && props.resubmit.inputData.state !== "Completed") ? props.resubmit.inputData.output_name : '' },
-            csonnet_simulation: ['simulation_output', {
-                formLabel: 'simulation_output',
-                id: 1,
-                name: 'simulation_output',
-                outputFlag: false,
-                required: true,
-                types: ['csonnet_simulation_container'],
-                value: props.resubmit ? props.resubmit.inputData.input["csonnet_simulation"] : ""
-            }],
-            output_path: ['output_path', {
-                description: "Select the path from File manager where the output file is to be stored.",
-                formLabel: "Output Container",
-                id: 200,
-                outputFlag: true,
-                required: true,
-                types: ["folder", "epihiper_multicell_analysis", "epihiperOutput", "csonnet_simulation_container"],
-                value: props.resubmit ? props.resubmit.inputData.output_container : ""
-            }]
-        },[props.resubmit])
+        if(props.resubmit){
+            let dp = {
+                blocking_class: { id: 101, value: (props.resubmit && props.resubmit.inputData && props.resubmit.inputData.input && typeof props.resubmit.inputData.input.blocking_class !== 'undefined')?props.resubmit.inputData.input.blocking_class:"" , required: true },
+                blocking_method: {id: 102, value: (props.resubmit && props.resubmit.inputData && props.resubmit.inputData.input && typeof props.resubmit.inputData.input.blocking_method !== 'undefined')?props.resubmit.inputData.input.blocking_method:"", required: true},
+                random_seed: {id: 103, value: (props.resubmit && props.resubmit.inputData && props.resubmit.inputData.input && typeof props.resubmit.inputData.input.random_seed !== 'undefined')?props.resubmit.inputData.input.random_seed:0, required: true},
+                number_blocking_nodes: {id: 104, value: (props.resubmit && props.resubmit.inputData && props.resubmit.inputData.input && typeof props.resubmit.inputData.input.number_blocking_nodes !== 'undefined')?props.resubmit.inputData.input.number_blocking_nodes:1, required: true},
+                blocking_node_state: {id: 105, value: (props.resubmit && props.resubmit.inputData && props.resubmit.inputData.input)?props.resubmit.inputData.input.blocking_node_state:"", required: true},
+                inactive_state: {id: 105, value: (props.resubmit && props.resubmit.inputData && props.resubmit.inputData.input)?props.resubmit.inputData.input.inactive_state:"", required: true},
+                output_name: { value: (props.resubmit && props.resubmit.inputData && props.resubmit.inputData.input && props.resubmit.inputData.state !== "Completed") ? props.resubmit.inputData.output_name : '' },
+                csonnet_simulation: ['simulation_output', {
+                    formLabel: 'simulation_output',
+                    id: 1,
+                    name: 'simulation_output',
+                    outputFlag: false,
+                    required: true,
+                    types: ['csonnet_simulation_container'],
+                    value: props.resubmit ? props.resubmit.inputData.input["csonnet_simulation"] : ""
+                }],
+                output_path: ['output_path', {
+                    description: "Select the path from File manager where the output file is to be stored.",
+                    formLabel: "Output Container",
+                    id: 200,
+                    outputFlag: true,
+                    required: true,
+                    types: ["folder", "epihiper_multicell_analysis", "epihiperOutput", "csonnet_simulation_container"],
+                    value: props.resubmit ? props.resubmit.inputData.output_container : ""
+                }]
+            }
+            setDynamicProps(dp,[props.resubmit])
+            window.restoreDynamicProps = dp
+        }else if(props.localResubmit){
+            let dp = {
+                blocking_class: { id: 101, value: (props.localResubmit && props.localResubmit.input && typeof props.localResubmit.input.blocking_class !== 'undefined')?props.localResubmit.input.blocking_class:"" , required: true },
+                blocking_method: {id: 102, value: (props.localResubmit && props.localResubmit.input && typeof props.localResubmit.input.blocking_method !== 'undefined')?props.localResubmit.input.blocking_method:"", required: true},
+                random_seed: {id: 103, value: (props.localResubmit && props.localResubmit.input && typeof props.localResubmit.input.random_seed !== 'undefined')?props.localResubmit.input.random_seed:0, required: true},
+                number_blocking_nodes: {id: 104, value: (props.localResubmit && props.localResubmit.input && typeof props.localResubmit.input.number_blocking_nodes !== 'undefined')?props.localResubmit.input.number_blocking_nodes:1, required: true},
+                blocking_node_state: {id: 105, value: (props.localResubmit && props.localResubmit.input)?props.localResubmit.input.blocking_node_state:"", required: true},
+                inactive_state: {id: 105, value: (props.localResubmit && props.localResubmit.input)?props.localResubmit.input.inactive_state:"", required: true},
+                output_name: { value: (props.localResubmit && props.localResubmit.input && props.localResubmit.state !== "Completed") ? props.localResubmit.output_name : '' },
+                csonnet_simulation: ['simulation_output', {
+                    formLabel: 'simulation_output',
+                    id: 1,
+                    name: 'simulation_output',
+                    outputFlag: false,
+                    required: true,
+                    types: ['csonnet_simulation_container'],
+                    value: props.localResubmit ? props.localResubmit.input["csonnet_simulation"] : ""
+                }],
+                output_path: ['output_path', {
+                    description: "Select the path from File manager where the output file is to be stored.",
+                    formLabel: "Output Container",
+                    id: 200,
+                    outputFlag: true,
+                    required: true,
+                    types: ["folder", "epihiper_multicell_analysis", "epihiperOutput", "csonnet_simulation_container"],
+                    value: props.localResubmit ? props.localResubmit.output_container : ""
+                }]
+            }
+            setDynamicProps(dp,[props.localResubmit])
+            window.restoreDynamicProps = dp
+            props.localResubmit && localStorage.setItem('last_selected_folder', props.localResubmit.output_container + '/')
+
+        }else{
+            let dp = {
+                blocking_class: { id: 101, value: (props.resubmit && props.resubmit.inputData && props.resubmit.inputData.input && typeof props.resubmit.inputData.input.blocking_class !== 'undefined')?props.resubmit.inputData.input.blocking_class:"" , required: true },
+                blocking_method: {id: 102, value: (props.resubmit && props.resubmit.inputData && props.resubmit.inputData.input && typeof props.resubmit.inputData.input.blocking_method !== 'undefined')?props.resubmit.inputData.input.blocking_method:"", required: true},
+                random_seed: {id: 103, value: (props.resubmit && props.resubmit.inputData && props.resubmit.inputData.input && typeof props.resubmit.inputData.input.random_seed !== 'undefined')?props.resubmit.inputData.input.random_seed:0, required: true},
+                number_blocking_nodes: {id: 104, value: (props.resubmit && props.resubmit.inputData && props.resubmit.inputData.input && typeof props.resubmit.inputData.input.number_blocking_nodes !== 'undefined')?props.resubmit.inputData.input.number_blocking_nodes:1, required: true},
+                blocking_node_state: {id: 105, value: (props.resubmit && props.resubmit.inputData && props.resubmit.inputData.input)?props.resubmit.inputData.input.blocking_node_state:"", required: true},
+                inactive_state: {id: 105, value: (props.resubmit && props.resubmit.inputData && props.resubmit.inputData.input)?props.resubmit.inputData.input.inactive_state:"", required: true},
+                output_name: { value: (props.resubmit && props.resubmit.inputData && props.resubmit.inputData.input && props.resubmit.inputData.state !== "Completed") ? props.resubmit.inputData.output_name : '' },
+                csonnet_simulation: ['simulation_output', {
+                    formLabel: 'simulation_output',
+                    id: 1,
+                    name: 'simulation_output',
+                    outputFlag: false,
+                    required: true,
+                    types: ['csonnet_simulation_container'],
+                    value: props.resubmit ? props.resubmit.inputData.input["csonnet_simulation"] : ""
+                }],
+                output_path: ['output_path', {
+                    description: "Select the path from File manager where the output file is to be stored.",
+                    formLabel: "Output Container",
+                    id: 200,
+                    outputFlag: true,
+                    required: true,
+                    types: ["folder", "epihiper_multicell_analysis", "epihiperOutput", "csonnet_simulation_container"],
+                    value: props.resubmit ? props.resubmit.inputData.output_container : ""
+                }]
+            }
+            setDynamicProps(dp,[props.resubmit])
+            window.restoreDynamicProps = dp
+        }
 
 
-        console.log("DYNAMIC_PROPS: ", dynamicProps)
         props.resubmit && localStorage.setItem('last_selected_folder', props.resubmit.inputData.output_container + '/')
          setModelJSON(props.job_definition.input_schema)
 
@@ -131,10 +196,12 @@ const CSonNet_Generate_Blocking_Nodes = (props) => {
 
         updatedJobSubmissionForm[obj] = updatedFormElement;
         setDynamicProps({ ...updatedJobSubmissionForm });
+        window.restoreDynamicProps = { ...updatedJobSubmissionForm }
+        window.formEdited = true
     }
 
     const createSubmissionData = () => {
-        console.log("Random Seed: ", dynamicProps.random_seed)
+        // console.log("Random Seed: ", dynamicProps.random_seed)
         const random_seed = (dynamicProps.random_seed.value === "0")?(Math.floor(Math.random() * 1000)):parseInt(dynamicProps.random_seed.value)
         let requestJson = {
             "csonnet_simulation": dynamicProps.csonnet_simulation[1].value,
@@ -162,7 +229,7 @@ const CSonNet_Generate_Blocking_Nodes = (props) => {
             output_name: dynamicProps.output_name.value
         };
 
-        console.log("Form Data: ", requestJson)
+        // console.log("Form Data: ", requestJson)
         onFormSubmit(requestJson)
 
     }
@@ -398,7 +465,7 @@ const CSonNet_Generate_Blocking_Nodes = (props) => {
                                         disabled={!isFormValid || success || onSubmit}                                    >
                                         Submit
                                     </Button>
-                                    {props.resubmit ? <Link to="/apps/my-jobs/" style={{ color: 'transparent' }}>
+                                    {(props.resubmit || props.localResubmit) ? <Link to="/apps/my-jobs/" style={{ color: 'transparent' }}>
                                         <Button
                                             variant="contained"
                                             onClick={onFormCancel}

@@ -66,12 +66,13 @@ function FileRow(props) {
     const infoIcon = {
         right: '0',
         backgroundColor: '#F7F7F7',
-        position: 'sticky',
+        position: 'sticky', 
         top: '30px',
         width: '35px',
         paddingLeft: '0px',
         paddingRight: '0px',
     }
+    const iconArray = ['folder','epihiperOutput','pdf','epihiper_multicell_analysis','png','jpg','jpeg','mp3','mp4','csv','excel']
 
     return (
         <TableRow
@@ -94,14 +95,24 @@ function FileRow(props) {
             )}
 
             <TableCell className="max-w-64 w-64 p-0 text-center align-middle">
-                <Icon className={clsx(classes.typeIcon, meta.type)} />
+                {
+                    iconArray.includes(meta.type) ? 
+                        <Icon className={clsx(classes.typeIcon, meta.type)} /> : 
+                    meta.isContainer ?
+                        <Icon className={clsx(classes.typeIcon, "folder")} /> :
+                    <Icon className={clsx(classes.typeIcon, meta.type)} />
+                }
             </TableCell>
 
             {columns.map((column,idx)=>{
                 return (
                     <>
-                    {!column.infoIconVisibility ? 
-                    (<TableCell key={idx} className={column.cellClass}>{column.formatter?column.formatter(meta[column.attr],meta):meta[column.attr]}</TableCell>) : 
+                    {!column.infoIconVisibility ?
+                    (<TableCell key={idx} className={`${column.cellClass}`}>
+                        {column.formatter ?
+                            column.formatter(meta[column.attr], meta) :
+                            meta[column.attr]}
+                    </TableCell>) :
                      <Hidden mdUp>
                      <TableCell style={infoIcon} key={idx} className={column.cellClass}>
                         <IconButton

@@ -41,9 +41,9 @@ function SimpleFileList(props) {
             "cellClass": "",
             "formatter": (val,obj)=>{
                 if ((selectableTypes.indexOf(obj.type)>=0) && (obj.type !== "folder")){
-                    return <span className="">{val}</span>
+                    return <span title={`${obj.state}`} className={`asd ${setHoverClass(obj)}`}>{val}</span>
                 }else if (obj.isContainer){
-                    return <span className="cursor-pointer text-primary" style={{"color": "rgb(97, 218, 251)"}} onClick={(evt)=>{
+                    return <span  title={`${obj.state}`} className={`cursor-pointer text-primary`}  style={{"color": "rgb(97, 218, 251)"}} onClick={(evt)=>{ //className="cursor-pointer text-primary"
                         evt.preventDefault(); 
                         if (evt.detail === 1) {
                             var newPath = `${props.folder === "/" ? "" : props.folder}/${val}`;
@@ -60,7 +60,7 @@ function SimpleFileList(props) {
                         {val}
                     </span>
                 } else {
-                    return <span className="">{val}</span>
+                    return <span title={`${obj.state}`} className={`${setHoverClass(obj)}`} className="">{val}</span>
                 }
             }
         },
@@ -96,6 +96,18 @@ function SimpleFileList(props) {
             }
         }
     ]
+
+    function setHoverClass(meta) {
+        let cls = "";
+            if(meta.state === "" || meta.state === "ready" || meta.state === "partial"){
+                cls = "case_one" //blue
+            }else if(meta.state === "staging" || meta.state === "loading"){
+                cls = "case_two" //yellow
+            }else if(meta.state === "invalid"){
+                cls = "case_three" //red
+            }
+        return cls
+      }
 
     React.useEffect(()=>{
         setFirstFile(_files[0])
@@ -161,7 +173,27 @@ function SimpleFileList(props) {
 
         if (sel[id] && selectableTypes!=="*"){
             const meta = getSelectedMeta(id)
-            if (selectableTypes.indexOf(meta.type)<0){
+            let stateBoolean = false
+
+            const allowedState = {
+                'ready'   : true,
+                'partial' : false,
+                'staging' : false,
+                'loading' : false,
+                'invalid' : false
+            }
+            if(meta.type !== ""){
+                //If meta.state is emtpy file wont be selecteable, if meta.state is present in allowedState then file being selectable or not will depend on its value given in allowedState object, if meta.state other than above all comes then the file will be selectable 
+                if(meta.state === ""){
+                    stateBoolean = false
+                }
+                else if(allowedState.hasOwnProperty(meta.state)){
+                    stateBoolean = allowedState[meta.state]
+                }else{
+                    stateBoolean = true
+                }
+            }
+            if (selectableTypes.indexOf(meta.type) < 0 || !stateBoolean){
                 return;
             }
         }
@@ -234,7 +266,8 @@ function SimpleFileList(props) {
                     />
                     {(_files.length>0)&&(
                         <TableBody onClick={onClickRow} >
-                            {_files && _files.map((f)=><FileRow rowClass={props.rowClass||""} key={f.id} table_columns={table_columns} onNavigate={navigateToFolder} selected={selected[f.id]||false} meta={f} />)}
+                            {_files && _files.map((f)=>
+                            <FileRow rowClass={props.rowClass||""} key={f.id} table_columns={table_columns} onNavigate={navigateToFolder} selected={selected[f.id]||false} meta={f} />)}
                         </TableBody>
                     )}
                     {(_files.length===0)&&(

@@ -119,3 +119,16 @@ display: none;
   /* [class$="-MuiButtonBase-root-MuiPaginationItem-root"] {
     font-size: 1.2rem !important;
   } */
+  .expander{
+    width: 8px;
+    padding: 0 0 0 4px;
+  }
+  .expandShifter{
+    position: relative;
+  }
+  .MuiTableCell-root{
+    padding-top: 16px;
+    padding-right: 5px;
+    padding-bottom: 16px;
+    padding-left: 16px;
+  }

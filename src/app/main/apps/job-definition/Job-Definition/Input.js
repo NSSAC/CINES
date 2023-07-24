@@ -315,8 +315,26 @@ export const Input = (props) => {
 							required
 						/>}
 					</label>
-					{props.formData[1].outputFlag ? <div className={`folderPath ${folderChosenPath === '' ? '' : 'pathBreak'}`}>{folderChosenPath === '' ? 'No folder specified' : <b onBlur={props.changed} >{folderChosenPath}</b>}</div>
-						: <div className={`folderPath ${fileChosenPath === '' ? '' : 'pathBreak'}`}>{fileChosenPath === '' ? 'No file chosen' : <b onBlur={props.changed} >{fileChosenPath}</b>}</div>}
+					{
+					  props.formData[1].outputFlag ? (
+					    <div className={`folderPath ${folderChosenPath === "" ? "" : "pathBreak"}`}>
+					      {folderChosenPath === "" ? (
+					        "No folder specified"
+					      ) : (
+					        <b onBlur={props.changed}>{folderChosenPath}</b>
+					      )}
+					    </div>
+					  ) : (
+					    <div className={`folderPath ${fileChosenPath === "" ? "" : "pathBreak"}`}>
+					      {fileChosenPath === "" ? (
+					        "No file chosen"
+					      ) : (
+					        <b onBlur={props.changed}>{fileChosenPath}</b>
+					      )}
+					    </div>
+					  )
+					}
+
 				</div>
 			);
 	}
@@ -326,7 +344,22 @@ export const Input = (props) => {
 		}
 
 		if(props.formData[1].value !== "" && props.formData[1].outputFlag === false && typeFlag === 0){
-			setFileChosenPath(props.formData[1].value)
+			let validateFileType = window.checkInputFiles
+			if(validateFileType){
+				validateFileType.forEach((ele) => {
+					if(ele.filePath === props.formData[1].value && ele.name === props.formData[1].name){
+						if(props.formData[1].types.includes(ele.type)){
+							setFileChosenPath(props.formData[1].value)
+						}else{
+							setFileChosenPath("")
+						}
+					}else{
+						setFileChosenPath(props.formData[1].value)
+					}
+				})
+			}else{
+				setFileChosenPath(props.formData[1].value)
+			}
 		  }
 
 		  if(props.formData[1].value !== "" && props.formData[1].outputFlag === true && typeFlag === 0){
@@ -378,6 +411,7 @@ export const Input = (props) => {
 						}}
 						title="Select File"
 						fileTypes={props.formData[1].types}
+						labelName={props.formData[1].name}
 						requireWritePermissions={false}
 						props={props}
 					/>}

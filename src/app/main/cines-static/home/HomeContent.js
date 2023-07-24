@@ -23,7 +23,9 @@ const useStyles = makeStyles(theme => ({
 }));
 
 function HomeContent(props)
-{
+{   
+    window.expCheckedList = {}
+    window.expList = []
     const graphicStyle ={
         width: "60%",
         maxWidth: "600px",

@@ -12,6 +12,8 @@ const LegendSection = (props) => {
         const values = [...props.inputFields];
         values.push({ legend_name: '', data_color: '', alpha_values: 1 });
         props.setInputFields(values);
+        window.restoreInputFields = values
+        window.formEdited = true
       };
 
     return (

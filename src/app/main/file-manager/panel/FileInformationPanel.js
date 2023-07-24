@@ -3,6 +3,11 @@ import { makeStyles } from '@material-ui/styles';
 import filesize from 'filesize';
 import moment from 'moment';
 
+// //Start of import custom elements
+// import '../../CustomWebComponents/app-table'
+// //End of custom elements
+
+
 const useStyles = makeStyles((theme) => ({
     table: {
         '& th': {
@@ -32,6 +37,28 @@ const useStyles = makeStyles((theme) => ({
 
 
 function FileInformationPanel(props) {
+    // const clickableAttr = JSON.stringify(['Version'])
+    // const data = [
+    //     {
+    //         "Version": "1",
+    //         "Modified" : "28 Dec 2022 02:23:44",
+    //         "Modified By": "EXCEADS Admin",
+    //         "Size": "31KB"
+    //     },
+    //     {
+    //         "Version": "2",
+    //         "Modified" : "28 Dec 2022 02:23:44",
+    //         "Modified By": "EXCEADS Admin",
+    //         "Size": "32KB"
+    //     },
+    //     {
+    //         "Version": "3",
+    //         "Modified" : "28 Dec 2022 02:23:44",
+    //         "Modified By": "EXCEADS Admin",
+    //         "Size": "33KB"
+    //     }
+    //   ]
+    
     const classes = useStyles();
 
     return (
@@ -85,7 +112,7 @@ function FileInformationPanel(props) {
                     </tr>
                 </tbody>
             </table>
-
+            {/* <app-table data={JSON.stringify(data)} clickableAttr={clickableAttr}></app-table> */}
         </div>    
     )
 
