@@ -38,15 +38,14 @@ function JobDefinitionView(props) {
     const pageLayout = useRef(null);
     const history = useHistory();
     const job_definition = useSelector(({ JobDefinitionApp }) => { return JobDefinitionApp.job_definition })
-    const [version, setVersion] = useState();
-    const [versionArr, setVersionArr] = useState([]);
+    // const [version, setVersion] = useState();
+    // const [versionArr, setVersionArr] = useState([]);
     const [restoreData, setRestoreData] = useState();
-    const [dynamicInput_v2, setDynamicInput_v2] = useState(null)
-    const [form_version, setForm_version] = useState();
+    // const [form_version, setForm_version] = useState();
     
     const handleChange = (event) => {
         localStorage.removeItem("jdTrigger")
-        setVersion(event.target.value);
+        // setVersion(event.target.value);
         dispatch(Actions.clearJobDefinition());
         // dispatch(Actions.clearSelectedItem())
         const url = window.location.pathname + "?version=" + event.target.value
@@ -67,7 +66,7 @@ function JobDefinitionView(props) {
                 return false;
             })){
                 form_version = v;
-                setForm_version(form_version)
+                // setForm_version(form_version)
             }
             if(window.restoreDynamicProps){
                 inputFileCheck = window.restoreDynamicProps && window.restoreDynamicProps.input_file ? window.restoreDynamicProps.input_file[1].value  : 
@@ -89,9 +88,9 @@ function JobDefinitionView(props) {
                         extractRunTimeData_staticF(form_version, "CSonNet_Generate_Blocking_Nodes")
                     }
                 }
-                
+
             }
-           
+
         }else if(props.module === "CSonNet_Plotting"){
             inputFileCheck = window.restoreDynamicProps && window.restoreDynamicProps.input_file ? window.restoreDynamicProps.input_file[1].value  :
                             window.restoreDynamicProps && window.restoreDynamicProps.inputFile_Graph ? window.restoreDynamicProps.inputFile_Graph[1].value : false
@@ -101,8 +100,8 @@ function JobDefinitionView(props) {
         }else if(!props.static_form){
             extractRunTimeData_DynamicF()
         }
-        
-        
+
+
         history.replace(url)
       };
 
@@ -273,19 +272,19 @@ function JobDefinitionView(props) {
             if(form_version === "v3"){
                 submitJSON["submodelArrayData"] = submodelArray
             }
-            
+
             let checkInputFields = inputFields && inputFields.length > 0  ? true : false;
             let checkInitial_states_method = submitJSON['initial_states_method'] && submitJSON['initial_states_method'][0] ? true : false;
-    
-            if(checkInputFields && checkInitial_states_method && submitJSON['initial_states_method'][0]['type'] == 'custom'){
+
+            if(checkInputFields && checkInitial_states_method && submitJSON['initial_states_method'][0]['type'] === 'custom'){
                 let changedInputFields = inputFields.map((ele) =>{
-                    if(ele.min == ""){
+                    if(ele.min === ""){
                         delete ele.min
                     }
-                    if(ele.max == ""){
+                    if(ele.max === ""){
                         delete ele.max
                     }
-                    if(ele.weight == ""){   
+                    if(ele.weight === ""){
                         delete ele.weight
                     }
                 return ele
@@ -315,7 +314,7 @@ function JobDefinitionView(props) {
             }else{
                 newRules = rules
             }
-            
+
             submitJSON.rules = newRules;
             let createdJSON = {
                 "input" : submitJSON,
@@ -363,38 +362,39 @@ function JobDefinitionView(props) {
     }
 
     useEffect(() => {
-        if(job_definition && job_definition.versions && (!localStorage.getItem("verDrop") || JSON.parse(localStorage.getItem("verDrop")).id != job_definition.id) ){
-           
-            if(localStorage.getItem("selectedJdId") == job_definition.id){
+        if(job_definition && job_definition.versions && (!localStorage.getItem("verDrop") || JSON.parse(localStorage.getItem("verDrop")).id !== job_definition.id) ){
+
+            if(localStorage.getItem("selectedJdId") === job_definition.id){
                 const verDroDetail = {
                     "array": job_definition.versions.reverse(),
                     "currentSelected": job_definition.version,
                     "id": job_definition.id
                 }
-                setVersion(job_definition.version)
+                // setVersion(job_definition.version)
                 localStorage.setItem("verDrop",JSON.stringify(verDroDetail))
             }
         }else{
             if(localStorage.getItem("verDrop")){
                 setTimeout(()=> {
-                    const verDroDetail = JSON.parse(localStorage.getItem("verDrop"))
-                    setVersionArr(verDroDetail.array)
+                    // const verDroDetail = JSON.parse(localStorage.getItem("verDrop"))
+                    // setVersionArr(verDroDetail.array)
                 },50)
                 if(job_definition && job_definition.version){
-                    setVersion(job_definition.version)
+                    // setVersion(job_definition.version)
                 }
             }
         }
-    },[job_definition])   
+    },[job_definition])
 
       useEffect(() => {
         if (window.performance) {
-            if (performance.navigation.type == 1) {
+            if (performance.navigation.type === 1) {
             localStorage.removeItem("jdTrigger")
             }
           }
+           // eslint-disable-next-line
       },[window.performance.navigation])
-    
+
 
     useEffect(() => {
         var id;

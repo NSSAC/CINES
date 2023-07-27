@@ -637,7 +637,7 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
 
             }
         }
-        if(obj == "input_file"){
+        if(obj === "input_file"){
             setEdgeDirectionality(event.edgeDirectionality)
         }
         //END
@@ -682,15 +682,15 @@ const CSonNet_Contagion_Simulation_v3 = (props) => {
             "dynamic_inputs": {"Behaviour_model": dynamicProps.Behaviour.value},
             "rules": rules,
         };
-        if(inputFields.length > 0 && submitJSON['initial_states_method'][0]['type'] == 'custom'){
+        if(inputFields.length > 0 && submitJSON['initial_states_method'][0]['type'] === 'custom'){
             let changedInputFields = inputFields.map((ele) =>{
-                if(ele.min == ""){
+                if(ele.min === ""){
                     delete ele.min
                 }
-                if(ele.max == ""){
+                if(ele.max === ""){
                     delete ele.max
                 }
-                if(ele.weight == ""){   
+                if(ele.weight === ""){
                     delete ele.weight
                 }
             return ele

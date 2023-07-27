@@ -175,19 +175,19 @@ function FileManagerApp(props) {
             );
           }
 
-          if(file_meta.type && file_meta.type != "folder" && !file_viewers_map.hasOwnProperty(file_meta.type) && !file_meta.isContainer){
+          if(file_meta.type && file_meta.type !== "folder" && !file_viewers_map.hasOwnProperty(file_meta.type) && !file_meta.isContainer){
             if(blacklisted_FileType.includes(file_meta.type)){
               defaultType = "blacklisted"
             }else{
               defaultType = "text"
             }
-          }else if(file_meta.type && file_meta.type != "folder" && !file_viewers_map.hasOwnProperty(file_meta.type) && file_meta.isContainer){
+          }else if(file_meta.type && file_meta.type !== "folder" && !file_viewers_map.hasOwnProperty(file_meta.type) && file_meta.isContainer){
             defaultType = "folder"
           }
 
           if (file_viewers_map[file_meta.type] || file_viewers_map[defaultType]  ) {
             let Comp;
-            if(file_meta.type && file_meta.type != "folder" && !file_viewers_map.hasOwnProperty(file_meta.type)){
+            if(file_meta.type && file_meta.type !== "folder" && !file_viewers_map.hasOwnProperty(file_meta.type)){
               Comp = file_viewers_map[defaultType] ;
             }else{
               Comp = file_viewers_map[file_meta.type] ;

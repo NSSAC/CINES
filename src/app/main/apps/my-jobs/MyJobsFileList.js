@@ -144,7 +144,7 @@ function MyJobsFileList(props) {
     useEffect(() => {
         dispatch(Actions.clearData());
         setSpinnerFlag(true)
-    },[props.expCheck])
+    },[dispatch, props.expCheck])
 
     useEffect(() => {
         if (files.length > 0 && sortCount === false) {
@@ -156,6 +156,7 @@ function MyJobsFileList(props) {
           }
             // document.getElementsByClassName("jobRows")[0].click();
         }
+         // eslint-disable-next-line
       }, [files.length, page, sortCount]);
 
       // To make the 1st row element selected and show its meta-data
@@ -172,6 +173,7 @@ function MyJobsFileList(props) {
             }
             // document.getElementsByClassName("jobRows")[0].click();
         }
+         // eslint-disable-next-line
       }, [firstFileId]);
 
     useEffect(() => {

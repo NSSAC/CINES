@@ -9,14 +9,14 @@ import { VegaLite } from 'react-vega'
 function guessDistributionLabel(jobname){
     var parts = jobname.split("/")
     var final = parts.pop()
-    const [name, version] = final.split("@")
+    const name = final.split("@")
     switch(name){
         case "snap_GetDegCnt":
             return "Degree"
         case "snap_GetInDegCnt":
             return "In-Degree"
         case "snap_GetOutDegCnt":
-            return "Out-Degree" 
+            return "Out-Degree"
         case "snap_GetKCoreEdges":
             return "KCore Edges"
         case "snap_GetKCoreNodes":
