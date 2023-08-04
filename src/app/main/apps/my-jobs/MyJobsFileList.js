@@ -792,7 +792,7 @@ function MyJobsFileList(props) {
     if (spinnerFlag === true)
         return (
             <div className="flex flex-1 flex-col items-center justify-center mt-40">
-                <Typography className="text-20 mt-16" color="textPrimary">Loading1</Typography>
+                <Typography className="text-20 mt-16" color="textPrimary">Loading</Typography>
                 <LinearProgress className="w-xs" color="secondary" />
             </div>
         );
