@@ -200,10 +200,10 @@ const SearchContent = () => {
               }}
               className={classes.chipMarginL}
               ml={{sm: 2}}
-            > 
+            >
               <Chip key={"All Results"}
                 style={{ fontWeight: "700", justifyContent: "flex-start" }}
-                className={classes.chipFontSize +' '+  classes.chipStretch}
+                className={`${classes.chipFontSize} ${classes.chipStretch}`}
                 avatar={
                   <Avatar
                     style={{ color: "white", fontSize: 10, backgroundColor: "#122230"}}
@@ -218,7 +218,7 @@ const SearchContent = () => {
               {[...searchMapData.keys()].map((mapItem) => (
                 <Chip key={capitalizeFirstLetter(mapItem)}
                   style={{ fontWeight: "bolder", justifyContent: "flex-start", marginTop: "3px"}}
-                  className={classes.chipFontSize +' '+ classes.chipStretch}
+                  className={`${classes.chipFontSize} ${classes.chipStretch}`}
                   avatar={
                     <Avatar
                       style={{ color: "white", fontSize: 10, backgroundColor: "#122230" }}
@@ -246,10 +246,10 @@ const SearchContent = () => {
           >
             {[...searchMapData.keys()].map((mapItem) => {
               return (
-                <Grid item container xs={12} sm={11} md={11}  key={mapItem}  
+                <Grid item container xs={12} sm={11} md={11}  key={mapItem}
                 style={{
                   paddingTop:24,
-                 
+
                 }}
                 >
                   <Grid  item className="headerStyle">

@@ -9,28 +9,13 @@ import FileOverviewPanel from "app/main/file-manager/panel/FileOverviewPanel"
 import ProvenancePanel from "app/main/file-manager/panel/ProvenancePanel"
 // import PermissionsPanel from "app/main/file-manager/panel/PermissionsPanel"
 import MetadataPanel from "app/main/file-manager/panel/MetadataPanel"
-import {MAX_RAW_FILE_VIEW_SIZE} from "../../FileManagerAppConfig"
+// import {MAX_RAW_FILE_VIEW_SIZE} from "../../FileManagerAppConfig"
 
 function BlackListViewer(props) {
     // const dispatch = useDispatch();
     // const data = useSelector(({ BlacklistViewerApp }) => BlacklistViewerApp.data);
     const [selectedTab, setSelectedTab] = useState(0);
-    const [maxFileSize] = useState(props.max_file_size || MAX_RAW_FILE_VIEW_SIZE)
-    const [enableFileView,setEnableFileView] = useState(false)
 
-    // React.useEffect(() =>{
-    //     if (enableFileView){
-    //         dispatch(Actions.getData(props.meta.id))
-    //     }
-    // },[dispatch,props.meta,enableFileView])
-
-    React.useEffect(()=>{
-        if (props.meta &&  ((props.meta.state==="staged") || (props.meta.state==="stored")) && (props.meta.size<maxFileSize)  ){
-            setEnableFileView(true)
-        }else{
-            setEnableFileView(false)
-        }
-    },[props.meta,maxFileSize])
 
     function handleTabChange(event, value) {
         setSelectedTab(value);
@@ -52,14 +37,6 @@ function BlackListViewer(props) {
                         label="Overview"
 
                     />
-                    {/* <Tab
-                        // icon={<FileIcon alt="JSON Tree" />}
-                        className={`${enableFileView?'':'hidden'} min-w-0`}
-                        title="Data"
-                        label="Data"
-
-                    /> */}
-
                     <Tab
                         // icon={<FileIcon alt="JSON Tree" />}
                         className="min-w-0"

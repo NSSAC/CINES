@@ -755,7 +755,7 @@ const CSonNet_Contagion_Simulation = (props) => {
                         <div className="content">
                             <div className='flex flex-col' >
                                 {isToasterFlag ? (
-                                    <Toaster errorMsg={errorMsg} success={success} id="CSonNet Contagion Simulation 2"></Toaster>
+                                    <Toaster errorMsg={errorMsg} success={success} id="CSonNet Contagion Simulation"></Toaster>
                                 ) : null}
                                 <Formsy
                                     onValid={enableButton}

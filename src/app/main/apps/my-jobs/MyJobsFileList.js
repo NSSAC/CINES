@@ -144,7 +144,7 @@ function MyJobsFileList(props) {
     useEffect(() => {
         dispatch(Actions.clearData());
         setSpinnerFlag(true)
-    },[props.expCheck])
+    },[dispatch, props.expCheck])
 
     useEffect(() => {
         if (files.length > 0 && sortCount === false) {
@@ -156,6 +156,7 @@ function MyJobsFileList(props) {
           }
             // document.getElementsByClassName("jobRows")[0].click();
         }
+         // eslint-disable-next-line
       }, [files.length, page, sortCount]);
 
       // To make the 1st row element selected and show its meta-data
@@ -172,6 +173,7 @@ function MyJobsFileList(props) {
             }
             // document.getElementsByClassName("jobRows")[0].click();
         }
+         // eslint-disable-next-line
       }, [firstFileId]);
 
     useEffect(() => {
@@ -790,7 +792,7 @@ function MyJobsFileList(props) {
     if (spinnerFlag === true)
         return (
             <div className="flex flex-1 flex-col items-center justify-center mt-40">
-                <Typography className="text-20 mt-16" color="textPrimary">Loading1</Typography>
+                <Typography className="text-20 mt-16" color="textPrimary">Loading</Typography>
                 <LinearProgress className="w-xs" color="secondary" />
             </div>
         );

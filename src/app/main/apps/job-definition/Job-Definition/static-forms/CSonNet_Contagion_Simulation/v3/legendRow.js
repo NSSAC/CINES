@@ -92,10 +92,10 @@ const LegendRow = (props) => {
                             required
                             req="true"
                             >
-                                {props.edgeDirectionality == "undirected" ? 
+                                {props.edgeDirectionality === "undirected" ? 
                                 undirected.map((ele) => {
                                     return <MenuItem key={ele.value} value={ele.value}> {ele.label} </MenuItem>
-                                }) : props.edgeDirectionality == "directed" ?
+                                }) : props.edgeDirectionality === "directed" ?
                                 directed.map((ele) => {
                                     return <MenuItem key={ele.value} value={ele.value}> {ele.label} </MenuItem>
                                 }) : 

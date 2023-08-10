@@ -60,13 +60,13 @@ function SimpleFileList(props) {
                         {val}
                     </span>
                 } else {
-                    return <span title={`${obj.state}`} className={`${setHoverClass(obj)}`} className="">{val}</span>
+                    return <span title={`${obj.state}`} className={`${setHoverClass(obj)}`}>{val}</span>
                 }
             }
         },
         {
             'label': "Type", 
-            "attr": "type",        
+            "attr": "type",
             "sortable": true,
             "headerClass": "hidden sm:table-cell",
             "cellClass": "hidden sm:table-cell wordBreak"
