@@ -17,6 +17,9 @@ import FormControl from '@material-ui/core/FormControl';
 import NativeSelect from '@material-ui/core/NativeSelect';
 import { makeStyles } from '@material-ui/core/styles';
 import semver  from 'semver';
+import "../../../CustomWebComponents/cwe-jsonRenderer";
+
+
 function JobDefinitionView(props) {
     const useStyles = makeStyles((theme) => ({
         formControl: {
@@ -520,10 +523,15 @@ function JobDefinitionView(props) {
             }else if( window.restoreDynamicFData ){
                 resubmitFormDetail = window.restoreDynamicFData
             }
-
-            return <JobDefinitionForm state={job_definition} resubmit={props.location.state} localResubmit={resubmitFormDetail} {...props} />
+            
+            if(job_definition.id === 'exceads_dev/moviemaker'){
+                return <cwe-jsonrenderer job_data={JSON.stringify(job_definition.input_schema)}></cwe-jsonrenderer>
+            }else{
+                return <JobDefinitionForm state={job_definition} resubmit={props.location.state} localResubmit={resubmitFormDetail} {...props} />
+            }
         }
     }
+
 
     return (
         <FusePageSimple
