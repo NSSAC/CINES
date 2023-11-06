@@ -17,7 +17,7 @@ import reducer from "./store/reducers";
 import { blacklisted_FileType } from "./FileManagerAppConfig";
 
 import './FileManager.css'
-
+// import DatasetLanding from "./DatasetLanding";
 const useStyles = makeStyles(theme => ({
   root                     : {
     backgroundColor: theme.palette.background.default,
@@ -47,7 +47,17 @@ function FileManagerApp(props) {
   let defaultType = ""
 
   const matches = useMediaQuery("(min-width:600px)");
-
+//   const dataset = {
+//     "License": "CC-BY-4.0",
+//     "Description": "geographic reference frame for the Richmond (VA) area derived from the data set 'TIGER/Line Shapefile, 2017, 2010 state, Virginia, 2010 Census Block State-based' and the file tl_2017_51_tabblock10.zip provided at https://catalog.data.gov/dataset/tiger-line-shapefile-2017-2010-state-virginia-2010-census-block-state-based and retrieved in January 2023.",
+//     "Nodes ": "5",
+//     "Edges": "4",
+//     "Edge Directionality": "undirected",
+//     'Edge Attributed': "FALSE",
+//     "Node Attributed": "FALSE",
+//     "Weakly Connected": "TRUE",
+//     "Estimated Graph Diameter": "4"
+// }
   React.useEffect(()=>{
     if (!usermeta_updater || (usermeta_updater && !usermeta_updater.updating)){
       dispatch(Actions.getFileMeta(file_path))
@@ -74,7 +84,7 @@ function FileManagerApp(props) {
       </div>
     )
   }
-  
+
   function navigateHome(evt){
     evt.preventDefault()
     props.history.push("/home")
@@ -106,34 +116,41 @@ function FileManagerApp(props) {
             ? `w-full flex flex-col justify-between ${clsx(
                 classes.header
               )}`
-            : `w-full items-center flex flex-row min-h-72 justify-between ${clsx(
+            : `w-full flex flex-col  ${clsx(
                 classes.header
               )}`
         }
       >
-        <div className="flex-initial text-baseline mt-18 mr-8">
-          <Icon
-            className="ml-8 text-18 cursor-pointer inline align-top"
-            onClick={navigateHome}
-          >
-            home
-          </Icon>
-          <Icon className="text-18">chevron_right</Icon>
-          <Breadcrumb props={props} path={file_path} meta={file_meta} abc="adfad" className="text-white" />
-        </div>
-        <div className="flex-grow text-right flex-row text-lg m-0">
-          {fileActions}
-          {menuItems}
-          {!file_meta.isContainer ?
+        <div className="flex flex-row">
+          <div className=" text-baseline mt-18 mr-8 py-10" style={{flex: "0 2 auto"}}>
+            <Icon
+              className="ml-8 text-18 cursor-pointer inline align-top"
+              onClick={navigateHome}
+            >
+              home
+            </Icon>
+            <Icon className="text-18">chevron_right</Icon>
+            <Breadcrumb props={props} path={file_path} meta={file_meta} abc="adfad" className="text-white" />
+          </div>
+          <div className="flex-grow text-right flex-row text-lg m-0">
+            {fileActions}
+            {menuItems}
+            {!file_meta.isContainer ?
               <IconButton title="Click to Download" className="w-64 h-64" onClick={() => downloadFile(file_meta)}>
                 <Icon className="text-white text-4xl">cloud_download</Icon>
               </IconButton>
-            :
-            ""
-          }
+              :
+              ""
+            }
+          </div>
         </div>
+
+        {/* <div className="pb-10">
+          <DatasetLanding dataset={dataset} />
+        </div> */}
+
       </div>
-      <div className="flex-grow  m-0 p-0 overflow-hidden flex flex-col">
+      <div className="flex-grow  m-0 p-0  flex flex-col">
         {((file_meta, file_path) => {
           if (file_meta && file_meta.error) {
             if (file_meta.error === "Forbidden") {

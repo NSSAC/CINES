@@ -18,6 +18,7 @@ export const FileManagerAppConfig = {
 export const file_viewers_map = {
     "text": React.lazy(() => import('./viewer/text/')),
     "csv": React.lazy(() => import('./viewer/csv/')),
+    "csv2": React.lazy(() => import('./viewer/csv/')),
     "csonnet_simulation": React.lazy(() => import('./viewer/csv/')),
     "csonnet_data_analysis": React.lazy(() => import('./viewer/text/')),
     "csonnet_blocking_nodes": React.lazy(() => import('./viewer/text/')),
@@ -77,7 +78,7 @@ export const MAX_RAW_FILE_VIEW_SIZE = 10000000
 
 const FILEUPLOAD_CONFIG = {
     fileTypeToBeRemoved:['folder','symlink'],
-    fileTypes:["PUNGraph","PNGraph","PNEANet", "csv","tsv","json","text","dynamical_systems_initial_config","dynamical_systems_problems","dynamical_systems_functions"].sort()
+    fileTypes:["PUNGraph","PNGraph","PNEANet", "csv2", "tsv","json","text","dynamical_systems_initial_config","dynamical_systems_problems","dynamical_systems_functions"].sort()
 }
 
 export default  FILEUPLOAD_CONFIG;

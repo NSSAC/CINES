@@ -45,19 +45,22 @@ function DetailSidebarHeader(props)
       }
 
       function onRerun(item) {
-        var parts = item.job_definition.split("@")
-        extractFileData(item)
-        var target = window.location.pathname.replace(`my-jobs/${item.id}`,'job-definition/').replace('my-jobs','job-definition') + parts[0];
-        props.history.push({
-          pathname: target,
-          search: "?version=" + parts[1],
-          state: { inputData: item }
-        });
-
-        dispatch(Actions.clearJobDefinition());
-        localStorage.setItem('resubmitJob',JSON.stringify(item))
         
+        if(!item.job_definition.includes('moviemaker')){ // this case is added as resubmit functionality is not added for moviemaker job(json-rendered web component)
+          var parts = item.job_definition.split("@")
+          extractFileData(item)
+          var target = window.location.pathname.replace(`my-jobs/${item.id}`,'job-definition/').replace('my-jobs','job-definition') + parts[0];
+          props.history.push({
+            pathname: target,
+            search: "?version=" + parts[1],
+            state: { inputData: item }
+          });
+  
+          dispatch(Actions.clearJobDefinition());
+          localStorage.setItem('resubmitJob',JSON.stringify(item))
+        }
       }
+
       function extractFileData(item){
         let checkInputFiles = [...item.input_files]
         checkInputFiles.forEach((ele) => {

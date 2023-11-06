@@ -17,8 +17,8 @@ import FormControl from '@material-ui/core/FormControl';
 import NativeSelect from '@material-ui/core/NativeSelect';
 import { makeStyles } from '@material-ui/core/styles';
 import semver  from 'semver';
-import "../../../CustomWebComponents/cwe-jsonRenderer";
-
+import '../../../CustomWebComponents/cwe-jsonRenderer'
+import SelectFileDialog from 'app/main/file-manager/dialogs/SelectFileDialog'
 
 function JobDefinitionView(props) {
     const useStyles = makeStyles((theme) => ({
@@ -45,7 +45,52 @@ function JobDefinitionView(props) {
     // const [versionArr, setVersionArr] = useState([]);
     const [restoreData, setRestoreData] = useState();
     // const [form_version, setForm_version] = useState();
-    
+  ////
+    const [showFMDialog, setShowFMDialog] = useState(false);
+	const [showFolderDialog, setShowFolderDialog] = useState(false);
+
+
+    React.useEffect(() => {
+        window.addEventListener('cust-openFM', showFileManagerDialog)
+        return () => {
+            window.removeEventListener('cust_openFM', showFileManagerDialog)
+        }
+    }, [])
+
+    React.useEffect(() => {
+        window.addEventListener('cust-openFolderM', showFolderManagerDialog)
+        return () => {
+            window.removeEventListener('cust-openFolderM', showFolderManagerDialog)
+        }
+    }, [])
+
+    React.useEffect(() => {
+        window.addEventListener('cust-backToJDListPage', backToJDListPage)
+        return () => {
+            window.removeEventListener('cust-backToJDListPage', backToJDListPage)
+        }
+    }, [])
+
+	function showFileManagerDialog(e) {
+        setShowFMDialog(true);
+	}
+    function handleFMClose() {
+        setShowFMDialog(false);
+    }
+
+	function showFolderManagerDialog() {
+        setShowFolderDialog(true);
+	}
+
+    function handleFolderClose() {
+        setShowFolderDialog(false);
+	}
+
+    function backToJDListPage() {
+        history.push("/apps/my-jobs/");
+    }
+
+  ////
     const handleChange = (event) => {
         localStorage.removeItem("jdTrigger")
         // setVersion(event.target.value);
@@ -523,15 +568,83 @@ function JobDefinitionView(props) {
             }else if( window.restoreDynamicFData ){
                 resubmitFormDetail = window.restoreDynamicFData
             }
-            
-            if(job_definition.id === 'exceads_dev/moviemaker'){
-                return <cwe-jsonrenderer job_data={JSON.stringify(job_definition.input_schema)}></cwe-jsonrenderer>
-            }else{
+
+            if (job_definition.id === 'exceads_dev/moviemaker') {
+                return <>
+                    {/* <cwe-jsonrenderer details={JSON.stringify(job_definition)} submitFlow="true" ></cwe-jsonrenderer> */}
+                    <FusePageSimple
+                        classes={{
+                            root: 'root',
+                            header: 'headerDisplay'
+                        }}
+                        header={
+                            <div>
+                                {showFMDialog && Object.keys(window.askForPathOutput).length > 0 && <SelectFileDialog
+                                    showModal={showFMDialog}
+                                    target=""
+                                    handleFMClose={handleFMClose}
+                                    multiple={false}
+                                    onSelect={(p, metadata) => {
+                                        const generate_event = `cust_${window.askForPathOutput.setPathFor}`
+                                        const sendPath = new CustomEvent(generate_event, {
+                                            bubbles: true,
+                                            composed: true,
+                                            detail: {
+                                                pathDetails: p,
+                                                setPathFor: window.askForPathOutput.setPathFor,
+                                                metadata: metadata
+                                            }
+                                        });
+                                        window.dispatchEvent(sendPath);
+                                        window.askForPathOutput = {}
+                                        console.log("🔥🔥🔥🔥🔥🔥", p, metadata)
+                                    }}
+                                    callMetaDataAPI={true}
+                                    //   target="/resources/examples/moviemaker"
+                                    title="Select File"
+                                    fileTypes={window.askForPathOutput.openFM_props.formData[1].types}
+                                    labelName={window.askForPathOutput.openFM_props.formData[1].name}
+                                    requireWritePermissions={false}
+                                    props={window.askForPathOutput.openFM_props}
+                                />}
+
+                                {showFolderDialog && <SelectFileDialog
+                                    showModal={showFolderDialog}
+                                    // target={folderChosenPath}
+                                    handleFMClose={handleFolderClose}
+                                    multiple={false}
+                                    title="Select Output Location"
+                                    target=""
+                                    onSelect={(p) => {
+
+                                        const generate_event = `cust-containerPath`
+                                        const sendPath = new CustomEvent(generate_event, {
+                                            bubbles: true,
+                                            composed: true,
+                                            detail: {
+                                                pathDetails: (p && p[0]) ? p[0] : "/"
+                                                //   setPathFor:  window.askForPathOutput.setPathFor
+                                            }
+                                        });
+                                        window.dispatchEvent(sendPath);
+                                        window.askForPathOutput = {}
+                                    }}
+                                    fileTypes={["folder"]}//{props.formData[1].types}
+                                    requireWritePermissions={true}
+                                />}
+                            </div>
+                        }
+                        content={
+                            <cwe-jsonrenderer details={JSON.stringify(job_definition)} submitFlow="true" ></cwe-jsonrenderer>
+                        }
+                    />
+                </>
+            } else {
                 return <JobDefinitionForm state={job_definition} resubmit={props.location.state} localResubmit={resubmitFormDetail} {...props} />
             }
+
         }
     }
-
 
     return (
         <FusePageSimple

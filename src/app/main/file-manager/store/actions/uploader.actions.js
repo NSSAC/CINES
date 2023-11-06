@@ -17,7 +17,7 @@ const fsurl = `${process.env.REACT_APP_SCIDUCT_FILE_SERVICE}/`
 function uploadFile(dispatch,f){
   const token = localStorage.getItem('id_token');
   const fileServiceInstance = new FileService(fsurl, token)
-  return fileServiceInstance.create(f.path, {name: f.fileName, type:f.type}).then(fileRef => {
+  return fileServiceInstance.create(f.path, {name: f.fileName, type:f.type, usermeta:f.usermeta}).then(fileRef => {
     f.file_created=true
     f.id = fileRef.id
     return axios({

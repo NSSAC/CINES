@@ -1,32 +1,39 @@
-import { Icon, MenuItem } from '@material-ui/core';
+// import { Icon, MenuItem } from '@material-ui/core';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
+// import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
+// import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import LinearProgress from '@material-ui/core/LinearProgress';
+// import DialogContentText from '@material-ui/core/DialogContentText';
+// import DialogTitle from '@material-ui/core/DialogTitle';
+// import LinearProgress from '@material-ui/core/LinearProgress';
 import Slide from '@material-ui/core/Slide';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import CloudUploadIcon from '@material-ui/icons/CloudUpload';
-import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
+// import Table from '@material-ui/core/Table';
+// import TableBody from '@material-ui/core/TableBody';
+// import TableCell from '@material-ui/core/TableCell';
+// import TableHead from '@material-ui/core/TableHead';
+// import TableRow from '@material-ui/core/TableRow';
+// import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+// import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
 import React from 'react';
 import { useRef, useState } from 'react';
 import * as Actions from 'app/main/file-manager/store/actions';
 import reducer from "app/main/file-manager/store/reducers";
 import withReducer from "app/store/withReducer";
 import FILEUPLOAD_CONFIG from "../../FileManagerAppConfig";
-import MenuTableCell from "./MenuTableCell";
+// import MenuTableCell from "./MenuTableCell";
 import { useDispatch, useSelector } from "react-redux";
-import filesize from 'filesize';
+// import filesize from 'filesize';
 
 import './FileUpload.css'
-import { toast } from 'material-react-toastify';
+// import { toast } from 'material-react-toastify';
+
+// import Typography from '@material-ui/core/Typography';
+
+// //Start of import custom elements
+import '../../../CustomWebComponents/cwe-fileUploader'
+// //End of custom elements
+
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -53,161 +60,201 @@ const useStyles = makeStyles({
 
 });
 
-const ellipsis = {
-  textOverflow: 'ellipsis',
-  whiteSpace: 'nowrap',
-  overflow: 'hidden',
-  maxWidth: '170px',
-  cursor: 'default'
-}
+// const ellipsis = {
+//   textOverflow: 'ellipsis',
+//   whiteSpace: 'nowrap',
+//   overflow: 'hidden',
+//   maxWidth: '170px',
+//   cursor: 'default'
+// }
 
-const breadcrumb_wrap = {
-  width: '100%',
-  flexWrap: 'wrap'
-}
+// const breadcrumb_wrap = {
+//   width: '100%',
+//   flexWrap: 'wrap'
+// }
 
-const BorderLinearProgress = withStyles((theme) => ({
-  root: {
-    height: 10,
-    borderRadius: 5,
-  },
-  bar: {
-    borderRadius: 5,
-    backgroundColor: '#1a90ff',
-  },
-}))(LinearProgress);
+// const BorderLinearProgress = withStyles((theme) => ({
+//   root: {
+//     height: 10,
+//     borderRadius: 5,
+//   },
+//   bar: {
+//     borderRadius: 5,
+//     backgroundColor: '#1a90ff',
+//   },
+// }))(LinearProgress);
 
-function FileUpload({ fileTypes, path, showModal, handleClose, breadcrumbArr, dropped, setSelected, uploadButtonClicked, dialogCloseFlag }) {
+function FileUpload({ fileTypes, path, showModal, handleClose, breadcrumbArr, dropped, setSelected, uploadButtonClicked, dialogCloseFlag, test }) {
   const dispatch = useDispatch();
   const file_types = useSelector(({ fileManagerApp }) => fileManagerApp.file_types);
   const uploader = useSelector(({ fileManagerApp }) => fileManagerApp.uploader);
 
-  const [isDrag, setDrag] = useState(false);
+  // const [isDrag, setDrag] = useState(false);
   const [uploadFiles, setUploadFiles] = useState(dropped || []);
-  const [disableButton, setDisableButton] = useState(true);
+  // const [disableButton, setDisableButton] = useState(true);
 
-  const classes = useStyles();
+  // const classes = useStyles();
   const fileInput = useRef();
 
   var uploadableTypes = fileTypes || FILEUPLOAD_CONFIG.fileTypes
 
+  const [fullWidth, setFullWidth] = React.useState(true);
+  const [maxWidth, setMaxWidth] = React.useState('sm');
+
+
   React.useEffect(() => {
     if (!file_types) {
       dispatch(Actions.getFileTypes())
+    }else{
+      setTimeout(() => {
+        let cwe_fwiz = document.querySelector("cwe-fwiz")
+        let temp_fileType = Object.values(file_types)
+        if(cwe_fwiz){
+          cwe_fwiz.setAttribute('file_types', JSON.stringify(temp_fileType))
+        }
+      },1000)
+
     }
+    console.log(file_types)
   }, [dispatch, file_types])
+
+  React.useEffect(() => {
+    window.addEventListener('cancel-wizard', onCancelll )
+    window.addEventListener('end-upload', onUploadd)
+    return () => {
+    window.removeEventListener('cancel-wizard', onCancelll )
+    }
+  },[])
 
 
   React.useEffect(() => {
     dispatch(Actions.validateFiles(uploadFiles))
   }, [dispatch, uploadFiles])
 
-  React.useEffect(() => {
-    if (!uploader || !uploader.validated) {
-      setDisableButton(true)
-      return
-    }
-    if (uploader.validated.some((f) => !f.valid)) {
-      setDisableButton(true)
-    } else {
-      setDisableButton(false)
-    }
+  // React.useEffect(() => {
+  //   if (!uploader || !uploader.validated) {
+  //     setDisableButton(true)
+  //     return
+  //   }
+  //   if (uploader.validated.some((f) => !f.valid)) {
+  //     setDisableButton(true)
+  //   } else {
+  //     setDisableButton(false)
+  //   }
 
-    if (uploader && uploader.recentItem) {
-      if (setSelected) {
-        let s = {}
-        s[uploader.recentItem.id] = true;
-        setSelected(s)
-      }
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [uploader, uploader.validated])
+  //   if (uploader && uploader.recentItem) {
+  //     if (setSelected) {
+  //       let s = {}
+  //       s[uploader.recentItem.id] = true;
+  //       setSelected(s)
+  //     }
+  //   }
+  // // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [uploader, uploader.validated])
 
-  const onChangeHandler = (event) => {
-    const fileData = Object.keys(event.target.files).map((fk) => {
-      var f = event.target.files[fk]
-      var fobj = {}
-      if (uploadableTypes.length === 1) {
-        fobj.type = uploadableTypes[0]
-      } else {
-        fobj.type = uploadableTypes.indexOf(f.name.split('.').pop()) !== -1 && f.name.split('.').pop();
-      }
-      fobj.fileName = f.name;
-      fobj.size = f.size;
-      fobj['contents'] = f;
-      return fobj
-    })
-    setUploadFiles(uploadFiles.concat(fileData));
-    // setDisableButton(false);
-  }
+  // const onChangeHandler = (event) => {
+  //   const fileData = Object.keys(event.target.files).map((fk) => {
+  //     var f = event.target.files[fk]
+  //     var fobj = {}
+  //     if (uploadableTypes.length === 1) {
+  //       fobj.type = uploadableTypes[0]
+  //     } else {
+  //       fobj.type = uploadableTypes.indexOf(f.name.split('.').pop()) !== -1 && f.name.split('.').pop();
+  //     }
+  //     fobj.fileName = f.name;
+  //     fobj.size = f.size;
+  //     fobj['contents'] = f;
+  //     return fobj
+  //   })
+  //   setUploadFiles(uploadFiles.concat(fileData));
+  //   // setDisableButton(false);
+  // }
 
-  const handleDrop = (e) => {
-    e.preventDefault();
-    e.stopPropagation()
-    const draggedFiles = [];
-    var mapped = {}
-    uploadFiles.forEach((f) => {
-      mapped[f.fileName] = true
-    })
-    if (e.dataTransfer.items) {
-      Array.from(e.dataTransfer.items).forEach((item, i) => {
-        if (item.kind === "file") {
-          let file = item.getAsFile();
-          let tempObj = {};
-          if (uploadableTypes.length === 1) {
-            tempObj.type = uploadableTypes[0]
-          } else {
-            tempObj.type = uploadableTypes.indexOf(file.name.split('.').pop()) !== -1 && file.name.split('.').pop();
-          }
-          tempObj.fileName = file.name;
-          tempObj['contents'] = file;
-          if (!mapped[tempObj.fileName]) {
-            draggedFiles.push(tempObj);
-          } else {
-            toast.error(`${tempObj.fileName} already exists in the upload list.`)
-          }
-        }
-      });
+  // const handleDrop = (e) => {
+  //   e.preventDefault();
+  //   e.stopPropagation()
+  //   const draggedFiles = [];
+  //   var mapped = {}
+  //   uploadFiles.forEach((f) => {
+  //     mapped[f.fileName] = true
+  //   })
+  //   if (e.dataTransfer.items) {
+  //     Array.from(e.dataTransfer.items).forEach((item, i) => {
+  //       if (item.kind === "file") {
+  //         let file = item.getAsFile();
+  //         let tempObj = {};
+  //         if (uploadableTypes.length === 1) {
+  //           tempObj.type = uploadableTypes[0]
+  //         } else {
+  //           tempObj.type = uploadableTypes.indexOf(file.name.split('.').pop()) !== -1 && file.name.split('.').pop();
+  //         }
+  //         tempObj.fileName = file.name;
+  //         tempObj['contents'] = file;
+  //         if (!mapped[tempObj.fileName]) {
+  //           draggedFiles.push(tempObj);
+  //         } else {
+  //           toast.error(`${tempObj.fileName} already exists in the upload list.`)
+  //         }
+  //       }
+  //     });
 
-      setUploadFiles(uploadFiles.concat(draggedFiles));
-      // setDisableButton(false);
-    }
-    setDrag(false);
-  };
+  //     setUploadFiles(uploadFiles.concat(draggedFiles));
+  //     // setDisableButton(false);
+  //   }
+  //   setDrag(false);
+  // };
 
-  const onCancel = () => {
-    setUploadFiles([]);
+  const onCancelll = (e) => {
     handleClose()
   }
 
-  const onUpload = () => {
-    if(uploadButtonClicked) {
-      uploadButtonClicked(true);
+  // const onCancel = () => {
+  //   setUploadFiles([]);
+  //   handleClose()
+  // }
+
+  const onUploadd = (event) => {
+    const up_files = event.detail
+    if(up_files.hasOwnProperty('uploadData')){
+
+      const mapped = up_files['uploadData'].map((f) => {
+        f['path'] = path
+        return f
+      })
+      dispatch(Actions.addToUploadQueue(mapped))
     }
-    setDisableButton(true);
-    const mapped = uploadFiles.map((f) => {
-      f.path = path
-      return f
-    })
-    dispatch(Actions.addToUploadQueue(mapped))
-    setUploadFiles([])
   }
 
-  const removeFile = (index => {
-    console.log(uploadFiles)
-    uploadFiles.splice(index, 1);
-    setUploadFiles([...uploadFiles]);
-  })
 
-  const handleChangeUploadType = (f) => (e) => {
-    f.type = e.target.value;
-    setUploadFiles([...uploadFiles]);
-  }
+  // const onUpload = () => {
+  //   if(uploadButtonClicked) {
+  //     uploadButtonClicked(true);
+  //   }
+  //   setDisableButton(true);
+  //   const mapped = uploadFiles.map((f) => {
+  //     f.path = path
+  //     return f
+  //   })
+  //   console.log(mapped)
+  //   dispatch(Actions.addToUploadQueue(mapped))
+  //   setUploadFiles([])
+  // }
 
-  const openFileDialog = () => {
-    fileInput.current.value = ''
-    fileInput.current.click();
-  };
+  // const removeFile = (index => {
+  //   console.log(uploadFiles)
+  //   uploadFiles.splice(index, 1);
+  //   setUploadFiles([...uploadFiles]);
+  // })
+
+  // const handleChangeUploadType = (f) => (e) => {
+  //   f.type = e.target.value;
+  //   setUploadFiles([...uploadFiles]);
+  // }
+
+  // const openFileDialog = () => {
+  //   fileInput.current.value = ''
+  //   fileInput.current.click();
+  // };
 
   const handleDragOver = e => {
     e.preventDefault();
@@ -215,18 +262,18 @@ function FileUpload({ fileTypes, path, showModal, handleClose, breadcrumbArr, dr
     // setDrag(true);
   };
 
-  const handleDragLeave = e => {
-    e.preventDefault();
-    e.stopPropagation()
-    setDrag(false);
-  };
+  // const handleDragLeave = e => {
+  //   e.preventDefault();
+  //   e.stopPropagation()
+  //   setDrag(false);
+  // };
 
 
-  const handleDragStart = e => {
-    e.preventDefault();
-    e.stopPropagation()
-    setDrag(true);
-  };
+  // const handleDragStart = e => {
+  //   e.preventDefault();
+  //   e.stopPropagation()
+  //   setDrag(true);
+  // };
 
   function onEntered() {
     var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
@@ -248,17 +295,25 @@ function FileUpload({ fileTypes, path, showModal, handleClose, breadcrumbArr, dr
     <Dialog
       open={showModal}
       TransitionComponent={Transition}
-      maxWidth="lg"
+      fullWidth={fullWidth}
+      maxWidth={maxWidth}
       aria-labelledby="alert-dialog-slide-title"
       aria-describedby="alert-dialog-slide-description"
       onEntered={onEntered}
       onExiting={onExiting}
-      onDragEnter={handleDragStart}
-      onDrop={handleDrop}
+      // onDragEnter={handleDragStart}
+      // onDrop={handleDrop}
       onDragOver={handleDragOver}
-      onDragLeave={handleDragLeave}
+      // onDragLeave={handleDragLeave}
+      // onClose={handleClose}
     >
-      <DialogTitle id="alert-dialog-slide-title" divider="true">
+      <DialogContent style={{backgroundColor: "#ffffff"}}>
+
+        <cwe-fwiz path={JSON.stringify(path)} uploadableTypes={JSON.stringify(uploadableTypes)} ></cwe-fwiz>
+
+      </DialogContent>  
+      <hr></hr>
+      {/* <DialogTitle id="alert-dialog-slide-title" divider="true">
         Upload Files
         <DialogContentText className='mb-0' id="alert-dialog-slide-description">
           {breadcrumbArr ? <span className="flex text-16 sm:text-16" style={breadcrumb_wrap}>
@@ -384,7 +439,7 @@ function FileUpload({ fileTypes, path, showModal, handleClose, breadcrumbArr, dr
           Close
         </Button>
 
-      </DialogActions>
+      </DialogActions> */}
     </Dialog>
 
   );
