@@ -64,8 +64,12 @@ template_FileUploadWizard.innerHTML = /* html */ `
         border: 0px;
         cursor: pointer;
        }
+       .textWrap{
+        word-break: break-all;
+        word-wrap: normal;
+       }
     </style>
-    <div>
+    <div class="drop-zone" id="drop-zone">
         <div class="row">
           <div class="col-md-12">
             <div class="wizard">
@@ -152,6 +156,7 @@ class FileUploadWizard extends HTMLElement {
     this.getFileAttributes()
     this.initilization()
     this.fileUpload()
+    
   }
 
   attributeChangedCallback(name, oldVal, newVal) {
@@ -188,15 +193,53 @@ class FileUploadWizard extends HTMLElement {
     self.tbody_file_List = this.shadowRoot.querySelector('#file_list').querySelector('tbody');
 
     fileInputButton.addEventListener('click', () => {
+      fileInput.value = null;
       fileInput.click();
     });
     fileInput.addEventListener('input', self.handleFileInputChange);
+    self.dragDrop()
+  }
+
+  dragDrop(){
+    const self = this;
+    const dropZone = self.shadowRoot.querySelector('#drop-zone');
+
+    dropZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropZone.classList.add('dragover');
+    });
+
+    dropZone.addEventListener('dragleave', () => {
+      dropZone.classList.remove('dragover');
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('dragover');
+      
+      const files = e.dataTransfer.files;
+      // Filter out duplicates based on file name
+      const uniqueFiles = Array.from(files).filter(file => {
+        return !self.uploadFiles.some(uploadedFile => uploadedFile.fileName === file.name);
+      });
+
+      self.handleFileInputChange(uniqueFiles)
+    });
   }
 
   handleFileInputChange(event) {
     const self = this;
-
-    self.files = event.target.files;
+    if(event.target){
+      // Removing duplicate files from getting uploaded. This check based on file-name
+      const uniqueFiles = Array.from(event.target.files).filter(file => {
+        return !self.uploadFiles.some(uploadedFile => uploadedFile.fileName === file.name);
+      });
+      self.files = uniqueFiles;
+      // self.files = event.target.files
+    }else{
+      // condition that adds dragged and dropped files
+      self.files = event
+    }
     if (self.files.length > 0) {
       self.table_file_List.classList.remove('d-none')
     }
@@ -228,7 +271,6 @@ class FileUploadWizard extends HTMLElement {
       return fobj
     })
     self.uploadFiles.push(...tempF)
-    // console.log(self.uploadFiles)
     //Add Next button and add eventlistener on it
     self.addRmv_nextBtn()
 
@@ -366,19 +408,21 @@ class FileUploadWizard extends HTMLElement {
         let className = `tab-pane ${unique_fileID}`
         let slide_tag = `[slide-tagname="${unique_fileID}"]`
         let checkInDOM = self.shadowRoot.querySelector(slide_tag)
-  
+
         if (!checkInDOM) {
           let div = document.createElement('div')
           div.setAttribute('class', className)
           div.setAttribute('role', 'tabpanel')
           div.setAttribute('slide-tagName', unique_fileID)
-          
+
           let jsonReader = document.createElement('cwe-jsonrenderer')
           jsonReader.setAttribute('details', JSON.stringify(slide_details_uniqueId))
           jsonReader.setAttribute('uniqueId', unique_fileID)
           jsonReader.setAttribute('submitFlow', "false")
           let event = {}
+          // Description : Here CustomEvents are created for a reason. The reason being if any selected file that requires an additional property and needs to go through jsonRenderer web component then for each jsonRenderer web component being loaded for respective file should have unique set of events. This is to maintain the uniqueness of events so they dont get called unecessary for non-required selected files.
 
+          // customEventArray is an array which has the CustomEvent, that will be used later in function addEventOnButtons()
           const eventOne = `cust_EventOne_${unique_fileID}`
           const eventTwo = `cust_EventTwo_${unique_fileID}`
           const customEvent_One = new CustomEvent(eventOne, {
@@ -391,7 +435,6 @@ class FileUploadWizard extends HTMLElement {
           event['cust_eventOne'] = customEvent_One;
           event['cust_eventTwo'] = eventTwo;
           self.customEventArray.push(event)
-          // jsonReader.setAttribute('eventObj', JSON.stringify(event))
 
           div.appendChild(jsonReader)
           const lastFileSummaryTab = self.tab_content.querySelector('.tab-pane.file-summary');
@@ -402,11 +445,16 @@ class FileUploadWizard extends HTMLElement {
             // If no "tab-pane file-summary" div is found, simply append the new tab to the end
             self.tab_content.appendChild(div)
           }
-
-          // self.tab_content.appendChild(div)
         }
       })
     }
+  }
+
+  formatSize(bytes) {
+    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+    if (bytes === 0) return '0 Byte';
+    const i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
+    return Math.round(bytes / Math.pow(1024, i), 2) + ' ' + sizes[i];
   }
 
   createFileRow(name, size, unique_id) {
@@ -444,7 +492,7 @@ class FileUploadWizard extends HTMLElement {
 
     // Size column
     const sizeCell = document.createElement('td');
-    sizeCell.textContent = size;
+    sizeCell.textContent = self.formatSize(size);
     row.appendChild(sizeCell);
 
     // Remove column with button
@@ -509,9 +557,6 @@ class FileUploadWizard extends HTMLElement {
             self.slide_data[obj.unique_id]['size'] = obj.size
             self.slide_data['create_slide'] = self.slide_data.hasOwnProperty('create_slide') ? self.slide_data['create_slide'] : []
 
-            // self.slide_data[obj.unique_id]['contents'] = obj.contents
-
-
             if (checkForm_prop) {
               if (self.slide_data['create_slide']) {
                 if (!self.slide_data['create_slide'].includes(obj.unique_id)) {
@@ -574,12 +619,17 @@ class FileUploadWizard extends HTMLElement {
           
           if(self.currentTab === 0){
           self.currentTab++;
-          if (self.currentTab === self.totalSlides) { // if user uploaded ALL files that dont require form then next sllide will be alst slide
+          if (self.currentTab === self.totalSlides) { // if user uploaded ALL files that dont require form then next sllide will be summary slide
             self.createSummaryTab();
           }
             self.updateWizard();
           } else {
           e.stopPropagation();
+          // Once we are on form Tab (jsonRenderer web component) and we click on next tab below code performs these things internally
+          // 1. Check for active tab, get its slide-tagname
+          // 2. filter obj in customEventArray (that have pre made CustomEvents) obj.id === slideTag
+          // 3. cust_eventOne dispatched to trigger functions extractFormProperties() && _ajvValidation().
+          // 4. Once both functions are completed in jsonRenderer wc, output gets sent through CustomEventsto fileUploader wc. Name of event is being dispatched is filterdEvent[0].cust_eventTwo. With the same event name an EventListener is added to check if details.formValidation === "true". if found true then move to next slide
           self.tempIndexVar = self.currentTab
           const getActive_tab = self.shadowRoot.querySelector('.tab-pane.active')
           const slideTag = getActive_tab.getAttribute('slide-tagname')
@@ -599,7 +649,6 @@ class FileUploadWizard extends HTMLElement {
               self.createSummaryTab();
               self.updateWizard();
             }
-            // console.log("self.slide_data on next button",self.slide_data)
             window.removeEventListener(filterdEvent[0].cust_eventTwo, formDataReadyHandler);
           }
 
@@ -683,14 +732,16 @@ class FileUploadWizard extends HTMLElement {
         summary_row.setAttribute('summary_id', fileId)
 
         const col_ten = document.createElement('div')
-        col_ten.className = "col-md-10 py-1";
+        col_ten.className = "col py-1 d-flex flex-row justify-content-between align-items-center";
         col_ten.innerHTML = /* html */`
-            <h4 class="font-weight-bold"> File Name : ${fileContent.file_name}</h4>
-            <h5 class="font-weight-bold">Type : ${fileContent.type}</h5>
+            <div>
+              <h4 class="font-weight-bold textWrap"> File Name : ${fileContent.file_name}</h4>
+              <h5 class="font-weight-bold">Type : ${fileContent.type}</h5>
+            </div>
+            
         `
 
-        const col_two = document.createElement('div')
-        col_two.className = "col-md-2 d-flex justify-content-center";
+        const div_button = document.createElement('div')
         const button = document.createElement('button')
         button.className = "remove_btn";
         button.innerHTML =  /* html */ `
@@ -708,12 +759,14 @@ class FileUploadWizard extends HTMLElement {
                     </path>
            </svg>
         `
-        col_two.appendChild(button)
-
+        div_button.appendChild(button)
+        col_ten.appendChild(div_button)
         button.addEventListener('click', () => {
           if(Object.keys(self.slide_data).length === 2){
+            // if only single file is selected and the same file is being removed
             self.resetUploadFunctionality()
           }else{
+            // if multiple files are selected and one of them being removed
             summary_row.remove()
             const index = self.slide_data['create_slide'].indexOf(fileId);
             if (index > -1) {
@@ -741,10 +794,9 @@ class FileUploadWizard extends HTMLElement {
                 self.totalSlides = 1 + self.slide_data['create_slide'].length
                 self.currentTab = self.totalSlides
               }
-              // console.log("self.slide_data in last slide",self.slide_data)
           }
         })
-        summary_row.append(col_ten, col_two)
+        summary_row.appendChild(col_ten)
         div.appendChild(summary_row)
   }
 
@@ -767,7 +819,6 @@ class FileUploadWizard extends HTMLElement {
           }
         }
 
-        // console.log("self.endUpload",self.endUpload)
         const uploadEvent = new CustomEvent("end-upload", {
           bubbles: true,
           composed: true,
@@ -776,13 +827,13 @@ class FileUploadWizard extends HTMLElement {
         window.dispatchEvent(uploadEvent)
         setTimeout(() => {
           self.resetUploadFunctionality()
-
         },500)
 
   }
 
   resetUploadFunctionality(){
     const self = this;
+    self.nextButton.textContent = "NEXT"
     let summary_tag = `[slide-tagname="file-summary"]`
     let check_summarySlide = self.shadowRoot.querySelector(summary_tag)
     if(check_summarySlide){
@@ -814,12 +865,10 @@ class FileUploadWizard extends HTMLElement {
               }
   
               // Setting total no. of slides
-              if (self.slide_data['create_slide']) {
-                self.totalSlides = 1 + self.slide_data['create_slide'].length
-                self.currentTab = 0
-                self.updateWizard();
+              self.totalSlides = 1
+              self.currentTab = 0
+              self.updateWizard();
 
-              }
             self.slide_data = {}
             self.uploadFiles = []
             self.table_file_List.classList.add('d-none');

@@ -510,7 +510,6 @@ class JSONRenderer extends HTMLElement {
     self.form_details = JSON.parse(self.form_details);
     // self.form_details = latest_APIschema;
 
-    console.log("===>>>>>>>", self.form_details);
     self.submitFlow = self.getAttribute('submitFlow');
     self.uniqueId = self.getAttribute('uniqueId')
     // self.eventObj = self.getAttribute('eventObj')
@@ -643,11 +642,9 @@ class JSONRenderer extends HTMLElement {
     if (self.normalized_schema && self.normalized_schema.hasOwnProperty("oneOf")) {
       self.commonFields = self.extractCommonFieldsFromOneOf(self.normalized_schema);
       // self.commonFields  = JSON.stringify(self.commonFields, null, 2)
-      // console.log("self.commonFields", self.commonFields);
 
       self.mergeProps = self.mergeProperties(self.commonFields, self.normalized_schema, "normalized")
       // self.mergeProps  = JSON.stringify(self.mergeProps, null, 2)
-      // console.log("self.mergeProps", self.mergeProps);
 
       if (self.mergeProps['mergeProp']) {
         self.initilize_formGeneration(self.mergeProps, true)
@@ -663,9 +660,7 @@ class JSONRenderer extends HTMLElement {
     RefParser.dereference(json)
       .then((dereferencedSchema) => {
 
-        console.log("🏄🏄🏄", dereferencedSchema)
         self.normalized_schema = dereferencedSchema
-        // console.log(JSON.stringify(dereferencedSchema, null, 2));
       })
       .catch((err) => {
         console.error(err);
@@ -766,8 +761,6 @@ class JSONRenderer extends HTMLElement {
                   if (i === json.oneOf.length - 1) {
                     delete iteratedExProp['const']
                   }
-                  console.log("iteratedExProp", iteratedExProp)
-                  console.log("instanceExProp==>>", instanceExProp)
                 }
 
               }
@@ -898,7 +891,6 @@ class JSONRenderer extends HTMLElement {
             // }
           }
         }
-        // console.log("🌴", mergeProp)
 
         // to add the properties that are not present in json.properties but in common_Fields
         for (const prop in common_Fields['properties']) {
@@ -994,7 +986,6 @@ class JSONRenderer extends HTMLElement {
       }
     }
 
-    // console.log("👯‍", combineObj)
     return combineObj;
   }
 
@@ -1056,7 +1047,7 @@ class JSONRenderer extends HTMLElement {
       if (self.submitFlow === "false") {
         self.jsonForm_Genx.innerHTML += /* html */`
           <div class="row">
-            <div class="col-md-8">
+            <div class="col-md-8" style="word-break: break-all;">
             <p class="font-weight-bold"> File : ${self.form_details.file_name}</p>
             </div>
             <div class="col-md-4">
@@ -1080,11 +1071,11 @@ class JSONRenderer extends HTMLElement {
       if (self.submitFlow === "false") {
         self.jsonForm_Genx.innerHTML += /* html */`
           <div class="row">
-            <div class="col-md-8">
+            <div class="col-md-8" style="word-break: break-all;">
             <p class="font-weight-bold"> File : ${self.form_details.file_name}</p>
             </div>
             <div class="col-md-4">
-            <p class="font-weight-bold">Type : ${self.form_details.type}</p>
+            <p class="font-weight-bold text-right">Type : ${self.form_details.type}</p>
             </div>
           </div>
           <hr>
@@ -1666,10 +1657,8 @@ class JSONRenderer extends HTMLElement {
             if (matchedOneOfCopy.hasOwnProperty('oneOf')) {
               const copyOfmatchedOneOfCopy = _.cloneDeep(matchedOneOfCopy) // this line is added to make a copy of matchedOneOfCopy as somehwere in extractCommonFieldsFromOneOf function, json passed to this function is getting changed only for case with meaure_type (moviemaker-json.oneOf[0].oneOf) 
               _commonFields = self.extractCommonFieldsFromOneOf(copyOfmatchedOneOfCopy);
-              // console.log("🔥Type: DropDOwn🔥 _commonFields", _commonFields);
 
               _mergeData = self.mergeProperties(_commonFields, matchedOneOfCopy, prop)
-              // console.log("🔥Type:DropDown🔥 _mergeData", prop, "==>>", _mergeData);
             } else {
               _mergeData = {
                 "form_drivingProp": null,
@@ -1700,10 +1689,8 @@ class JSONRenderer extends HTMLElement {
                   // highest-index
                   // linkedTo_measures[0]_measure_type
                   let secondaryElements = element.querySelector(`[major-name]`)
-                  console.log(secondaryElements)
                   
                   let major_name = secondaryElements.getAttribute('major-name')
-                  console.log(major_name)
                   // let = `${major_name}-index`
                   let secondaryElementsArr = secondaryElements.querySelectorAll(`[${major_name}-index]`)
                   secondaryElementsArr.forEach((secEle) => {
@@ -2291,7 +2278,6 @@ class JSONRenderer extends HTMLElement {
           "required": property['required']
         }
       }
-      // console.log("🔥Type:Object No OneOf🔥 _mergeData", _mergeData);
     } else if (property && property.hasOwnProperty('allOf') && !property.hasOwnProperty('oneOf')) {
       // ex. oneOf[1].properties.date_settings
       let allOf = property.allOf
@@ -2330,15 +2316,14 @@ class JSONRenderer extends HTMLElement {
             temp_mergeData['form_drivingProp'][f_dp] = { "oneOf": [...data.oneOf] }
           }
 
-          // console.log("💪", temp_commonFields)
-          // console.log("💪🚀🚀", temp_mergeData)
+
 
 
         } else if (data.hasOwnProperty('properties')) {
 
           let temp_commonFields = self.extractCommonFieldsFromOneOf(data);
           temp_mergeData = self.mergeProperties(temp_commonFields, data)
-          // console.log("🌴🌴🌴", temp_mergeData)
+
 
         }
 
@@ -2346,7 +2331,7 @@ class JSONRenderer extends HTMLElement {
           allMerge[item] = temp_mergeData
         }
       }
-      // console.log("💪💪🔥🔥🔥🔥🔥",allMerge)
+
       if (Object.keys(allMerge).length > 0) {
         // Merge the objects into one
         const mergedObject = {
@@ -2385,17 +2370,14 @@ class JSONRenderer extends HTMLElement {
 
           }
         }
-        // console.log("🔥",mergedObject);
         _mergeData = mergedObject
       }
 
     }
     else if (property && property.hasOwnProperty('oneOf')) {                                                                           // if oneOf found then _merge data will be created by below functions
       _commonFields = self.extractCommonFieldsFromOneOf(property);
-      // console.log("🔥Type: Object🔥 _commonFields", _commonFields);
 
       _mergeData = self.mergeProperties(_commonFields, property, prop)
-      // console.log("🔥Type: Object🔥 _mergeData", prop, "==>>", _mergeData);
     }
 
     const container = self.createNewRow('container')
@@ -2498,7 +2480,6 @@ class JSONRenderer extends HTMLElement {
         }
       }
       // add_BtnBreaker = false
-      // console.log("🔥Type: Array No Item🔥 _mergeData", prop, "==>>", _mergeData);
 
     } 
     else if (property.hasOwnProperty('items') && !property.hasOwnProperty('properties') && !property.items.hasOwnProperty('properties') && !property.items.hasOwnProperty('oneOf') && !property.items.hasOwnProperty('allOf')) {
@@ -2557,7 +2538,6 @@ class JSONRenderer extends HTMLElement {
           "required": property.items['required']
         }
       }
-      // console.log("🔥Type: Array No OneOf🔥 _mergeData", prop, "==>>", _mergeData);
 
     } 
     else if (property && property.items && property.items.hasOwnProperty('oneOf') && !property.items.hasOwnProperty('allOf')) {
@@ -2604,15 +2584,13 @@ class JSONRenderer extends HTMLElement {
             temp_mergeData['form_drivingProp'][f_dp] = { "oneOf": [...data.oneOf] }
           }
 
-          // console.log("💪", temp_commonFields)
-          // console.log("💪🚀🚀", temp_mergeData)
+
 
         } 
         else if (data.hasOwnProperty('properties')) {
 
           let temp_commonFields = self.extractCommonFieldsFromOneOf(data);
           temp_mergeData = self.mergeProperties(temp_commonFields, data)
-          console.log("🌴🌴🌴", temp_mergeData)
 
         }
 
@@ -2658,7 +2636,6 @@ class JSONRenderer extends HTMLElement {
 
           }
         }
-        // console.log("🔥",mergedObject);
         _mergeData = mergedObject
       }
     }
@@ -2688,7 +2665,6 @@ class JSONRenderer extends HTMLElement {
                   if (_mergeData['form_drivingProp']) { // merging the converted oneOf to _mergeData.for_drivingProp 
                     _mergeData['form_drivingProp'] = { ..._mergeData['form_drivingProp'], ...additionalForm_drivingProp[0] }
                   }
-                  console.log("🔥==>> _mergeData   ",_mergeData)
                 }
 
               }
@@ -3394,7 +3370,7 @@ class JSONRenderer extends HTMLElement {
           });
         });
       }
-      console.log("self.formProperties", self.formProperties);
+      // console.log("self.formProperties", self.formProperties);
       resolve()
     })
   }
@@ -3407,7 +3383,7 @@ class JSONRenderer extends HTMLElement {
         strictMode: false,
         $data: true,
         allErrors: true,
-        $comment: true,
+        $comment: false,
         messages: true,
         timestamp: true,
         ownProperties: true,
@@ -3418,20 +3394,28 @@ class JSONRenderer extends HTMLElement {
       const validate = ajv.compile(self.use_schema);
       const valid = validate(self.formProperties)
       if (!valid) {
-        console.log(validate.errors)
         var errorObj = {};
         validate.errors.forEach(function (arrayItem) {
           var x = arrayItem.message;
-          if (arrayItem.hasOwnProperty('parentSchema') && arrayItem.parentSchema.hasOwnProperty('displayName'))
-            errorObj[arrayItem.parentSchema.displayName] = x;
-          // else if (arrayItem.hasOwnProperty('keyword')  && !arrayItem.params.hasOwnProperty('missingProperty'))
-          //   errorObj[arrayItem.params.missingProperty] = x;
-          // else
-          //   errorObj[arrayItem.dataPath] = x;
+          if (self.submitFlow === "false") {
+            if (arrayItem.dataPath) { 
+              let dataPath = arrayItem.dataPath.replace(".", "")
+              errorObj[dataPath] = x
+            } else if (arrayItem.keyword) {
+              let keyword = arrayItem.keyword.replace(".", "")
+              errorObj[keyword] = x
+            }
+          } else {
+            if (arrayItem.hasOwnProperty('parentSchema') && arrayItem.parentSchema.hasOwnProperty('displayName'))
+              errorObj[arrayItem.parentSchema.displayName] = x;
+            // else if (arrayItem.hasOwnProperty('keyword') && !arrayItem.params.hasOwnProperty('missingProperty'))
+            //   errorObj[arrayItem.params.missingProperty] = x;
+            // else
+            //   errorObj[arrayItem.dataPath] = x;
+          }
         });
-        console.log(errorObj)
+        // console.log(errorObj)
         const errorMessages = self.shadowRoot.querySelector(".errorMessages");
-        //errorMessages.innerText = JSON.stringify(errorObj)
         let error_span = '';
         Object.entries(errorObj).forEach(([key, value]) => {
           error_span += `${key} : ${value} \n`
@@ -3464,9 +3448,9 @@ class JSONRenderer extends HTMLElement {
 
         if (self.submitFlow === "false") {
           self.validityCheck = "true"
-          console.log("no error")
+          // console.log("No Errors found")
         } else {
-          console.log("no error submitflow == true")
+          // console.log("No Errors found submitflow == true")
           self.createSubmissionData()
         }
       }
@@ -3491,15 +3475,12 @@ class JSONRenderer extends HTMLElement {
         if (key.includes('output')) {
           requestJson[key] = self.input_output_properties[key]
         }
-        console.log(key);
-        console.log(key.includes('output'));
       }
     }
 
     // self.formProperties['input_file'] = self.input_output_properties.input_files
     requestJson.input = self.formProperties;
     // requestJson.output_container = self.input_output_properties.output_container
-    console.log("requestJson Object :: ", requestJson)
       self.onFormSubmit(requestJson);
   }
 

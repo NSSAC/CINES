@@ -115,7 +115,7 @@ function FileUpload({ fileTypes, path, showModal, handleClose, breadcrumbArr, dr
       },1000)
 
     }
-    console.log(file_types)
+    // console.log(file_types)
   }, [dispatch, file_types])
 
   React.useEffect(() => {
@@ -307,7 +307,7 @@ function FileUpload({ fileTypes, path, showModal, handleClose, breadcrumbArr, dr
       // onDragLeave={handleDragLeave}
       // onClose={handleClose}
     >
-      <DialogContent style={{backgroundColor: "#ffffff"}}>
+      <DialogContent style={{backgroundColor: "#ffffff", color: "rgba(0, 0, 0, 0.87)"}}>
 
         <cwe-fwiz path={JSON.stringify(path)} uploadableTypes={JSON.stringify(uploadableTypes)} ></cwe-fwiz>
 
