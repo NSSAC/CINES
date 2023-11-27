@@ -5,6 +5,7 @@
 */
 
 import Ajv from 'ajv';
+import addFormats from "ajv-formats";
 import RefParser from 'json-schema-ref-parser';
 import _ from '@lodash';
 import { JobService } from "node-sciduct";
@@ -3388,9 +3389,12 @@ class JSONRenderer extends HTMLElement {
         timestamp: true,
         ownProperties: true,
         verbose: true,
-        allowDate: true
+        allowDate: true,
+        formats: true
       }
       const ajv = new Ajv(defaultOptions);
+      require("ajv-keywords")(ajv)
+      addFormats(ajv)
       const validate = ajv.compile(self.use_schema);
       const valid = validate(self.formProperties)
       if (!valid) {
@@ -3478,10 +3482,8 @@ class JSONRenderer extends HTMLElement {
       }
     }
 
-    // self.formProperties['input_file'] = self.input_output_properties.input_files
     requestJson.input = self.formProperties;
-    // requestJson.output_container = self.input_output_properties.output_container
-      self.onFormSubmit(requestJson);
+    self.onFormSubmit(requestJson);
   }
 
   onFormSubmit(requestJson) {

@@ -73,7 +73,6 @@ function DetailSidebarHeader(props)
             ele['filePath'] = item.input[name]
           }
         })
-        console.log(checkInputFiles)
         window.checkInputFiles = checkInputFiles
       }
 

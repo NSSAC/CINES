@@ -1,7 +1,13 @@
-import './cwe-jsonRenderer'
-// import FILEUPLOAD_CONFIG from "../file-manager/FileManagerAppConfig";
+/*
+Attributes needed for cwe-fielUploader
+  1. uploadableTypes: accepted file types 
+  2. path: path of folder user is currently in;
+  3. file_types: attributeChanged callback - api data for all file types. On file type selection required file type is filted;
+  4. uploader_stat: attributeChanged callback - api prgress for active uploads;
+*/
 
-// import $ from 'jquery'
+import './cwe-jsonRenderer'
+
 const template_FileUploadWizard = document.createElement("template");
 template_FileUploadWizard.innerHTML = '';
 template_FileUploadWizard.innerHTML = /* html */ `
@@ -89,13 +95,29 @@ template_FileUploadWizard.innerHTML = /* html */ `
                                   <button class="file-input-button">Choose or Drop File</button>
                                 </div>
                                 <div class="table-responsive">
-                                  <table id="file_list" class="table d-none" >
+                                  <table id="file_list" class="table d-none" >    <!-- Table is to only populate the selected files to be uploaded  -->
                                     <thead>
                                       <tr>
                                         <th scope="col"  class="border-top-0">Name</th>
                                         <th scope="col"  class="border-top-0">Type</th>
                                         <th scope="col"  class="border-top-0">Size</th>
-                                        <!-- <th>Remove</th> -->
+                                        <!-- <th>Remove</th> // commented on purpose: This last table heading  column is for remove button but has no heading  -->
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      <!-- Table rows will be dynamically added here -->
+                                    </tbody>
+                                  </table>
+                                  
+                                  <table id="active_uploads" class="table d-none" >   <!-- Table is to only populate the active uploads  -->
+                                    <thead>
+                                      <tr>
+                                        <th scope="col" class="border-0" colspan="3"> Active Uploads</th>
+                                      </tr>
+                                      <tr>
+                                        <th scope="col"  class="border-top-0">Name</th>
+                                        <th scope="col"  class="border-top-0">Size</th>
+                                        <th scope="col"  class="border-top-0">Status</th>
                                       </tr>
                                     </thead>
                                     <tbody>
@@ -125,8 +147,10 @@ class FileUploadWizard extends HTMLElement {
     this.attachShadow({ mode: 'open' });
 
     // Variable declaration
-    this.table_file_List = ""       //table
-    this.tbody_file_List = ""       //table-body
+    this.table_file_List = ""       //selected files table
+    this.tbody_file_List = ""       //selected files table-body
+    this.table_active_uploads = ""    // active uploads table
+    this.tbody_active_uploads = ""    // active uploads table-body
     this.files = []       //selected files array
     this.path = ""      // path of uploaded file
     this.uploadFiles = []       //files to be uploaded
@@ -144,10 +168,11 @@ class FileUploadWizard extends HTMLElement {
     this.tempIndexVar = "";
     this.customEventArray = [];
     this.endUpload = []
+    this.uploadQueue = []   // uploader queue api response for active uploads
   }
 
   static get observedAttributes() {
-    return ['file_types'];
+    return ['file_types', 'uploader_stat'];
   }
 
   connectedCallback() {
@@ -160,10 +185,21 @@ class FileUploadWizard extends HTMLElement {
   }
 
   attributeChangedCallback(name, oldVal, newVal) {
-
+    const self = this;
     if (newVal && (name === 'file_types')) {
-      this.api_fileTypes = this.getAttribute('file_types')
-      this.api_fileTypes = JSON.parse(this.api_fileTypes)
+      self.api_fileTypes = self.getAttribute('file_types')
+      self.api_fileTypes = JSON.parse(self.api_fileTypes)
+    }
+
+    if(newVal && (name === 'uploader_stat')){
+      self.uploadQueue = self.getAttribute('uploader_stat')
+      self.uploadQueue = JSON.parse(self.uploadQueue)
+      if(self.uploadQueue.queue && self.uploadQueue.queue.length > 0){
+        self.table_active_uploads.classList.remove('d-none')
+        self.activeUploads()
+      }else{
+        self.table_active_uploads.classList.add('d-none')
+      }
     }
 
   }
@@ -171,7 +207,6 @@ class FileUploadWizard extends HTMLElement {
   getFileAttributes() {
     const self = this;
     self.path = JSON.parse(self.getAttribute("path"))
-    // self.uploadableTypes = FILEUPLOAD_CONFIG.fileTypes
     self.uploadableTypes = JSON.parse(self.getAttribute("uploadableTypes"))
   }
 
@@ -181,16 +216,17 @@ class FileUploadWizard extends HTMLElement {
     self.addEventOnButtons()
   }
 
-
-
   fileUpload() {
     const self = this;
     self.handleFileInputChange = self.handleFileInputChange.bind(this);
 
-    const fileInput = this.shadowRoot.querySelector('#file-input');
-    const fileInputButton = this.shadowRoot.querySelector('.file-input-button');
-    self.table_file_List = this.shadowRoot.querySelector('#file_list')
-    self.tbody_file_List = this.shadowRoot.querySelector('#file_list').querySelector('tbody');
+    const fileInput = self.shadowRoot.querySelector('#file-input');
+    const fileInputButton = self.shadowRoot.querySelector('.file-input-button');
+    self.table_file_List = self.shadowRoot.querySelector('#file_list')
+    self.tbody_file_List = self.shadowRoot.querySelector('#file_list').querySelector('tbody');
+
+    self.table_active_uploads = self.shadowRoot.querySelector('#active_uploads')
+    self.tbody_active_uploads = self.shadowRoot.querySelector('#active_uploads').querySelector('tbody');
 
     fileInputButton.addEventListener('click', () => {
       fileInput.value = null;
@@ -326,8 +362,6 @@ class FileUploadWizard extends HTMLElement {
 
     //Remove Next button if uploaded_files.length === 0
     self.addRmv_nextBtn();
-
-
   }
 
   updateTableVisibility = () => {   //remove table headers if no file selected
@@ -405,7 +439,7 @@ class FileUploadWizard extends HTMLElement {
     if(self.slide_data && self.slide_data.create_slide && self.slide_data.create_slide.length > 0){
       self.slide_data.create_slide.forEach((unique_fileID) => {
         let slide_details_uniqueId = self.slide_data[unique_fileID]
-        let className = `tab-pane ${unique_fileID}`
+        let className = `tab-pane`
         let slide_tag = `[slide-tagname="${unique_fileID}"]`
         let checkInDOM = self.shadowRoot.querySelector(slide_tag)
 
@@ -450,11 +484,16 @@ class FileUploadWizard extends HTMLElement {
     }
   }
 
-  formatSize(bytes) {
+  formatSize(bytes, check) {
+    // bytes is size of file in bytes
+    // check: if check is true then size type will be mentioned i.e 20MB else 20 
     const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
     if (bytes === 0) return '0 Byte';
     const i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
-    return Math.round(bytes / Math.pow(1024, i), 2) + ' ' + sizes[i];
+    // const sizes_included = Math.round(bytes / Math.pow(1024, i), 2) + ' ' + sizes[i];
+    // const sizes_notincluded = Math.round(bytes / Math.pow(1024, i), 2);
+    const returnOutput = check === true ? Math.round(bytes / Math.pow(1024, i), 2) + ' ' + sizes[i] : Math.round(bytes / Math.pow(1024, i), 2)
+    return returnOutput
   }
 
   createFileRow(name, size, unique_id) {
@@ -492,7 +531,7 @@ class FileUploadWizard extends HTMLElement {
 
     // Size column
     const sizeCell = document.createElement('td');
-    sizeCell.textContent = self.formatSize(size);
+    sizeCell.textContent = self.formatSize(size, true);
     row.appendChild(sizeCell);
 
     // Remove column with button
@@ -539,7 +578,7 @@ class FileUploadWizard extends HTMLElement {
           if (obj.unique_id === attrSelectId) {
             obj.type = selectedFileType
             let temp_filetype = self.api_fileTypes.filter((obj) => obj.id === selectedFileType)
-            let checkForm_prop = temp_filetype[0].hasOwnProperty('usermeta_schema') ? true : false      // check if filter api response has usermeta_schema
+            let checkForm_prop = temp_filetype.length > 0 && temp_filetype[0].hasOwnProperty('usermeta_schema') ? true : false      // check if filter api response has usermeta_schema
 
 
             // pushing filtered file types in self.filtered_fileTypes and checking for duplicates if multiple file type select same file type
@@ -831,6 +870,47 @@ class FileUploadWizard extends HTMLElement {
 
   }
 
+  activeUploads(){
+    const self = this;
+    self.tbody_active_uploads.innerHTML = ""
+    if(self.uploadQueue.queue.length > 0){
+      self.uploadQueue.queue.forEach((file) => {
+        const row = self.createActiveUploadrow(file);
+        self.tbody_active_uploads.appendChild(row);
+      })
+    } 
+  }
+
+  createActiveUploadrow = (file) => {
+    const self = this;
+    const row = document.createElement('tr');
+    row.setAttribute("queue-fileId", file.fileName)
+
+    // Name column
+    const nameCell = document.createElement('td');
+    nameCell.style.wordBreak = "break-all"
+    nameCell.textContent = file.fileName;
+    row.appendChild(nameCell);
+
+    // Size column
+    const sizeCell = document.createElement('td');
+    const loaded = file.hasOwnProperty('loaded') ? self.formatSize(file.loaded, false) : 0
+    const total = file.hasOwnProperty('total') ? self.formatSize(file.total, true) : 0
+    sizeCell.textContent = `${loaded}/${total}`
+    row.appendChild(sizeCell);
+    
+    // Progress bar column
+    const progressCell = document.createElement('td')
+    progressCell.innerHTML = /* html */ `
+    <div class="progress">
+      <div class="progress-bar" role="progressbar" style="width: ${file.percentage || 0}%" aria-valuenow="${file.percentage || 0}" aria-valuemin="0" aria-valuemax="100"></div>
+    </div>
+    `
+    row.appendChild(progressCell)
+
+    return row;
+  }
+
   resetUploadFunctionality(){
     const self = this;
     self.nextButton.textContent = "NEXT"
@@ -847,36 +927,35 @@ class FileUploadWizard extends HTMLElement {
             if (index > -1) {
               self.slide_data['create_slide'].splice(index, 1);
             }
-
-              delete self.slide_data[fileId]
+            
+            // Removing tab-pane from DOM if file is removed
+            let removeTab_attr = `[slide-tagname='${fileId}']`
+            let tab_pane = self.shadowRoot.querySelector(removeTab_attr)
+            if (tab_pane) {
+              tab_pane.remove()
+            }
   
-              // Removing tab-pane from DOM if file is removed
-              let removeTab_attr = `[slide-tagname='${fileId}']`
-              let tab_pane = self.shadowRoot.querySelector(removeTab_attr)
-              if (tab_pane) {
-                tab_pane.remove()
-              }
-  
-              //Removing row form table from first slide
-              let removeRow = `[file-name='${fileId}']`
-              let row = self.shadowRoot.querySelector(removeRow)
-              if (row) {
-                row.remove()
-              }
-  
-              // Setting total no. of slides
-              self.totalSlides = 1
-              self.currentTab = 0
-              self.updateWizard();
+            //Removing row form table from first slide
+            let removeRow = `[file-name='${fileId}']`
+            let row = self.shadowRoot.querySelector(removeRow)
+            if (row) {
+              row.remove()
+            }
 
-            self.slide_data = {}
-            self.uploadFiles = []
-            self.table_file_List.classList.add('d-none');
-            self.addRmv_nextBtn()
-            self.enableNextButton()
-
+            delete self.slide_data[fileId]
+  
+            // Setting total no. of slides
+            self.totalSlides = 1
+            self.currentTab = 0
+            self.updateWizard();
       }
     }
+    self.slide_data = {}
+    self.uploadFiles = []
+    self.table_file_List.classList.add('d-none');
+    self.addRmv_nextBtn()
+    self.enableNextButton()
+
   }
 }
 

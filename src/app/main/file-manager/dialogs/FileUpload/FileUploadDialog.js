@@ -90,11 +90,11 @@ function FileUpload({ fileTypes, path, showModal, handleClose, breadcrumbArr, dr
   const uploader = useSelector(({ fileManagerApp }) => fileManagerApp.uploader);
 
   // const [isDrag, setDrag] = useState(false);
-  const [uploadFiles, setUploadFiles] = useState(dropped || []);
+  // const [uploadFiles, setUploadFiles] = useState(dropped || []);
   // const [disableButton, setDisableButton] = useState(true);
 
   // const classes = useStyles();
-  const fileInput = useRef();
+  // const fileInput = useRef();
 
   var uploadableTypes = fileTypes || FILEUPLOAD_CONFIG.fileTypes
 
@@ -120,16 +120,30 @@ function FileUpload({ fileTypes, path, showModal, handleClose, breadcrumbArr, dr
 
   React.useEffect(() => {
     window.addEventListener('cancel-wizard', onCancelll )
-    window.addEventListener('end-upload', onUploadd)
     return () => {
     window.removeEventListener('cancel-wizard', onCancelll )
     }
   },[])
 
+  React.useEffect(() => {
+    window.addEventListener('end-upload', onUploadd)
+    return () => {
+    window.removeEventListener('end-upload', onUploadd )
+    }
+  },[])
 
   React.useEffect(() => {
-    dispatch(Actions.validateFiles(uploadFiles))
-  }, [dispatch, uploadFiles])
+    // this useEffect is added to send the active upload status 
+    let cwe_fwiz = document.querySelector("cwe-fwiz")
+      if(cwe_fwiz){
+        cwe_fwiz.setAttribute('uploader_stat', JSON.stringify(uploader))
+      }
+  }, [uploader])
+
+
+  // React.useEffect(() => {
+  //   dispatch(Actions.validateFiles(uploadFiles))
+  // }, [dispatch, uploadFiles])
 
   // React.useEffect(() => {
   //   if (!uploader || !uploader.validated) {
@@ -256,11 +270,11 @@ function FileUpload({ fileTypes, path, showModal, handleClose, breadcrumbArr, dr
   //   fileInput.current.click();
   // };
 
-  const handleDragOver = e => {
-    e.preventDefault();
-    e.stopPropagation()
-    // setDrag(true);
-  };
+  // const handleDragOver = e => {
+  //   e.preventDefault();
+  //   e.stopPropagation()
+  //   // setDrag(true);
+  // };
 
   // const handleDragLeave = e => {
   //   e.preventDefault();
@@ -303,7 +317,7 @@ function FileUpload({ fileTypes, path, showModal, handleClose, breadcrumbArr, dr
       onExiting={onExiting}
       // onDragEnter={handleDragStart}
       // onDrop={handleDrop}
-      onDragOver={handleDragOver}
+      // onDragOver={handleDragOver}
       // onDragLeave={handleDragLeave}
       // onClose={handleClose}
     >
