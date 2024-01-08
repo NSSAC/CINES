@@ -6,7 +6,7 @@ import { Link, useHistory } from "react-router-dom";
 import { FusePageSimple } from '@fuse';
 import withReducer from 'app/store/withReducer';
 
-import JobDefinitionForm from "./JobDefinitionForm"
+// import JobDefinitionForm from "./JobDefinitionForm"
 import MainSidebarContent from './MainSidebarContent';
 import MainSidebarHeader from './MainSidebarHeader';
 import * as Actions from './store/actions';
@@ -19,6 +19,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import semver  from 'semver';
 import '../../../CustomWebComponents/cwe-jsonRenderer'
 import SelectFileDialog from 'app/main/file-manager/dialogs/SelectFileDialog'
+import _ from '@lodash';
 
 function JobDefinitionView(props) {
     const useStyles = makeStyles((theme) => ({
@@ -33,7 +34,9 @@ function JobDefinitionView(props) {
             color: '#FFA726',
             marginTop: '-3px',
         },
-
+        contentDisplay: {
+            backgroundColor: '#ffffff'
+        }
       }));
 
     const classes = useStyles();
@@ -70,6 +73,7 @@ function JobDefinitionView(props) {
             window.removeEventListener('cust-backToJDListPage', backToJDListPage)
         }
     }, [])
+
 
 	function showFileManagerDialog(e) {
         setShowFMDialog(true);
@@ -146,10 +150,21 @@ function JobDefinitionView(props) {
                 extractRunTimeData_staticPlotF()
             }
         }else if(!props.static_form){
-            extractRunTimeData_DynamicF()
+            const cwe_jsonrenderer = document.querySelector("cwe-jsonrenderer");            
+            if (cwe_jsonrenderer && event.target.value) {
+                cwe_jsonrenderer.setAttribute('jobversion', JSON.stringify(event.target.value));
+            }
+
+            let intervalId;
+
+            const intervalFn = () => {
+                if(window.restoreDynamicFData !== undefined){
+                    clearInterval(intervalId)
+                }
+              }
+              intervalId = setInterval(intervalFn, 200)
+            // extractRunTimeData_DynamicF()
         }
-
-
         history.replace(url)
       };
 
@@ -394,19 +409,19 @@ function JobDefinitionView(props) {
     }
 
 
-    function renderTask(a){
-    if (a.type ) {
+    function renderTask(a) {
+        if (a.type) {
 
-        if (a.type["$ref"]) {
-            var parts = a.type["$ref"].split("/")
-            var t = parts[parts.length - 1]
-            return(<span>{t}</span>) 
-        }else{
-            return(<span>{a.type.toString()}</span>)
+            if (a.type["$ref"]) {
+                var parts = a.type["$ref"].split("/")
+                var t = parts[parts.length - 1]
+                return (<span>{t}</span>)
+            } else {
+                return (<span>{a.type.toString()}</span>)
+            }
+        } else if (a.types) {
+            return (<span>{a.types.toString()}</span>)
         }
-    }else if(a.types){
-        return(<span>{a.types.toString()}</span>)
-    }
     }
 
     useEffect(() => {
@@ -464,16 +479,16 @@ function JobDefinitionView(props) {
             return
         }
         let jdTrigger = localStorage.getItem("jdTrigger")
-        if(!jdTrigger){
+        // if(!jdTrigger){
             if (!props.version || (props.version === "default")) {
                 id = `${props.namespace}/${props.jobdef}`;
-                localStorage.setItem("jdTrigger", "true")
+                // localStorage.setItem("jdTrigger", "true")
                 dispatch(Actions.getJobDefinition(id))
             } else if (props.version ) {
                 id = `${props.namespace}/${props.jobdef}@${props.version}`
                 dispatch(Actions.getJobDefinition(id))
             }
-        }
+        // }
 
     }, [props.namespace, props.jobdef, props.version, job_definition, dispatch])
 
@@ -564,18 +579,31 @@ function JobDefinitionView(props) {
         } else {
             let resubmitFormDetail;
             if(!window.formEdited && localStorage.getItem("resubmitJob")){
-                resubmitFormDetail = JSON.parse(localStorage.getItem("resubmitJob"))
+                resubmitFormDetail = props.location.state
+                
             }else if( window.restoreDynamicFData ){
-                resubmitFormDetail = window.restoreDynamicFData
+                let a = _.cloneDeep( window.restoreDynamicFData)
+                resubmitFormDetail = {
+                    "inputData" : {
+                        "input" : a.formProperties,
+                        "input_files": a.inputFiles,
+                        "output_container": a.outputContainer,
+                        "output_name": a.outputName,
+                        "inputFile_actualdata" : a.inputFile_actualdata,
+                    },
+                    "re_resubmit" : true
+                }
+                window.restoreDynamicFData = undefined
             }
 
-            if (job_definition.id === 'exceads_dev/moviemaker') {
+            // if (job_definition.id === 'exceads_dev/moviemaker') {
                 return <>
                     {/* <cwe-jsonrenderer details={JSON.stringify(job_definition)} submitFlow="true" ></cwe-jsonrenderer> */}
                     <FusePageSimple
                         classes={{
                             root: 'root',
-                            header: 'headerDisplay'
+                            header: 'headerDisplay',
+                            content: `${classes.contentDisplay}`
                         }}
                         header={
                             <div>
@@ -597,7 +625,6 @@ function JobDefinitionView(props) {
                                         });
                                         window.dispatchEvent(sendPath);
                                         window.askForPathOutput = {}
-                                        console.log("🔥🔥🔥🔥🔥🔥", p, metadata)
                                     }}
                                     callMetaDataAPI={true}
                                     //   target="/resources/examples/moviemaker"
@@ -635,13 +662,14 @@ function JobDefinitionView(props) {
                             </div>
                         }
                         content={
-                            <cwe-jsonrenderer details={JSON.stringify(job_definition)} submitFlow="true" ></cwe-jsonrenderer>
+                            <cwe-jsonrenderer details={JSON.stringify(job_definition)} submitFlow="true" resubmitData={JSON.stringify(resubmitFormDetail)}></cwe-jsonrenderer>
                         }
                     />
                 </>
-            } else {
-                return <JobDefinitionForm state={job_definition} resubmit={props.location.state} localResubmit={resubmitFormDetail} {...props} />
-            }
+            // } 
+            // else {
+            //     return <JobDefinitionForm state={job_definition} resubmit={props.location.state} localResubmit={resubmitFormDetail} {...props} />
+            // }
 
         }
     }

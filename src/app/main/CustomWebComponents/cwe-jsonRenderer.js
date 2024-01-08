@@ -2,6 +2,8 @@
   Attributes required for this component
     1. details : this attribute holds for generating json.
     2. submitFlow: attribute holds check if form has submit flow or not. doesnot have submit flow ? "false" : (set as "true" or will work if nothing is set)
+    3. resubmitData : attribute holds the resubmit data for the selected job
+    4. jobversion : attribute holds the version of current job definiton
 */
 
 import Ajv from 'ajv';
@@ -9,6 +11,7 @@ import addFormats from "ajv-formats";
 import RefParser from 'json-schema-ref-parser';
 import _ from '@lodash';
 import { JobService } from "node-sciduct";
+import { parseInt } from 'lodash';
 
 
 const template_JSONFromRendered = document.createElement('template');
@@ -465,18 +468,22 @@ class JSONRenderer extends HTMLElement {
     this.output_files = null
     this.inputFile_actualdata = []
     this.inputFile_metadata = ""
-	this.jobdefiniation = ""
+    this.jobdefiniation = ""
+    this.resubmitData = null;   // Resubmit complete data coming from last comp
+    this.resubmitProp = null;   // extracted input data 
+    this.inputFileResponse = []
+    this.jobVersion = ""
   }
 
   static get observedAttributes() {
-    return [''];
+    return ['inputfileresponse', 'jobversion'];
   }
 
   connectedCallback() {
     const self = this;
-      this.jobdefiniation = JSON.parse(this.getAttribute("details"));
-    	this.shadowRoot.appendChild(template_JSONFromRendered.content.cloneNode(true));
-      self.jsonForm_Genx = self.shadowRoot.querySelector('#json-form')
+    this.jobdefiniation = JSON.parse(this.getAttribute("details"));
+    this.shadowRoot.appendChild(template_JSONFromRendered.content.cloneNode(true));
+    self.jsonForm_Genx = self.shadowRoot.querySelector('#json-form')
 
     // Get a reference to the button element
     const interval = setInterval(() => {
@@ -503,13 +510,59 @@ class JSONRenderer extends HTMLElement {
   }
 
   attributeChangedCallback(name, oldVal, newVal) {
+    const self = this;
+
+    if (newVal && (name === 'jobversion')) {   // ***RESUBMIT FUNCTIONALITY*** attribute jobversion checks for the change in version of job definitions. 
+      self.jobVersion = self.getAttribute('jobversion')
+      self.jobVersion = JSON.parse(self.jobVersion)
+
+      self.extractFormProperties()
+      const outputContainerDOM_col = self.shadowRoot.querySelector(`[property="output_container"]`);
+      const outputNameDOM_col = self.shadowRoot.querySelector(`[property="output_name"]`);
+      let outputContainer_value = ""
+      let outputName_value = "" 
+      if(outputContainerDOM_col){
+        outputContainer_value = outputContainerDOM_col.getAttribute('value')
+      }
+      if(outputNameDOM_col){
+        outputName_value = outputNameDOM_col.getAttribute('value')
+      }
+
+      const inputSelectionProperties_element = self.shadowRoot.querySelectorAll(`[container-type="input-selection"]`);
+      let inpuFiles = []
+      if (inputSelectionProperties_element) {
+        inputSelectionProperties_element.forEach((inputoutput_element) => {
+          const input_row_elements = inputoutput_element.querySelectorAll('.col-md-6');
+          let element = {}
+          input_row_elements.forEach((row_element) => {
+            element['name'] = row_element.getAttribute('property');
+            element['filePath'] = row_element.getAttribute('value') !== null ? row_element.getAttribute('value') : "";
+            if(element['filePath']) {
+              const parts = element['filePath'].split('/');
+              const lastFileName = parts[parts.length - 1];
+              element['stored_name'] = lastFileName
+            }
+            element['type'] = row_element.getAttribute('types');
+            inpuFiles.push(element)
+          });
+        });
+      }
+      const storedData = {
+        "formProperties" : self.formProperties,
+        "inputFile_actualdata" : self.inputFile_actualdata.length > 0 ? self.inputFile_actualdata : [],
+        "outputContainer" : outputContainer_value ? outputContainer_value : "",
+        "outputName": outputName_value ? outputName_value : "",
+        "inputFiles": inpuFiles
+      }
+      window.restoreDynamicFData = storedData;
+    }
   }
+
 
   getFileAttribute() {
     const self = this;
     self.form_details = self.getAttribute('details')
     self.form_details = JSON.parse(self.form_details);
-    // self.form_details = latest_APIschema;
 
     self.submitFlow = self.getAttribute('submitFlow');
     self.uniqueId = self.getAttribute('uniqueId')
@@ -519,7 +572,7 @@ class JSONRenderer extends HTMLElement {
       self.use_schema = self.form_details.file_schema.usermeta_schema
     } else if (self.form_details && self.form_details.hasOwnProperty('input_schema')) {
       // Job definitions Case
-      // JSON Form Generation
+      // JSON Form Generatio
       self.use_schema = self.form_details.input_schema;
       if (self.form_details.hasOwnProperty('input_files') && self.form_details.input_files.length > 0) {
         self.input_files = self.form_details.input_files
@@ -528,6 +581,16 @@ class JSONRenderer extends HTMLElement {
         self.output_files = Object.keys(self.form_details.output_files).length > 0 ? self.form_details.output_files : null
       }
     }
+
+
+    // Resubmit functionality
+    if (self.hasAttribute('resubmitData')) {
+      self.resubmitData = self.getAttribute('resubmitData');
+      self.resubmitData = JSON.parse(self.resubmitData)
+      self.resubmitProp = self.resubmitData !== null && self.resubmitData.inputData && self.resubmitData.inputData.input ? self.resubmitData.inputData.input : null;
+      self.inputFile_actualdata = self.resubmitData !== null && self.resubmitData.inputData && self.resubmitData.inputData.input_files ? self.resubmitData.inputData.input_files : [];
+    }
+
   }
 
   initilization() {
@@ -614,9 +677,9 @@ class JSONRenderer extends HTMLElement {
         const element = required_elements[index];
         const hasAttr = element.hasAttribute('value')
         const attrVal = element.getAttribute('value')
-        if(hasAttr && attrVal && (attrVal !== null || attrVal !== "") ){
+        if (hasAttr && attrVal && (attrVal !== null || attrVal !== "")) {
           propWithVal.push(true);
-        }else{
+        } else {
           break;
         }
       }
@@ -628,29 +691,11 @@ class JSONRenderer extends HTMLElement {
 
     let submitBtn = self.shadowRoot.querySelector('#submitBtn');
     if (submitBtn) {
-      if(enabled){
+      if (enabled) {
         submitBtn.classList.remove('disabled');
-      }else {
+      } else {
         if (!submitBtn.classList.contains('disabled'))
           submitBtn.classList.add('disabled');
-      }
-    } 
-  }
-
-  _processJSON() {
-    const self = this;
-
-    if (self.normalized_schema && self.normalized_schema.hasOwnProperty("oneOf")) {
-      self.commonFields = self.extractCommonFieldsFromOneOf(self.normalized_schema);
-      // self.commonFields  = JSON.stringify(self.commonFields, null, 2)
-
-      self.mergeProps = self.mergeProperties(self.commonFields, self.normalized_schema, "normalized")
-      // self.mergeProps  = JSON.stringify(self.mergeProps, null, 2)
-
-      if (self.mergeProps['mergeProp']) {
-        self.initilize_formGeneration(self.mergeProps, true)
-      } else {
-        self.initilize_formGeneration(self.mergeProps, false)
       }
     }
   }
@@ -666,6 +711,24 @@ class JSONRenderer extends HTMLElement {
       .catch((err) => {
         console.error(err);
       });
+  }
+
+  _processJSON() {
+    const self = this;
+
+    if (self.normalized_schema) {
+      self.commonFields = self.extractCommonFieldsFromOneOf(self.normalized_schema);
+      // self.commonFields  = JSON.stringify(self.commonFields, null, 2)
+
+      self.mergeProps = self.mergeProperties(self.commonFields, self.normalized_schema, "normalized")
+      // self.mergeProps  = JSON.stringify(self.mergeProps, null, 2)
+
+      if (self.mergeProps['mergeProp']) {
+        self.initilize_formGeneration(self.mergeProps, true)
+      } else {
+        self.initilize_formGeneration(self.mergeProps, false)
+      }
+    }
   }
 
   extractCommonFieldsFromOneOf(json) {
@@ -689,7 +752,7 @@ class JSONRenderer extends HTMLElement {
 
       // Iterate through the remaining objects in oneOf to find common properties
       for (let i = 1; i < json.oneOf.length; i++) {
-        const instance = {...json.oneOf[i]};
+        const instance = { ...json.oneOf[i] };
 
         if (instance.properties) {
           for (const prop in commonFields['properties']) {
@@ -726,7 +789,7 @@ class JSONRenderer extends HTMLElement {
                 if (i === json.oneOf.length - 1) {
                   delete commonFields['properties'][prop]['const']
                 }
-              } 
+              }
               else if (commonFields['properties'][prop].hasOwnProperty('items') &&
                 commonFields['properties'][prop].items.hasOwnProperty('properties') &&
                 Object.keys(commonFields['properties'][prop].items.properties).length === 1) {
@@ -735,7 +798,7 @@ class JSONRenderer extends HTMLElement {
 
                   const iteratedExProp = commonFields['properties'][prop].items.properties[externalProp]
                   const instanceExProp = instance['properties'][prop].items.properties[externalProp]
-                  
+
 
                   if (commonFields['required'].indexOf(prop) === -1) {
                     commonFields['required'].push(prop)
@@ -822,7 +885,7 @@ class JSONRenderer extends HTMLElement {
                 form_drivingProp.push(prop)
               }
             }
-          } 
+          }
           else if (common_Fields['properties'][prop].hasOwnProperty('items') &&
             common_Fields['properties'][prop].items.hasOwnProperty('properties') &&
             Object.keys(common_Fields['properties'][prop].items.properties).length === 1) {
@@ -1089,239 +1152,240 @@ class JSONRenderer extends HTMLElement {
       container_input.appendChild(row_inputSelection)
 
       // if (self.input_files !== null || self.output_files !== null) {
-        if (self.input_files !== null && self.input_files.length > 0) {
+      if (self.input_files !== null && self.input_files.length > 0) {
 
-          self.input_files.forEach((file, index) => {
-            const required = file.required ? file.required : false;
-            // const types = file.types ? file.types : []
-            const types = file.types
+        self.input_files.forEach((file, index) => {
+          const required = file.required ? file.required : false;
+          // const types = file.types ? file.types : []
+          const types = file.types
 
-            const uniqueInputId = `input_files_${index}`
-            const name = file.name ? file.name : uniqueInputId
-            const col = document.createElement('div')
-            col.classList.add('col-md-6')
-            col.setAttribute("property", name)
-            col.setAttribute("property-index", uniqueInputId)
-            col.setAttribute("types", types)
-            col.setAttribute("name", name)
-            col.setAttribute("required", required)
-            col.style.wordBreak = 'break-all'
-            col.style.setProperty('white-space', 'normal', 'important')
-
-            const inputDiv = document.createElement('div')
-            inputDiv.classList.add('form-group', 'modify-formGroup');
-
-            const inputLabel = document.createElement('label')
-            inputLabel.textContent = name;
-            inputLabel.setAttribute('for', name)
-
-            required ? inputLabel.classList.add('modify-label', 'required', 'font-weight-bold') : inputLabel.classList.add('modify-label', 'font-weight-bold')
-
-            const inputBtn = document.createElement('button')
-            inputBtn.type = 'button'
-            inputBtn.textContent = "select File"
-            inputBtn.className = "inputOutputBtn"
-
-            const inputPathSpan = document.createElement('span')
-            inputPathSpan.setAttribute('setpath', uniqueInputId)
-            inputPathSpan.textContent = 'No File Chosen'
-            inputPathSpan.className = 'ml-2'
-
-            inputDiv.append(inputLabel, inputBtn, inputPathSpan)
-            col.appendChild(inputDiv)
-            row_inputSelection.appendChild(col)
-
-            setTimeout(() => {
-              inputBtn.addEventListener('click', function (e) {
-                e.stopPropagation();
-                let eventOutput;
-                const props = {
-                  'formData': [
-                    "inputFile_Graph",
-                    {
-                      "name": name,
-                      "required": true,
-                      "types": types,
-                      "stage": true,
-                      "require_related_provenance_files": false,
-                      "retrieve_provenance_files": false,
-                      "id": index,
-                      "formLabel": name,
-                      "outputFlag": false,
-                      "value": ""
-                    }
-                  ]
-                }
-                window.askForPathOutput = {
-                  openFM_props: props,
-                  setPathFor: uniqueInputId
-                }
-                const showFileManager = new CustomEvent('cust-openFM', {
-                  bubbles: true,
-                  composed: true,
-                  detail: {
-                    openFM_props: props,
-                    setPathFor: uniqueInputId,
-                    showFileManager: true
-                  }
-                });
-                inputBtn.dispatchEvent(showFileManager);
-
-                const generate_event = `cust_${uniqueInputId}`
-                const setInputPath = (event) => {
-                  eventOutput = event.detail.pathDetails
-                  inputPathSpan.textContent = eventOutput[0];
-                  inputPathSpan.style.fontWeight = 'bold';
-                  self.inputFile_actualdata = []
-                  self.inputFile_actualdata = [event.detail.metadata]
-
-                  const selectDropDowns = self.shadowRoot.querySelectorAll(`[input-dependselect='true']`)
-                  for (let index = 0; index < selectDropDowns.length; index++) {
-                    const selectDD = selectDropDowns[index];
-                    selectDD.innerHTML = ""
-                    // adding a default selected select option
-                    const select_option = document.createElement('option');
-                    select_option.textContent = "Please select input file";
-                    select_option.setAttribute('disabled', true)
-                    select_option.setAttribute('selected', true)
-                    selectDD.appendChild(select_option);
-                    selectDD.setAttribute('input-dependselectupdate', 'not-updated')
-                  }
-
-                  const multiSelectDropd = self.shadowRoot.querySelectorAll(`[input-dependmultiselect='true']`)
-                  for (let index = 0; index < multiSelectDropd.length; index++) {
-                    const multiselectDD = multiSelectDropd[index];
-                    multiselectDD.innerHTML = ""
-                    // adding a default selected select option
-                    const _li = document.createElement('li');
-                    _li.textContent = "Please select input file";
-                    _li.className = "checkbox-option"
-                    multiselectDD.appendChild(_li);
-                    multiselectDD.setAttribute('input-dependmultiselectupdate', 'not-updated')
-                  }
-                  self.updateSelectOptions(true)
-                  col.setAttribute("value", eventOutput.length > 0 ? eventOutput[0] : "")
-
-                  self.enableDisableSubmitBtn() // This is enable/disable submit button on changes for required fields
-                  window.removeEventListener(generate_event, setInputPath)
-                }
-                window.addEventListener(generate_event, setInputPath)
-              })
-            }, 200)
-          })
-
-        }
-
-
-        const container_output = self.createNewRow('container')
-        container_output.setAttribute('container-type', 'output-selection')
-        container_output.style.marginBottom = '25px';
-        const row_outputSelection = self.createNewRow('row')
-        container_output.appendChild(row_outputSelection)
-        
-        if (self.output_files !== null) {
-          const required = true
-          const types = ["folder", "epihiper_multicell_analysis", "epihiperOutput", "csonnet_simulation_container"]
-          const name = "output_container"
+          const uniqueInputId = `input_files_${index}`
+          const name = file.name ? file.name : uniqueInputId
           const col = document.createElement('div')
-          const uniqueOutputId = `output_container`
-
           col.classList.add('col-md-6')
-          col.setAttribute("property", "output_container")
+          col.setAttribute("property", name)
+          col.setAttribute("property-index", uniqueInputId)
           col.setAttribute("types", types)
           col.setAttribute("name", name)
           col.setAttribute("required", required)
           col.style.wordBreak = 'break-all'
           col.style.setProperty('white-space', 'normal', 'important')
 
-          const outputDiv = document.createElement('div')
-          outputDiv.classList.add('form-group', 'modify-formGroup');
+          const inputDiv = document.createElement('div')
+          inputDiv.classList.add('form-group', 'modify-formGroup');
 
-          const outputLabel = document.createElement('label')
-          outputLabel.textContent = name;
-          outputLabel.setAttribute('for', name)
-          required ? outputLabel.classList.add('modify-label', 'required', 'font-weight-bold') : outputLabel.classList.add('modify-label', 'font-weight-bold')
+          const inputLabel = document.createElement('label')
+          inputLabel.textContent = name;
+          inputLabel.setAttribute('for', name)
 
-          const outputBtn = document.createElement('button')
-          outputBtn.type = 'button'
-          outputBtn.textContent = "Select Path"
-          outputBtn.className = "inputOutputBtn"
+          required ? inputLabel.classList.add('modify-label', 'required', 'font-weight-bold') : inputLabel.classList.add('modify-label', 'font-weight-bold')
 
-          const outputPathSpan = document.createElement('span')
-          outputPathSpan.setAttribute('setOutput_containerPath', uniqueOutputId)
-          outputPathSpan.textContent = 'No Folder Specified'
-          outputPathSpan.className = 'ml-2'
+          const inputBtn = document.createElement('button')
+          inputBtn.type = 'button'
+          inputBtn.textContent = "select File"
+          inputBtn.className = "inputOutputBtn"
 
-          outputDiv.append(outputLabel, outputBtn, outputPathSpan)
-          col.appendChild(outputDiv)
-          row_outputSelection.appendChild(col)
+          const inputPathSpan = document.createElement('span')
+          inputPathSpan.setAttribute('setpath', uniqueInputId)
+          inputPathSpan.textContent = 'No File Chosen'
+          inputPathSpan.className = 'ml-2'
+
+          inputDiv.append(inputLabel, inputBtn, inputPathSpan)
+          col.appendChild(inputDiv)
+          row_inputSelection.appendChild(col)
 
           setTimeout(() => {
-            outputBtn.addEventListener('click', function (e) {
-              e.stopPropagation()
+            inputBtn.addEventListener('click', function (e) {
+              e.stopPropagation();
               let eventOutput;
-              const showFolderManager = new CustomEvent('cust-openFolderM', {
+              const props = {
+                'formData': [
+                  "inputFile_Graph",
+                  {
+                    "name": name,
+                    "required": true,
+                    "types": types,
+                    "stage": true,
+                    "require_related_provenance_files": false,
+                    "retrieve_provenance_files": false,
+                    "id": index,
+                    "formLabel": name,
+                    "outputFlag": false,
+                    "value": ""
+                  }
+                ]
+              }
+              window.askForPathOutput = {
+                openFM_props: props,
+                setPathFor: uniqueInputId
+              }
+              const showFileManager = new CustomEvent('cust-openFM', {
                 bubbles: true,
                 composed: true,
                 detail: {
-                  // openFM_props: props,
-                  setOutput_containerPath: uniqueOutputId,
-                  showFolderManager: true
+                  openFM_props: props,
+                  setPathFor: uniqueInputId,
+                  showFileManager: true
                 }
               });
-              outputBtn.dispatchEvent(showFolderManager);
+              inputBtn.dispatchEvent(showFileManager);
 
-
-              const generate_event = `cust-containerPath`
+              const generate_event = `cust_${uniqueInputId}`
               const setInputPath = (event) => {
                 eventOutput = event.detail.pathDetails
-                outputPathSpan.textContent = eventOutput;
-                outputPathSpan.style.fontWeight = 'bold';
-                col.setAttribute("value", eventOutput)
-                self.enableDisableSubmitBtn() // This is enable/disable submit button on changes for required fields
+                inputPathSpan.textContent = eventOutput[0];
+                inputPathSpan.style.fontWeight = 'bold';
+                self.inputFile_actualdata = []
+                self.inputFile_actualdata = [event.detail.metadata]
 
+                const selectDropDowns = self.shadowRoot.querySelectorAll(`[input-dependselect='true']`)
+                for (let index = 0; index < selectDropDowns.length; index++) {
+                  const selectDD = selectDropDowns[index];
+                  selectDD.innerHTML = ""
+                  // adding a default selected select option
+                  const select_option = document.createElement('option');
+                  select_option.textContent = "Please select input file";
+                  select_option.setAttribute('disabled', true)
+                  select_option.setAttribute('selected', true)
+                  selectDD.appendChild(select_option);
+                  selectDD.setAttribute('input-dependselectupdate', 'not-updated')
+                }
+
+                const multiSelectDropd = self.shadowRoot.querySelectorAll(`[input-dependmultiselect='true']`)
+                for (let index = 0; index < multiSelectDropd.length; index++) {
+                  const multiselectDD = multiSelectDropd[index];
+                  multiselectDD.innerHTML = ""
+                  // adding a default selected select option
+                  const _li = document.createElement('li');
+                  _li.textContent = "Please select input file";
+                  _li.className = "checkbox-option"
+                  multiselectDD.appendChild(_li);
+                  multiselectDD.setAttribute('input-dependmultiselectupdate', 'not-updated')
+                }
+                self.updateSelectOptions(true)
+                col.setAttribute("value", eventOutput.length > 0 ? eventOutput[0] : "")
+
+                self.enableDisableSubmitBtn() // This is enable/disable submit button on changes for required fields
                 window.removeEventListener(generate_event, setInputPath)
               }
               window.addEventListener(generate_event, setInputPath)
             })
+          }, 200)
 
-          }, 200);
+        })
 
-          // Output file Nama HTML
-          const col_outputName = document.createElement('div')
-          col_outputName.classList.add('col-md-6')
-          col_outputName.setAttribute("property", "output_name")
-          col_outputName.setAttribute("property-type", "string")
+      }
 
-          col_outputName.setAttribute("name", "outputFile_name")
-          col_outputName.setAttribute("required", required)
 
-            const form_group = document.createElement('div')
-            form_group.className = "form-group modify-formGroup"
+      const container_output = self.createNewRow('container')
+      container_output.setAttribute('container-type', 'output-selection')
+      container_output.style.marginBottom = '25px';
+      const row_outputSelection = self.createNewRow('row')
+      container_output.appendChild(row_outputSelection)
 
-            const label = document.createElement('label')
-            label.className = "modify-label required"
-            label.setAttribute('for', 'output_name');
-            label.textContent = 'output_name'
+      if (self.output_files !== null) {
+        const required = true
+        const types = ["folder", "epihiper_multicell_analysis", "epihiperOutput", "csonnet_simulation_container"]
+        const name = "output_container"
+        const col = document.createElement('div')
+        const uniqueOutputId = `output_container`
 
-            const input = document.createElement('input')
-            input.type = 'string'
-            input.className = "form-control border-bottom modify-input"
-            input.setAttribute('actual-name','output_name')
-            input.id = 'output_name';
-            input.name = 'output_name'
-            input.style.border = 'none'
+        col.classList.add('col-md-6')
+        col.setAttribute("property", "output_container")
+        col.setAttribute("types", types)
+        col.setAttribute("name", name)
+        col.setAttribute("required", required)
+        col.style.wordBreak = 'break-all'
+        col.style.setProperty('white-space', 'normal', 'important')
 
-          form_group.append(label, input)
-          col_outputName.append(form_group)
-          row_outputSelection.append(col, col_outputName)
-          setTimeout(() => {
-            input.addEventListener("input", function () {
-              self.setValue_column(input.value.trim(), col_outputName)
+        const outputDiv = document.createElement('div')
+        outputDiv.classList.add('form-group', 'modify-formGroup');
+
+        const outputLabel = document.createElement('label')
+        outputLabel.textContent = name;
+        outputLabel.setAttribute('for', name)
+        required ? outputLabel.classList.add('modify-label', 'required', 'font-weight-bold') : outputLabel.classList.add('modify-label', 'font-weight-bold')
+
+        const outputBtn = document.createElement('button')
+        outputBtn.type = 'button'
+        outputBtn.textContent = "Select Path"
+        outputBtn.className = "inputOutputBtn"
+
+        const outputPathSpan = document.createElement('span')
+        outputPathSpan.setAttribute('setOutput_containerPath', uniqueOutputId)
+        outputPathSpan.textContent = 'No Folder Specified'
+        outputPathSpan.className = 'ml-2'
+
+        outputDiv.append(outputLabel, outputBtn, outputPathSpan)
+        col.appendChild(outputDiv)
+        row_outputSelection.appendChild(col)
+
+        setTimeout(() => {
+          outputBtn.addEventListener('click', function (e) {
+            e.stopPropagation()
+            let eventOutput;
+            const showFolderManager = new CustomEvent('cust-openFolderM', {
+              bubbles: true,
+              composed: true,
+              detail: {
+                // openFM_props: props,
+                setOutput_containerPath: uniqueOutputId,
+                showFolderManager: true
+              }
             });
-          }, 200);
+            outputBtn.dispatchEvent(showFolderManager);
 
-        }
+
+            const generate_event = `cust-containerPath`
+            const setInputPath = (event) => {
+              eventOutput = event.detail.pathDetails
+              outputPathSpan.textContent = eventOutput;
+              outputPathSpan.style.fontWeight = 'bold';
+              col.setAttribute("value", eventOutput)
+              self.enableDisableSubmitBtn() // This is enable/disable submit button on changes for required fields
+
+              window.removeEventListener(generate_event, setInputPath)
+            }
+            window.addEventListener(generate_event, setInputPath)
+          })
+
+        }, 200);
+
+        // Output file Nama HTML
+        const col_outputName = document.createElement('div')
+        col_outputName.classList.add('col-md-6')
+        col_outputName.setAttribute("property", "output_name")
+        col_outputName.setAttribute("property-type", "string")
+
+        col_outputName.setAttribute("name", "outputFile_name")
+        col_outputName.setAttribute("required", required)
+
+        const form_group = document.createElement('div')
+        form_group.className = "form-group modify-formGroup"
+
+        const label = document.createElement('label')
+        label.className = "modify-label required"
+        label.setAttribute('for', 'output_name');
+        label.textContent = 'output_name'
+
+        const input = document.createElement('input')
+        input.type = 'string'
+        input.className = "form-control border-bottom modify-input"
+        input.setAttribute('actual-name', 'output_name')
+        input.id = 'output_name';
+        input.name = 'output_name'
+        input.style.border = 'none'
+
+        form_group.append(label, input)
+        col_outputName.append(form_group)
+        row_outputSelection.append(col, col_outputName)
+        setTimeout(() => {
+          input.addEventListener("input", function () {
+            self.setValue_column(input.value.trim(), col_outputName)
+          });
+        }, 200);
+
+      }
       // }
 
       const container_propCommon = self.createNewRow('container')
@@ -1337,10 +1401,10 @@ class JSONRenderer extends HTMLElement {
       container_propArray.style.marginBottom = '25px'
 
       container_propCommon.appendChild(row_propCommon)
-      
+
       const container_formButtons = document.createElement('div');
 
-      if(self.submitFlow !== 'false'){  // adding this condition to add submit button 
+      if (self.submitFlow !== 'false') {  // adding this condition to add submit button 
         self.jsonForm_Genx.classList.add('padding-20')        // adding this because there shoudld be padding if its a job definiton form
 
         container_formButtons.className = "row formButtons"
@@ -1356,22 +1420,621 @@ class JSONRenderer extends HTMLElement {
 
       self.jsonForm_Genx.append(self.input_files ? container_input : "", container_propCommon, container_propObject, container_propArray, self.output_files ? container_output : "", self.submitFlow !== 'false' ? container_formButtons : "")
       self._generateForm_HTML(mergedData, row_propCommon, container_propObject, container_propArray);
-      
-         
-      if(self.submitFlow !== 'false'){   // adding this condtion to enable events until submit button is added if self.submitFlow !== 'false'
+      if (self.resubmitProp !== null) {
+        self.resubmitFunctionality()
+      }
+
+      if (self.submitFlow !== 'false') {   // adding this condtion to enable events until submit button is added if self.submitFlow !== 'false'
         let intervalId;
         let submitBtn = false
         const intervalFn = () => {
-          if(submitBtn){
+          if (submitBtn) {
             self.sumbitFormFlow()
             clearInterval(intervalId)
-          }else{
+          } else {
             const form_buttons = self.shadowRoot.querySelector(".formButtons");
             form_buttons ? submitBtn = true : submitBtn = false;
           }
         }
         intervalId = setInterval(intervalFn, 500)
 
+      }
+    }
+  }
+
+  delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+  arraysHaveSameValues(arr1, arr2) {      // checks if two array has same value or not irrespective of the object sequence in both arrays
+    if (arr1.length !== arr2.length) {
+      return false;
+    }
+
+    const sortedArr1 = arr1.slice().sort();
+    const sortedArr2 = arr2.slice().sort();
+
+    for (let i = 0; i < sortedArr1.length; i++) {
+      if (sortedArr1[i] !== sortedArr2[i]) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  setNotUpdated(obj) {
+    const self = this;
+    for (const key in obj) {
+      if (typeof obj[key] === 'object' && !Array.isArray(obj[key])) {
+        // If the value is an object (excluding arrays), recursively set its values
+        self.setNotUpdated(obj[key]);
+      } else if (Array.isArray(obj[key])) {
+        if (obj[key].length > 0 && typeof obj[key][0] === 'object') {
+          // If it's an array of objects, set each element of the array to "not-updated"
+          obj[key].forEach((item) => {
+            for (const subKey in item) {
+              item[subKey] = 'not-updated';
+            }
+          });
+        } else {
+          // If it's a simple array, set the entire array to "not-updated"
+          obj[key] = 'not-updated';
+        }
+      } else {
+        // For non-object and non-array values, set the value to "not-updated"
+        obj[key] = 'not-updated';
+      }
+    }
+  }
+
+  resubmitFunctionality() {
+    const self = this;
+    const json = self.resubmitProp
+    const updatedPropList = [];
+    self.updateSelectOptions(true)    // RESTRICTED from moving position of this function. 
+    
+    let removeInputfile_properties = []   // array holds the name of inputFile i.e input_file, input_graph. Later on these can excluded as inputFile are getting set before form properties
+    const updatedValuePropJSON = _.cloneDeep(self.resubmitProp)
+    self.setNotUpdated(updatedValuePropJSON)
+
+    // input file pre-selection for resubmit
+    if (self.resubmitData.inputData.input_files && self.resubmitData.inputData.input_files.length > 0) {
+      if(self.resubmitData.inputData.inputFile_actualdata){
+        self.inputFile_actualdata = self.resubmitData.inputData.inputFile_actualdata
+      }
+      let inputFiles = self.resubmitData.inputData.input_files
+      removeInputfile_properties = inputFiles.map(inp_file => inp_file.name)
+      inputFiles.forEach((file) => {
+        const fileDOM_col = self.shadowRoot.querySelector(`[property="${file.name}"]`);
+        if (fileDOM_col) {
+          fileDOM_col.setAttribute("value", file.filePath ? file.filePath : "")
+          const inputPathSpan = fileDOM_col.querySelector('span')
+          if (inputPathSpan) {
+            inputPathSpan.textContent = file.filePath
+            inputPathSpan.style.fontWeight = 'bold';
+          }
+        }
+      })
+        // self.updateSelectOptions(true)      // RESTRICTED from moving this function. 
+    }
+
+    // output-container path && output name pre-selection for resubmit
+    if (self.resubmitData.inputData.output_container) {
+      const outputContainerDOM_col = self.shadowRoot.querySelector(`[property="output_container"]`);
+      if (outputContainerDOM_col) {
+        outputContainerDOM_col.setAttribute("value", self.resubmitData.inputData.output_container ? self.resubmitData.inputData.output_container : "")
+        const outputPathSpan = outputContainerDOM_col.querySelector('span')
+        if (outputPathSpan) {
+          outputPathSpan.textContent = self.resubmitData.inputData.output_container
+          outputPathSpan.style.fontWeight = 'bold';
+        }
+      }
+
+    }
+    // if(self.resubmitData.inputData.state !== "Completed"){
+    //   if (self.resubmitData.inputData.output_name) {
+    //     const outputNameDOM_col = self.shadowRoot.querySelector(`[property="output_name"]`);
+    //     if (outputNameDOM_col) {
+    //       outputNameDOM_col.setAttribute("value", self.resubmitData.inputData.output_name ? self.resubmitData.inputData.output_name : "")
+    //       const outputNameInput = outputNameDOM_col.querySelector('input')
+    //       if (outputNameInput) {
+    //         outputNameInput.value = self.resubmitData.inputData.output_name
+    //       }
+    //     }
+    //   }
+    // }
+
+    function updateStatusInList(parent, mainProp, property, type, index, extras) {
+      if ((index !== undefined && index !== null) && mainProp) {
+        if (parent[mainProp][index]) {
+          parent[mainProp][index][property] = "updated";
+        }
+      } else if (mainProp) {
+        parent[mainProp][property] = "updated";
+      } else {
+        parent[property] = "updated";
+      }
+    }
+
+    function hasNotUpdatedValue(obj) {
+      for (const key in obj) {
+        if (typeof obj[key] === 'object' && !Array.isArray(obj[key])) {
+          // If the value is an object (excluding arrays), recursively check its values
+          if (hasNotUpdatedValue(obj[key])) {
+            return true;
+          }
+        } else if (Array.isArray(obj[key])) {
+          // If the value is an array, check each element
+          for (const item of obj[key]) {
+            if (typeof item === 'object') {
+              if (hasNotUpdatedValue(item)) {
+                return true;
+              }
+            } else if (item === 'not-updated') {
+              return true;
+            }
+          }
+        } else if (obj[key] === 'not-updated') {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    function checkObjectType(value) {
+      if (Array.isArray(value) && value.length > 0 && typeof value[0] === 'object') {
+        return "object";
+      } else if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
+        return "object";
+      } else {
+        return "nonObject";
+      }
+    }
+
+    loopJSON()
+    async function loopJSON() {
+      // self.updateSelectOptions(true)
+
+      for (const prop in json) {
+        let propVal = json[prop]
+        if (!removeInputfile_properties.includes(prop)) {
+          setVal(prop, propVal)
+        }
+      }
+      window.formEdited = true;
+    }
+    setTimeout(() => {
+      loopJSON()
+      self.enableDisableSubmitBtn();
+    }, 1000);
+
+    function setVal(prop, propVal) {
+      const propValType = checkObjectType(propVal)
+      if (propValType === 'nonObject') {
+        const propHTML = self.shadowRoot.querySelector(`[property="${prop}"]`)
+        if (propHTML) {
+          const propertyType = propHTML.getAttribute('property-type')
+          const formDriven_check = propHTML.getAttribute('form-driven')
+
+          if (propertyType === "string" || propertyType === "integer" || propertyType === "number") {
+
+            const inputOrSelect = propHTML.querySelector('input, select');
+            if (inputOrSelect) {
+              if (inputOrSelect.tagName.toLowerCase() === 'select') {
+
+                if (updatedValuePropJSON[prop] !== "updated") {
+                  const updateListCheck = true
+                  proceed_select(prop, propVal, formDriven_check, propHTML, inputOrSelect, updateListCheck)
+                }
+              } else if (inputOrSelect.tagName.toLowerCase() === 'input') {
+
+                if (updatedValuePropJSON[prop] !== "updated") {
+                  const updateListCheck = true
+                  proceed_input(prop, propVal, formDriven_check, propHTML, inputOrSelect, updateListCheck)
+                }
+              }
+            }
+          }
+
+          else if (propertyType === "boolean") {
+            if (updatedValuePropJSON[prop] !== "updated") {
+              const updateListCheck = true
+              proceed_boolean(prop, propVal, formDriven_check, propHTML, updateListCheck)
+            }
+          }
+
+          else if (propertyType === "array-multiselect") {
+
+          }
+        }
+      } else if (propValType === "object") {    // this case is applied for properties that are type array or object for eg. measures, date_settings
+
+        const propHTML = self.shadowRoot.querySelector(`[major-name="${prop}"]`)
+        if (propHTML) {
+          const majorPropertyType = propHTML.getAttribute('property-type')
+          if (majorPropertyType === "array") {
+
+            const add_completeSectionBtn = self.shadowRoot.querySelector(`[add-completesection="add_${prop}"]:not(.d-none)`)
+            if (add_completeSectionBtn) {     // case where add complete section button is present && needs to be clicked
+
+              let event = new Event('click');
+              add_completeSectionBtn.dispatchEvent(event);
+              (async () => {
+                await initiateArray(prop, propVal, propHTML);
+              })();
+
+            } else {         // case where add complete section button is not present. here we need to check the length of array and if > 1 then we need to click the add another button of array to match the no. of object
+              (async () => {
+                await initiateArray(prop, propVal, propHTML);
+              })();
+
+            }
+          }
+
+          if (majorPropertyType === "object") {
+
+            const add_completeSectionBtn = self.shadowRoot.querySelector(`[add-completesection="add_${prop}"]:not(.d-none)`)
+            if (add_completeSectionBtn) {     // case where add complete section button is present && needs to be clicked
+
+              let event = new Event('click');
+              add_completeSectionBtn.dispatchEvent(event);
+              (async () => {
+                await initiateObject(prop, propVal, propHTML);
+              })();
+
+            } else {         // case where add complete section button is not present. here we need to check the length of array and if > 1 then we need to click the add another button of array to match the no. of object
+              (async () => {
+                await initiateObject(prop, propVal, propHTML);
+              })();
+
+            }
+          }
+        }
+
+        async function initiateObject(prop, propVal, propHTML, extraParams) {
+          let copy_arguments = {
+            "prop": prop,
+            "propVal": propVal,
+            "propHTML": propHTML,
+            "type": "object"
+
+          }
+
+          for (const property in propVal) {
+            const propertyValue = propVal[property]
+            const propValType = checkObjectType(propertyValue)
+            let propertyDiv = ""
+            let extraParameter = extraParams ? extraParams : []
+            if (propValType === "nonObject") {
+              propertyDiv = propHTML.querySelector(`[property="${property}"]`)
+            } else if (propValType === "object") {
+              propertyDiv = propHTML.querySelector(`[major-name="${property}"]`)
+            }
+
+            if (propertyDiv) {
+              await divertFunctions(property, propertyValue, null, propertyDiv, copy_arguments, extraParameter)
+            }
+
+          }
+        }
+
+        async function initiateArray(prop, propVal, propHTML) {   
+          const highestIndex = propHTML.getAttribute('highest-index');
+          const match = highestIndex.match(/\[(\d+)\]/);
+          const extractedNumber = parseInt(match[1], 10);
+          if (match) {     
+            if (propVal.length === extractedNumber + 1) {     // Array related function : if prop ex, measure is already present in DOM then settinng values directly
+              await startSettingArrVal(prop, propVal, propHTML)
+
+            } else {  // appending object in array that is === propVal.length (array.length)
+              const appendObjBtn = propHTML.querySelector(`[id="add_${prop}[0]"]`)    // this is Add Another button 
+              // await self.delay(500);
+
+              for (let i = 0; i < propVal.length - 1; i++) {
+                appendObjBtn.click();
+              }
+              await startSettingArrVal(prop, propVal, propHTML)
+            }
+          }
+        }
+
+        async function startSettingArrVal(prop, propVal, propHTML) {    // Array related function: this function make no. of object == no. of object in DOM
+          const attribute = `${prop}-index`     //ex : measures-index
+          const propIndices = [];    // Array to store the extracted value of attribute based on its unique index value
+          const innerDivs = propHTML.querySelectorAll(`[${attribute}]`);
+          let copy_arguments = {
+            "prop": prop,
+            "propVal": propVal,
+            "propHTML": propHTML,
+            "type": "array"
+          }
+
+          // Iterate through the inner div elements and extract the values
+          innerDivs.forEach((div) => {
+            const attributeVal = div.getAttribute(attribute);
+            const index = propIndices.indexOf(attributeVal);
+            if (index === -1) {
+              propIndices.push(attributeVal);
+            }
+          });
+
+          if (propIndices.length > 0) {
+            for (let i = 0; i < propVal.length; i++) {
+              const obj = propVal[i];
+              for (const property in obj) {
+                const propertyValue = obj[property]
+                if (propertyValue !== "object") {
+                  const propertyDiv = propHTML.querySelector(`[property="${property}"][${attribute}="${propIndices[i]}"]`)
+                  if (propertyDiv) {
+
+                    await divertFunctions(property, propertyValue, propIndices[i], propertyDiv, copy_arguments)
+                    // await self.delay(100)
+                    updateStatusInList(updatedValuePropJSON, prop, property, typeof property, i)
+                  }
+                }
+              }
+            }
+          }
+        }
+
+        async function divertFunctions(property, propertyValue, currentPropArrIndex, propertyDiv, copy_arguments, extraParams) {    // seperate unique function for both array and object 
+          const propValType = checkObjectType(propertyValue)
+          if (propValType === "nonObject") {
+            const propertyType = propertyDiv.getAttribute('property-type')
+            const formDriven_check = propertyDiv.getAttribute('form-driven')
+
+            if (propertyType === "string" || propertyType === "integer" || propertyType === "number") {
+              const inputOrSelect = propertyDiv.querySelector('input, select');
+
+              if (inputOrSelect) {
+                if (inputOrSelect.tagName.toLowerCase() === 'select') {
+                  if (inputOrSelect.value !== propertyValue) {
+                    selectDDProperties(property, propertyValue, formDriven_check, inputOrSelect, copy_arguments)
+                  }
+                }
+                else if (inputOrSelect.tagName.toLowerCase() === 'input') {
+                  if (inputOrSelect.value !== propertyValue) {
+
+                    inputProperties(property, propertyValue, formDriven_check, inputOrSelect, copy_arguments)
+                  }
+                }
+              }
+            }
+
+            if (propertyType === "boolean") {
+              let value = propertyDiv.getAttribute('value')
+              value = JSON.parse(value)
+              if (value !== propertyValue) {  // as functions are recuring over and over again adding some checks to check if resubmission value and actual value on propertyHTML matches or not. It should not match  
+                booleanProperties(property, propertyValue, formDriven_check, propertyDiv, currentPropArrIndex, copy_arguments)
+              }
+            }
+
+            if (propertyType === "array-multiselect") {
+              arrayMultiSelect(property, propertyValue, formDriven_check, propertyDiv, copy_arguments)
+              // const result = arraysHaveSameValues(a, b);
+            }
+          } else if (propValType === "object") {
+
+            // const propHTML = self.shadowRoot.querySelector(`[major-name="${prop}"]`)
+
+            if (propertyDiv) {
+              const propertyDivType = propertyDiv.getAttribute('property-type')
+
+              if (propertyDivType === "array") {
+                const add_completeSectionBtn = self.shadowRoot.querySelector(`[add-completesection="add_${property}"]:not(.d-none)`)
+                if (add_completeSectionBtn) {     // case where add complete section button is present && needs to be clicked
+
+                  let event = new Event('click');
+                  add_completeSectionBtn.dispatchEvent(event);
+                  (async () => {
+                    await initiateArray(property, propertyValue, propertyDiv);
+                  })();
+
+                } else {         // case where add complete section button is not present. here we need to check the length of array and if > 1 then we need to click the add another button of array to match the no. of object
+                  (async () => {
+                    await initiateArray(property, propertyValue, propertyDiv);
+                  })();
+
+                }
+              }
+
+              if (propertyDivType === "object") {
+                const add_completeSectionBtn = self.shadowRoot.querySelector(`[add-completesection="add_${property}"]:not(.d-none)`)
+                if (add_completeSectionBtn) {     // case where add complete section button is present && needs to be clicked
+
+                  let event = new Event('click');
+                  add_completeSectionBtn.dispatchEvent(event);
+                  (async () => {
+                    await initiateObject(property, propertyValue, propertyDiv);
+                  })();
+
+                } else {         // case where add complete section button is not present. here we need to check the length of array and if > 1 then we need to click the add another button of array to match the no. of object
+                  (async () => {
+                    await initiateObject(property, propertyValue, propertyDiv);
+                  })();
+
+                }
+              }
+
+            }
+          }
+
+        }
+
+        async function selectDDProperties(property, propertyValue, formDriven_check, string_select, copy_arguments) {
+          const arg = copy_arguments
+          await self.delay(100)
+          for (let i = 0; i < string_select.options.length; i++) {
+            if (string_select.options[i].text === propertyValue) {
+              string_select.options[i].selected = true; // Set the selected attribute
+              break;
+            }
+          }
+          let event = new Event('change');
+          string_select.dispatchEvent(event);
+          if (formDriven_check === "true") {      // if the property is a formDriven prop and other properties are dependeable on it, in that case loopJSON() will be called again as other properties just got added to DOM
+            await self.delay(100)
+            await loopJSON()
+          }
+        }
+
+        function inputProperties(property, propertyValue, formDriven_check, input, copy_arguments) {
+
+          setTimeout(() => {
+            let v = propertyValue
+            if (propertyValue && (typeof propertyValue === "number" || typeof propertyValue === "integer")) {
+              v = propertyValue.toString()
+            }
+            input.value = v
+            let event = new Event('input');
+            input.dispatchEvent(event);
+          }, 100);
+        }
+
+        async function booleanProperties(property, propertyValue, formDriven_check, propertyDiv, currentPropArrIndex, copy_arguments) {
+          const arg = copy_arguments
+          await self.delay(100)
+
+          // setTimeout(() => {
+          let param;
+          if (currentPropArrIndex) {
+            param = `input[name="${currentPropArrIndex}_${property}_boolean"]`
+          } else {
+            param = `input[name="${property}_boolean"]`
+          }
+          const booleanArr = propertyDiv.querySelectorAll(param);
+          if (booleanArr.length > 0) {
+            let valueSeton_PropertyDiv = propertyDiv.getAttribute('value')
+            valueSeton_PropertyDiv = JSON.parse(valueSeton_PropertyDiv)
+            if (valueSeton_PropertyDiv !== propertyValue) {     // adding this condition to make sure that propertyValue is !== value that is set on propertyDiv(this value is getting set during HTML generation).
+              booleanArr.forEach((element) => {
+                let boolValue = element.getAttribute('value')
+                boolValue = JSON.parse(boolValue)    // consverting string "true"/"false" to boolean for comparing
+                if (propertyValue == boolValue) {
+                  element.setAttribute('checked', true)
+                  let event = new Event('change')
+                  element.dispatchEvent(event)
+
+                  if (formDriven_check === "true") {
+                    setTimeout(() => {
+                      // (async () => {
+                      startSettingArrVal(arg.prop, arg.propVal, arg.propHTML)
+                      // })();
+                    }, 200);
+                  }
+                }
+              })
+            }
+          }
+          // }, 100);
+        }
+
+        function arrayMultiSelect(property, propertyValue, formDriven_check, arrayMulti_Select, copy_arguments) {
+
+          setTimeout(() => {
+            if (propertyValue.length > 0) {
+              const selectedOptions = propertyValue;
+              const id = `#${property} input[type="checkbox"]`
+              const checkboxOptions = arrayMulti_Select.querySelectorAll(id);
+              checkboxOptions.forEach(function (checkbox) {
+                if (selectedOptions.includes(checkbox.value)) {
+                  checkbox.checked = true
+                }
+              });
+
+              if (selectedOptions.length > 0) {
+                const _input = arrayMulti_Select.querySelector('input[readonly]');
+                _input.placeholder = selectedOptions.toString()
+                arrayMulti_Select.setAttribute('value', selectedOptions.toString())
+              }
+            }
+          }, 100);
+
+
+        }
+
+      }
+    }
+
+    function proceed_select(prop, propVal, formDriven_check, propHTML, string_select, updateListCheck) {     // high level select dropdowns
+
+      // const index = updatedPropList.indexOf(prop);
+      // if (index === -1) {
+      for (let i = 0; i < string_select.options.length; i++) {
+        if (string_select.options[i].text === propVal) {
+          string_select.options[i].selected = true; // Set the selected attribute
+          if (updateListCheck) {
+            updateStatusInList(updatedValuePropJSON, null, prop, typeof propVal)
+          }
+          break;
+        }
+      }
+      setTimeout(() => {
+        let event = new Event('change');
+        string_select.dispatchEvent(event);
+
+        // updateList(prop)
+        if (formDriven_check === "true") {      // if the property is a formDriven prop and other properties are dependeable on it, in that case loopJSON() will be called again as other properties just got added to DOM
+          loopJSON()
+        }
+      }, 100);
+      // }
+    }
+
+    function proceed_input(prop, propVal, formDriven_check, propHTML, input, updateListCheck) {      // high level input fields
+
+      // const index = updatedPropList.indexOf(prop);
+      // if (index === -1) {
+      setTimeout(() => {
+        let v = propVal
+        if (propVal && (typeof propVal === "number" || typeof propVal === "integer")) {
+          v = propVal.toString()
+        }
+        input.value = v
+        let event = new Event('input');
+        input.dispatchEvent(event);
+        if (updateListCheck) {
+          updateStatusInList(updatedValuePropJSON, null, prop, typeof propVal)
+        }
+        // updateList(prop)
+      }, 100);
+      // }
+    }
+
+    function proceed_boolean(prop, propVal, formDriven_check, propHTML, updateListCheck) {
+      // const index = updatedPropList.indexOf(prop);
+      // if (index === -1) {
+      setTimeout(() => {
+        const param = `input[name="${prop}_boolean"]`
+        const booleanArr = propHTML.querySelectorAll(param);
+        if (booleanArr.length > 0) {
+          booleanArr.forEach((element) => {
+            let boolValue = element.getAttribute('value')
+            boolValue = JSON.parse(boolValue)    // consverting string "true"/"false" to boolean for comparing
+            if (propVal == boolValue) {
+              element.setAttribute('checked', true)
+              let event = new Event('change')
+              element.dispatchEvent(event)
+
+              if (updateListCheck) {
+                updateStatusInList(updatedValuePropJSON, null, prop, typeof propVal)
+              }
+              // updateList(prop)
+              if (formDriven_check === "true") {      // if the property is a formDriven prop and other properties are dependeable on it, in that case loopJSON() will be called again as other properties just got added to DOM
+                loopJSON()
+              }
+            }
+
+          })
+        }
+      }, 100);
+      // }
+    }
+
+    function updateList(prop) {      // updating the updatedPropList with propeties whose values are updated.
+      const index = updatedPropList.indexOf(prop);
+      if (index === -1) {
+        updatedPropList.push(prop)
       }
     }
   }
@@ -1385,12 +2048,12 @@ class JSONRenderer extends HTMLElement {
     for (const prop in iterateProp) {
       const property = iterateProp[prop]
       let inputDependable;
-      if(property.hasOwnProperty('type') && property.type === 'array'){
+      if (property.hasOwnProperty('type') && property.type === 'array') {
         // case for input dependable properties that have multiselect dropdown
-        if(property.hasOwnProperty('items')){
+        if (property.hasOwnProperty('items')) {
           inputDependable = property.items.hasOwnProperty('displayOptions') && property.items.displayOptions.hasOwnProperty('enum_data_source') ? true : false
         }
-      }else{
+      } else {
         inputDependable = property.hasOwnProperty('displayOptions') && property.displayOptions.hasOwnProperty('enum_data_source') ? true : false
 
       }
@@ -1527,7 +2190,7 @@ class JSONRenderer extends HTMLElement {
       const optionsType = property.displayOptions.enum_data_source.jsonpath ? property.displayOptions.enum_data_source.jsonpath.replace(/[$.]/g, '') : null
       if (optionsType !== null) {
         string_select.setAttribute('input-dependselectkey', optionsType)
-      } 
+      }
       // else {
       //   string_select.setAttribute('input-dependselectkey', 'columns')
       // }
@@ -1590,7 +2253,7 @@ class JSONRenderer extends HTMLElement {
                   axx = Object.keys(obj['properties'])[ax]
                   const keyToSearch = prop;
                   const foundValue = self.findValueByKey(jsonElement, keyToSearch); // serch the key (prop) in the jsonElement 
-                  if(foundValue){
+                  if (foundValue) {
                     if (foundValue.hasOwnProperty('const')) {
                       if (selectedValue === foundValue['const']) {
                         matched_oneOf = { ...obj }
@@ -1646,8 +2309,8 @@ class JSONRenderer extends HTMLElement {
                   break;
                 }
               }
-              
-            }else{
+
+            } else {
               for (const pros in matchedOneOfCopy['properties']) {
                 if (pros === prop) {
                   delete matchedOneOfCopy['properties'][pros];
@@ -1682,15 +2345,15 @@ class JSONRenderer extends HTMLElement {
                 }
               }
               elements.forEach((element) => {
-                if(element.hasAttribute('property') === true){ // normal scenario where elemens will be remeoved if there are nested linkage
+                if (element.hasAttribute('property') === true) { // normal scenario where elemens will be remeoved if there are nested linkage
                   let linkto_attr = `linkedTo_${element.getAttribute('property')}`
                   let linked_toElement = self.shadowRoot.querySelectorAll(`[linkedto="${linkto_attr}"]`)
                   removeElement(linked_toElement)
-                } else{ // special scenario where nested elements will be removed from array. ex. on visulization type  => measure is added. measure.measure_type ==> other properteis are added. Those should also be removed form dom 
+                } else { // special scenario where nested elements will be removed from array. ex. on visulization type  => measure is added. measure.measure_type ==> other properteis are added. Those should also be removed form dom 
                   // highest-index
                   // linkedTo_measures[0]_measure_type
                   let secondaryElements = element.querySelector(`[major-name]`)
-                  
+
                   let major_name = secondaryElements.getAttribute('major-name')
                   // let = `${major_name}-index`
                   let secondaryElementsArr = secondaryElements.querySelectorAll(`[${major_name}-index]`)
@@ -1706,7 +2369,7 @@ class JSONRenderer extends HTMLElement {
               })
             }
             // rowX.getAttribute('primary-row') is set only on row present in container-type=commonProperties. so if there is any driving form property in primary-row it can get appended in container_propObject & container_propArray if type found are object and array respectively.
-            if(form_drivingProp[prop].hasOwnProperty('primaryLevel') && form_drivingProp[prop].primaryLevel === true){
+            if (form_drivingProp[prop].hasOwnProperty('primaryLevel') && form_drivingProp[prop].primaryLevel === true) {
               const row_propCommonX = self.shadowRoot.querySelector(`[primary-row="true"]`)
               const container_propObjectX = self.shadowRoot.querySelector(`[container-type="objectProperties"]`);
               const container_propArrayX = self.shadowRoot.querySelector(`[container-type="arrayProperties"]`);
@@ -1784,7 +2447,7 @@ class JSONRenderer extends HTMLElement {
 
       if (property.hasOwnProperty('format') && property.format === 'date') {
         inputType = 'date'
-      } else if(property.hasOwnProperty('display_options') && property.display_options.hasOwnProperty('component') && property.display_options.component ==='builtin://color_pallette'){
+      } else if (property.hasOwnProperty('display_options') && property.display_options.hasOwnProperty('component') && property.display_options.component === 'builtin://color_pallette') {
         inputType = 'color'
       } else {
         inputType = 'string'
@@ -1802,7 +2465,7 @@ class JSONRenderer extends HTMLElement {
     if (property.hasOwnProperty('default')) {
       input.value = property['default']
     }
-    if(inputType === 'color'){
+    if (inputType === 'color') {
       // modify-colorSpanDetail
       input.style.setProperty('width', '46%', 'important')
       colorDetails.className = 'modify-colorSpanDetail'
@@ -1829,8 +2492,24 @@ class JSONRenderer extends HTMLElement {
             keyCode === 9 || // Tab
             keyCode === 37 || // Left arrow
             keyCode === 39 || // Right arrow
-            keyCode === 46 // Delete
-          ) {
+            keyCode === 46 || // Delete
+            (keyCode === 189 && input.value.indexOf('-') === -1) // Minus sign and not already present
+            ) {
+            return true
+          } else {
+            e.preventDefault(); // Prevent the key press
+          }
+        }else if (property.type === 'number') {
+          if (
+            (keyCode >= 48 && keyCode <= 57) ||     // 0-9
+            keyCode === 8 || // Backspace
+            keyCode === 9 || // Tab
+            keyCode === 37 || // Left arrow
+            keyCode === 39 || // Right arrow
+            keyCode === 46 || // Delete
+            keyCode === 190 || // Decimal point
+            (keyCode === 189 && input.value.indexOf('-') === -1) // Minus sign and not already present
+            ) {
             return true
           } else {
             e.preventDefault(); // Prevent the key press
@@ -1839,7 +2518,7 @@ class JSONRenderer extends HTMLElement {
       })
 
       input.addEventListener("input", function () {
-        if(inputType === 'color'){
+        if (inputType === 'color') {
           colorDetails.textContent = input.value
         }
         self.setValue_column(input.value.trim(), col)
@@ -2111,7 +2790,6 @@ class JSONRenderer extends HTMLElement {
         self.setValue_column(selectedBtn.value, col)
       }
 
-
     }, 100)
 
 
@@ -2178,7 +2856,7 @@ class JSONRenderer extends HTMLElement {
 
     const _ul = document.createElement('ul')
     _ul.style.paddingLeft = "0px"
-    if(inputDependable){
+    if (inputDependable) {
       const optionsType = property.items.displayOptions.enum_data_source.jsonpath ? property.items.displayOptions.enum_data_source.jsonpath.replace(/[$.]/g, '') : null
       if (optionsType !== null) {
         _ul.setAttribute('input-dependmultiselectkey', optionsType)
@@ -2193,20 +2871,20 @@ class JSONRenderer extends HTMLElement {
       // _li.id = setId
       _ul.appendChild(_li);
 
-    }else{
+    } else {
       for (const val of property.items.enum) {
         const _li = document.createElement('li');
         _li.textContent = val;
         _li.className = "checkbox-option"
         _li.id = setId
-  
+
         const input_inLi = document.createElement('input')
         input_inLi.type = "checkbox"
         input_inLi.value = val
         input_inLi.innerText = val
         input_inLi.className = 'custom-checkBox'
         prop_default.includes(val) ? input_inLi.checked = true : input_inLi.checked = false
-  
+
         _li.appendChild(input_inLi)
         _ul.appendChild(_li);
       }
@@ -2266,6 +2944,7 @@ class JSONRenderer extends HTMLElement {
   }
 
   __object(prop, property, requiredProp, form_drivingPropObj, rowX, container_propObject, setAttr) {
+
     const self = this;
     const requiredProp_check = requiredProp.includes(prop) ? true : false
     let _commonFields
@@ -2423,11 +3102,13 @@ class JSONRenderer extends HTMLElement {
       button_add.textContent = `Add ${displayName}`
       button_add.type = "button"
       button_add.classList.add('btn', 'btn-light', 'btn-lg', 'btn-boxShadow')
+      button_add.setAttribute('add-completesection', `add_${prop}`)
 
       const button_remove = document.createElement('button')
       button_remove.textContent = `Remove ${displayName}`
       button_remove.type = "button"
       button_remove.classList.add('btn', 'btn-light', 'btn-lg', 'btn-boxShadow', 'd-none')
+      button_remove.setAttribute('remove-completesection', `remove_${prop}`)
 
       button_div.append(button_add, button_remove)
       fieldSet.appendChild(button_div)
@@ -2482,7 +3163,7 @@ class JSONRenderer extends HTMLElement {
       }
       // add_BtnBreaker = false
 
-    } 
+    }
     else if (property.hasOwnProperty('items') && !property.hasOwnProperty('properties') && !property.items.hasOwnProperty('properties') && !property.items.hasOwnProperty('oneOf') && !property.items.hasOwnProperty('allOf')) {
       // ex.  "column_headers": {
       //   "type": "array",
@@ -2540,7 +3221,7 @@ class JSONRenderer extends HTMLElement {
         }
       }
 
-    } 
+    }
     else if (property && property.items && property.items.hasOwnProperty('oneOf') && !property.items.hasOwnProperty('allOf')) {
       // ex. parts of json object where priperty.item has oneOf
       _commonFields = self.extractCommonFieldsFromOneOf(property.items);
@@ -2587,7 +3268,7 @@ class JSONRenderer extends HTMLElement {
 
 
 
-        } 
+        }
         else if (data.hasOwnProperty('properties')) {
 
           let temp_commonFields = self.extractCommonFieldsFromOneOf(data);
@@ -2641,36 +3322,36 @@ class JSONRenderer extends HTMLElement {
       }
     }
 
-    if(formDrivenProp_check){
+    if (formDrivenProp_check) {
       // this if condition is to make sure that if any property found formDriven property then check in it if their is any other property that is actually fomDriven(if found then this is same reason for being this prop as formDrivien so we check it here, extract that properties and merge it with _mergeData.form_drivingProp)
       // Case : measures.measure_type for visulization_type "Map"
       let form_drivingOneOf = ""
       // let form_drivingKey = ""
-      if(form_drivingPropArr.hasOwnProperty(prop)){
-          if(form_drivingPropArr[prop].hasOwnProperty('oneOf')){
-            form_drivingOneOf = form_drivingPropArr[prop]
-            const firstOneOf = form_drivingPropArr[prop]['oneOf'][0]
+      if (form_drivingPropArr.hasOwnProperty(prop)) {
+        if (form_drivingPropArr[prop].hasOwnProperty('oneOf')) {
+          form_drivingOneOf = form_drivingPropArr[prop]
+          const firstOneOf = form_drivingPropArr[prop]['oneOf'][0]
 
-            for(const prox in firstOneOf.properties){
-              let inst = firstOneOf.properties[prox]
-              if( inst.hasOwnProperty('items') &&
-                  inst.items.hasOwnProperty('properties') &&
-                  Object.keys(inst.items.properties).length === 1){
+          for (const prox in firstOneOf.properties) {
+            let inst = firstOneOf.properties[prox]
+            if (inst.hasOwnProperty('items') &&
+              inst.items.hasOwnProperty('properties') &&
+              Object.keys(inst.items.properties).length === 1) {
 
-                for(const proz in inst.items.properties){
-                  // form_drivingKey = proz
-                  let obj = {};
-                  form_drivingOneOf['primaryLevel'] = true; // setting primaryLevel key only for this case if formDrivenProp_check is found for type array and its oneOf is a nested format ex. oneOf[0].oneOf[0].measures. in this driven prooerty is not measure but measure_key that is nested in measures
-                  obj[proz] = form_drivingOneOf;
-                  additionalForm_drivingProp.push(obj)
-                  if (_mergeData['form_drivingProp']) { // merging the converted oneOf to _mergeData.for_drivingProp 
-                    _mergeData['form_drivingProp'] = { ..._mergeData['form_drivingProp'], ...additionalForm_drivingProp[0] }
-                  }
+              for (const proz in inst.items.properties) {
+                // form_drivingKey = proz
+                let obj = {};
+                form_drivingOneOf['primaryLevel'] = true; // setting primaryLevel key only for this case if formDrivenProp_check is found for type array and its oneOf is a nested format ex. oneOf[0].oneOf[0].measures. in this driven prooerty is not measure but measure_key that is nested in measures
+                obj[proz] = form_drivingOneOf;
+                additionalForm_drivingProp.push(obj)
+                if (_mergeData['form_drivingProp']) { // merging the converted oneOf to _mergeData.for_drivingProp 
+                  _mergeData['form_drivingProp'] = { ..._mergeData['form_drivingProp'], ...additionalForm_drivingProp[0] }
                 }
-
               }
+
             }
           }
+        }
       }
     }
 
@@ -2735,11 +3416,14 @@ class JSONRenderer extends HTMLElement {
       button_add.textContent = `Add ${displayName}`
       button_add.type = "button"
       button_add.classList.add('btn', 'btn-light', 'btn-lg', 'btn-boxShadow')
+      button_add.setAttribute('add-completesection', `add_${prop}`)
 
       const button_remove = document.createElement('button')
       button_remove.textContent = `Remove ${displayName}`
       button_remove.type = "button"
       button_remove.classList.add('btn', 'btn-light', 'btn-lg', 'btn-boxShadow', 'd-none')
+      button_remove.setAttribute('remove-completesection', `remove_${prop}`)
+
 
       button_div.append(button_add, button_remove)
       fieldSet.appendChild(button_div)
@@ -2774,7 +3458,7 @@ class JSONRenderer extends HTMLElement {
     }
   }
 
-  callFromArray_generateForm_HTML(_mergeData, rowIn_container, setAttr, property, add_BtnBreaker, iterationIndex, addAttr){
+  callFromArray_generateForm_HTML(_mergeData, rowIn_container, setAttr, property, add_BtnBreaker, iterationIndex, addAttr) {
     const self = this
     self._generateForm_HTML(_mergeData, rowIn_container, null, null, addAttr)
     if (!(property.minItems === 1 && property.maxItems === 1)) {
@@ -2798,7 +3482,7 @@ class JSONRenderer extends HTMLElement {
           //   addbtn.classList.add('d-none')
           //   breaker.classList.add('d-none')
           // }
-        }, 1000)
+        }, 500)
       }
     }
   }
@@ -3005,17 +3689,17 @@ class JSONRenderer extends HTMLElement {
     setTimeout(() => {
       const addbtn = self.shadowRoot.getElementById(`add_${setAttr.value}`)
       addbtn.addEventListener('click', function () {
-      self.appendObject_inArray(_mergeData, setAttr, addbtn)
-      self.enableDisableSubmitBtn()
+        self.appendObject_inArray(_mergeData, setAttr, addbtn)
+        self.enableDisableSubmitBtn()
       })
 
       const removetbtn = self.shadowRoot.getElementById(`remove_${setAttr.value}`)
       removetbtn.addEventListener('click', function () {
-      self.removeObject_fromArray(setAttr, removetbtn)
-      self.enableDisableSubmitBtn()
+        self.removeObject_fromArray(setAttr, removetbtn)
+        self.enableDisableSubmitBtn()
 
       })
-    }, 1000)
+    }, 500)
     // this function appends object in array
   }
 
@@ -3028,60 +3712,59 @@ class JSONRenderer extends HTMLElement {
         // dropDowns = self.shadowRoot.querySelectorAll(`[input-dependselect='true'][input-dependmultiselect='true']`)
         const selectDropd = self.shadowRoot.querySelectorAll(`[input-dependselect='true']`)
         const multiSelectDropd = self.shadowRoot.querySelectorAll(`[input-dependmultiselect='true']`)
-        if(selectDropd.length > 0){
+        if (selectDropd.length > 0) {
           dropDowns = [...selectDropd]
         }
-        if(multiSelectDropd.length > 0){
-          if(dropDowns.length > 0){
-            dropDowns = [ ...dropDowns, ...multiSelectDropd]
-          }else{
+        if (multiSelectDropd.length > 0) {
+          if (dropDowns.length > 0) {
+            dropDowns = [...dropDowns, ...multiSelectDropd]
+          } else {
             dropDowns = [...multiSelectDropd]
           }
         }
       } else {
         const selectDropd = self.shadowRoot.querySelectorAll(`[input-dependselect='true'][input-dependselectupdate='not-updated']`)
         const multiSelectDropd = self.shadowRoot.querySelectorAll(`[input-dependmultiselect='true'][input-dependmultiselectupdate='not-updated']`)
-        if(selectDropd.length > 0){
+        if (selectDropd.length > 0) {
           dropDowns = [...selectDropd]
         }
-        if(multiSelectDropd.length > 0){
-          if(dropDowns.length > 0){
-            dropDowns = [ ...dropDowns, ...multiSelectDropd]
-          }else{
+        if (multiSelectDropd.length > 0) {
+          if (dropDowns.length > 0) {
+            dropDowns = [...dropDowns, ...multiSelectDropd]
+          } else {
             dropDowns = [...multiSelectDropd]
           }
         }
-        // dropDowns = [...selectDropd, ...multiSelectDropd];
       }
       if (dropDowns.length > 0) {
         for (let index = 0; index < dropDowns.length; index++) {
-          
+
           const selectDD = dropDowns[index];
           let inputDependableOn = ""
           const optionsArray = []
-          function extractOptionsArray(inputFile_actualdata, inputDependableOn){
+          function extractOptionsArray(inputFile_actualdata, inputDependableOn) {
             let array = []
-              if (inputFile_actualdata[0].autometa[inputDependableOn]) {
-                array = inputFile_actualdata[0].autometa[inputDependableOn]
-              } else if (inputFile_actualdata[0].usermeta[inputDependableOn]) {
-                array = inputFile_actualdata[0].usermeta[inputDependableOn]
-  
-              } else if (inputFile_actualdata.includes(inputDependableOn)) {
-                array = inputFile_actualdata[0][inputDependableOn]
-              }
+            if (inputFile_actualdata[0].autometa[inputDependableOn]) {
+              array = inputFile_actualdata[0].autometa[inputDependableOn]
+            } else if (inputFile_actualdata[0].usermeta[inputDependableOn]) {
+              array = inputFile_actualdata[0].usermeta[inputDependableOn]
+
+            } else if (inputFile_actualdata.includes(inputDependableOn)) {
+              array = inputFile_actualdata[0][inputDependableOn]
+            }
             return array
           }
 
-          if(selectDD.hasAttribute('input-dependselect')){
+          if (selectDD.hasAttribute('input-dependselect')) {
             inputDependableOn = selectDD.getAttribute('input-dependselectkey')
             if (self.inputFile_actualdata.length > 0 && inputDependableOn) {
               optionsArray = extractOptionsArray(self.inputFile_actualdata, inputDependableOn)
             }
-  
+
             if (optionsArray.length > 0) {
               const firstOption = selectDD.options[0]     // updating textContent for option[0] as options array has been extracted.
               firstOption.textContent = "Select option";
-  
+
               for (const val of optionsArray) {
                 const option = document.createElement('option');
                 option.textContent = val;
@@ -3091,7 +3774,7 @@ class JSONRenderer extends HTMLElement {
               selectDD.setAttribute('input-dependselectupdate', 'updated')
             }
           }
-          else if(selectDD.hasAttribute('input-dependmultiselectkey')){
+          else if (selectDD.hasAttribute('input-dependmultiselectkey')) {
             inputDependableOn = selectDD.getAttribute('input-dependmultiselectkey')
             if (self.inputFile_actualdata.length > 0 && inputDependableOn) {
               optionsArray = extractOptionsArray(self.inputFile_actualdata, inputDependableOn)
@@ -3106,14 +3789,14 @@ class JSONRenderer extends HTMLElement {
                 _li.textContent = val;
                 _li.className = "checkbox-option"
                 _li.id = setId
-          
+
                 const input_inLi = document.createElement('input')
                 input_inLi.type = "checkbox"
                 input_inLi.value = val
                 input_inLi.innerText = val
                 input_inLi.className = 'custom-checkBox'
                 prop_default && prop_default.includes(val) ? input_inLi.checked = true : input_inLi.checked = false
-          
+
                 _li.appendChild(input_inLi)
                 selectDD.appendChild(_li);
               }
@@ -3216,7 +3899,7 @@ class JSONRenderer extends HTMLElement {
             row_element.childNodes.forEach((child_row_element) => {
               if ((child_row_element.getAttribute('required') === 'true') || (child_row_element.getAttribute('required') === 'false' && child_row_element.hasAttribute('value') && child_row_element.getAttribute('value') !== "")) {
                 if (child_row_element.getAttribute('property-type') === 'integer' || child_row_element.getAttribute('property-type') === 'number') {
-                  self.formProperties[child_row_element.getAttribute('property')] = (child_row_element.getAttribute('value') !== "" || child_row_element.getAttribute('value') !== null || child_row_element.getAttribute('value') !== NaN) ? parseInt(child_row_element.getAttribute('value')) : 0;
+                  self.formProperties[child_row_element.getAttribute('property')] = (child_row_element.getAttribute('value') !== "" || child_row_element.getAttribute('value') !== null || child_row_element.getAttribute('value') !== NaN) ? parseFloat(child_row_element.getAttribute('value')) : 0;
                 }
                 else if (child_row_element.getAttribute('property-type') === 'date') {
                   self.formProperties[child_row_element.getAttribute('property')] = (child_row_element.getAttribute('value') !== "" || child_row_element.getAttribute('value') !== null || child_row_element.getAttribute('value') !== NaN) ? child_row_element.getAttribute('value') : new Date();
@@ -3243,34 +3926,37 @@ class JSONRenderer extends HTMLElement {
           objectProperties_row_elements.forEach((row_element) => {
             let object_name = row_element.getAttribute('major-name');
             let objectProperties_row_obj = {};
-            if(object_name !== 'columns'){
-            row_element.childNodes.forEach((child_row_element) => {
-              if ((child_row_element.getAttribute('required') === 'true') || (child_row_element.getAttribute('required') === 'false' && child_row_element.hasAttribute('value') && child_row_element.getAttribute('value') !== "")) {
-                if (child_row_element.hasAttribute('property-type')) {
-                  if (child_row_element.getAttribute('property-type') === 'integer' || child_row_element.getAttribute('property-type') === 'number') {
-                    objectProperties_row_obj[child_row_element.getAttribute('property')] = (child_row_element.getAttribute('value') !== "" || child_row_element.getAttribute('value') !== null || child_row_element.getAttribute('value') !== NaN) ? parseInt(child_row_element.getAttribute('value')) : 0;
-                  }
-                  else if (child_row_element.getAttribute('property-type') === 'boolean') {
-                    objectProperties_row_obj[child_row_element.getAttribute('property')] = child_row_element.getAttribute('value') !== "" ? JSON.parse(child_row_element.getAttribute('value')) : "";
-                  }
-                  else if (child_row_element.getAttribute('property-type') === 'array-multiselect') {
-                    if (child_row_element.getAttribute('value') !== "") {
-                      let arrayValue = child_row_element.getAttribute('value').split(',')
-                      objectProperties_row_obj[child_row_element.getAttribute('property')] = arrayValue;
-                    } else {
-                      objectProperties_row_obj[child_row_element.getAttribute('property')] = [];
+            if (object_name !== 'columns') {
+              row_element.childNodes.forEach((child_row_element) => {
+                if ((child_row_element.getAttribute('required') === 'true') || (child_row_element.getAttribute('required') === 'false' && child_row_element.hasAttribute('value') && child_row_element.getAttribute('value') !== "")) {
+                  if (child_row_element.hasAttribute('property-type')) {
+                    if (child_row_element.getAttribute('property-type') === 'integer') {
+                      objectProperties_row_obj[child_row_element.getAttribute('property')] = (child_row_element.getAttribute('value') !== "" || child_row_element.getAttribute('value') !== null || child_row_element.getAttribute('value') !== NaN) ? parseInt(child_row_element.getAttribute('value')) : 0;
                     }
-                  } else if (child_row_element.getAttribute('property-type') === 'string' && child_row_element.getAttribute('required') === 'true') {
-                    objectProperties_row_obj[child_row_element.getAttribute('property')] = (child_row_element.getAttribute('value') !== null && child_row_element.getAttribute('value') !== "") ? child_row_element.getAttribute('value') : null;
+                    else if (child_row_element.getAttribute('property-type') === 'number') {
+                      objectProperties_row_obj[child_row_element.getAttribute('property')] = (child_row_element.getAttribute('value') !== "" || child_row_element.getAttribute('value') !== null || child_row_element.getAttribute('value') !== NaN) ? parseFloat(child_row_element.getAttribute('value')) : 0;
+                    }
+                    else if (child_row_element.getAttribute('property-type') === 'boolean') {
+                      objectProperties_row_obj[child_row_element.getAttribute('property')] = child_row_element.getAttribute('value') !== "" ? JSON.parse(child_row_element.getAttribute('value')) : "";
+                    }
+                    else if (child_row_element.getAttribute('property-type') === 'array-multiselect') {
+                      if (child_row_element.getAttribute('value') !== "") {
+                        let arrayValue = child_row_element.getAttribute('value').split(',')
+                        objectProperties_row_obj[child_row_element.getAttribute('property')] = arrayValue;
+                      } else {
+                        objectProperties_row_obj[child_row_element.getAttribute('property')] = [];
+                      }
+                    } else if (child_row_element.getAttribute('property-type') === 'string' && child_row_element.getAttribute('required') === 'true') {
+                      objectProperties_row_obj[child_row_element.getAttribute('property')] = (child_row_element.getAttribute('value') !== null && child_row_element.getAttribute('value') !== "") ? child_row_element.getAttribute('value') : null;
+                    }
+                    else {
+                      objectProperties_row_obj[child_row_element.getAttribute('property')] = (child_row_element.getAttribute('value') !== null && child_row_element.getAttribute('value') !== "") ? child_row_element.getAttribute('value') : "";
+                    }
                   }
-                  else {
-                    objectProperties_row_obj[child_row_element.getAttribute('property')] = (child_row_element.getAttribute('value') !== null && child_row_element.getAttribute('value') !== "") ? child_row_element.getAttribute('value') : "";
-                  }
+                  self.formProperties[`${object_name}`] = objectProperties_row_obj;
                 }
-                self.formProperties[`${object_name}`] = objectProperties_row_obj;
-              }
 
-            });
+              });
             }
 
             const container_objectProperties_row_elements = row_element.querySelectorAll(`[class="container"]`);
@@ -3282,8 +3968,11 @@ class JSONRenderer extends HTMLElement {
                 row_element.childNodes.forEach((child_row_element) => {
                   if ((child_row_element.getAttribute('required') === 'true') || (child_row_element.getAttribute('required') === 'false' && child_row_element.hasAttribute('value') && child_row_element.getAttribute('value') !== "")) {
                     if (child_row_element.hasAttribute('property-type')) {
-                      if (child_row_element.getAttribute('property-type') === 'integer' || child_row_element.getAttribute('property-type') === 'number') {
+                      if (child_row_element.getAttribute('property-type') === 'integer') {
                         child_objectProperties_row_obj[child_row_element.getAttribute('property')] = (child_row_element.getAttribute('value') !== "" || child_row_element.getAttribute('value') !== null || child_row_element.getAttribute('value') !== NaN) ? parseInt(child_row_element.getAttribute('value')) : 0;
+                      }
+                      else if (child_row_element.getAttribute('property-type') === 'number') {
+                        child_objectProperties_row_obj[child_row_element.getAttribute('property')] = (child_row_element.getAttribute('value') !== "" || child_row_element.getAttribute('value') !== null || child_row_element.getAttribute('value') !== NaN) ? parseFloat(child_row_element.getAttribute('value')) : 0;
                       }
                       else if (child_row_element.getAttribute('property-type') === 'boolean') {
                         child_objectProperties_row_obj[child_row_element.getAttribute('property')] = child_row_element.getAttribute('value') !== "" ? JSON.parse(child_row_element.getAttribute('value')) : "";
@@ -3326,8 +4015,11 @@ class JSONRenderer extends HTMLElement {
               if (child_row_element.hasAttribute('property-type')) {
                 if (child_row_element.getAttribute('value') !== 'Select option') {
                   if ((child_row_element.getAttribute('required') === 'true') || (child_row_element.getAttribute('required') === 'false' && child_row_element.hasAttribute('value') && child_row_element.getAttribute('value') !== "")) {
-                    if (child_row_element.getAttribute('property-type') === 'integer' || child_row_element.getAttribute('property-type') === 'number') {
+                    if (child_row_element.getAttribute('property-type') === 'integer') {
                       inside_obj[child_row_element.getAttribute('property')] = (child_row_element.getAttribute('value') !== "" || child_row_element.getAttribute('value') !== null || child_row_element.getAttribute('value') !== NaN) ? parseInt(child_row_element.getAttribute('value')) : 0;
+                    }
+                    else if (child_row_element.getAttribute('property-type') === 'number') {
+                      inside_obj[child_row_element.getAttribute('property')] = (child_row_element.getAttribute('value') !== "" || child_row_element.getAttribute('value') !== null || child_row_element.getAttribute('value') !== NaN) ? parseFloat(child_row_element.getAttribute('value')) : 0;
                     }
                     else if (child_row_element.getAttribute('property-type') === 'boolean') {
                       inside_obj[child_row_element.getAttribute('property')] = child_row_element.getAttribute('value') !== "" ? JSON.parse(child_row_element.getAttribute('value')) : "";
@@ -3364,14 +4056,13 @@ class JSONRenderer extends HTMLElement {
                 self.formProperties[`${object_name}`] = convertedObj
               }
             } else {
-              if(arrayProperties_row_obj.length > 0)
-              self.formProperties[`${object_name}`] = arrayProperties_row_obj;
+              if (arrayProperties_row_obj.length > 0)
+                self.formProperties[`${object_name}`] = arrayProperties_row_obj;
             }
 
           });
         });
       }
-      // console.log("self.formProperties", self.formProperties);
       resolve()
     })
   }
@@ -3402,7 +4093,7 @@ class JSONRenderer extends HTMLElement {
         validate.errors.forEach(function (arrayItem) {
           var x = arrayItem.message;
           if (self.submitFlow === "false") {
-            if (arrayItem.dataPath) { 
+            if (arrayItem.dataPath) {
               let dataPath = arrayItem.dataPath.replace(".", "")
               errorObj[dataPath] = x
             } else if (arrayItem.keyword) {
@@ -3448,7 +4139,7 @@ class JSONRenderer extends HTMLElement {
 
           });
         }
-      } else { 
+      } else {
 
         if (self.submitFlow === "false") {
           self.validityCheck = "true"
@@ -3491,7 +4182,7 @@ class JSONRenderer extends HTMLElement {
     const url = `${process.env.REACT_APP_SCIDUCT_JOB_SERVICE}/`
     const token = localStorage.getItem('id_token');
     const jobServiceInstance = new JobService(url, token)
-    
+
     jobServiceInstance.createJobInstance(requestJson.job_definition, requestJson.input, requestJson.pragmas, requestJson.output_name, requestJson.output_container).then(
       (res) => {
         const successMeg = this.shadowRoot.querySelector(".successMessage");
@@ -3525,13 +4216,13 @@ class JSONRenderer extends HTMLElement {
           });
           let submitBtn = self.shadowRoot.querySelector('#submitBtn');
           if (submitBtn) {
-                submitBtn.classList.add('disabled');
+            submitBtn.classList.add('disabled');
           }
           const backToJDListPage = new CustomEvent('cust-backToJDListPage', {
             bubbles: true,
             composed: true,
             detail: {
-              navigateToJDList : true
+              navigateToJDList: true
             }
           });
           setTimeout(() => {
@@ -3547,30 +4238,30 @@ class JSONRenderer extends HTMLElement {
         else
           errorMessages.innerText = `An internal error occured. Please try again`;
 
-          let errorSpan = errorMessages.innerText;
-          const element = this.shadowRoot.querySelector("#json-form");
-          element.scrollIntoView()
-  
-          if (errorSpan !== '') {
-            const toast = this.shadowRoot.querySelector(".toast");
-            const closeIcon = this.shadowRoot.querySelector(".close")
-            const progress = this.shadowRoot.querySelector(".progress");
-            const successSpan = this.shadowRoot.querySelector(".successSpan");
-            const errorSpan = this.shadowRoot.querySelector(".errorMsg");
-            toast.classList.remove("d-none");
-            errorSpan.classList.remove("d-none");
-            successSpan.classList.remove("d-none");
-            toast.classList.add("active");
-            progress.classList.add("active");
-  
-            closeIcon.addEventListener("click", () => {
-              toast.classList.remove("active");
-              toast.classList.add("d-none");
-              errorSpan.classList.add("d-none");
-              progress.classList.remove("active");
-  
-            });
-          }
+        let errorSpan = errorMessages.innerText;
+        const element = this.shadowRoot.querySelector("#json-form");
+        element.scrollIntoView()
+
+        if (errorSpan !== '') {
+          const toast = this.shadowRoot.querySelector(".toast");
+          const closeIcon = this.shadowRoot.querySelector(".close")
+          const progress = this.shadowRoot.querySelector(".progress");
+          const successSpan = this.shadowRoot.querySelector(".successSpan");
+          const errorSpan = this.shadowRoot.querySelector(".errorMsg");
+          toast.classList.remove("d-none");
+          errorSpan.classList.remove("d-none");
+          successSpan.classList.remove("d-none");
+          toast.classList.add("active");
+          progress.classList.add("active");
+
+          closeIcon.addEventListener("click", () => {
+            toast.classList.remove("active");
+            toast.classList.add("d-none");
+            errorSpan.classList.add("d-none");
+            progress.classList.remove("active");
+
+          });
+        }
       }
     );
   }
