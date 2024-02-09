@@ -572,7 +572,7 @@ class JSONRenderer extends HTMLElement {
       self.use_schema = self.form_details.file_schema.usermeta_schema
     } else if (self.form_details && self.form_details.hasOwnProperty('input_schema')) {
       // Job definitions Case
-      // JSON Form Generatio
+      // JSON Form Generation
       self.use_schema = self.form_details.input_schema;
       if (self.form_details.hasOwnProperty('input_files') && self.form_details.input_files.length > 0) {
         self.input_files = self.form_details.input_files
@@ -718,16 +718,9 @@ class JSONRenderer extends HTMLElement {
 
     if (self.normalized_schema) {
       self.commonFields = self.extractCommonFieldsFromOneOf(self.normalized_schema);
-      // self.commonFields  = JSON.stringify(self.commonFields, null, 2)
-
       self.mergeProps = self.mergeProperties(self.commonFields, self.normalized_schema, "normalized")
-      // self.mergeProps  = JSON.stringify(self.mergeProps, null, 2)
 
-      if (self.mergeProps['mergeProp']) {
-        self.initilize_formGeneration(self.mergeProps, true)
-      } else {
-        self.initilize_formGeneration(self.mergeProps, false)
-      }
+      self.initilize_formGeneration(self.mergeProps, false)
     }
   }
 
@@ -741,7 +734,6 @@ class JSONRenderer extends HTMLElement {
 
 
       // Perform below operations on above oenOf array
-      // 1. 
 
       // Initialize commonFields with the properties from the first object in oneOf
       if (json.oneOf[0] && json.oneOf[0].properties) {
@@ -1104,33 +1096,7 @@ class JSONRenderer extends HTMLElement {
 
   initilize_formGeneration(mergedData, check) {
     const self = this;
-    //dont forget to handle the error msg if mergeProps are empty
-
-    if (!check) {     // if check is false it means that json data is not generated properly
-
-      if (self.submitFlow === "false") {
-        self.jsonForm_Genx.innerHTML += /* html */`
-          <div class="row">
-            <div class="col-md-8" style="word-break: break-all;">
-            <p class="font-weight-bold"> File : ${self.form_details.file_name}</p>
-            </div>
-            <div class="col-md-4">
-            <p class="font-weight-bold">Type : ${self.form_details.type}</p>
-            </div>
-          </div>
-          <hr>
-        `
-      }
-
-      self.jsonForm_Genx.innerHTML += /* html */`
-              <div class="row">
-                <div class="col">
-                <p class="font-weight-bold">Data not found, please check the schema</p>
-                </div>
-              </div>
-              <hr>
-        `
-    } else if (check) {     // json data is generated properly
+    //There are job-definition where input files and input_schema is blank, so mergeData will throw null values
 
       if (self.submitFlow === "false") {
         self.jsonForm_Genx.innerHTML += /* html */`
@@ -1145,13 +1111,13 @@ class JSONRenderer extends HTMLElement {
           <hr>
         `
       }
+
       const container_input = self.createNewRow('container')
       container_input.setAttribute('container-type', 'input-selection')
       container_input.style.marginBottom = '25px';
       const row_inputSelection = self.createNewRow('row')
       container_input.appendChild(row_inputSelection)
 
-      // if (self.input_files !== null || self.output_files !== null) {
       if (self.input_files !== null && self.input_files.length > 0) {
 
         self.input_files.forEach((file, index) => {
@@ -1176,6 +1142,7 @@ class JSONRenderer extends HTMLElement {
 
           const inputLabel = document.createElement('label')
           inputLabel.textContent = name;
+          inputLabel.style.width = '130px'
           inputLabel.setAttribute('for', name)
 
           required ? inputLabel.classList.add('modify-label', 'required', 'font-weight-bold') : inputLabel.classList.add('modify-label', 'font-weight-bold')
@@ -1386,8 +1353,7 @@ class JSONRenderer extends HTMLElement {
         }, 200);
 
       }
-      // }
-
+      
       const container_propCommon = self.createNewRow('container')
       const row_propCommon = self.createNewRow('row')
       row_propCommon.setAttribute('primary-row', "true")
@@ -1419,7 +1385,11 @@ class JSONRenderer extends HTMLElement {
       }
 
       self.jsonForm_Genx.append(self.input_files ? container_input : "", container_propCommon, container_propObject, container_propArray, self.output_files ? container_output : "", self.submitFlow !== 'false' ? container_formButtons : "")
-      self._generateForm_HTML(mergedData, row_propCommon, container_propObject, container_propArray);
+      
+      if(mergedData['mergeProp']){  // if mergedData['mergeProp'] === null, means either input_schema is blank or there is issue with input_schema structure
+        self._generateForm_HTML(mergedData, row_propCommon, container_propObject, container_propArray);
+      }
+
       if (self.resubmitProp !== null) {
         self.resubmitFunctionality()
       }
@@ -1439,7 +1409,6 @@ class JSONRenderer extends HTMLElement {
         intervalId = setInterval(intervalFn, 500)
 
       }
-    }
   }
 
   delay(ms) {
@@ -1515,7 +1484,6 @@ class JSONRenderer extends HTMLElement {
           }
         }
       })
-        // self.updateSelectOptions(true)      // RESTRICTED from moving this function. 
     }
 
     // output-container path && output name pre-selection for resubmit
