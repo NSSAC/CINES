@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Fab, Icon, IconButton, Typography, Tooltip } from "@material-ui/core";
+import {Icon, IconButton, Typography, Tooltip } from "@material-ui/core";
+import Button from '@material-ui/core/Button';
 import { FuseAnimate, FusePageSimple } from "@fuse";
 import { useDispatch, useSelector } from "react-redux";
 import withReducer from "app/store/withReducer";
@@ -206,13 +207,16 @@ function MyJobsApp(props) {
             <Tooltip title="Job Definition" placement="top">
               <Link to="/apps/job-definition/">
                 <FuseAnimate animation="transition.expandIn" delay={600}>
-                  <Fab
+                  {/* <Fab
                     color="secondary"
                     aria-label="add"
                     className="absolute bottom-0 left-0 ml-16 -mb-28 z-999"
-                  >
-                    <Icon>add</Icon>
-                  </Fab>
+                  > */}
+                    <Button variant="contained" color="secondary" component="span" className="capitalize" >
+                      Create Job
+                    </Button>
+                    {/* <Icon>add</Icon> */}
+                  {/* </Fab> */}
                 </FuseAnimate>
               </Link>
             </Tooltip>
