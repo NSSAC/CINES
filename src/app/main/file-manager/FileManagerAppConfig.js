@@ -69,6 +69,7 @@ export const file_viewers_map = {
     "snap_TGVizLayout": React.lazy(() => import('./viewer/text/')),
     "snap_TIntV_Subgraph": React.lazy(() => import('./viewer/text/')),
     "csonnet_simulation_container": React.lazy(() => import('./viewer/csonnet_simulation_container/')),
+    "html": React.lazy(() => import('./viewer/html/')),
     "blacklisted": React.lazy(() => import('./viewer/blacklisted'))
 }
 

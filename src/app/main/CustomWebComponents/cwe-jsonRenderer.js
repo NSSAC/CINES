@@ -12,6 +12,7 @@ import RefParser from 'json-schema-ref-parser';
 import _ from '@lodash';
 import { JobService } from "node-sciduct";
 import { parseInt } from 'lodash';
+import { array } from 'vega';
 
 
 const template_JSONFromRendered = document.createElement('template');
@@ -1612,7 +1613,6 @@ class JSONRenderer extends HTMLElement {
           }
 
           else if (propertyType === "array-multiselect") {
-
           }
         }
       } else if (propValType === "object") {    // this case is applied for properties that are type array or object for eg. measures, date_settings
@@ -1898,7 +1898,6 @@ class JSONRenderer extends HTMLElement {
         }
 
         function arrayMultiSelect(property, propertyValue, formDriven_check, arrayMulti_Select, copy_arguments) {
-
           setTimeout(() => {
             if (propertyValue.length > 0) {
               const selectedOptions = propertyValue;
@@ -3616,6 +3615,7 @@ class JSONRenderer extends HTMLElement {
   }
 
   removeObject_fromArray(setAttr, removetbtn) {
+
     const self = this
     let value = `[${setAttr.key}="${setAttr.value}"]`
     const removeArray = self.shadowRoot.querySelectorAll(value)
@@ -3825,7 +3825,6 @@ class JSONRenderer extends HTMLElement {
     const self = this;
     const submitButton = self.shadowRoot.querySelector('#submitBtn');
     submitButton.addEventListener('click', function () {
-
       self.extractFormProperties()
         .then(() => self._ajvValidation())
     });
@@ -3858,7 +3857,6 @@ class JSONRenderer extends HTMLElement {
         });
       }
 
-
       const commonProperties_elements = self.shadowRoot.querySelectorAll(`[container-type="commonProperties"]`);
       if (commonProperties_elements) {
         commonProperties_elements.forEach((element) => {
@@ -3866,7 +3864,11 @@ class JSONRenderer extends HTMLElement {
           commonProperties_row_elements.forEach((row_element) => {
             row_element.childNodes.forEach((child_row_element) => {
               if ((child_row_element.getAttribute('required') === 'true') || (child_row_element.getAttribute('required') === 'false' && child_row_element.hasAttribute('value') && child_row_element.getAttribute('value') !== "")) {
-                if (child_row_element.getAttribute('property-type') === 'integer' || child_row_element.getAttribute('property-type') === 'number') {
+
+                if (child_row_element.getAttribute('property-type') === 'array-multiselect' ) {
+                  self.formProperties[child_row_element.getAttribute('property')] = (child_row_element.getAttribute('value') !== "") ? child_row_element.getAttribute('value').split(",") : [];
+                }
+                else if (child_row_element.getAttribute('property-type') === 'integer' || child_row_element.getAttribute('property-type') === 'number') {
                   self.formProperties[child_row_element.getAttribute('property')] = (child_row_element.getAttribute('value') !== "" || child_row_element.getAttribute('value') !== null || child_row_element.getAttribute('value') !== NaN) ? parseFloat(child_row_element.getAttribute('value')) : 0;
                 }
                 else if (child_row_element.getAttribute('property-type') === 'date') {
@@ -3886,7 +3888,6 @@ class JSONRenderer extends HTMLElement {
           });
         });
       }
-
       const objectProperties_elements = self.shadowRoot.querySelectorAll(`[container-type="objectProperties"]`);
       if (objectProperties_elements) {
         objectProperties_elements.forEach((element) => {
@@ -3968,7 +3969,6 @@ class JSONRenderer extends HTMLElement {
           });
         });
       }
-
       const arrayProperties_elements = self.shadowRoot.querySelectorAll(`[container-type="arrayProperties"]`);
       if (arrayProperties_elements) {
         arrayProperties_elements.forEach((element) => {
@@ -4108,12 +4108,9 @@ class JSONRenderer extends HTMLElement {
           });
         }
       } else {
-
         if (self.submitFlow === "false") {
           self.validityCheck = "true"
-          // console.log("No Errors found")
         } else {
-          // console.log("No Errors found submitflow == true")
           self.createSubmissionData()
         }
       }
