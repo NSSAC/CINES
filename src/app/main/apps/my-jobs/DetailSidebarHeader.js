@@ -53,24 +53,22 @@ function DetailSidebarHeader(props)
           search: "?version=" + parts[1],
           state: { inputData: item }
         });
-
         dispatch(Actions.clearJobDefinition());
         localStorage.setItem('resubmitJob',JSON.stringify(item))
-        
       }
+
       function extractFileData(item){
         let checkInputFiles = [...item.input_files]
         checkInputFiles.forEach((ele) => {
-          if(ele.autometa || ele.usermeta){
-            delete ele.autometa 
-            delete ele.usermeta
-          }
+          // if(ele.autometa || ele.usermeta){
+          //   delete ele.autometa 
+          //   delete ele.usermeta
+          // }
           let name = ele.name || ""
           if(item.input && item.input[name] && item.input[name] !== ""){
             ele['filePath'] = item.input[name]
           }
         })
-        console.log(checkInputFiles)
         window.checkInputFiles = checkInputFiles
       }
 

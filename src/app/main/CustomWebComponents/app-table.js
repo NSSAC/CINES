@@ -10,12 +10,11 @@ class TableJS extends HTMLElement {
     let sortedTableData = tableData.sort(
       (p1, p2) => (p1['Version'] < p2['Version']) ? 1 : (p1['Version'] > p2['Version']) ? -1 : 0);
     const tableHeaders = Object.keys(tableData[0])
-    console.log("+++++",tableData)
-    const a = "qqqq"
+
 
     let tableHTML = null;
     for (let i = 0; i < sortedTableData.length; i++) {
-      if (i == 0) {
+      if (i === 0) {
         tableHTML = `<table id="cus_table"><thead><tr>`;
         for (let idx = 0; idx < tableHeaders.length; idx++) {
           tableHTML += `
@@ -39,7 +38,7 @@ class TableJS extends HTMLElement {
                   </tr>
               `;
 
-      if (i == sortedTableData.length - 1) {
+      if (i === sortedTableData.length - 1) {
         tableHTML += `</tbody></table> `;
       }
     }

@@ -59,20 +59,22 @@ function SelectFileDialog({ showModal, handleFMClose, target, fileTypes, multipl
     handleFMClose();
   }
 
-  const onClickSelect = () => {
+  function onClickSelect() {
     if (onSelect) {
       var tf = []
-      files.forEach((f) => {
+      let selectedFile_metaData;
+      for (let index = 0; index < files.length; index++) {
+        const f = files[index];
         if (selection[f.id]) {
+          selectedFile_metaData = f
           let filePath = `${targetFolder}/${f.name}`
           tf.push(`${targetFolder}/${f.name}`)
           tf.push(f.autometa.edgeDirectionality || "")
           tf.push(f.type || "")
           extractFileData(f,filePath,labelName)
-          
+            onSelect(tf, selectedFile_metaData)
         }
-      })
-      onSelect(tf)
+      }
     }
 
     localStorage.setItem("last_selected_folder",targetFolder)

@@ -227,7 +227,7 @@ function MetadataPanel(props) {
                                                                 fontWeight: 'bold',
                                                                 wordBreak: 'break-all'
                                                             },
-                                                        }} /> : val
+                                                        }} /> : `${val}`
                                                     // typeof val !== 'string' ? JSON.stringify(val) : val
                                                     }</span></Grid>
                                             </Grid>
@@ -247,7 +247,7 @@ function MetadataPanel(props) {
                                                                 fontWeight: 'bold',
                                                                 wordBreak: 'break-all'
                                                             },
-                                                        }} /> : val
+                                                        }} /> : `${val}`
                                                     }</span></Grid>}
                                                 {canWrite && (
                                                     <React.Fragment>
@@ -263,7 +263,7 @@ function MetadataPanel(props) {
                                                                         fontWeight: 'bold',
                                                                         wordBreak: 'break-all'
                                                                     },
-                                                                }} /> : val
+                                                                }} /> : `${val}`
                                                             }</span></Grid>
                                                         <Grid item xs={2} style={{whiteSpace:'nowrap'}} className="cursor-pointer">
                                                             <Icon title='Edit property' onClick={() => { showAddPropDialog(member.field, props.meta[member.type][member.field]) }}>edit</Icon>
